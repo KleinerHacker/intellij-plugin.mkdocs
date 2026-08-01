@@ -1,0 +1,294 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  licences:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Check licences
+        run: ./gradlew licensee --stacktrace
+
+      - name: Generate SBOM
+        run: ./gradlew cyclonedxBom --stacktrace
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom
+          path: build/reports/cyclonedx/bom.xml
+
+  # Developer tests: every test class NOT named *IT.
+  test-developer:
+    runs-on: ubuntu-latest
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Run developer tests
+        run: ./gradlew test -PtestSuite=developer --stacktrace --info
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-developer
+          path: '**/build/reports/tests/test/**'
+
+  # Integration tests: test classes named *IT. Runs at the same time as the developer tests,
+  # from the identical setup.
+  test-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Run integration tests
+        run: ./gradlew test -PtestSuite=integration --stacktrace --info
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-integration
+          path: '**/build/reports/tests/test/**'
+
+  # Single gate name for everything that publishes: a release only happens when BOTH suites are green.
+  # Until this was introduced a tagged release was published without running any test at all.
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - test-developer
+      - test-integration
+    steps:
+      - name: Both test suites passed
+        run: echo "Developer and integration tests are green."
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build plugin
+        run: ./gradlew buildPlugin -Pversion=${{ github.ref_name }} --stacktrace
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-distribution
+          path: build/distributions/*.zip
+
+  # Build the docs as a generation test (mkdocs --strict) before they get deployed.
+  validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+
+      - name: Pip Update
+        run: pip install --upgrade pip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build docs
+        run: ./gradlew buildDocs --stacktrace --info
+
+  # Publish the docs via mike under the release tag as the version. This is the only
+  # place the gh-pages site is updated — pushes to the default branch merely build
+  # the docs for verification (see ci.yml). Stable releases (tag like x.y or x.y.z,
+  # optionally v-prefixed) also get the 'latest' alias; pre-releases (tag with a
+  # -alpha/-beta/-rc suffix) do not, so 'latest' keeps pointing at the last stable
+  # release.
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: validate-docs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+
+      - name: Pip Update
+        run: pip install --upgrade pip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Configure git for mike
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy docs
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^v?[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            ./gradlew deployDocs -Pversion="$TAG" --stacktrace --info
+          else
+            ./gradlew deployDocs -Pversion="$TAG" -PsetLatest=false --stacktrace --info
+          fi
+
+  # Sign the plugin and upload it to the JetBrains Marketplace. This is the last step
+  # before the GitHub release is created (the release job depends on this job), so a
+  # failed upload prevents the GitHub release from being published.
+  publish-marketplace:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - licences
+      - deploy-docs
+      - tests
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # Write all secrets to short-lived files (umask 077). Secrets touch the environment only in
+      # this trusted printf-only step; the Gradle/signer process below gets just file paths, so a
+      # `set`/`env` dump there reveals nothing.
+      - name: Write signing material
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: |
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.p12"
+          printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
+          printf '%s' "$PUBLISH_TOKEN"               > "$RUNNER_TEMP/publish.token"
+
+      - name: Publish to JetBrains Marketplace
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/keystore.p12
+          KEYSTORE_PASSWORD_FILE: ${{ runner.temp }}/keystore.pass
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          PUBLISH_TOKEN_FILE: ${{ runner.temp }}/publish.token
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^(0|[a-zA-Z]) ]]; then CHANNEL="eap"; else CHANNEL="default"; fi
+          ./gradlew publishPlugin -Pversion="$TAG" -PpublishChannel="$CHANNEL" --stacktrace
+        continue-on-error: true
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - licences
+      - deploy-docs
+      - tests
+      - publish-marketplace
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download plugin artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: plugin-distribution
+          path: build/distributions/
+
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: sbom
+          path: build/reports/cyclonedx/
+
+      - name: Extract changelog
+        run: |
+          TAG="${{ github.ref_name }}"
+          NOTES=$(awk "/^## \[$TAG\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md)
+          NOTES=$(echo "$NOTES" | sed '/./,$!d' | sed -e :a -e '/^\n*$/{$d;N;ba}')
+          if [ -z "$NOTES" ]; then
+            echo "ERROR: No changelog entry found for tag $TAG"
+            exit 1
+          fi
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^(0|[a-zA-Z]) ]]; then
+            gh release create "$TAG" build/distributions/*.zip build/reports/cyclonedx/bom.xml \
+              --title "$TAG" \
+              --notes "$RELEASE_NOTES" \
+              --prerelease \
+              --latest=false
+          else
+            gh release create "$TAG" build/distributions/*.zip build/reports/cyclonedx/bom.xml \
+              --title "$TAG" \
+              --notes "$RELEASE_NOTES" \
+              --latest
+          fi

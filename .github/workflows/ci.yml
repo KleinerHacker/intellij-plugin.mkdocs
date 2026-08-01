@@ -1,0 +1,204 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, developer ]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  check-licences:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Check licences
+        run: ./gradlew licensee --stacktrace --info
+
+      - name: Generate SBOM
+        run: ./gradlew cyclonedxBom --stacktrace
+
+  # Build and test are separate concerns and run independently: `assemble` only produces artifacts and
+  # contains no verification, so it never re-runs what the test jobs already cover.
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Assemble
+        run: ./gradlew assemble --stacktrace --info
+
+  # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
+  test-developer:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Run developer tests
+        run: ./gradlew test -PtestSuite=developer --stacktrace --info
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-developer
+          path: '**/build/reports/tests/test/**'
+
+  # Integration tests: test classes named *IT — shipped-artifact smoke tests and the timing-based
+  # performance guards. Runs at the same time as the developer tests, from the identical setup.
+  test-integration:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Run integration tests
+        run: ./gradlew test -PtestSuite=integration --stacktrace --info
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-integration
+          path: '**/build/reports/tests/test/**'
+
+  # Single gate name for everything downstream: the pipeline continues only when BOTH suites are green.
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - test-developer
+      - test-integration
+    steps:
+      - name: Both test suites passed
+        run: echo "Developer and integration tests are green."
+
+  # Verify that the freshly built plugin can actually be signed with the signing material
+  # currently stored in the repository secrets — so a broken/expired certificate or a wrong
+  # password is caught on every push instead of only failing the real release.
+  verify-signing:
+    runs-on: ubuntu-latest
+    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
+    needs: tests
+    # Secrets are not exposed to pull requests coming from forks; only run where they exist.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Check signing secrets presence
+        id: secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Signing secrets (KEYSTORE_BASE64 / KEYSTORE_PASSWORD / KEY_ALIAS) not configured — skipping signability check."
+          fi
+
+      # Secrets touch the environment only in this trusted printf-only step; the Gradle/signer
+      # process below gets just file paths (umask 077 keeps the files private).
+      - name: Write signing material
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.p12"
+          printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
+
+      - name: Build and sign the plugin (signability check)
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/keystore.p12
+          KEYSTORE_PASSWORD_FILE: ${{ runner.temp }}/keystore.pass
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: ./gradlew signPlugin --stacktrace --info
+
+  # Build the docs as a generation test (mkdocs --strict) on every push and PR.
+  # Verification only — the gh-pages site is updated solely by tag releases
+  # (see release.yml). No deployment happens from this workflow.
+  validate-docs:
+    runs-on: ubuntu-latest
+    # Gated on the tests, like every other downstream job.
+    needs: tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+
+      - name: Pip Update
+        run: pip install --upgrade pip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build docs
+        run: ./gradlew buildDocs --stacktrace --info

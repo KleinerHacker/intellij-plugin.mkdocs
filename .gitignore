@@ -1,21 +1,14 @@
 .gradle
-**/build/
+.idea
+.intellijPlatform
+.claude
+.kotlin
+# Gradle build output. The trailing-slash pattern matches any directory named "build",
+# so re-include a `build` Kotlin *source package* should one ever live under src/.
+build/
 !**/src/**/build/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Avoid ignore Gradle wrappper properties
-!gradle-wrapper.properties
-
-# Cache of project
-.gradletasknamecache
-
-# Eclipse Gradle plugin generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+docs/site
+docs/docs/dokka
+docs/docs/licences
+# Local plugin signing material (private key must never be committed)
+/.signing

@@ -1,0 +1,28 @@
+name: Set up Gradle build environment
+description: >-
+  Installs the JDK, restores the Gradle cache and compiles the test classes. Shared by the developer-test
+  and integration-test jobs so both provably start from identical preconditions — with the steps duplicated
+  per job they would drift apart over time, and GitHub Actions has no YAML anchors to prevent that.
+
+  The repository checkout is NOT part of this action: a local action can only be resolved once the
+  repository is already on disk, so the calling job must run actions/checkout first.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: '25'
+        cache: gradle
+
+    - name: Make Gradle wrapper executable
+      run: chmod +x ./gradlew
+      shell: bash
+
+    # Compile once here so a compilation failure is reported as such, instead of surfacing
+    # identically in both test jobs.
+    - name: Compile test classes
+      run: ./gradlew testClasses --stacktrace --info
+      shell: bash
