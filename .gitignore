@@ -1,7 +1,6 @@
 .gradle
 .idea
 .intellijPlatform
-.claude
 .kotlin
 # Gradle build output. The trailing-slash pattern matches any directory named "build",
 # so re-include a `build` Kotlin *source package* should one ever live under src/.
