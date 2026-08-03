@@ -2,10 +2,10 @@
 name: features
 ---
 
-# Features in MKDocs modules
+# Features in MkDocs modules
 
-* Each feature must be auto-detected if `mkdocs.yaml` is present in the module directory and or this file was updated.
-* Features can be added by UI, in this case the `mkdocs.yaml` file must be updated by IDE.
+* Each feature MUST be auto-detected if `mkdocs.yml` is present in the module directory and/or that file has been updated.
+* Features can be added via the UI; in that case the `mkdocs.yml` file MUST be updated by the IDE.
 
 ## Angular Material Feature
 
@@ -19,7 +19,7 @@ name: features
 
 * Extension for Mike (complex extension)
 
-## General IDE feature extensions by activating the given features above
+## General IDE extensions enabled by activating the features above
 
-* Extends YAML support (intelligence, completion and annotation) for `mkdocs.yaml` for special feature
-* Extends file detection in MKDocs module folders
+* Extends YAML support (intelligence, completion and annotation) in `mkdocs.yml` for the given feature
+* Extends file detection in MkDocs module folders

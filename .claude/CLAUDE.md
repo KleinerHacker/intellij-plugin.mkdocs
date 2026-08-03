@@ -74,7 +74,7 @@
 
 ### External Documentation
 
-* All MKDocs documentation is available here: `https://jrsoftware.org/ishelp/`
+* All MkDocs documentation is available here: `https://www.mkdocs.org/`
 
 ## Planning
 
@@ -95,7 +95,7 @@
   * The status MUST ALWAYS be kept up to date
 * When restarting an existing plan after an interruption, plan mode MUST be entered
   * The remaining items are laid out again according to the prescribed scheme
-* After plan is finished cleanup `.claude\plans` folder
+* After a plan is finished, clean up the `.claude\plans` folder
 
 ## Implementation
 
@@ -141,16 +141,16 @@
 
 ## Limiting search
 
-* NEVER decompile or reflect depending third party class
+* NEVER decompile or reflect on third-party classes the project depends on
   * If this is required, ask the user first
 
 # Claude Code
 
 ## Console / CLI Output
 
-* On Console or in CLI: MUST ALWAYS in GERMANY
-* Plans printed on Console MUST ALWAYS in GERMANY
+* On the console or in the CLI: output MUST ALWAYS be in GERMAN
+* Plans printed on the console MUST ALWAYS be in GERMAN
 
 ## File Output
 
-* Into files: MUST ALWAYS in ENGLISH
+* Into files: content MUST ALWAYS be in ENGLISH

@@ -4,9 +4,9 @@ name: module
 
 # Module System for MKDocs
 
-Each MKDocs system requires a registered IntelliJ Module. The Module is detected by `mkdocs.yaml` in this folder.
+Each MkDocs system requires a registered IntelliJ module. The module is detected by the `mkdocs.yml` file in its folder.
 
 ## Auto-detect modules
 
-A module must autodetect by `mkdocs.yaml`. The module name is inherited from the `site_name` property. It must
-be checked after each Virtual File System change / update.
+A module MUST be auto-detected via `mkdocs.yml`. The module name is derived from the `site_name` property. Detection
+MUST be re-checked after each Virtual File System change / update.
