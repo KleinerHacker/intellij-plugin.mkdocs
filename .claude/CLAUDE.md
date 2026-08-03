@@ -95,6 +95,7 @@
   * The status MUST ALWAYS be kept up to date
 * When restarting an existing plan after an interruption, plan mode MUST be entered
   * The remaining items are laid out again according to the prescribed scheme
+* After plan is finished cleanup `.claude\plans` folder
 
 ## Implementation
 
