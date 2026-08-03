@@ -1,122 +1,155 @@
-# Globale Regeln
+# Global Rules
 
-## Programmierung
+## Programming
 
-* Es wird IMMER Kotlin verwendet
-* Es wird IMMER Gradle verwendet
+* Kotlin MUST ALWAYS be used
+* Gradle MUST ALWAYS be used
 
-## Struktur
+## Structure
 
-* Root Paket ist IMMER `org.pcsoft.ij.plugin.mkdocs`
-* Darunter befinden sich jeweils spezialisierte Pakete für:
-  * `services` - Injectable Services (IntelliJ Platform)
-  * `types` - Allgemeine Typen
-  * `settings` - Einstellungsfeatures, Einstellungsseiten, ...
-  * `build` - Alles rund um das Bauen von MKDocs, z. B. Run Config, Building, ...
-* Bei Abweichungen MUSS der Nutzer gefragt werden
+* The root package is ALWAYS `org.pcsoft.intellij.plugin.mkdocs`
+* Below that there are specialized packages for:
+  * `services` - Injectable services (IntelliJ Platform)
+  * `types` - General types
+  * `settings` - Settings features, settings pages, ...
+  * `build` - Everything around building MKDocs, e.g. run config, building, ...
+* For any deviation the user MUST be asked
 
-## Bauen
+## Building
 
-* Es MUSS immer ein Build erfolgen mit dem Gradle Ziel `build` nach jeder Änderung
-* Es MUSS immer ein Plugin Verify erfolgen mit dem Gradle Ziel `verifyPlugin` nach jeder Änderung
-  * Die Verifizierung MUSS fehlerfrei durchlaufen, DARF aber Warnungen enthalten
-  * Wird eine Warnung für DEPRECATION oder REMOVAL erfasst, MUSS eine Anpassung des Codes erfolgen
-  * Wird ein Fehler festgestellt, MUSS eine Anpassung des Codes erfolgen
-  * Sind die o. g. Fälle nicht reparierbar, MUSS der Benutzer gefragt werden, was zu tun ist, mit einer Liste erarbeiteter Lösungsvorschläge
+* A build MUST always be performed with the Gradle target `build` after every change
+* A plugin verification MUST always be performed with the Gradle target `verifyPlugin` after every change
+  * The verification MUST pass without errors, but MAY contain warnings
+  * If a DEPRECATION or REMOVAL warning is reported, the code MUST be adjusted
+  * If an error is detected, the code MUST be adjusted
+  * If the cases above cannot be fixed, the user MUST be asked what to do, together with a list of prepared solution proposals
 
-## Testen
+## Testing
 
-* Es MUSS das IntelliJ Plugin Test System genutzt werden
-* Es MUSS jeder Anwendungsfall getestet werden
-* Die Code Coverage sollte mindestens 90% erreichen, optimaler Weise 100%, wenn möglich
-* Die Paketstruktur aus dem produktiven Code ist zu spiegeln
-* Der Test ist in zwei Kategorien zu unterteilen
-  * **Developer Tests** - einfache Unit Tests zum Testen einzelner Funktionalitäten
-  * **Integrationstests** - Test, die vollumfängliche Funktionen testen oder auf Performance aus sind
+* The IntelliJ plugin test system MUST be used
+* Every use case MUST be tested
+* Code coverage should reach at least 90%, ideally 100% where possible
+* The package structure of the production code is to be mirrored
+* Tests are to be split into two categories
+  * **Developer tests** - Simple unit tests covering individual pieces of functionality
+  * **Integration tests** - Tests covering complete features or aiming at performance
 
-## Dokumentation
+## Documentation
 
 ### Code
 
-* JEDER öffentliche Member in JEDER Quellcode Datei (außer automatisch erzeugter Quellcodedateien) ist mittels KDocs zu dokumentieren
-* JEDE Test Methode ist mit einem ausführlichen KDoc zum Anwendungsfall zu dokumentieren
+* EVERY public member in EVERY source file (except automatically generated source files) is to be documented with KDoc
+* EVERY test method is to be documented with a detailed KDoc describing the use case
 
 ### Readme
 
-* Es MUSS eine Anleitung existieren, wie das Projekt auszuchecken ist und zu bauen und starten ist
-* JEDES Feature muss in einem Anstrich dokumentiert sein
-* Es MUSS eine Anleitung zur Einbindung der Artefakte existieren
-* Es MUSS ein kurzer Abriss über das "WAS" des Projekts existieren
-* Es MUSS ein Verweis auf MKDocs Doku (gh-pages), API Doku und Lizenz-Report enthalten sein
-* Die Readme MUSS automatisch nach Änderungen geprüft und angepasst werden, wenn erforderlich
+* There MUST be instructions on how to check out, build and run the project
+* EVERY feature must be documented in a bullet point
+* There MUST be instructions on how to consume the artifacts
+* There MUST be a short outline of the "WHAT" of the project
+* There MUST be a reference to the MkDocs documentation (gh-pages), the API documentation and the licence report
+* The readme MUST be checked automatically after changes and adjusted if required
 
-### MKDocs
+### MkDocs
 
-* Es MUSS MKDocs eingebunden sein unter `docs`
-* Struktur:
-  * `docs/mkdocs.yml` - Stammdatei
-  * `docs/docs` - *.MD Dateien
-  * `docs/assets` - weitere Asset Dateien
-* Die Dokumentation MUSS nach jeder Änderung geprüft und ggf. angepasst werden
+* MkDocs MUST be integrated under `docs`
+* Structure:
+  * `docs/mkdocs.yml` - Root file
+  * `docs/docs` - *.MD files
+  * `docs/docs/assets` - Further asset files (MUST reside inside `docs_dir` so that MkDocs ships them)
+  * `docs/docs/stylesheets` - Additional CSS files
+* The documentation MUST be checked after every change and adjusted if necessary
 
 ### CHANGELOG.md
 
-* Es MUSS eine Änderungsdatei enthalten sein
-* Diese MUSS nach einer Änderung mit den erfolgten Änderungen aktualisiert werden
-  * Die Änderungen MÜSSEN für den Nutzer ersichtlich sein, sonst DÜRFEN diese NICHT in das Changelog wandern
-* Das vorgegebene Format MUSS eingehalten werden
-  * Neuerungen MÜSSEN unter `[UNRELEASED]`
+* A change file MUST be present
+* It MUST be updated with the applied changes after a change
+  * The changes MUST be visible to the user, otherwise they MUST NOT go into the changelog
+* The prescribed format MUST be kept
+  * New entries MUST go under `[UNRELEASED]`
 
 ### STATUS.md
 
-* Es MUSS der aktuelle Umsetzungsstatus gegenüber der MKDocs Dokumentation und existierenden Erweiterungen hier festgehalten werden
+* The current implementation status against the MKDocs documentation MUST be recorded here
 
-### Externe Dokumentation
+### External Documentation
 
-* Jegliche MKDocs Dokumentation ist hier enthalten: `[https://jrsoftware.org/ishelp/](https://www.mkdocs.org/user-guide/)`
+* All MKDocs documentation is available here: `https://jrsoftware.org/ishelp/`
 
-## Planung
+## Planning
 
-* Bei JEDER Änderung MUSS ein Plan erstellt werden
-  * Ein Wechsel zum Plan Modus MUSS erfolgen
-* Der PLAN DARF KEINE Zusammenfassung oder Erklärung der Änderungen enthalten
-* DieUmsetzungstasks MÜSSEN in kurzen Anstrichen mit nicht mehr als 20 Worten pro Anstrich und max. 10 Anstrichen pro Task erklärt werden
-* Der Plan MUSS in das lokale `.claude/plans` Verzeichnis geschrieben werden, zusammen mit einer Statusdatei
-  * Namensschema: 
+* A plan MUST be created for EVERY change
+  * A switch to plan mode MUST happen
+* The PLAN MUST ALWAYS be written in GERMAN - both the plan file and the console output
+  * This applies to headings, bullet points and every other text of the plan
+* The PLAN MUST NOT contain a summary or explanation of the changes
+  * FORBIDDEN sections: "Context", "Background", "Summary", "Overview", "Rationale", "Trade-offs"
+  * FORBIDDEN: prose paragraphs of any kind - the plan consists of bullet points ONLY
+* The implementation tasks MUST be explained in short bullet points with no more than 20 words per bullet and a maximum of 10 bullets per task
+  * A bullet describes WHAT is done, NOT WHY
+* Before leaving plan mode the plan MUST be checked against ALL rules above
+* The plan MUST be written into the local `.claude/plans` directory, together with a status file
+  * Naming scheme:
     * Plan: `<Name>.md`
     * Status: `<Name>-status.md`
-  * Der Status MUSS IMMER aktuell gehalten werden
-* Bei Neustart eines bestehenden Plans nach Unterbrechung MUSS in den Plan Modus gewechselt werden
-  * Die noch umzusetzenden Punkte werden nach vorgegeben Schema erneut dargelegt
+  * The status MUST ALWAYS be kept up to date
+* When restarting an existing plan after an interruption, plan mode MUST be entered
+  * The remaining items are laid out again according to the prescribed scheme
 
-## Implementierung
+## Implementation
 
-* Alle Änderungen in einer einzelnen Datei MÜSSEN mit einem Mal (einem Schreibvorgang) erfolgen
+* All changes to a single file MUST be applied at once (in a single write operation)
+
+## Concurrency
+
+* Concurrent or long running processes (e.g. `build`, `test`, `verifyPlugin`, `koverXmlReport`)
+  MUST ALWAYS be executed through an agent (Task tool)
+  * NOT through a background command of the shell
+  * The agent returns the result; only the result is reported
 
 ## GIT
 
-* Alle Änderungen erfolgen über GIT:
-  * Umbenennung / Verschiebung: `git mv`
-  * Löschen: `git rm`
-  * Erstellen: nach Erstellung mit `git add` hinzufügen
-* Es DÜRFEN NIE Commits, Pushes, Pulls oder sonst welche Aktionen, die mit dem Git Server kommunizieren, aufgerufen werden.
-  * Sollte es erforderlich sein, MUSS der Nutzer gefragt werden
+* All changes are made through GIT:
+  * Rename / move: `git mv`
+  * Delete: `git rm`
+  * Create: add with `git add` after creation
+* Commits, pushes, pulls or any other actions communicating with the Git server MUST NEVER be invoked.
+  * Should it be required, the user MUST be asked
+* Exceptions:
+  * NEVER add plans or plan status
+  
 
-### Zielumgebung
+### Target Environment
 
-* Es MUSS GitHub verwendet werden
-* Alle Dateien rund um GitHub befinden sich in `.github`
-* Bei tieferen Änderungen in Strukturen MUSS die Pipeline geprüft und ggf. angepasst werden
+* GitHub MUST be used
+* All files around GitHub reside in `.github`
+* For deeper structural changes the pipeline MUST be checked and adjusted if necessary
 
 #### Pipeline
 
-* Es MUSS eine Pipeline für den regelmäßigen Bau geben in `ci.yml`
-  * Diese enthält: [Bauen] Bauen -> Testen -> Plugin Verifizieren, [Verifizieren] Lizenzen / Signatur / MKDocs Bauen und Verifizieren
-  * `Bauen` und `Verifizieren` MUSS parallel abgearbeitet werden, alles in `Verifizieren` MUSS auch parallel erfolgen
-* Es MUSS eine Pipeline für ein Tag basiertes Release geben mit dem Namen `release.yml`
-  * Diese enthält: [Changelog] Verifizieren auf Version -> ([Bauen] Bauen -> Testen -> Plugin Verifizieren, [Verifizieren] Lizenzen verifizieren / Signatur erstellen, [MKDocs] Bauen -> Deployen, [Release] Artefakte pushen / Zu Market Place deployen -> Release schreiben)
-  * `Changelog` erfolgt zu erst
-  * `Bauen`, `Verifizieren`, `MKDocs` parallel danach
-    * `Verifizieren` in sich auch parallel
-  * `Release` zum Schluss
-    * Deployment Fehler MÜSSEN ignoriert werden, aber als Warnung angezeigt
+* There MUST be a pipeline for the regular build in `ci.yml`
+  * It contains: [Build] Build -> Test -> Verify plugin, [Verify] Licences / Signature / Build and verify MkDocs
+  * `Build` and `Verify` MUST be processed in parallel; everything within `Verify` MUST also run in parallel
+* There MUST be a pipeline for a tag based release named `release.yml`
+  * It contains: [Changelog] Verify against version -> ([Build] Build -> Test -> Verify plugin, [Verify] Verify licences / Create signature, [MkDocs] Build -> Deploy, [Release] Push artifacts / Deploy to marketplace -> Write release)
+  * `Changelog` runs first
+  * `Build`, `Verify`, `MkDocs` in parallel afterwards
+    * `Verify` internally in parallel as well
+  * `Release` at the end
+    * Deployment errors MUST be ignored, but shown as a warning
+
+## Limiting search
+
+* NEVER decompile or reflect depending third party class
+  * If this is required, ask the user first
+
+# Claude Code
+
+## Console / CLI Output
+
+* On Console or in CLI: MUST ALWAYS in GERMANY
+* Plans printed on Console MUST ALWAYS in GERMANY
+
+## File Output
+
+* Into files: MUST ALWAYS in ENGLISH
