@@ -22,13 +22,33 @@
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-    <depends>org.jetbrains.kotlin</depends>
+    <!-- No dependency on org.jetbrains.kotlin: the plugin is *written* in Kotlin, which needs nothing but the
+         platform-bundled stdlib at runtime. Declaring the Kotlin IDE plugin would make the plugin
+         unloadable in Rider, CLion and GoLand, which do not ship it. -->
     <depends>org.jetbrains.plugins.yaml</depends>
     <depends>com.intellij.modules.json</depends>
 
 
+    <!-- Message bundle for every user visible text. -->
+    <resource-bundle>messages.MkDocsBundle</resource-bundle>
+
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <!-- The MkDocs module system: the directory above an mkdocs.yml becomes an MkDocs module, which is
+             represented by this facet. Optional MkDocs features are meant to be added later as facets
+             declaring "mkdocs" as their underlying facet type. -->
+        <facetType implementation="org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetType"/>
+
+        <!-- Initial detection when a project is opened … -->
+        <postStartupActivity implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsStartupActivity"/>
+        <!-- … and re-detection after every relevant virtual file system change. -->
+        <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsVfsListener"/>
+
+        <!-- Shows the site name behind the site root directory in the project view and badges its icon. -->
+        <projectViewNodeDecorator implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsProjectViewDecorator"/>
+
+        <!-- Gives mkdocs.yml / mkdocs.yaml its own icon instead of the generic YAML one. -->
+        <fileIconProvider implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsFileIconProvider"/>
     </extensions>
 </idea-plugin>

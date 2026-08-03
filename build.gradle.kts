@@ -11,6 +11,7 @@
  */
 
 import com.github.jk1.license.render.ReportRenderer
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.SignPluginTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -59,6 +60,18 @@ intellijPlatform {
         // Release-time changelog injection is wired separately; keep patchPluginXml off the changelog
         // provider so it stays configuration-cache friendly.
         changeNotes = provider { "" }
+    }
+
+    // Authoritative IDE matrix for `verifyPlugin` (see .claude/rules/plugin-verification.md). The version is
+    // always read from the catalog so the verified IDEs can never drift away from the platform the plugin is
+    // compiled against — bumping `idea` in libs.versions.toml bumps all of them at once.
+    pluginVerification {
+        ides {
+            create(IntelliJPlatformType.IntellijIdea, libs.versions.idea.get())
+            create(IntelliJPlatformType.Rider, libs.versions.idea.get())
+            create(IntelliJPlatformType.CLion, libs.versions.idea.get())
+            create(IntelliJPlatformType.GoLand, libs.versions.idea.get())
+        }
     }
 
     signing {
@@ -119,7 +132,7 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
 
         // Plugin dependencies for compilation — these mirror the <depends> entries in plugin.xml.
-        bundledPlugin("org.jetbrains.kotlin")
+        // Deliberately NOT org.jetbrains.kotlin: see the comment in plugin.xml.
         bundledPlugin("com.intellij.modules.json")
         bundledPlugin("org.jetbrains.plugins.yaml")
 

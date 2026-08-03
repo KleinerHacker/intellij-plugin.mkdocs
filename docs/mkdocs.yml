@@ -55,5 +55,6 @@ theme:
 
 nav:
   - Home: index.md
+  - Modules: modules.md
   - API Docs: dokka/html/index.html
   - Licences: licences/index.html

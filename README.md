@@ -6,6 +6,20 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 
 📖 **Documentation:** <https://kleinerhacker.github.io/intellij-plugin.mkdocs/>
 
+## Features
+
+- **Automatic module detection** — the directory above an `mkdocs.yml` / `mkdocs.yaml` is recognised as an
+  MkDocs module and marked with the *MkDocs* facet, visible in *Project Structure → Facets*.
+- The module name is taken from `site_name`, falling back to the directory name.
+- Detection re-runs after every relevant change to the virtual file system, so adding, renaming or deleting a
+  configuration file is picked up without a reload.
+- A module of its own is created only for a site that belongs to no module at all; otherwise the surrounding
+  module is used, which keeps Gradle and Maven imports untouched.
+- **Marked in the project view** — the site root directory shows its `site_name` in brackets behind the
+  directory name, like a Maven project directory, and its folder icon carries a small MkDocs badge.
+- **Own file icon** — `mkdocs.yml` / `mkdocs.yaml` is shown with a dedicated MkDocs icon instead of the
+  generic YAML one, everywhere the IDE renders it.
+
 ## Project structure
 
 Single-project Gradle build — the root project *is* the publishable plugin.
