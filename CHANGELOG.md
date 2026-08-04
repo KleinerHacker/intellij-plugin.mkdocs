@@ -14,6 +14,9 @@
   directory name and the folder icon carries a small MkDocs badge. The colour of the site name comes from a
   dedicated colour scheme entry and follows light and dark themes.
 - `mkdocs.yml` / `mkdocs.yaml` gets its own icon instead of the generic YAML one.
+- The MkDocs facet can no longer be added by hand in the Project Structure dialog — it is assigned by the
+  detection only. A facet that reaches a module without a configuration file behind it now reports an error
+  in its tab instead of showing empty fields.
 
 ### Fixed
 

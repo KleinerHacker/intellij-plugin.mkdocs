@@ -9,7 +9,9 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 ## Features
 
 - **Automatic module detection** — the directory above an `mkdocs.yml` / `mkdocs.yaml` is recognised as an
-  MkDocs module and marked with the *MkDocs* facet, visible in *Project Structure → Facets*.
+  MkDocs module and marked with the *MkDocs* facet, visible in *Project Structure → Facets*. The facet is
+  assigned by the detection only — it cannot be added by hand, and a facet without a configuration file
+  behind it reports an error.
 - The module name is taken from `site_name`, falling back to the directory name.
 - Detection re-runs after every relevant change to the virtual file system, so adding, renaming or deleting a
   configuration file is picked up without a reload.

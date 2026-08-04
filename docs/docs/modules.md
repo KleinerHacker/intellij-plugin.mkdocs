@@ -35,10 +35,18 @@ A detected module is marked with the **MkDocs** facet. You can see it in
 | Field              | Meaning                                                      |
 |--------------------|--------------------------------------------------------------|
 | Site name          | `site_name` from the configuration file                      |
-| Configuration file | the detected file, relative to the module root               |
+| Configuration file | the detected file, relative to the site root                  |
 
 Both values are read-only: the configuration file is the single source of truth. Change `site_name` in
 `mkdocs.yml` and the facet follows.
+
+For the same reason the facet cannot be assigned by hand — it is not offered in the "+" menu of the
+Project Structure dialog. A facet without a configuration file behind it would carry no site information
+and would be removed again by the next detection run. To turn a directory into an MkDocs module, put an
+`mkdocs.yml` into it; the facet appears on its own.
+
+Should a facet without a configuration file reach a module anyway — through a hand-edited or merged `.iml`
+file — its tab reports an error instead of showing empty fields.
 
 ## In the project view
 

@@ -44,10 +44,17 @@ class MkDocsFacetType : FacetType<MkDocsFacet, MkDocsFacetConfiguration>(
     ): MkDocsFacet = MkDocsFacet(module, name, configuration, underlyingFacet)
 
     /**
-     * An MkDocs site can live inside any kind of module — a plain documentation folder, a Gradle module, a
-     * Rider project — so no module type is excluded.
+     * Always `false`, which removes MkDocs from the facet list offered by the Project Structure dialog.
+     *
+     * The facet is not something the user configures: it mirrors the MkDocs configuration file found on disk
+     * and is created, updated and dropped by
+     * [org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService]. A hand-added facet would carry no site
+     * information at all and would be removed again by the very next detection run, so it is not offered in
+     * the first place. Creating the facet programmatically is unaffected by this method.
+     *
+     * An MkDocs site may still live inside any kind of module — no module type is excluded anywhere else.
      */
-    override fun isSuitableModuleType(moduleType: ModuleType<*>?): Boolean = true
+    override fun isSuitableModuleType(moduleType: ModuleType<*>?): Boolean = false
 
     override fun getIcon(): Icon = MkDocsIcons.MkDocs
 }

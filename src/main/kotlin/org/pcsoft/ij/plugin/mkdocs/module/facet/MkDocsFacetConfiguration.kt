@@ -79,5 +79,5 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
     override fun createEditorTabs(
         editorContext: FacetEditorContext,
         validatorsManager: FacetValidatorsManager,
-    ): Array<FacetEditorTab> = arrayOf(MkDocsFacetEditorTab(this))
+    ): Array<FacetEditorTab> = arrayOf(MkDocsFacetEditorTab(this, editorContext, validatorsManager))
 }
