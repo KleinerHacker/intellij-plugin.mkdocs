@@ -19,8 +19,10 @@ import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.LayeredIcon
+import com.intellij.ui.SimpleTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import javax.swing.Icon
 import javax.swing.SwingConstants
@@ -69,7 +71,15 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
         val module = ModuleUtilCore.findModuleForFile(virtualFile, project) ?: return
         val siteName = MkDocsFacet.getInstance(module)?.configuration?.siteName?.takeIf { it.isNotBlank() } ?: return
 
-        data.locationString = siteName
+        // Once a coloured fragment is added the plain presentable text is no longer rendered, so the
+        // directory name has to become the first fragment itself.
+        if (data.coloredText.isEmpty()) {
+            data.addText(data.presentableText ?: directory.name, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+        }
+        data.addText(
+            " [$siteName]",
+            MkDocsTextAttributes.asSimpleTextAttributes(MkDocsTextAttributes.SiteName),
+        )
         data.getIcon(false)?.let { data.setIcon(withBadge(it)) }
     }
 }

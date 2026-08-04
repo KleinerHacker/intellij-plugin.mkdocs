@@ -44,13 +44,16 @@ Both values are read-only: the configuration file is the single source of truth.
 
 The site root is marked wherever it appears in the project view:
 
-- the site name is shown in brackets behind the directory name — exactly the way a Maven project directory
-  is rendered, so a site is recognisable without opening anything, and
+- the site name is shown bold in brackets behind the directory name — exactly the way a Maven project
+  directory is rendered, so a site is recognisable without opening anything, and
 - the folder icon carries a small MkDocs badge in its lower right corner.
 
 The name in brackets is the `site_name` stored in the MkDocs facet, so it changes as soon as the
 configuration file does. Only the site root itself is marked, never the directories below it, and never a
 directory whose module has not been detected yet.
+
+The colour of the name comes from the colour scheme entry `MKDOCS_SITE_NAME`, which ships with a value for
+light themes and one for dark themes, so the marking stays readable in either.
 
 The configuration file itself carries a dedicated MkDocs icon instead of the generic YAML one — in the
 project view, in editor tabs and in navigation popups alike. Its file type stays YAML, so all YAML support

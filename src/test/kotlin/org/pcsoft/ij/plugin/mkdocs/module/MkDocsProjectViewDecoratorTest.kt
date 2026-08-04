@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.LayeredIcon
+import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 
@@ -48,8 +49,22 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
 
-        assertEquals("My Documentation", data.locationString)
+        assertEquals("[My Documentation]", siteFragment(data))
         assertTrue("expected the folder icon to be badged", data.getIcon(false) is LayeredIcon)
+    }
+
+    /**
+     * Use case: the directory name must survive the decoration. As soon as a coloured fragment exists the
+     * platform stops rendering the plain presentable text, so the name has to be the first fragment.
+     */
+    fun `test keeps the directory name in front of the site name`() {
+        val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
+        MkDocsModuleService.getInstance(project).sync()
+
+        val data = presentationWithFolderIcon().apply { presentableText = "docs" }
+        decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
+
+        assertEquals("docs [My Documentation]", data.coloredText.joinToString("") { it.text })
     }
 
     /**
@@ -65,7 +80,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(other.virtualFile.parent), data)
 
-        assertNull(data.locationString)
+        assertEmpty(data.coloredText)
         assertSame(AllIcons.Nodes.Folder, data.getIcon(false))
     }
 
@@ -80,7 +95,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf<PsiFile>(configFile), data)
 
-        assertNull(data.locationString)
+        assertEmpty(data.coloredText)
     }
 
     /**
@@ -95,7 +110,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
 
-        assertNull(data.locationString)
+        assertEmpty(data.coloredText)
     }
 
     /**
@@ -110,7 +125,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
 
-        assertNull(data.locationString)
+        assertEmpty(data.coloredText)
     }
 
     /**
@@ -124,8 +139,25 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         val data = PresentationData()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
 
-        assertEquals("My Documentation", data.locationString)
+        assertEquals("[My Documentation]", siteFragment(data))
         assertNull(data.getIcon(false))
+    }
+
+    /**
+     * Use case: the site name fragment is rendered with the plugin's own text attribute, which is defined in
+     * the colour scheme files and therefore adapts to a light or dark theme.
+     */
+    fun `test renders the site name with the plugin text attribute`() {
+        val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
+        MkDocsModuleService.getInstance(project).sync()
+
+        val data = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
+
+        val expected = MkDocsTextAttributes.asSimpleTextAttributes(MkDocsTextAttributes.SiteName)
+        val actual = data.coloredText.last().attributes
+        assertEquals(expected.style, actual.style)
+        assertEquals(expected.fgColor, actual.fgColor)
     }
 
     /**
@@ -140,6 +172,10 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
             model.commit()
         }
     }
+
+    /** Returns the trimmed text of the last coloured fragment, i.e. the fragment carrying the site name. */
+    private fun siteFragment(data: PresentationData): String? =
+        data.coloredText.lastOrNull()?.text?.trim()
 
     private fun presentationWithFolderIcon(): PresentationData =
         PresentationData().apply { setIcon(AllIcons.Nodes.Folder) }

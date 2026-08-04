@@ -1,5 +1,8 @@
 # Global Rules
 
+* All changes to a single file MUST be applied at once (in a single write operation)
+* If you try to do any action outside all described rules, the user MUST be asked what to do, together with a list of prepared solution proposals
+
 ## Programming
 
 * Kotlin MUST ALWAYS be used
@@ -97,10 +100,6 @@
 * When restarting an existing plan after an interruption, plan mode MUST be entered
   * The remaining items are laid out again according to the prescribed scheme
 * After a plan is finished, clean up the `.claude\plans` folder
-
-## Implementation
-
-* All changes to a single file MUST be applied at once (in a single write operation)
 
 ## Concurrency
 

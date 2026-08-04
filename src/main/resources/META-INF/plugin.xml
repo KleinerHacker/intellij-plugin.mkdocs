@@ -50,5 +50,9 @@
 
         <!-- Gives mkdocs.yml / mkdocs.yaml its own icon instead of the generic YAML one. -->
         <fileIconProvider implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsFileIconProvider"/>
+
+        <!-- Colors of the plugin's own text attributes, for light and for dark themes. -->
+        <additionalTextAttributes scheme="Default" file="colorSchemes/MkDocsDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/MkDocsDarcula.xml"/>
     </extensions>
 </idea-plugin>

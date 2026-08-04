@@ -10,8 +10,9 @@
   module and marked with the new *MkDocs* facet.
 - The module name is derived from `site_name`, falling back to the directory name.
 - Detection re-runs automatically after relevant virtual file system changes.
-- The site root directory is marked in the project view: the site name is shown in brackets behind the
-  directory name and the folder icon carries a small MkDocs badge.
+- The site root directory is marked in the project view: the site name is shown bold in brackets behind the
+  directory name and the folder icon carries a small MkDocs badge. The colour of the site name comes from a
+  dedicated colour scheme entry and follows light and dark themes.
 - `mkdocs.yml` / `mkdocs.yaml` gets its own icon instead of the generic YAML one.
 
 ### Fixed

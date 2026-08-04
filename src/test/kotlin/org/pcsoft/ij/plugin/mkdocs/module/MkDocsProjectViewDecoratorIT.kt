@@ -47,7 +47,7 @@ class MkDocsProjectViewDecoratorIT : HeavyPlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.parent), data)
 
-        assertEquals("Handbook", data.locationString)
+        assertEquals("[Handbook]", siteFragment(data))
         assertTrue("expected the folder icon to be badged", data.getIcon(false) is LayeredIcon)
     }
 
@@ -65,8 +65,8 @@ class MkDocsProjectViewDecoratorIT : HeavyPlatformTestCase() {
         val referenceData = presentationWithFolderIcon()
         decorator.decorate(nodeOf(reference.parent), referenceData)
 
-        assertEquals("Guide", guideData.locationString)
-        assertEquals("Reference", referenceData.locationString)
+        assertEquals("[Guide]", siteFragment(guideData))
+        assertEquals("[Reference]", siteFragment(referenceData))
     }
 
     /**
@@ -84,9 +84,13 @@ class MkDocsProjectViewDecoratorIT : HeavyPlatformTestCase() {
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(siteRoot), data)
 
-        assertNull(data.locationString)
+        assertEmpty(data.coloredText)
         assertSame(AllIcons.Nodes.Folder, data.getIcon(false))
     }
+
+    /** Returns the trimmed text of the last coloured fragment, i.e. the fragment carrying the site name. */
+    private fun siteFragment(data: PresentationData): String? =
+        data.coloredText.lastOrNull()?.text?.trim()
 
     private fun createConfig(relativePath: String, text: String): VirtualFile =
         VfsTestUtil.createFile(getOrCreateProjectBaseDir(), relativePath, text)
