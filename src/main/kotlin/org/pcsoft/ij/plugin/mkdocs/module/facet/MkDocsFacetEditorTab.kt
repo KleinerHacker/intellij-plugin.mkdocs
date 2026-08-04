@@ -27,6 +27,7 @@ import com.intellij.ui.dsl.builder.panel
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import javax.swing.JComponent
 
 /**
@@ -115,6 +116,12 @@ class MkDocsFacetEditorTab(
             row(MkDocsBundle.message("facet.mkdocs.field.configFile")) {
                 label(configuration.configFilePath)
             }
+            row(MkDocsBundle.message("facet.mkdocs.field.docsDir")) {
+                label(docsDirName())
+            }
+            row(MkDocsBundle.message("facet.mkdocs.field.assetsDir")) {
+                label(configuration.assetsDirName)
+            }
             row {
                 comment(MkDocsBundle.message("facet.mkdocs.hint"))
             }
@@ -130,6 +137,18 @@ class MkDocsFacetEditorTab(
 
     /** The tab never edits anything, so there is nothing that could become modified. */
     override fun isModified(): Boolean = false
+
+    /**
+     * Returns the documentation directory of the site, read from `docs_dir` of its configuration file.
+     *
+     * Falls back to the MkDocs default when the file cannot be read — the tab is informational, it must not
+     * fail because a configuration file is momentarily half-written.
+     */
+    private fun docsDirName(): String {
+        val configFile = findConfigFile(editorContext.module, configuration.configFilePath)
+            ?: return MkDocsProject.DEFAULT_DOCS_DIR
+        return runReadActionBlocking { MkDocsConfig.resolveDocsDir(editorContext.project, configFile) }
+    }
 
     /**
      * Reports an error while the module carries the facet without holding an MkDocs configuration file.

@@ -15,6 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.types
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -74,6 +75,49 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         assertEquals("handbook", resolveSiteName(file))
     }
 
+    /**
+     * Use case: a site points `docs_dir` at a directory of its own naming. The value has to be read as
+     * written — the project view marks exactly that directory as the documentation directory.
+     */
+    fun `test reads a configured documentation directory`() {
+        val file = configFile("docs/mkdocs.yml", "site_name: Handbook\ndocs_dir: sources\n")
+
+        assertEquals("sources", readDocsDir(file))
+        assertEquals("sources", resolveDocsDir(file))
+    }
+
+    /**
+     * Use case: the ordinary site without `docs_dir`. MkDocs falls back to `docs`, so the plugin has to do
+     * the same instead of marking nothing.
+     */
+    fun `test falls back to the default documentation directory`() {
+        val file = configFile("docs/mkdocs.yml", "site_name: Handbook\n")
+
+        assertNull(readDocsDir(file))
+        assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+    }
+
+    /**
+     * Use case: a half-written file makes the parser see a sequence behind `docs_dir`. The text of such a
+     * node is no usable directory name, so it must be refused rather than passed on.
+     */
+    fun `test refuses a non scalar documentation directory`() {
+        val file = configFile("docs/mkdocs.yml", "site_name: Handbook\ndocs_dir:\n  - one\n  - two\n")
+
+        assertNull(readDocsDir(file))
+        assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+    }
+
+    /**
+     * Use case: `docs_dir` is present but empty. An empty directory name is unusable, so the default applies.
+     */
+    fun `test falls back when the documentation directory is blank`() {
+        val file = configFile("docs/mkdocs.yml", "site_name: Handbook\ndocs_dir: \"   \"\n")
+
+        assertNull(readDocsDir(file))
+        assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+    }
+
     private fun configFile(path: String, text: String): VirtualFile =
         myFixture.addFileToProject(path, text).virtualFile
 
@@ -82,4 +126,10 @@ class MkDocsConfigTest : BasePlatformTestCase() {
 
     private fun resolveSiteName(file: VirtualFile): String =
         runReadActionBlocking { MkDocsConfig.resolveSiteName(project, file) }
+
+    private fun readDocsDir(file: VirtualFile): String? =
+        runReadActionBlocking { MkDocsConfig.readDocsDir(project, file) }
+
+    private fun resolveDocsDir(file: VirtualFile): String =
+        runReadActionBlocking { MkDocsConfig.resolveDocsDir(project, file) }
 }

@@ -16,6 +16,8 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Re-detection after virtual file system changes                  | ✅      |
 | Site root marked in the project view (site name + badge)        | ✅      |
 | Own file icon for `mkdocs.yml` / `mkdocs.yaml`                   | ✅      |
+| Documentation and assets directory marked in the project view   | ✅      |
+| Create a new site from the IDE (*New → MkDocs Site*)            | ✅      |
 | Tool window listing the detected sites                          | ⬜      |
 
 ## Configuration (`mkdocs.yml`)
@@ -24,20 +26,23 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 |-----------------------------------------------------------|--------|
 | `site_name`                                               | ✅      |
 | Schema-based completion and annotation of all other keys  | ⬜      |
-| `docs_dir` / `site_dir` awareness (file detection, excludes) | ⬜   |
+| `docs_dir` read and used (project view marking, site creation) | ✅   |
+| `site_dir` awareness (excludes)                           | ⬜      |
 | `nav` navigation (references, completion, validation)     | ⬜      |
 | `theme` (including `material`)                            | ⬜      |
 | `plugins` / `markdown_extensions`                         | ⬜      |
 
 ## Features (optional MkDocs extensions)
 
-Planned as facets stacked on the MkDocs facet.
+Planned as facets stacked on the MkDocs facet. The `siteFeature` extension point and the feature step of the
+creation wizard exist; no feature implements them yet.
 
-| Feature          | Status |
-|------------------|--------|
-| Angular Material | ⬜      |
-| I18N             | ⬜      |
-| Mike             | ⬜      |
+| Feature                                        | Status |
+|------------------------------------------------|--------|
+| `siteFeature` extension point and wizard step  | ✅      |
+| Angular Material                               | ⬜      |
+| I18N                                           | ⬜      |
+| Mike                                           | ⬜      |
 
 ## Build / run
 

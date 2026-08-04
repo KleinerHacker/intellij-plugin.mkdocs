@@ -22,6 +22,64 @@ Detection runs automatically:
 
 There is nothing to enable and nothing to import.
 
+## Creating a site
+
+A new site is created from the IDE: **New → MkDocs Site**, either from the context menu of a directory in
+the project view or from **File → New**.
+
+The wizard has two steps.
+
+**Step 1 — the site**
+
+| Field                   | Meaning                                                                  |
+|-------------------------|--------------------------------------------------------------------------|
+| Location                | the directory the site is created in; see below                          |
+| Site name               | written to `site_name`                                                   |
+| Documentation directory | holds the `*.md` files, default `docs`                                   |
+| Assets directory        | holds asset files, created inside the documentation directory, default `assets` |
+
+The location starts at the directory you invoked the action on and follows the site name as you type it, the
+same way the new project dialog does: entering *Handbook* below `~/projects` makes the location
+`~/projects/Handbook`. Whatever of the path does not exist yet is created along with the site, however many
+levels that takes. As soon as you edit the location yourself, it stops following the name — from then on the
+path is yours.
+
+The step reports what it finds at that location:
+
+| Situation                                        | Reaction                                        |
+|--------------------------------------------------|-------------------------------------------------|
+| The directory does not exist                     | nothing — it is created                         |
+| The directory exists and is empty                | nothing                                         |
+| The directory exists and holds other content     | a warning; the site is created alongside it     |
+| The directory holds `mkdocs.yml` / `mkdocs.yaml` | an error; creation is refused                   |
+
+The last case is refused because MkDocs loads exactly one configuration file per site — a second one next to
+it would be ignored and would confuse the module detection.
+
+**Next** stays greyed out as long as the step cannot produce a site: no site name, an unusable location, an
+empty or path-carrying directory name, or a directory that already holds a configuration file.
+
+**Step 2 — the features**
+
+Optional features of the site. Nothing ships here yet, so the step currently shows a hint; the planned
+MkDocs extensions will appear in it once they are available.
+
+The result is the smallest structure MkDocs works with:
+
+```
+<location>/            (created if it does not exist)
+  mkdocs.yml
+  docs/
+    index.md
+    assets/
+```
+
+`docs_dir` is written to `mkdocs.yml` only when the documentation directory differs from the MkDocs default
+— repeating a default in a configuration file tells the reader nothing. The assets directory has no MkDocs
+key at all; the chosen name is remembered in the [MkDocs facet](#the-mkdocs-facet).
+
+Detection runs immediately afterwards, so the new site is an MkDocs module as soon as the wizard closes.
+
 !!! note "Ignored directories"
     Build outputs and dependency caches are skipped, so a configuration file copied into `build/`,
     `site/`, `node_modules/`, `dist/`, `target/`, `out/`, `__pycache__/`, a virtual environment or a VCS
@@ -32,10 +90,12 @@ There is nothing to enable and nothing to import.
 A detected module is marked with the **MkDocs** facet. You can see it in
 *File → Project Structure → Modules → &lt;module&gt; → Facets*, showing:
 
-| Field              | Meaning                                                      |
-|--------------------|--------------------------------------------------------------|
-| Site name          | `site_name` from the configuration file                      |
-| Configuration file | the detected file, relative to the site root                  |
+| Field                   | Meaning                                                       |
+|-------------------------|---------------------------------------------------------------|
+| Site name               | `site_name` from the configuration file                       |
+| Configuration file      | the detected file, relative to the site root                  |
+| Documentation directory | `docs_dir` from the configuration file, default `docs`        |
+| Assets directory        | the name chosen when the site was created, default `assets`   |
 
 Both values are read-only: the configuration file is the single source of truth. Change `site_name` in
 `mkdocs.yml` and the facet follows.
@@ -57,8 +117,19 @@ The site root is marked wherever it appears in the project view:
 - the folder icon carries a small MkDocs badge in its lower right corner.
 
 The name in brackets is the `site_name` stored in the MkDocs facet, so it changes as soon as the
-configuration file does. Only the site root itself is marked, never the directories below it, and never a
+configuration file does. Only the site root itself gets the name, never the directories below it, and never a
 directory whose module has not been detected yet.
+
+Two directories inside a site are badged as well, each with a marker of its own:
+
+| Directory               | Marker         | Recognised by                                                   |
+|-------------------------|----------------|-----------------------------------------------------------------|
+| Site root               | MkDocs logo    | it directly contains the configuration file                     |
+| Documentation directory | green circle   | `docs_dir` of the site directly above it, default `docs`        |
+| Assets directory        | orange diamond | the name in the facet, directly inside the documentation directory |
+
+The three markers differ in shape, not only in colour, so they stay apart at overlay size. A directory named
+`assets` somewhere deeper in the documentation tree is not the assets directory and stays unmarked.
 
 The colour of the name comes from the colour scheme entry `MKDOCS_SITE_NAME`, which ships with a value for
 light themes and one for dark themes, so the marking stays readable in either.

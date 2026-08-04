@@ -38,6 +38,11 @@ class MkDocsFacetConfigurationTest {
         assertEquals("", configuration.configFilePath)
         assertFalse(configuration.ownsModule)
         assertEquals("", configuration.ownerModuleName)
+        assertEquals(
+            "MkDocs has no key for the assets directory, so the convention is the starting point",
+            "assets",
+            configuration.assetsDirName,
+        )
     }
 
     /**
@@ -51,6 +56,7 @@ class MkDocsFacetConfigurationTest {
             configFilePath = "mkdocs.yml"
             ownsModule = true
             ownerModuleName = "app"
+            assetsDirName = "media"
         }
 
         val element = XmlSerializer.serialize(original.state)
@@ -65,6 +71,11 @@ class MkDocsFacetConfigurationTest {
             "the former owner must survive the restart, the exclusion is reverted with it",
             "app",
             restored.ownerModuleName,
+        )
+        assertEquals(
+            "the assets directory lives in no file MkDocs reads, so only the facet can carry it",
+            "media",
+            restored.assetsDirName,
         )
     }
 

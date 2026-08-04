@@ -28,6 +28,30 @@ object MkDocsProject {
      */
     val CONFIG_FILE_NAMES: Set<String> = setOf("mkdocs.yml", "mkdocs.yaml")
 
+    /** The directory MkDocs reads the documentation sources from when `docs_dir` is not set. */
+    const val DEFAULT_DOCS_DIR: String = "docs"
+
+    /**
+     * The directory the plugin puts asset files into by default.
+     *
+     * MkDocs has no configuration key for this — it is a convention. The directory lives inside the
+     * documentation directory so MkDocs ships its content with the site.
+     */
+    const val DEFAULT_ASSETS_DIR: String = "assets"
+
+    /**
+     * Returns `true` if [name] is usable as a single directory name inside a site.
+     *
+     * Rejects blank names and anything carrying a path of its own, so a value from the UI cannot escape the
+     * site root.
+     *
+     * @param name the directory name to check
+     */
+    fun isValidDirectoryName(name: String): Boolean =
+        name.isNotBlank() &&
+            name.none { it == '/' || it == '\\' } &&
+            name.trim() !in setOf(".", "..")
+
     /**
      * Returns `true` if [fileName] is an MkDocs configuration file.
      *

@@ -161,6 +161,94 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the documentation directory of a site. It gets its own badge — a different one from the site
+     * root — but no name in brackets, because only the site root carries the site name.
+     */
+    fun `test badges the documentation directory`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val page = myFixture.addFileToProject("handbook/docs/index.md", "# Home\n")
+        MkDocsModuleService.getInstance(project).sync()
+
+        val data = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(page.virtualFile.parent), data)
+
+        assertEmpty(data.coloredText)
+        assertTrue("expected the docs folder to be badged", data.getIcon(false) is LayeredIcon)
+    }
+
+    /**
+     * Use case: a site pointing `docs_dir` at a directory of its own naming. The badge has to follow the
+     * configuration, not the MkDocs default.
+     */
+    fun `test badges a renamed documentation directory`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: Handbook\ndocs_dir: sources\n")
+        val page = myFixture.addFileToProject("handbook/sources/index.md", "# Home\n")
+        val unrelated = myFixture.addFileToProject("handbook/docs/index.md", "# Home\n")
+        MkDocsModuleService.getInstance(project).sync()
+
+        val badged = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(page.virtualFile.parent), badged)
+        assertTrue("expected the configured docs folder to be badged", badged.getIcon(false) is LayeredIcon)
+
+        val plain = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(unrelated.virtualFile.parent), plain)
+        assertSame("a directory named docs is not the docs dir here", AllIcons.Nodes.Folder, plain.getIcon(false))
+    }
+
+    /**
+     * Use case: the assets directory inside the documentation directory. MkDocs has no key for it, so the
+     * name comes from the facet — here the default.
+     */
+    fun `test badges the assets directory`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val asset = myFixture.addFileToProject("handbook/docs/assets/logo.txt", "")
+        MkDocsModuleService.getInstance(project).sync()
+        // The light fixture module is shared between tests and keeps whatever a previous test wrote into the
+        // facet, so the default this test is about has to be stated explicitly.
+        MkDocsFacet.getInstance(myFixture.module)!!.configuration.assetsDirName = "assets"
+
+        val data = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(asset.virtualFile.parent), data)
+
+        assertTrue("expected the assets folder to be badged", data.getIcon(false) is LayeredIcon)
+    }
+
+    /**
+     * Use case: the site was created with a differently named assets directory. The facet remembers the name,
+     * and the badge has to follow it rather than the convention.
+     */
+    fun `test badges a renamed assets directory`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val asset = myFixture.addFileToProject("handbook/docs/media/logo.txt", "")
+        val conventional = myFixture.addFileToProject("handbook/docs/assets/logo.txt", "")
+        MkDocsModuleService.getInstance(project).sync()
+        MkDocsFacet.getInstance(myFixture.module)!!.configuration.assetsDirName = "media"
+
+        val badged = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(asset.virtualFile.parent), badged)
+        assertTrue("expected the configured assets folder to be badged", badged.getIcon(false) is LayeredIcon)
+
+        val plain = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(conventional.virtualFile.parent), plain)
+        assertSame("only the configured name counts", AllIcons.Nodes.Folder, plain.getIcon(false))
+    }
+
+    /**
+     * Use case: a directory named like the assets directory but sitting somewhere else in the site. Only the
+     * one directly inside the documentation directory is the assets directory.
+     */
+    fun `test leaves a directory named assets elsewhere untouched`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val stray = myFixture.addFileToProject("handbook/docs/guide/assets/logo.txt", "")
+        MkDocsModuleService.getInstance(project).sync()
+
+        val data = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(stray.virtualFile.parent), data)
+
+        assertSame(AllIcons.Nodes.Folder, data.getIcon(false))
+    }
+
+    /**
      * Drops the MkDocs facet from the fixture module, so a test starts from a module that is provably not an
      * MkDocs module — the light fixture project is shared between tests and may still carry one.
      */

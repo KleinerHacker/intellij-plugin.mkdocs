@@ -32,6 +32,26 @@
     <!-- Message bundle for every user visible text. -->
     <resource-bundle>messages.MkDocsBundle</resource-bundle>
 
+    <!-- Extension points offered to other plugins and to later parts of this one. -->
+    <extensionPoints>
+        <!-- Optional features of an MkDocs site, offered in the creation wizard. Nothing implements this
+             yet — the point exists so the planned MkDocs extensions (Angular Material, I18N, Mike) can be
+             added without touching the wizard. -->
+        <extensionPoint name="siteFeature"
+                        interface="org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature"
+                        dynamic="true"/>
+    </extensionPoints>
+
+    <!-- Actions contributed by the plugin. -->
+    <actions>
+        <!-- NewGroup backs both the "New" context menu of the project view and File | New. -->
+        <action id="org.pcsoft.ij.plugin.mkdocs.CreateSite"
+                class="org.pcsoft.ij.plugin.mkdocs.module.create.MkDocsCreateSiteAction"
+                icon="org.pcsoft.ij.plugin.mkdocs.MkDocsIcons.MkDocs">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+    </actions>
+
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">

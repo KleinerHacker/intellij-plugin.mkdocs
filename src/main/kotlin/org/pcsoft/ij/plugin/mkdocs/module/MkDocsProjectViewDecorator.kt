@@ -15,7 +15,9 @@ package org.pcsoft.ij.plugin.mkdocs.module
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ProjectViewNodeDecorator
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.LayeredIcon
@@ -24,15 +26,17 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import javax.swing.Icon
 import javax.swing.SwingConstants
 
 /**
- * Renders the root directory of an MkDocs site the way Maven renders a project directory: the site name in
- * brackets behind the directory name, plus a small badge on the folder icon.
+ * Renders the directories of an MkDocs site the way Maven renders a project directory: the site name in
+ * brackets behind the site root, plus a small badge on the folder icon of the site root, the documentation
+ * directory and the assets directory.
  *
- * Only directories that actually hold an MkDocs configuration file and whose module carries an
- * [MkDocsFacet] are decorated, so the project view never disagrees with the detected module model.
+ * Only directories belonging to a module that carries an [MkDocsFacet] are decorated, so the project view
+ * never disagrees with the detected module model.
  */
 class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
 
@@ -49,15 +53,53 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
                 MkDocsProject.CONFIG_FILE_NAMES.any { directory.findChild(it) != null }
 
         /**
-         * Puts the MkDocs badge into the lower right corner of [base].
+         * Returns `true` if [directory] is the documentation directory of the site rooted directly above it.
+         *
+         * The name comes from `docs_dir` of that site, falling back to the MkDocs default.
+         *
+         * @param project the project [directory] belongs to
+         * @param directory the directory to inspect
+         */
+        @JvmStatic
+        fun isDocsDirectory(project: Project, directory: VirtualFile): Boolean {
+            if (!directory.isValid || !directory.isDirectory) return false
+            val siteRoot = directory.parent?.takeIf { isSiteRoot(it) } ?: return false
+            val configFile = MkDocsProject.CONFIG_FILE_NAMES.firstNotNullOfOrNull { siteRoot.findChild(it) }
+                ?: return false
+            return directory.name == MkDocsConfig.resolveDocsDir(project, configFile)
+        }
+
+        /**
+         * Returns `true` if [directory] is the assets directory of the site two levels above it.
+         *
+         * The expected name is taken from the MkDocs facet of the owning module, because MkDocs itself has no
+         * configuration key for the assets directory.
+         *
+         * @param project the project [directory] belongs to
+         * @param module the module owning [directory]
+         * @param directory the directory to inspect
+         */
+        @JvmStatic
+        fun isAssetsDirectory(project: Project, module: Module, directory: VirtualFile): Boolean {
+            if (!directory.isValid || !directory.isDirectory) return false
+            val docsDir = directory.parent ?: return false
+            if (!isDocsDirectory(project, docsDir)) return false
+            val expected = MkDocsFacet.getInstance(module)?.configuration?.assetsDirName
+                ?: MkDocsProject.DEFAULT_ASSETS_DIR
+            return directory.name == expected
+        }
+
+        /**
+         * Puts [badge] into the lower right corner of [base].
          *
          * @param base the undecorated node icon
+         * @param badge the marker to overlay
          * @return a layered icon of the same size as [base]
          */
         @JvmStatic
-        fun withBadge(base: Icon): Icon {
-            val layered = LayeredIcon.layeredIcon(arrayOf(base, MkDocsIcons.Badge))
-            layered.setIcon(MkDocsIcons.Badge, 1, SwingConstants.SOUTH_EAST)
+        fun withBadge(base: Icon, badge: Icon = MkDocsIcons.Badge): Icon {
+            val layered = LayeredIcon.layeredIcon(arrayOf(base, badge))
+            layered.setIcon(badge, 1, SwingConstants.SOUTH_EAST)
             return layered
         }
     }
@@ -65,21 +107,30 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
     override fun decorate(node: ProjectViewNode<*>, data: PresentationData) {
         val directory = node.value as? PsiDirectory ?: return
         val virtualFile = directory.virtualFile
-        if (!isSiteRoot(virtualFile)) return
-
         val project = node.project ?: return
         val module = ModuleUtilCore.findModuleForFile(virtualFile, project) ?: return
-        val siteName = MkDocsFacet.getInstance(module)?.configuration?.siteName?.takeIf { it.isNotBlank() } ?: return
+        val facet = MkDocsFacet.getInstance(module) ?: return
 
-        // Once a coloured fragment is added the plain presentable text is no longer rendered, so the
-        // directory name has to become the first fragment itself.
-        if (data.coloredText.isEmpty()) {
-            data.addText(data.presentableText ?: directory.name, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+        if (isSiteRoot(virtualFile)) {
+            val siteName = facet.configuration.siteName.takeIf { it.isNotBlank() } ?: return
+            // Once a coloured fragment is added the plain presentable text is no longer rendered, so the
+            // directory name has to become the first fragment itself.
+            if (data.coloredText.isEmpty()) {
+                data.addText(data.presentableText ?: directory.name, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            }
+            data.addText(
+                " [$siteName]",
+                MkDocsTextAttributes.asSimpleTextAttributes(MkDocsTextAttributes.SiteName),
+            )
+            data.getIcon(false)?.let { data.setIcon(withBadge(it)) }
+            return
         }
-        data.addText(
-            " [$siteName]",
-            MkDocsTextAttributes.asSimpleTextAttributes(MkDocsTextAttributes.SiteName),
-        )
-        data.getIcon(false)?.let { data.setIcon(withBadge(it)) }
+
+        val badge = when {
+            isDocsDirectory(project, virtualFile) -> MkDocsIcons.DocsBadge
+            isAssetsDirectory(project, module, virtualFile) -> MkDocsIcons.AssetsBadge
+            else -> return
+        }
+        data.getIcon(false)?.let { data.setIcon(withBadge(it, badge)) }
     }
 }

@@ -18,6 +18,7 @@ import com.intellij.psi.PsiManager
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLScalar
+import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
  * Reads the few pieces of information the module system needs out of an MkDocs configuration file.
@@ -32,6 +33,9 @@ object MkDocsConfig {
 
     /** The MkDocs configuration key holding the human readable name of the site. */
     const val KEY_SITE_NAME: String = "site_name"
+
+    /** The MkDocs configuration key holding the directory the documentation sources live in. */
+    const val KEY_DOCS_DIR: String = "docs_dir"
 
     /**
      * Reads `site_name` from [configFile].
@@ -65,4 +69,35 @@ object MkDocsConfig {
         readSiteName(project, configFile)
             ?: configFile.parent?.name?.takeIf { it.isNotEmpty() }
             ?: configFile.nameWithoutExtension
+
+    /**
+     * Reads `docs_dir` from [configFile].
+     *
+     * Only a scalar value is accepted, for the same reason as in [readSiteName]. The value is returned as
+     * written — MkDocs resolves it relative to the configuration file, and a site may well point it at a
+     * directory of its own naming.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @return the trimmed value of `docs_dir`, or `null` if it is absent, not a scalar, or blank
+     */
+    fun readDocsDir(project: Project, configFile: VirtualFile): String? {
+        val yamlFile = PsiManager.getInstance(project).findFile(configFile) as? YAMLFile ?: return null
+        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, KEY_DOCS_DIR) ?: return null
+        val scalar = keyValue.value as? YAMLScalar ?: return null
+        return scalar.textValue.trim().takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Determines the documentation directory of the site described by [configFile].
+     *
+     * Falls back to [MkDocsProject.DEFAULT_DOCS_DIR], which is what MkDocs itself uses when the key is
+     * missing.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     * @return the documentation directory, relative to the site root, never blank
+     */
+    fun resolveDocsDir(project: Project, configFile: VirtualFile): String =
+        readDocsDir(project, configFile) ?: MkDocsProject.DEFAULT_DOCS_DIR
 }

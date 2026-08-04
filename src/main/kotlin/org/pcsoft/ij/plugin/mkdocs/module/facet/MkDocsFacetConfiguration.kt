@@ -18,6 +18,7 @@ import com.intellij.facet.ui.FacetEditorTab
 import com.intellij.facet.ui.FacetValidatorsManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.util.xmlb.XmlSerializerUtil
+import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
  * Persistent state of the MkDocs facet.
@@ -39,6 +40,11 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
      * @property ownerModuleName name of the module the site root was detached from when the plugin created a
      *                           module for it, empty if the site root belonged to no module. Remembered so the
      *                           exclusion can be reverted once the site disappears
+     * @property assetsDirName name of the directory holding the asset files, inside the documentation
+     *                         directory. Unlike everything else here this is not derived from the
+     *                         configuration file: MkDocs has no key for it, so the value chosen when the site
+     *                         was created is remembered instead. Sites that came in through a checkout keep
+     *                         the default
      */
     class State {
         @JvmField
@@ -52,6 +58,9 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
 
         @JvmField
         var ownerModuleName: String = ""
+
+        @JvmField
+        var assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR
     }
 
     private var state = State()
@@ -82,6 +91,13 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
         get() = state.ownerModuleName
         set(value) {
             state.ownerModuleName = value
+        }
+
+    /** Name of the assets directory inside the documentation directory. */
+    var assetsDirName: String
+        get() = state.assetsDirName
+        set(value) {
+            state.assetsDirName = value
         }
 
     override fun getState(): State = state
