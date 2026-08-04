@@ -37,6 +37,7 @@ class MkDocsFacetConfigurationTest {
         assertEquals("", configuration.siteName)
         assertEquals("", configuration.configFilePath)
         assertFalse(configuration.ownsModule)
+        assertEquals("", configuration.ownerModuleName)
     }
 
     /**
@@ -49,6 +50,7 @@ class MkDocsFacetConfigurationTest {
             siteName = "My Documentation"
             configFilePath = "mkdocs.yml"
             ownsModule = true
+            ownerModuleName = "app"
         }
 
         val element = XmlSerializer.serialize(original.state)
@@ -59,6 +61,11 @@ class MkDocsFacetConfigurationTest {
         assertEquals("My Documentation", restored.siteName)
         assertEquals("mkdocs.yml", restored.configFilePath)
         assertTrue(restored.ownsModule)
+        assertEquals(
+            "the former owner must survive the restart, the exclusion is reverted with it",
+            "app",
+            restored.ownerModuleName,
+        )
     }
 
     /**
@@ -71,16 +78,19 @@ class MkDocsFacetConfigurationTest {
             siteName = "Old"
             configFilePath = "mkdocs.yaml"
             ownsModule = true
+            ownerModuleName = "app"
         }
 
         configuration.loadState(MkDocsFacetConfiguration.State().apply {
             siteName = "New"
             configFilePath = "mkdocs.yml"
             ownsModule = false
+            ownerModuleName = ""
         })
 
         assertEquals("New", configuration.siteName)
         assertEquals("mkdocs.yml", configuration.configFilePath)
         assertFalse(configuration.ownsModule)
+        assertEquals("", configuration.ownerModuleName)
     }
 }

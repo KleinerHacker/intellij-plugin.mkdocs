@@ -123,14 +123,30 @@ class MkDocsModuleServiceTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: several sites live in the same module (`docs/` and `handbook/`). Detection reports both, even
-     * though only one of them can own the module.
+     * Use case: several sites live in the same module (`docs/` and `handbook/`). Detection reports both — the
+     * module model then gives the second one a module of its own.
      */
     fun `test finds every site in the project`() {
         myFixture.addFileToProject("docs/mkdocs.yml", "site_name: Docs\n")
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: Handbook\n")
 
         assertEquals(listOf("Docs", "Handbook"), findSites().map { it.siteName }.sorted())
+    }
+
+    /**
+     * Use case: a directory holds both `mkdocs.yml` and `mkdocs.yaml`. That is a single site, and it must
+     * always be the same one of the two files that is picked — MkDocs loads `mkdocs.yml` first, so the facet
+     * has to name that file instead of whichever the file system happened to hand out first.
+     */
+    fun `test prefers the yml spelling when both exist`() {
+        myFixture.addFileToProject("mkdocs.yaml", "site_name: Yaml\n")
+        myFixture.addFileToProject("mkdocs.yml", "site_name: Yml\n")
+
+        val sites = findSites()
+
+        assertEquals(1, sites.size)
+        assertEquals("mkdocs.yml", sites.single().configFile.name)
+        assertEquals("Yml", sites.single().siteName)
     }
 
     private fun findSites(): List<MkDocsSite> = runReadActionBlocking { service.findSites() }

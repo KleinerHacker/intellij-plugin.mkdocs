@@ -75,11 +75,30 @@ gets a `~2` suffix.
 
 ## Which module the facet lands on
 
-| Situation                                                | Result                                        |
-|----------------------------------------------------------|-----------------------------------------------|
-| The site directory belongs to an existing module          | that module receives the MkDocs facet         |
-| The site directory belongs to no module at all            | a new module is created for the site directory |
+| Situation                                                     | Result                                         |
+|---------------------------------------------------------------|------------------------------------------------|
+| The site directory belongs to an existing module               | that module receives the MkDocs facet          |
+| The site directory belongs to no module at all                 | a new module is created for the site directory |
+| The existing module already represents another site            | a new module is created for the site directory |
 
 Reusing the surrounding module is deliberate: it keeps the module layout that Gradle, Maven or the .NET
 solution import produced intact. A module created by the plugin is removed again as soon as its configuration
 file disappears.
+
+### Several sites in one module
+
+A module carries at most one MkDocs facet and therefore represents exactly one site. If a module contains
+more than one site — say `app/docs-a/mkdocs.yml` and `app/docs-b/mkdocs.yml` — the first one by path stays
+on the existing module and every further one gets a module of its own, just like a site belonging to no
+module.
+
+Because a directory can belong to a single module only, the site directory has to leave its previous module
+first: it is excluded there and becomes the content root of the new module. Deleting the configuration file
+reverses both steps — the module is disposed and the directory is handed back, so it is neither excluded nor
+orphaned.
+
+!!! note
+
+    In a module imported by Gradle, Maven or the .NET solution import, that exclusion lives in the IDE's
+    module model only. A reimport rebuilds the model from the build script and can therefore drop it; the
+    next detection run applies it again.

@@ -33,8 +33,12 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
      *
      * @property siteName the `site_name` of the site, or the fall back directory name
      * @property configFilePath path of the MkDocs configuration file, relative to the site root
-     * @property ownsModule `true` if the plugin created the module itself because the site root belonged to
-     *                      no module — such a module is disposed again once the site disappears
+     * @property ownsModule `true` if the plugin created the module itself because the site root could not be
+     *                      represented by an existing module — such a module is disposed again once the site
+     *                      disappears
+     * @property ownerModuleName name of the module the site root was detached from when the plugin created a
+     *                           module for it, empty if the site root belonged to no module. Remembered so the
+     *                           exclusion can be reverted once the site disappears
      */
     class State {
         @JvmField
@@ -45,6 +49,9 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
 
         @JvmField
         var ownsModule: Boolean = false
+
+        @JvmField
+        var ownerModuleName: String = ""
     }
 
     private var state = State()
@@ -68,6 +75,13 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
         get() = state.ownsModule
         set(value) {
             state.ownsModule = value
+        }
+
+    /** Name of the module the site root was detached from, empty if it belonged to no module. */
+    var ownerModuleName: String
+        get() = state.ownerModuleName
+        set(value) {
+            state.ownerModuleName = value
         }
 
     override fun getState(): State = state

@@ -16,15 +16,16 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.HeavyPlatformTestCase
+import com.intellij.testFramework.PsiTestUtil
 import com.intellij.testFramework.VfsTestUtil
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.
  *
- * Exercises the full module system on a real project on disk, in particular the case a light fixture cannot
- * reproduce: an MkDocs site in a directory that belongs to no IntelliJ module, for which a module has to be
- * created.
+ * Exercises the full module system on a real project on disk, in particular the cases a light fixture cannot
+ * reproduce: an MkDocs site in a directory that belongs to no IntelliJ module, and a second site inside a
+ * module that already represents one — for both of which a module has to be created.
  */
 class MkDocsModuleDetectionIT : HeavyPlatformTestCase() {
 
@@ -48,6 +49,7 @@ class MkDocsModuleDetectionIT : HeavyPlatformTestCase() {
         assertNotNull(facet)
         assertTrue("a module created by the plugin must be marked as owned", facet!!.configuration.ownsModule)
         assertEquals("Handbook", facet.configuration.siteName)
+        assertEquals("no module to detach from", "", facet.configuration.ownerModuleName)
 
         val contentRoots = ModuleRootManager.getInstance(module).contentRoots
         assertEquals(1, contentRoots.size)
@@ -84,6 +86,62 @@ class MkDocsModuleDetectionIT : HeavyPlatformTestCase() {
         assertEquals(2, names.size)
         assertEquals("docs", names[0])
         assertEquals("docs~2", names[1])
+    }
+
+    /**
+     * Use case: one module contains two documentation sites side by side. A module can carry only one MkDocs
+     * facet, so the first site by path stays on the existing module and the second one gets a module of its
+     * own. Its root has to leave the existing module first — a directory belongs to a single module only — so
+     * it is excluded there.
+     */
+    fun `test creates its own module for a second site inside one module`() {
+        val contentRoot = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "app")
+        PsiTestUtil.addContentRoot(module, contentRoot)
+        createConfig("app/docs-a/mkdocs.yml", "site_name: Alpha\n")
+        createConfig("app/docs-b/mkdocs.yml", "site_name: Beta\n")
+
+        service.sync()
+
+        val ownerFacet = MkDocsFacet.getInstance(module)
+        assertNotNull("the existing module keeps the first site", ownerFacet)
+        assertEquals("Alpha", ownerFacet!!.configuration.siteName)
+        assertFalse("the existing module must not be owned", ownerFacet.configuration.ownsModule)
+
+        val beta = ModuleManager.getInstance(project).findModuleByName("Beta")
+        assertNotNull("expected a module of its own for the second site", beta)
+        val betaFacet = MkDocsFacet.getInstance(beta!!)
+        assertNotNull(betaFacet)
+        assertTrue(betaFacet!!.configuration.ownsModule)
+        assertEquals(module.name, betaFacet.configuration.ownerModuleName)
+        assertEquals("docs-b", ModuleRootManager.getInstance(beta).contentRoots.single().name)
+
+        assertTrue(
+            "the second site root must be excluded from the module it was taken from",
+            ModuleRootManager.getInstance(module).excludeRoots.any { it.name == "docs-b" },
+        )
+    }
+
+    /**
+     * Use case: the second site of a module is deleted again. Its module is disposed, and the directory has to
+     * be handed back to the module it was taken from — otherwise it would stay excluded and invisible to
+     * indexing and search for no reason.
+     */
+    fun `test hands the directory back when the second site disappears`() {
+        val contentRoot = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "app")
+        PsiTestUtil.addContentRoot(module, contentRoot)
+        createConfig("app/docs-a/mkdocs.yml", "site_name: Alpha\n")
+        val betaConfig = createConfig("app/docs-b/mkdocs.yml", "site_name: Beta\n")
+        service.sync()
+        assertNotNull(ModuleManager.getInstance(project).findModuleByName("Beta"))
+
+        VfsTestUtil.deleteFile(betaConfig)
+        service.sync()
+
+        assertNull(ModuleManager.getInstance(project).findModuleByName("Beta"))
+        assertTrue(
+            "the exclusion must be reverted",
+            ModuleRootManager.getInstance(module).excludeRoots.none { it.name == "docs-b" },
+        )
     }
 
     /**

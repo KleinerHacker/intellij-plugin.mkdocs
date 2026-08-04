@@ -25,6 +25,7 @@ import com.intellij.openapi.module.ModuleTypeManager
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ModuleRootModificationUtil
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VfsUtilCore
@@ -43,7 +44,8 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
  *
  * The rule implemented here: the directory **above** an `mkdocs.yml` / `mkdocs.yaml` is an MkDocs module.
  * It is represented by an [MkDocsFacet] on the IntelliJ module owning that directory; a module of its own
- * is created only when the directory belongs to no module at all. The configuration file always wins — a
+ * is created whenever that module cannot represent the site — because the directory belongs to no module at
+ * all, or because the module already represents a different site. The configuration file always wins — a
  * facet is created, updated or dropped to match what is on disk.
  *
  * @param project the project this service works on
@@ -127,14 +129,15 @@ class MkDocsModuleService(private val project: Project) {
      *
      * The search starts at the project directory and at every content root, skipping [IGNORED_DIRECTORIES].
      * A directory containing both `mkdocs.yml` and `mkdocs.yaml` yields a single site — MkDocs itself would
-     * only ever load one of them.
+     * only ever load one of them, and the `.yml` spelling is preferred so the choice does not depend on the
+     * order in which the file system hands out the children.
      *
      * Must be called inside a read action.
      *
      * @return one [MkDocsSite] per detected site root, ordered by path
      */
     fun findSites(): List<MkDocsSite> {
-        val sites = LinkedHashMap<String, MkDocsSite>()
+        val configFiles = LinkedHashMap<String, VirtualFile>()
         for (searchRoot in searchRoots()) {
             VfsUtilCore.visitChildrenRecursively(searchRoot, object : VirtualFileVisitor<Any?>() {
                 override fun visitFile(file: VirtualFile): Boolean {
@@ -143,18 +146,34 @@ class MkDocsModuleService(private val project: Project) {
                     }
                     if (!MkDocsProject.isConfigFile(file.name)) return true
                     val siteRoot = file.parent ?: return true
-                    sites.getOrPut(siteRoot.path) {
-                        MkDocsSite(
-                            root = siteRoot,
-                            configFile = file,
-                            siteName = MkDocsConfig.resolveSiteName(project, file),
-                        )
+                    val known = configFiles[siteRoot.path]
+                    if (known == null || preferredConfigFile(known, file) == file) {
+                        configFiles[siteRoot.path] = file
                     }
                     return true
                 }
             })
         }
-        return sites.values.sortedBy { it.root.path }
+        return configFiles.values
+            .mapNotNull { file ->
+                val siteRoot = file.parent ?: return@mapNotNull null
+                MkDocsSite(
+                    root = siteRoot,
+                    configFile = file,
+                    siteName = MkDocsConfig.resolveSiteName(project, file),
+                )
+            }
+            .sortedBy { it.root.path }
+    }
+
+    /**
+     * Picks the configuration file MkDocs itself would load when a directory holds both spellings.
+     *
+     * MkDocs looks for `mkdocs.yml` first, so that spelling wins; otherwise the first one found is kept.
+     */
+    private fun preferredConfigFile(known: VirtualFile, candidate: VirtualFile): VirtualFile {
+        val preferredName = MkDocsProject.CONFIG_FILE_NAMES.first()
+        return if (candidate.name.equals(preferredName, ignoreCase = true)) candidate else known
     }
 
     /**
@@ -178,23 +197,23 @@ class MkDocsModuleService(private val project: Project) {
     /**
      * Brings the module model in line with [sites].
      *
+     * A module can carry only one MkDocs facet and therefore represent only one site. Every further site
+     * found inside an already represented module gets a module of its own, exactly like a site belonging to
+     * no module at all — otherwise it would silently disappear from the model.
+     *
      * Must be called inside a write action on the EDT.
      */
     private fun apply(sites: List<MkDocsSite>) {
         val handled = HashSet<Module>()
         for (site in sites) {
-            val module = ModuleUtilCore.findModuleForFile(site.root, project)
-            if (module != null) {
-                if (handled.add(module)) {
-                    updateFacet(module, site, ownsModule = false)
-                } else {
-                    thisLogger().info("Module '${module.name}' already holds an MkDocs site, ignoring ${site.root.path}")
-                }
-            } else {
-                val created = createModule(site) ?: continue
-                handled.add(created)
-                updateFacet(created, site, ownsModule = true)
+            val owner = ModuleUtilCore.findModuleForFile(site.root, project)
+            if (owner != null && handled.add(owner)) {
+                updateFacet(owner, site, ownsModule = false)
+                continue
             }
+            val created = createModule(site, owner) ?: continue
+            handled.add(created)
+            updateFacet(created, site, ownsModule = true, ownerModuleName = owner?.name ?: "")
         }
         for (module in ModuleManager.getInstance(project).modules.toList()) {
             if (module in handled) continue
@@ -205,12 +224,25 @@ class MkDocsModuleService(private val project: Project) {
     /**
      * Creates a persistent module whose single content root is the site root.
      *
-     * Used only when the site root belongs to no module; returns `null` if the root has no path on the local
-     * file system.
+     * Used whenever the site cannot be represented by [owner] — either because there is no owning module, or
+     * because it already represents another site. In the latter case the site root has to leave the owner
+     * first: IntelliJ lets a directory belong to a single module only, so it is excluded there before it
+     * becomes the content root of the new module.
+     *
+     * @param site the site to create a module for
+     * @param owner the module the site root currently belongs to, or `null` if it belongs to none
+     * @return the created module, or `null` if the root has no path on the local file system or could not be
+     *         detached from [owner]
      */
-    private fun createModule(site: MkDocsSite): Module? {
+    private fun createModule(site: MkDocsSite, owner: Module?): Module? {
         val moduleManager = ModuleManager.getInstance(project)
         val directory = runCatching { site.root.toNioPath() }.getOrNull() ?: return null
+        if (owner != null && !excludeFromOwner(owner, site.root)) {
+            thisLogger().warn(
+                "Cannot detach ${site.root.path} from module '${owner.name}', skipping this MkDocs site"
+            )
+            return null
+        }
         val name = uniqueModuleName(site.siteName)
         // The generic default type: MkDocs is language agnostic, and a Java module type would not even be
         // available in the non-Java IDEs of the supported matrix.
@@ -219,6 +251,43 @@ class MkDocsModuleService(private val project: Project) {
         ModuleRootModificationUtil.addContentRoot(module, site.root)
         return module
     }
+
+    /**
+     * Excludes [siteRoot] from [owner] so it can become the content root of a module of its own.
+     *
+     * @return `false` if [owner] has no content root strictly above [siteRoot] — excluding a content root
+     *         itself would remove the owner's own root, which is never done
+     */
+    private fun excludeFromOwner(owner: Module, siteRoot: VirtualFile): Boolean {
+        val contentRoot = contentRootAbove(owner, siteRoot) ?: return false
+        ModuleRootModificationUtil.updateExcludedFolders(owner, contentRoot, emptyList(), listOf(siteRoot.url))
+        return true
+    }
+
+    /**
+     * Reverts the exclusion made by [excludeFromOwner] before an owned module is disposed.
+     *
+     * Without this the directory would stay excluded in the former owner after the site is gone, hiding it
+     * from indexing and search for no reason.
+     *
+     * @param module the owned module about to be disposed
+     * @param configuration its facet configuration, holding the name of the former owner
+     */
+    private fun releaseFromOwner(module: Module, configuration: MkDocsFacetConfiguration) {
+        if (configuration.ownerModuleName.isEmpty()) return
+        val owner = ModuleManager.getInstance(project)
+            .findModuleByName(configuration.ownerModuleName) ?: return
+        val siteRoot = ModuleRootManager.getInstance(module).contentRoots.firstOrNull() ?: return
+        val contentRoot = contentRootAbove(owner, siteRoot) ?: return
+        ModuleRootModificationUtil.updateExcludedFolders(owner, contentRoot, listOf(siteRoot.url), emptyList())
+    }
+
+    /**
+     * Returns the content root of [module] strictly above [file], or `null` if there is none.
+     */
+    private fun contentRootAbove(module: Module, file: VirtualFile): VirtualFile? =
+        ModuleRootManager.getInstance(module).contentRoots
+            .firstOrNull { VfsUtilCore.isAncestor(it, file, true) }
 
     /**
      * Turns [preferred] into a module name that is not taken yet by appending `~2`, `~3`, ….
@@ -240,8 +309,14 @@ class MkDocsModuleService(private val project: Project) {
      * @param module the module representing the site
      * @param site the detected site
      * @param ownsModule `true` if [module] was created by this service for [site]
+     * @param ownerModuleName name of the module the site root was detached from, empty if it belonged to none
      */
-    private fun updateFacet(module: Module, site: MkDocsSite, ownsModule: Boolean) {
+    private fun updateFacet(
+        module: Module,
+        site: MkDocsSite,
+        ownsModule: Boolean,
+        ownerModuleName: String = "",
+    ) {
         val configFilePath = VfsUtilCore.getRelativePath(site.configFile, site.root) ?: site.configFile.name
         val facetManager = FacetManager.getInstance(module)
 
@@ -260,6 +335,7 @@ class MkDocsModuleService(private val project: Project) {
             siteName = site.siteName
             this.configFilePath = configFilePath
             this.ownsModule = ownsModule
+            this.ownerModuleName = ownerModuleName
         }
         val facet = facetType.createFacet(module, facetType.defaultFacetName, configuration, null)
         val model = facetManager.createModifiableModel()
@@ -270,11 +346,13 @@ class MkDocsModuleService(private val project: Project) {
     /**
      * Drops the MkDocs facet from [module] once its configuration file is gone.
      *
-     * A module this service created itself is disposed entirely instead — it exists for no other reason.
+     * A module this service created itself is disposed entirely instead — it exists for no other reason — and
+     * its site root is handed back to the module it was taken from.
      */
     private fun dropFacet(module: Module) {
         val facet = MkDocsFacet.getInstance(module) ?: return
         if (facet.configuration.ownsModule) {
+            releaseFromOwner(module, facet.configuration)
             ModuleManager.getInstance(project).disposeModule(module)
             return
         }
