@@ -206,14 +206,54 @@ class MkDocsSiteTemplateTest {
 
     private fun root(): Path = folder.root.toPath()
 
+    /**
+     * Use case: the wizard suggested the output directory of the surrounding build system. Those are nested
+     * paths, so the output directory has to accept more than a single name.
+     */
+    @Test
+    fun `accepts a nested output directory`() {
+        assertNull(template(siteName = "Handbook", siteDir = "target/docs").validate())
+        assertNull(template(siteName = "Handbook", siteDir = "build/docs").validate())
+    }
+
+    /**
+     * Use case: an output directory the user pointed outside the site — absolute, or climbing up with `..`.
+     * MkDocs deletes the output directory before writing it, so this must never be accepted by accident.
+     */
+    @Test
+    fun `rejects an output directory outside the site`() {
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_SITE_DIR,
+            template(siteName = "Handbook", siteDir = "../elsewhere").validate(),
+        )
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_SITE_DIR,
+            template(siteName = "Handbook", siteDir = "/var/www").validate(),
+        )
+    }
+
+    /**
+     * Use case: the output directory field was cleared. MkDocs needs somewhere to build into, so an empty
+     * value is refused rather than silently defaulted.
+     */
+    @Test
+    fun `rejects a blank output directory`() {
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_SITE_DIR,
+            template(siteName = "Handbook", siteDir = "  ").validate(),
+        )
+    }
+
     private fun template(
         siteName: String,
         docsDir: String = "docs",
         assetsDir: String = "assets",
+        siteDir: String = "site",
     ): MkDocsSiteTemplate = MkDocsSiteTemplate(
         rootPath = root(),
         siteName = siteName,
         docsDirName = docsDir,
         assetsDirName = assetsDir,
+        siteDirName = siteDir,
     )
 }

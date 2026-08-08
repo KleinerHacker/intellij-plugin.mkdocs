@@ -118,6 +118,49 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
     }
 
+    /**
+     * Use case: a site builds into a directory of the surrounding build system. The configured value has to
+     * be reported as written, so the plugin knows where the rendered site lands.
+     */
+    fun `test reads the configured output directory`() {
+        val file = configFile("out/mkdocs.yml", "site_name: Handbook\nsite_dir: target/docs\n")
+
+        assertEquals("target/docs", readSiteDir(file))
+        assertEquals("target/docs", resolveSiteDir(file))
+    }
+
+    /**
+     * Use case: a site without `site_dir`, which is the common case. MkDocs then builds into `site`, and so
+     * must the plugin assume.
+     */
+    fun `test falls back to the default output directory`() {
+        val file = configFile("plain/mkdocs.yml", "site_name: Handbook\n")
+
+        assertNull(readSiteDir(file))
+        assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
+    }
+
+    /**
+     * Use case: a half-written file makes the parser see a sequence behind `site_dir`. The text of such a
+     * node is no usable directory, so the default applies.
+     */
+    fun `test falls back when the output directory is no scalar`() {
+        val file = configFile("seq/mkdocs.yml", "site_name: Handbook\nsite_dir:\n  - one\n  - two\n")
+
+        assertNull(readSiteDir(file))
+        assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
+    }
+
+    /**
+     * Use case: `site_dir` is present but empty. An empty directory name is unusable, so the default applies.
+     */
+    fun `test falls back when the output directory is blank`() {
+        val file = configFile("blank/mkdocs.yml", "site_name: Handbook\nsite_dir: \"   \"\n")
+
+        assertNull(readSiteDir(file))
+        assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
+    }
+
     private fun configFile(path: String, text: String): VirtualFile =
         myFixture.addFileToProject(path, text).virtualFile
 
@@ -132,4 +175,10 @@ class MkDocsConfigTest : BasePlatformTestCase() {
 
     private fun resolveDocsDir(file: VirtualFile): String =
         runReadActionBlocking { MkDocsConfig.resolveDocsDir(project, file) }
+
+    private fun readSiteDir(file: VirtualFile): String? =
+        runReadActionBlocking { MkDocsConfig.readSiteDir(project, file) }
+
+    private fun resolveSiteDir(file: VirtualFile): String =
+        runReadActionBlocking { MkDocsConfig.resolveSiteDir(project, file) }
 }

@@ -18,15 +18,21 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 - A module of its own is created only for a site that belongs to no module at all; otherwise the surrounding
   module is used, which keeps Gradle and Maven imports untouched.
 - **Create a site from the IDE** — *New → MkDocs Site*, in the project view context menu and under
-  *File → New*. The wizard asks for the location, the site name, the documentation directory and the assets
-  directory, then writes `mkdocs.yml`, a start page and the directory structure. A second step offers the
-  optional features of a site; it is fed by the `siteFeature` extension point and is empty until the first
-  feature ships.
+  *File → New*. The wizard asks for the location, the site name, the documentation directory, the assets
+  directory and the build output directory, then writes `mkdocs.yml`, a start page and the directory
+  structure. A second step offers the optional features of a site; it is fed by the `siteFeature` extension
+  point and is empty until the first feature ships.
+- **Output directory follows the build system** — `site_dir` is pre-filled with `target/docs` in a Maven
+  module, `build/docs` in a Gradle module, `out/docs` in a plain IntelliJ IDEA module and `site` everywhere
+  else, so a build never drops its HTML next to the sources.
 - **Marked in the project view** — the site root directory shows its `site_name` in brackets behind the
   directory name, like a Maven project directory, and its folder icon carries a small MkDocs badge. The
   documentation directory and the assets directory get their own badge.
-- **Own file icon** — `mkdocs.yml` / `mkdocs.yaml` is shown with a dedicated MkDocs icon instead of the
-  generic YAML one, everywhere the IDE renders it.
+- **Own file icons** — `mkdocs.yml` / `mkdocs.yaml` is shown with a dedicated MkDocs icon instead of the
+  generic YAML one, and every Markdown file below `docs_dir` gets a page icon, everywhere the IDE renders
+  them.
+- **Suggestions in *New Directory*** — a site missing its documentation or assets directory offers it in the
+  platform dialog, with the same badge the project view uses.
 
 ## Project structure
 

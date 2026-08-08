@@ -18,32 +18,37 @@ import javax.swing.Icon
 /**
  * Central registry of every icon shipped with the plugin.
  *
- * Icon files live in the `icons` resource folder and are named `<name>@<size>.<ext>`, with a `_dark`
+ * Icon files live in the `icons` resource folder and are named `<name>@<size>.svg`, with a `_dark`
  * suffix for the dark theme variant. Loading goes through [IconLoader] to get lazy loading and caching.
  */
 object MkDocsIcons {
 
     /** The MkDocs logo, used for the MkDocs facet. */
     @JvmField
-    val MkDocs: Icon = load("mkdocs@16.png")
+    val MkDocs: Icon = load("mkdocs@16.svg")
 
     /** The MkDocs logo at double size, for places that render larger icons. */
     @JvmField
-    val MkDocsLarge: Icon = load("mkdocs@32.png")
+    val MkDocsLarge: Icon = load("mkdocs@32.svg")
 
-    /** Small marker overlaid on the folder icon of an MkDocs site root in the project view. */
+    /**
+     * Small marker overlaid on the folder icon of an MkDocs site root in the project view.
+     *
+     * A circle, so it stays apart from the other two site markers even at overlay size — all three can
+     * appear directly below one another in the tree.
+     */
     @JvmField
-    val Badge: Icon = load("mkdocs-badge@8.png")
+    val Badge: Icon = load("mkdocs-badge@8.svg")
 
     /** The site marker at the regular icon size, for places rendering it on its own. */
     @JvmField
-    val BadgeLarge: Icon = load("mkdocs-badge@16.png")
+    val BadgeLarge: Icon = load("mkdocs-badge@16.svg")
 
     /**
      * Marker overlaid on the folder icon of the documentation directory of a site.
      *
-     * A circle, so it stays apart from the rounded square of [Badge] even at overlay size — the two can
-     * appear directly below one another in the tree.
+     * A portrait sheet with a folded corner, keeping it apart from the circle of [Badge] by silhouette
+     * alone.
      */
     @JvmField
     val DocsBadge: Icon = load("mkdocs-docs-badge@8.svg")
@@ -55,7 +60,7 @@ object MkDocsIcons {
     /**
      * Marker overlaid on the folder icon of the assets directory of a site.
      *
-     * A diamond, again to keep the three markers of a site apart by silhouette alone.
+     * A landscape picture frame, again to keep the three markers of a site apart by silhouette alone.
      */
     @JvmField
     val AssetsBadge: Icon = load("mkdocs-assets-badge@8.svg")
@@ -64,13 +69,21 @@ object MkDocsIcons {
     @JvmField
     val AssetsBadgeLarge: Icon = load("mkdocs-assets-badge@16.svg")
 
+    /** Icon of a Markdown file below the documentation directory of a site, replacing the generic one. */
+    @JvmField
+    val MarkdownFile: Icon = load("mkdocs-md@16.svg")
+
+    /** The Markdown page icon at double size, for places that render larger icons. */
+    @JvmField
+    val MarkdownFileLarge: Icon = load("mkdocs-md@32.svg")
+
     /** Icon of an MkDocs configuration file, replacing the generic YAML icon. */
     @JvmField
-    val ConfigFile: Icon = load("mkdocs-file@16.png")
+    val ConfigFile: Icon = load("mkdocs-file@16.svg")
 
     /** The configuration file icon at double size, for places that render larger icons. */
     @JvmField
-    val ConfigFileLarge: Icon = load("mkdocs-file@32.png")
+    val ConfigFileLarge: Icon = load("mkdocs-file@32.svg")
 
     private fun load(fileName: String): Icon = IconLoader.getIcon("/icons/$fileName", MkDocsIcons::class.java)
 }

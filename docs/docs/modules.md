@@ -37,12 +37,26 @@ The wizard has two steps.
 | Site name               | written to `site_name`                                                   |
 | Documentation directory | holds the `*.md` files, default `docs`                                   |
 | Assets directory        | holds asset files, created inside the documentation directory, default `assets` |
+| Output directory        | where `mkdocs build` writes the rendered site, written to `site_dir`     |
 
 The location starts at the directory you invoked the action on and follows the site name as you type it, the
 same way the new project dialog does: entering *Handbook* below `~/projects` makes the location
 `~/projects/Handbook`. Whatever of the path does not exist yet is created along with the site, however many
 levels that takes. As soon as you edit the location yourself, it stops following the name — from then on the
 path is yours.
+
+The output directory follows the location by the same rule. Which build system surrounds the site decides
+where its generated output belongs:
+
+| Surrounding module                             | Suggested output directory |
+|------------------------------------------------|----------------------------|
+| Maven (`pom.xml`)                              | `target/docs`              |
+| Gradle (`build.gradle`, `build.gradle.kts`, …) | `build/docs`               |
+| Plain IntelliJ IDEA module (`.idea`, `*.iml`)  | `out/docs`                 |
+| No build system at all                         | `site`, the MkDocs default |
+
+The search starts at the innermost existing directory of the location and walks upwards, so it works while
+the site directory itself does not exist yet. Editing the field stops it from following the location.
 
 The step reports what it finds at that location:
 
@@ -57,7 +71,9 @@ The last case is refused because MkDocs loads exactly one configuration file per
 it would be ignored and would confuse the module detection.
 
 **Next** stays greyed out as long as the step cannot produce a site: no site name, an unusable location, an
-empty or path-carrying directory name, or a directory that already holds a configuration file.
+empty or path-carrying directory name, or a directory that already holds a configuration file. The output
+directory may carry several levels, but it has to stay below the site root — an absolute path or one climbing
+out with `..` is refused.
 
 **Step 2 — the features**
 
@@ -74,9 +90,10 @@ The result is the smallest structure MkDocs works with:
     assets/
 ```
 
-`docs_dir` is written to `mkdocs.yml` only when the documentation directory differs from the MkDocs default
-— repeating a default in a configuration file tells the reader nothing. The assets directory has no MkDocs
-key at all; the chosen name is remembered in the [MkDocs facet](#the-mkdocs-facet).
+`docs_dir` and `site_dir` are written to `mkdocs.yml` only when they differ from the MkDocs defaults —
+repeating a default in a configuration file tells the reader nothing. Values carrying YAML syntax, such as a
+site name with a colon or a hash in it, are quoted. The assets directory has no MkDocs key at all; the chosen
+name is remembered in the [MkDocs facet](#the-mkdocs-facet).
 
 Detection runs immediately afterwards, so the new site is an MkDocs module as soon as the wizard closes.
 
@@ -122,11 +139,11 @@ directory whose module has not been detected yet.
 
 Two directories inside a site are badged as well, each with a marker of its own:
 
-| Directory               | Marker         | Recognised by                                                   |
-|-------------------------|----------------|-----------------------------------------------------------------|
-| Site root               | MkDocs logo    | it directly contains the configuration file                     |
-| Documentation directory | green circle   | `docs_dir` of the site directly above it, default `docs`        |
-| Assets directory        | orange diamond | the name in the facet, directly inside the documentation directory |
+| Directory               | Marker          | Recognised by                                                   |
+|-------------------------|-----------------|-----------------------------------------------------------------|
+| Site root               | circle          | it directly contains the configuration file                     |
+| Documentation directory | sheet of paper  | `docs_dir` of the site directly above it, default `docs`        |
+| Assets directory        | picture frame   | the name in the facet, directly inside the documentation directory |
 
 The three markers differ in shape, not only in colour, so they stay apart at overlay size. A directory named
 `assets` somewhere deeper in the documentation tree is not the assets directory and stays unmarked.
@@ -134,9 +151,30 @@ The three markers differ in shape, not only in colour, so they stay apart at ove
 The colour of the name comes from the colour scheme entry `MKDOCS_SITE_NAME`, which ships with a value for
 light themes and one for dark themes, so the marking stays readable in either.
 
-The configuration file itself carries a dedicated MkDocs icon instead of the generic YAML one — in the
-project view, in editor tabs and in navigation popups alike. Its file type stays YAML, so all YAML support
-keeps working; only the icon changes.
+Two kinds of file get an icon of their own — in the project view, in editor tabs and in navigation popups
+alike:
+
+| File                          | Icon                     | Recognised by                                        |
+|-------------------------------|--------------------------|------------------------------------------------------|
+| `mkdocs.yml` / `mkdocs.yaml`  | MkDocs configuration     | the file name                                        |
+| `*.md` below `docs_dir`       | MkDocs page              | it lives inside the documentation directory of a site |
+
+The page icon applies recursively, so a file in `docs/guide/advanced/` is marked just like one directly in
+`docs/`. Markdown outside the documentation directory — a README in the site root, say — is not published by
+MkDocs and keeps the icon the IDE gives it. The file types stay YAML and Markdown, so all existing support
+keeps working; only the icons change.
+
+## Suggested directories
+
+A site that is missing one of its directories offers it in the platform's **New Directory** dialog:
+
+| Invoked on                  | Suggestion                                          |
+|-----------------------------|-----------------------------------------------------|
+| the site root               | the documentation directory named by `docs_dir`     |
+| the documentation directory | the assets directory named in the facet             |
+
+Each suggestion carries the same badge the project view puts on the finished directory. A directory that
+already exists is not offered — there would be nothing to create.
 
 ## Module name
 

@@ -12,7 +12,9 @@
 
 package org.pcsoft.ij.plugin.mkdocs
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -39,5 +41,97 @@ class MkDocsProjectTest {
         assertFalse(MkDocsProject.isConfigFile(""))
         // A path is not a bare file name — callers must strip the directory part themselves.
         assertFalse(MkDocsProject.isConfigFile("docs/mkdocs.yml"))
+    }
+
+    /**
+     * Use case: the icon provider asks whether a file is a page of a site. Only Markdown files are, and the
+     * extension has to be recognised whatever way it is spelled.
+     */
+    @Test
+    fun `recognises markdown page files`() {
+        assertTrue(MkDocsProject.isPageFile("index.md"))
+        assertTrue(MkDocsProject.isPageFile("Getting-Started.MD"))
+        assertFalse(MkDocsProject.isPageFile("index.markdown"))
+        assertFalse(MkDocsProject.isPageFile("mkdocs.yml"))
+        // A file called just ".md" is an extension without a name, not a page.
+        assertFalse(MkDocsProject.isPageFile(".md"))
+        assertFalse(MkDocsProject.isPageFile(""))
+    }
+
+    /**
+     * Use case: the wizard suggests an output directory. A Maven module keeps generated output under
+     * `target`, so the site must not drop its HTML next to the sources.
+     */
+    @Test
+    fun `suggests the maven output directory`() {
+        assertEquals(MkDocsProject.MAVEN_SITE_DIR, MkDocsProject.siteDirFor(listOf("pom.xml", "src")))
+    }
+
+    /**
+     * Use case: the same for a Gradle module, in both the Groovy and the Kotlin spelling of the build script.
+     */
+    @Test
+    fun `suggests the gradle output directory`() {
+        assertEquals(MkDocsProject.GRADLE_SITE_DIR, MkDocsProject.siteDirFor(listOf("build.gradle")))
+        assertEquals(MkDocsProject.GRADLE_SITE_DIR, MkDocsProject.siteDirFor(listOf("build.gradle.kts")))
+        assertEquals(MkDocsProject.GRADLE_SITE_DIR, MkDocsProject.siteDirFor(listOf("settings.gradle.kts")))
+    }
+
+    /**
+     * Use case: a plain IntelliJ IDEA module, recognised by its `.idea` directory or its module file.
+     */
+    @Test
+    fun `suggests the idea output directory`() {
+        assertEquals(MkDocsProject.IDEA_SITE_DIR, MkDocsProject.siteDirFor(listOf(".idea")))
+        assertEquals(MkDocsProject.IDEA_SITE_DIR, MkDocsProject.siteDirFor(listOf("handbook.iml")))
+    }
+
+    /**
+     * Use case: a directory carrying markers of several build systems. Maven wins over Gradle and Gradle over
+     * IDEA, so a Maven project imported into the IDE does not get the IDEA directory.
+     */
+    @Test
+    fun `prefers the outermost build system`() {
+        assertEquals(
+            MkDocsProject.MAVEN_SITE_DIR,
+            MkDocsProject.siteDirFor(listOf(".idea", "build.gradle", "pom.xml")),
+        )
+        assertEquals(MkDocsProject.GRADLE_SITE_DIR, MkDocsProject.siteDirFor(listOf(".idea", "build.gradle")))
+    }
+
+    /**
+     * Use case: a directory belonging to no build system at all. There is nothing to derive, so the caller
+     * has to fall back to the MkDocs default itself.
+     */
+    @Test
+    fun `announces no build system for an unrelated directory`() {
+        assertNull(MkDocsProject.siteDirFor(listOf("docs", "README.md")))
+        assertNull(MkDocsProject.siteDirFor(emptyList()))
+    }
+
+    /**
+     * Use case: the user types an output directory. Several levels are fine — the build systems nest their
+     * output — but the path must stay below the site root.
+     */
+    @Test
+    fun `accepts nested output directories`() {
+        assertTrue(MkDocsProject.isValidSiteDirName("site"))
+        assertTrue(MkDocsProject.isValidSiteDirName("target/docs"))
+        assertTrue(MkDocsProject.isValidSiteDirName("build\\docs"))
+    }
+
+    /**
+     * Use case: an output directory that would escape the site root or address a place of its own. MkDocs
+     * would happily write there, which is exactly what must not happen by accident.
+     */
+    @Test
+    fun `rejects output directories leaving the site root`() {
+        assertFalse(MkDocsProject.isValidSiteDirName(""))
+        assertFalse(MkDocsProject.isValidSiteDirName("   "))
+        assertFalse(MkDocsProject.isValidSiteDirName("/var/www"))
+        assertFalse(MkDocsProject.isValidSiteDirName("C:/temp"))
+        assertFalse(MkDocsProject.isValidSiteDirName("../site"))
+        assertFalse(MkDocsProject.isValidSiteDirName("site/"))
+        assertFalse(MkDocsProject.isValidSiteDirName("build//docs"))
     }
 }

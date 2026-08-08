@@ -23,10 +23,9 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.ui.LayeredIcon
 import com.intellij.ui.SimpleTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import javax.swing.Icon
 import javax.swing.SwingConstants
 
@@ -48,12 +47,10 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
          * @param directory the directory to inspect
          */
         @JvmStatic
-        fun isSiteRoot(directory: VirtualFile): Boolean =
-            directory.isValid && directory.isDirectory &&
-                MkDocsProject.CONFIG_FILE_NAMES.any { directory.findChild(it) != null }
+        fun isSiteRoot(directory: VirtualFile): Boolean = MkDocsLayout.isSiteRoot(directory)
 
         /**
-         * Returns `true` if [directory] is the documentation directory of the site rooted directly above it.
+         * Returns `true` if [directory] is the documentation directory of the site it belongs to.
          *
          * The name comes from `docs_dir` of that site, falling back to the MkDocs default.
          *
@@ -61,16 +58,11 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
          * @param directory the directory to inspect
          */
         @JvmStatic
-        fun isDocsDirectory(project: Project, directory: VirtualFile): Boolean {
-            if (!directory.isValid || !directory.isDirectory) return false
-            val siteRoot = directory.parent?.takeIf { isSiteRoot(it) } ?: return false
-            val configFile = MkDocsProject.CONFIG_FILE_NAMES.firstNotNullOfOrNull { siteRoot.findChild(it) }
-                ?: return false
-            return directory.name == MkDocsConfig.resolveDocsDir(project, configFile)
-        }
+        fun isDocsDirectory(project: Project, directory: VirtualFile): Boolean =
+            MkDocsLayout.isDocsDirectory(project, directory)
 
         /**
-         * Returns `true` if [directory] is the assets directory of the site two levels above it.
+         * Returns `true` if [directory] is the assets directory of the site it belongs to.
          *
          * The expected name is taken from the MkDocs facet of the owning module, because MkDocs itself has no
          * configuration key for the assets directory.
@@ -80,14 +72,8 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
          * @param directory the directory to inspect
          */
         @JvmStatic
-        fun isAssetsDirectory(project: Project, module: Module, directory: VirtualFile): Boolean {
-            if (!directory.isValid || !directory.isDirectory) return false
-            val docsDir = directory.parent ?: return false
-            if (!isDocsDirectory(project, docsDir)) return false
-            val expected = MkDocsFacet.getInstance(module)?.configuration?.assetsDirName
-                ?: MkDocsProject.DEFAULT_ASSETS_DIR
-            return directory.name == expected
-        }
+        fun isAssetsDirectory(project: Project, module: Module, directory: VirtualFile): Boolean =
+            MkDocsLayout.isAssetsDirectory(project, module, directory)
 
         /**
          * Puts [badge] into the lower right corner of [base].

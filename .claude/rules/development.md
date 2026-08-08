@@ -4,6 +4,8 @@ name: development
 
 # Development
 
+* NEVER run `verifyPlugin`
+
 ## Planning
 
 * A plan MUST be created for EVERY change, ALWAYS ask the user to create a plan or not

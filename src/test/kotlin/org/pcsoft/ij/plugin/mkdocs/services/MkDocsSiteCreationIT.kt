@@ -51,9 +51,9 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
         assertEquals("site_name: Handbook\n", VfsUtilCore.loadText(site.configFile))
         assertEquals("# Handbook\n", VfsUtilCore.loadText(directory.findFileByRelativePath("docs/index.md")!!))
         assertNotNull(directory.findFileByRelativePath("docs/assets"))
-        assertNotNull(
-            "the empty assets directory needs a keep file to survive a commit",
-            directory.findFileByRelativePath("docs/assets/${MkDocsSiteCreationService.VCS_KEEP_FILE}"),
+        assertEmpty(
+            "the assets directory is created empty, without any placeholder file",
+            directory.findFileByRelativePath("docs/assets")!!.children.toList(),
         )
 
         val module = ModuleManager.getInstance(project).findModuleByName("Handbook")
@@ -127,6 +127,68 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
         val module = ModuleManager.getInstance(project).findModuleByName("Manual")
         assertNotNull(module)
         assertEquals("media", MkDocsFacet.getInstance(module!!)!!.configuration.assetsDirName)
+    }
+
+    /**
+     * Use case: a site created inside a build system module. The wizard suggested that build system's output
+     * directory, and `site_dir` has to be written so MkDocs actually builds there.
+     */
+    fun `test creating a site keeps a custom output directory`() {
+        val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "built")
+
+        val site = service.create(
+            MkDocsSiteTemplate(
+                rootPath = directory.toNioPath(),
+                siteName = "Built",
+                siteDirName = "target/docs",
+            ),
+        )
+
+        assertEquals("site_name: Built\nsite_dir: target/docs\n", VfsUtilCore.loadText(site.configFile))
+    }
+
+    /**
+     * Use case: a site left at the MkDocs default output directory. Repeating a default in the configuration
+     * file tells the reader nothing, so the key is omitted.
+     */
+    fun `test creating a site omits the default output directory`() {
+        val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "plainbuild")
+
+        val site = service.create(
+            MkDocsSiteTemplate(rootPath = directory.toNioPath(), siteName = "Plain Build"),
+        )
+
+        assertEquals("site_name: Plain Build\n", VfsUtilCore.loadText(site.configFile))
+    }
+
+    /**
+     * Use case: a site name carrying YAML syntax — a colon, a hash, a quote. Written as it is, such a name
+     * would turn the generated file into something YAML reads differently, or refuses altogether.
+     */
+    fun `test creating a site quotes a site name carrying yaml syntax`() {
+        val colon = service.create(
+            MkDocsSiteTemplate(
+                rootPath = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "colon").toNioPath(),
+                siteName = "Handbook: The Guide",
+            ),
+        )
+        assertEquals("site_name: 'Handbook: The Guide'\n", VfsUtilCore.loadText(colon.configFile))
+
+        val hash = service.create(
+            MkDocsSiteTemplate(
+                rootPath = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "hash").toNioPath(),
+                siteName = "Docs #1",
+            ),
+        )
+        assertEquals("site_name: 'Docs #1'\n", VfsUtilCore.loadText(hash.configFile))
+
+        val quote = service.create(
+            MkDocsSiteTemplate(
+                rootPath = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "quote").toNioPath(),
+                siteName = "Ann's Docs",
+            ),
+        )
+        assertEquals("site_name: 'Ann''s Docs'\n", VfsUtilCore.loadText(quote.configFile))
     }
 
     /**

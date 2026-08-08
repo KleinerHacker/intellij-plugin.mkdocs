@@ -14,6 +14,7 @@ import com.github.jk1.license.render.ReportRenderer
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.SignPluginTask
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.time.Duration
 
@@ -42,6 +43,10 @@ kotlin {
     jvmToolchain(25)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
+        // Inherit Java default methods instead of generating an override for each of them. Without this a
+        // class implementing a platform interface silently overrides *every* default method it declares,
+        // including the deprecated ones — which the plugin verifier reports as a deprecation of ours.
+        jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
     }
 }
 

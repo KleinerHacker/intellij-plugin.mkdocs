@@ -13,22 +13,34 @@
 package org.pcsoft.ij.plugin.mkdocs.module
 
 import com.intellij.ide.FileIconProvider
+import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import javax.swing.Icon
 
 /**
- * Replaces the generic YAML icon of `mkdocs.yml` / `mkdocs.yaml` with the MkDocs configuration icon.
+ * Gives the files of an MkDocs site their own icons.
  *
- * The file keeps its YAML file type — only its icon changes — so the configuration file is recognisable at a
- * glance wherever the IDE renders it: project view, editor tabs, "Go to file" and navigation popups.
+ * Two kinds of file are recognised: the configuration file `mkdocs.yml` / `mkdocs.yaml`, and every Markdown
+ * file below the documentation directory of a site — those are the pages MkDocs actually publishes. Both
+ * keep their file type, only the icon changes, so they are recognisable at a glance wherever the IDE renders
+ * them: project view, editor tabs, "Go to file" and navigation popups.
  */
 class MkDocsFileIconProvider : FileIconProvider {
 
     override fun getIcon(file: VirtualFile, flags: Int, project: Project?): Icon? {
         if (file.isDirectory) return null
-        return if (MkDocsProject.isConfigFile(file.name)) MkDocsIcons.ConfigFile else null
+        if (MkDocsProject.isConfigFile(file.name)) return MkDocsIcons.ConfigFile
+        if (!MkDocsProject.isPageFile(file.name)) return null
+
+        // Without a project there is no PSI to read docs_dir from, so the site cannot be identified.
+        val owningProject = project ?: return null
+        // Resolving the site reads the PSI of the configuration file, which needs a read action. The check is
+        // a couple of parent lookups, so blocking is cheaper than handing it to a background thread.
+        val isPage = runReadActionBlocking { MkDocsLayout.isInsideDocsDir(owningProject, file) }
+        return if (isPage) MkDocsIcons.MarkdownFile else null
     }
 }

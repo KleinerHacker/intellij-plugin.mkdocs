@@ -34,7 +34,21 @@
   detection only. A facet that reaches a module without a configuration file behind it now reports an error
   in its tab instead of showing empty fields.
 
+- Every Markdown file below the documentation directory of a site now carries its own page icon, recursively
+  through subdirectories. Markdown files outside the documentation directory, such as a README in the site
+  root, keep the icon the IDE gives them.
+- The creation wizard has a fourth field for the build output directory, written to `site_dir`. It is
+  pre-filled from the build system surrounding the location — `target/docs` for Maven, `build/docs` for
+  Gradle, `out/docs` for a plain IntelliJ IDEA module, and `site` when there is no build system — and follows
+  the location until it is edited by hand.
+- The *New Directory* dialog now suggests the directories a site is still missing: the documentation
+  directory at the site root, the assets directory inside it, each with its badge and only while it does not
+  exist yet.
+
 ### Fixed
 
 - The plugin no longer requires the Kotlin IDE plugin and can therefore be installed in Rider, CLion and
   GoLand, which do not ship it.
+- A site name containing YAML syntax such as `:`, `#` or a quote no longer produces a broken `mkdocs.yml` —
+  values are quoted when they need to be.
+- The assets directory of a new site is no longer created with a `.gitkeep` file in it.

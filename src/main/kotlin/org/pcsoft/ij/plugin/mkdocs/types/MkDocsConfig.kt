@@ -37,23 +37,38 @@ object MkDocsConfig {
     /** The MkDocs configuration key holding the directory the documentation sources live in. */
     const val KEY_DOCS_DIR: String = "docs_dir"
 
+    /** The MkDocs configuration key holding the directory the rendered site is written to. */
+    const val KEY_SITE_DIR: String = "site_dir"
+
+    /**
+     * Reads the scalar value of [key] from [configFile].
+     *
+     * Only a scalar value is accepted. A half-written file can make the parser see a sequence or a mapping
+     * behind a key, and the text of such a node is no usable value.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @param key the configuration key to read
+     * @return the trimmed value, or `null` if the file is not YAML, the key is absent, its value is not a
+     *         scalar, or the value is blank
+     */
+    private fun readScalar(project: Project, configFile: VirtualFile, key: String): String? {
+        val yamlFile = PsiManager.getInstance(project).findFile(configFile) as? YAMLFile ?: return null
+        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, key) ?: return null
+        val scalar = keyValue.value as? YAMLScalar ?: return null
+        return scalar.textValue.trim().takeIf { it.isNotEmpty() }
+    }
+
     /**
      * Reads `site_name` from [configFile].
      *
      * @param project the project [configFile] belongs to, used to obtain the PSI
      * @param configFile an MkDocs configuration file
-     * Only a scalar value is accepted. A half-written file can make the parser see a sequence or a mapping
-     * behind `site_name`, and the text of such a node is no usable name.
-     *
      * @return the trimmed value of `site_name`, or `null` if the file is not YAML, the key is absent, its
      *         value is not a scalar, or the value is blank
      */
-    fun readSiteName(project: Project, configFile: VirtualFile): String? {
-        val yamlFile = PsiManager.getInstance(project).findFile(configFile) as? YAMLFile ?: return null
-        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, KEY_SITE_NAME) ?: return null
-        val scalar = keyValue.value as? YAMLScalar ?: return null
-        return scalar.textValue.trim().takeIf { it.isNotEmpty() }
-    }
+    fun readSiteName(project: Project, configFile: VirtualFile): String? =
+        readScalar(project, configFile, KEY_SITE_NAME)
 
     /**
      * Determines the name of the MkDocs module for [configFile].
@@ -73,20 +88,15 @@ object MkDocsConfig {
     /**
      * Reads `docs_dir` from [configFile].
      *
-     * Only a scalar value is accepted, for the same reason as in [readSiteName]. The value is returned as
-     * written — MkDocs resolves it relative to the configuration file, and a site may well point it at a
-     * directory of its own naming.
+     * The value is returned as written — MkDocs resolves it relative to the configuration file, and a site
+     * may well point it at a directory of its own naming.
      *
      * @param project the project [configFile] belongs to, used to obtain the PSI
      * @param configFile an MkDocs configuration file
      * @return the trimmed value of `docs_dir`, or `null` if it is absent, not a scalar, or blank
      */
-    fun readDocsDir(project: Project, configFile: VirtualFile): String? {
-        val yamlFile = PsiManager.getInstance(project).findFile(configFile) as? YAMLFile ?: return null
-        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, KEY_DOCS_DIR) ?: return null
-        val scalar = keyValue.value as? YAMLScalar ?: return null
-        return scalar.textValue.trim().takeIf { it.isNotEmpty() }
-    }
+    fun readDocsDir(project: Project, configFile: VirtualFile): String? =
+        readScalar(project, configFile, KEY_DOCS_DIR)
 
     /**
      * Determines the documentation directory of the site described by [configFile].
@@ -100,4 +110,29 @@ object MkDocsConfig {
      */
     fun resolveDocsDir(project: Project, configFile: VirtualFile): String =
         readDocsDir(project, configFile) ?: MkDocsProject.DEFAULT_DOCS_DIR
+
+    /**
+     * Reads `site_dir` from [configFile].
+     *
+     * The value is returned as written, for the same reason as in [readDocsDir].
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @return the trimmed value of `site_dir`, or `null` if it is absent, not a scalar, or blank
+     */
+    fun readSiteDir(project: Project, configFile: VirtualFile): String? =
+        readScalar(project, configFile, KEY_SITE_DIR)
+
+    /**
+     * Determines the build output directory of the site described by [configFile].
+     *
+     * Falls back to [MkDocsProject.DEFAULT_SITE_DIR], which is what MkDocs itself uses when the key is
+     * missing.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     * @return the output directory, relative to the site root, never blank
+     */
+    fun resolveSiteDir(project: Project, configFile: VirtualFile): String =
+        readSiteDir(project, configFile) ?: MkDocsProject.DEFAULT_SITE_DIR
 }

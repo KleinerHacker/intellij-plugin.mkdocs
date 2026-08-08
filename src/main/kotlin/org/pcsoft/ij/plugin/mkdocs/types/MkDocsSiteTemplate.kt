@@ -34,6 +34,9 @@ import kotlin.io.path.name
  * @property docsDirName directory the documentation sources go into, written to `docs_dir` when it differs
  *                       from the MkDocs default
  * @property assetsDirName directory for asset files, created inside [docsDirName]
+ * @property siteDirName directory `mkdocs build` writes the rendered site to, written to `site_dir` when it
+ *                       differs from the MkDocs default. Unlike the other directories this one may carry
+ *                       several levels, because the build systems keep their output nested
  * @property features the features to switch on for the new site
  */
 data class MkDocsSiteTemplate(
@@ -41,6 +44,7 @@ data class MkDocsSiteTemplate(
     val siteName: String,
     val docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR,
     val assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR,
+    val siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR,
     val features: List<MkDocsSiteFeature> = emptyList(),
 ) {
 
@@ -55,6 +59,7 @@ data class MkDocsSiteTemplate(
         siteName.isBlank() -> MkDocsSiteTemplateError.BLANK_SITE_NAME
         !MkDocsProject.isValidDirectoryName(docsDirName) -> MkDocsSiteTemplateError.INVALID_DOCS_DIR
         !MkDocsProject.isValidDirectoryName(assetsDirName) -> MkDocsSiteTemplateError.INVALID_ASSETS_DIR
+        !MkDocsProject.isValidSiteDirName(siteDirName) -> MkDocsSiteTemplateError.INVALID_SITE_DIR
         holdsConfigFile() -> MkDocsSiteTemplateError.SITE_EXISTS
         else -> null
     }
@@ -115,6 +120,9 @@ enum class MkDocsSiteTemplateError(val messageKey: String) {
 
     /** The assets directory name is empty or carries a path of its own. */
     INVALID_ASSETS_DIR("create.site.error.assetsDir"),
+
+    /** The output directory is empty, absolute, or climbs out of the site root. */
+    INVALID_SITE_DIR("create.site.error.siteDir"),
 
     /** The target directory already holds an MkDocs configuration file. */
     SITE_EXISTS("create.site.error.exists"),

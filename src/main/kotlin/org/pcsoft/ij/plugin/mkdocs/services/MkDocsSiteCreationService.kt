@@ -42,8 +42,13 @@ class MkDocsSiteCreationService(private val project: Project) {
 
     companion object {
 
-        /** Name of the file keeping the otherwise empty assets directory alive in version control. */
-        const val VCS_KEEP_FILE: String = ".gitkeep"
+        /**
+         * Values matching this can go into the configuration file as they are.
+         *
+         * Everything else is quoted: a site name carrying a colon, a hash or a leading indicator character
+         * would otherwise turn the generated file into something YAML reads differently, or not at all.
+         */
+        private val PLAIN_SCALAR = Regex("^[A-Za-z0-9][A-Za-z0-9 ._/-]*$")
 
         /**
          * Returns the service instance for [project].
@@ -52,6 +57,22 @@ class MkDocsSiteCreationService(private val project: Project) {
          */
         @JvmStatic
         fun getInstance(project: Project): MkDocsSiteCreationService = project.service()
+
+        /**
+         * Renders [value] as a YAML scalar.
+         *
+         * Single quoting is enough for everything the wizard can produce, and inside single quotes YAML
+         * gives no character but the quote itself a meaning — which is escaped by doubling it.
+         *
+         * @param value the raw value as the user typed it
+         */
+        @JvmStatic
+        fun yamlScalar(value: String): String =
+            if (PLAIN_SCALAR.matches(value) && !value.endsWith(" ")) {
+                value
+            } else {
+                "'${value.replace("'", "''")}'"
+            }
     }
 
     /**
@@ -106,10 +127,8 @@ class MkDocsSiteCreationService(private val project: Project) {
         val indexFile = docsDir.createChildData(this, "index.md")
         VfsUtil.saveText(indexFile, buildIndexText(template))
 
-        val assetsDir = VfsUtil.createDirectoryIfMissing(docsDir, template.assetsDirName)
+        VfsUtil.createDirectoryIfMissing(docsDir, template.assetsDirName)
             ?: error("Cannot create assets directory '${template.assetsDirName}'")
-        // An empty directory would not survive a commit, and the assets directory starts out empty.
-        assetsDir.createChildData(this, VCS_KEEP_FILE)
 
         return MkDocsSite(root = root, configFile = configFile, siteName = template.siteName)
     }
@@ -117,13 +136,16 @@ class MkDocsSiteCreationService(private val project: Project) {
     /**
      * Builds the content of `mkdocs.yml`.
      *
-     * `docs_dir` is written only when it differs from what MkDocs assumes anyway — a configuration file
-     * repeating the defaults tells the reader nothing.
+     * `docs_dir` and `site_dir` are written only when they differ from what MkDocs assumes anyway — a
+     * configuration file repeating the defaults tells the reader nothing.
      */
     private fun buildConfigText(template: MkDocsSiteTemplate): String = buildString {
-        append("${MkDocsConfig.KEY_SITE_NAME}: ${template.siteName}\n")
+        append("${MkDocsConfig.KEY_SITE_NAME}: ${yamlScalar(template.siteName)}\n")
         if (template.docsDirName != MkDocsProject.DEFAULT_DOCS_DIR) {
-            append("${MkDocsConfig.KEY_DOCS_DIR}: ${template.docsDirName}\n")
+            append("${MkDocsConfig.KEY_DOCS_DIR}: ${yamlScalar(template.docsDirName)}\n")
+        }
+        if (template.siteDirName != MkDocsProject.DEFAULT_SITE_DIR) {
+            append("${MkDocsConfig.KEY_SITE_DIR}: ${yamlScalar(template.siteDirName)}\n")
         }
     }
 

@@ -24,12 +24,12 @@ import com.intellij.ui.DocumentAdapter
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.AlignX
-import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
 import java.nio.file.Path
@@ -42,7 +42,8 @@ import javax.swing.event.DocumentEvent
  *
  * The location follows the site name the way the new project dialog does it: the name is appended to the
  * directory the wizard started from, so typing a name is enough. As soon as the user edits the location
- * themselves the appending stops — from then on the field is theirs.
+ * themselves the appending stops — from then on the field is theirs. The output directory follows the
+ * location by the same rule, because which build system surrounds the site decides where its output belongs.
  *
  * @param project the project the site is created in
  * @param initialDirectory the directory the wizard started from, used as the base of the location
@@ -72,6 +73,21 @@ class MkDocsSiteStep(
             val directoryName = siteName.trim().replace(ILLEGAL_NAME_CHARACTERS, "_").trim()
             return if (directoryName.isEmpty()) baseDirectory else "$baseDirectory/$directoryName"
         }
+
+        /**
+         * Returns the output directory suggested for a site created at [location].
+         *
+         * A location that is no usable path yet keeps the MkDocs default — there is nothing to inspect.
+         *
+         * @param location the location as typed so far
+         */
+        @JvmStatic
+        fun siteDirFor(location: String): String {
+            val path = runCatching { Path.of(location.trim()) }.getOrNull()
+                ?: return MkDocsProject.DEFAULT_SITE_DIR
+            if (!path.isAbsolute) return MkDocsProject.DEFAULT_SITE_DIR
+            return MkDocsLayout.detectSiteDir(path)
+        }
     }
 
     /** Value written to `site_name`. */
@@ -83,11 +99,20 @@ class MkDocsSiteStep(
     /** Name of the directory holding the asset files. */
     var assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR
 
+    /** Directory `mkdocs build` writes the rendered site to. */
+    var siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR
+
     /** `true` once the user edited the location, which stops it from following the site name. */
     private var locationEditedByUser = false
 
+    /** `true` once the user edited the output directory, which stops it from following the location. */
+    private var siteDirEditedByUser = false
+
     /** Guards the location field against mistaking the plugin's own writes for user input. */
     private var updatingLocation = false
+
+    /** Guards the output directory field against mistaking the plugin's own writes for user input. */
+    private var updatingSiteDir = false
 
     /** `true` once every field and the panel exist, so the field listeners may touch them. */
     private var uiReady = false
@@ -109,6 +134,7 @@ class MkDocsSiteStep(
         textField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
                 if (!updatingLocation) locationEditedByUser = true
+                updateSiteDir()
                 refreshStatus()
             }
         })
@@ -135,6 +161,15 @@ class MkDocsSiteStep(
         })
     }
 
+    private val siteDirField = JBTextField(siteDirFor(initialDirectory)).apply {
+        document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                if (!updatingSiteDir) siteDirEditedByUser = true
+                refreshStatus()
+            }
+        })
+    }
+
     private val statusLabel = JBLabel().apply { isVisible = false }
 
     private val panel: DialogPanel = panel {
@@ -149,6 +184,9 @@ class MkDocsSiteStep(
         }
         row(MkDocsBundle.message("create.site.field.assetsDir")) {
             cell(assetsDirField).align(AlignX.FILL)
+        }
+        row(MkDocsBundle.message("create.site.field.siteDir")) {
+            cell(siteDirField).align(AlignX.FILL)
         }
         row {
             comment(MkDocsBundle.message("create.site.hint"))
@@ -219,6 +257,24 @@ class MkDocsSiteStep(
     }
 
     /**
+     * Points the output directory at what the build system around the location expects.
+     *
+     * Does nothing once the user edited the field themselves — from then on their value wins, the same way
+     * the location stops following the site name.
+     */
+    private fun updateSiteDir() {
+        if (!uiReady || siteDirEditedByUser) return
+        val suggestion = siteDirFor(locationField.text)
+        if (siteDirField.text == suggestion) return
+        updatingSiteDir = true
+        try {
+            siteDirField.text = suggestion
+        } finally {
+            updatingSiteDir = false
+        }
+    }
+
+    /**
      * Updates the line below the fields while the user types.
      *
      * Two things are worth showing there: that the target directory already holds an MkDocs configuration
@@ -261,6 +317,7 @@ class MkDocsSiteStep(
         siteName = siteNameField.text.trim()
         docsDirName = docsDirField.text.trim()
         assetsDirName = assetsDirField.text.trim()
+        siteDirName = siteDirField.text.trim()
     }
 
     /**
@@ -276,6 +333,7 @@ class MkDocsSiteStep(
             siteName = siteName,
             docsDirName = docsDirName,
             assetsDirName = assetsDirName,
+            siteDirName = siteDirName,
         )
     }
 
@@ -308,5 +366,11 @@ class MkDocsSiteStep(
     @TestOnly
     internal fun setAssetsDirNameForTest(name: String) {
         assetsDirField.text = name
+    }
+
+    /** Sets the output directory as if it had been typed. */
+    @TestOnly
+    internal fun setSiteDirNameForTest(name: String) {
+        siteDirField.text = name
     }
 }

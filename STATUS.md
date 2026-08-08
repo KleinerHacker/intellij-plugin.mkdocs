@@ -16,8 +16,10 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Re-detection after virtual file system changes                  | ✅      |
 | Site root marked in the project view (site name + badge)        | ✅      |
 | Own file icon for `mkdocs.yml` / `mkdocs.yaml`                   | ✅      |
+| Own file icon for the Markdown pages below `docs_dir`           | ✅      |
 | Documentation and assets directory marked in the project view   | ✅      |
 | Create a new site from the IDE (*New → MkDocs Site*)            | ✅      |
+| Missing site directories suggested in *New Directory*           | ✅      |
 | Tool window listing the detected sites                          | ⬜      |
 
 ## Configuration (`mkdocs.yml`)
@@ -27,6 +29,7 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | `site_name`                                               | ✅      |
 | Schema-based completion and annotation of all other keys  | ⬜      |
 | `docs_dir` read and used (project view marking, site creation) | ✅   |
+| `site_dir` read and written by the creation wizard        | ✅      |
 | `site_dir` awareness (excludes)                           | ⬜      |
 | `nav` navigation (references, completion, validation)     | ⬜      |
 | `theme` (including `material`)                            | ⬜      |

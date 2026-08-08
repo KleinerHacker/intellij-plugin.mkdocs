@@ -68,8 +68,12 @@
         <!-- Shows the site name behind the site root directory in the project view and badges its icon. -->
         <projectViewNodeDecorator implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsProjectViewDecorator"/>
 
-        <!-- Gives mkdocs.yml / mkdocs.yaml its own icon instead of the generic YAML one. -->
+        <!-- Gives mkdocs.yml / mkdocs.yaml and the Markdown pages of a site their own icons. -->
         <fileIconProvider implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsFileIconProvider"/>
+
+        <!-- Suggests the missing documentation and assets directory in the New Directory dialog. -->
+        <createDirectoryCompletionContributor
+                implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsDirectoryCompletionContributor"/>
 
         <!-- Colors of the plugin's own text attributes, for light and for dark themes. -->
         <additionalTextAttributes scheme="Default" file="colorSchemes/MkDocsDefault.xml"/>
