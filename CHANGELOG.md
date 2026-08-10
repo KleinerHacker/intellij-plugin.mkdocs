@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.1.0]
+
 ### Added
 
 - MkDocs module detection: the directory above an `mkdocs.yml` / `mkdocs.yaml` is recognised as an MkDocs
