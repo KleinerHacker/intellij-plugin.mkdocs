@@ -12,6 +12,8 @@ name: architecture
     * `types` - General types
     * `settings` - Settings features, settings pages, ...
     * `build` - Everything around building MKDocs, e.g. run config, building, ...
+    * `inspection` - Annotators and inspections on MKDocs files, plus their fixes
+    * `schema` - JSON schema mappings for MKDocs configuration files
 * The `*Icons` class collecting all icons of a module MUST ALWAYS reside on the package root level of that
   module, NOT in a specialised package
 * For any deviation the user MUST be asked

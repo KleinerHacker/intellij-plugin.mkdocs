@@ -1,12 +1,10 @@
 ---
-name: IntelliJ Plugin
+name: IntelliJ Plugin API
 ---
 
-# Deprecation Rules
+# Plugin API Rules
+
+* NEVER use internal marked members
 
 * NEVER use deprecated members
 * NEVER use members marked for removal
-
-# Internal Rules
-
-* NEVER use internal marked members

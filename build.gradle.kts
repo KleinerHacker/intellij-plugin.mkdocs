@@ -141,6 +141,16 @@ dependencies {
         bundledPlugin("com.intellij.modules.json")
         bundledPlugin("org.jetbrains.plugins.yaml")
 
+        // Optional at runtime (see the <depends optional="true"> entries in plugin.xml), but needed at compile
+        // time: the SCM and copyright prefilling of the creation wizard talks to these plugins directly.
+        bundledPlugin("Git4Idea")
+        bundledPlugin("com.intellij.copyright")
+
+        // Git4Idea's GitRepository/GitRepositoryManager extend the DVCS base types, which live in a platform
+        // module of their own. Without it Kotlin cannot even read the supertypes of what git4idea exposes.
+        bundledModule("intellij.platform.vcs.dvcs")
+        bundledModule("intellij.platform.vcs.dvcs.impl")
+
         // Since the platform bump to 2026.2 the core `intellij.spellchecker` module (pulled in transitively
         // via com.intellij.modules.lang) depends on `intellij.libraries.lucene.common`, which was moved out
         // of core lib/ into the bundled `intellij.libraries.misc.plugin`. Without it on the test classpath

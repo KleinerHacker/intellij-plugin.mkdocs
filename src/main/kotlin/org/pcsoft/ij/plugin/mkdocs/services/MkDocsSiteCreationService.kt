@@ -141,12 +141,33 @@ class MkDocsSiteCreationService(private val project: Project) {
      */
     private fun buildConfigText(template: MkDocsSiteTemplate): String = buildString {
         append("${MkDocsConfig.KEY_SITE_NAME}: ${yamlScalar(template.siteName)}\n")
+        appendOptional(MkDocsConfig.KEY_SITE_AUTHOR, template.siteAuthor)
+        appendOptional(MkDocsConfig.KEY_SITE_DESCRIPTION, template.siteDescription)
+        appendOptional(MkDocsConfig.KEY_SITE_URL, template.siteUrl)
+        appendOptional(MkDocsConfig.KEY_REPO_NAME, template.repoName)
+        appendOptional(MkDocsConfig.KEY_REPO_URL, template.repoUrl)
+        appendOptional(MkDocsConfig.KEY_COPYRIGHT, template.copyright)
         if (template.docsDirName != MkDocsProject.DEFAULT_DOCS_DIR) {
             append("${MkDocsConfig.KEY_DOCS_DIR}: ${yamlScalar(template.docsDirName)}\n")
         }
         if (template.siteDirName != MkDocsProject.DEFAULT_SITE_DIR) {
             append("${MkDocsConfig.KEY_SITE_DIR}: ${yamlScalar(template.siteDirName)}\n")
         }
+    }
+
+    /**
+     * Appends `key: value` unless [value] is empty.
+     *
+     * Every key beyond `site_name` is optional, and MkDocs treats a key written empty differently from a key
+     * that is absent — an empty `repo_url` renders an empty link.
+     *
+     * @param key the configuration key to write
+     * @param value the value as the user entered it
+     */
+    private fun StringBuilder.appendOptional(key: String, value: String) {
+        val trimmed = value.trim()
+        if (trimmed.isEmpty()) return
+        append("$key: ${yamlScalar(trimmed)}\n")
     }
 
     /** Builds the content of the start page. */

@@ -27,26 +27,27 @@ There is nothing to enable and nothing to import.
 A new site is created from the IDE: **New → MkDocs Site**, either from the context menu of a directory in
 the project view or from **File → New**.
 
-The wizard has two steps.
+The wizard has five steps. Only the first two ask for something the site cannot do without; every field of
+the remaining steps is optional, and a field left empty produces no key in `mkdocs.yml` at all.
 
-**Step 1 — the site**
+**Step 1 — the layout**
 
 | Field                   | Meaning                                                                  |
 |-------------------------|--------------------------------------------------------------------------|
-| Location                | the directory the site is created in; see below                          |
-| Site name               | written to `site_name`                                                   |
+| Name                    | the directory the site is created in, below the location                 |
+| Location                | the directory that name is created in                                    |
 | Documentation directory | holds the `*.md` files, default `docs`                                   |
 | Assets directory        | holds asset files, created inside the documentation directory, default `assets` |
 | Output directory        | where `mkdocs build` writes the rendered site, written to `site_dir`     |
 
-The location starts at the directory you invoked the action on and follows the site name as you type it, the
-same way the new project dialog does: entering *Handbook* below `~/projects` makes the location
-`~/projects/Handbook`. Whatever of the path does not exist yet is created along with the site, however many
-levels that takes. As soon as you edit the location yourself, it stops following the name — from then on the
-path is yours.
+This step decides only where files end up. The name asked for here is the logical name of the site *and* the
+directory it lives in: entering *Handbook* with the location `~/projects` creates the site in
+`~/projects/Handbook`. It is not written to `mkdocs.yml` — what the site calls itself is asked for in the
+next step, which starts out prefilled with this name. Whatever of the path does not exist yet is created
+along with the site, however many levels that takes.
 
-The output directory follows the location by the same rule. Which build system surrounds the site decides
-where its generated output belongs:
+The output directory follows the resulting site root. Which build system surrounds the site decides where its
+generated output belongs:
 
 | Surrounding module                             | Suggested output directory |
 |------------------------------------------------|----------------------------|
@@ -55,8 +56,8 @@ where its generated output belongs:
 | Plain IntelliJ IDEA module (`.idea`, `*.iml`)  | `out/docs`                 |
 | No build system at all                         | `site`, the MkDocs default |
 
-The search starts at the innermost existing directory of the location and walks upwards, so it works while
-the site directory itself does not exist yet. Editing the field stops it from following the location.
+The search starts at the innermost existing directory of the path and walks upwards, so it works while the
+site directory itself does not exist yet. Editing the field stops it from following the path.
 
 The step reports what it finds at that location:
 
@@ -70,12 +71,59 @@ The step reports what it finds at that location:
 The last case is refused because MkDocs loads exactly one configuration file per site — a second one next to
 it would be ignored and would confuse the module detection.
 
-**Next** stays greyed out as long as the step cannot produce a site: no site name, an unusable location, an
-empty or path-carrying directory name, or a directory that already holds a configuration file. The output
-directory may carry several levels, but it has to stay below the site root — an absolute path or one climbing
-out with `..` is refused.
+**Next** stays greyed out as long as the step cannot produce a site: no name, an unusable location, an empty
+or path-carrying directory name, or a directory that already holds a configuration file. The output directory
+may carry several levels, but it has to stay below the site root — an absolute path or one climbing out with
+`..` is refused.
 
-**Step 2 — the features**
+**Step 2 — the site**
+
+| Field       | Written to         | Required |
+|-------------|--------------------|----------|
+| Site name   | `site_name`        | yes      |
+| Author      | `site_author`      | no       |
+| Description | `site_description` | no       |
+| Site address| `site_url`         | no       |
+
+The site name starts out as the name from the first step and stops following it as soon as you type
+something of your own. The author is prefilled from the user name the Git repository records. The site
+address, if given, has to be an absolute `http` or `https` address — MkDocs turns it into canonical links and
+into the sitemap, so an address that is none would break both.
+
+**Step 3 — the repository**
+
+| Field              | Written to  |
+|--------------------|-------------|
+| Repository name    | `repo_name` |
+| Repository address | `repo_url`  |
+
+Together these two produce the link to the sources that MkDocs themes show on every page. Both start out
+filled with what the Git repository the site is created in says: an SSH address such as
+`git@github.com:acme/machine.git` is rewritten to `https://github.com/acme/machine`, credentials and the
+`.git` suffix are dropped, and the name is taken from the last two path segments. The name follows the
+address until you edit it yourself.
+
+Pointing the site at another repository is allowed — a site may well document something else — but it is
+reported as a warning, for the address and for the name, so it does not happen unnoticed. The two spellings
+of one repository count as equal and are not reported.
+
+**Step 4 — the copyright**
+
+The notice written to `copyright` and shown in the footer of every page. It comes from the Copyright settings
+of the IDE:
+
+| Configured there              | What the step does                              |
+|-------------------------------|-------------------------------------------------|
+| Nothing                       | suggests `© <year> <author>`                    |
+| One notice                    | uses it                                         |
+| Several, one marked default   | uses the marked one                             |
+| Several, none marked          | offers them in a list, starting at the first    |
+
+The notice is evaluated before it is shown, so template variables such as `$today.year` arrive as text, and
+a multi-line source header is joined into the single line `copyright` expects. The text stays editable in
+every case — a footer line is rarely word for word the notice of a source file.
+
+**Step 5 — the features**
 
 Optional features of the site. Nothing ships here yet, so the step currently shows a hint; the planned
 MkDocs extensions will appear in it once they are available.

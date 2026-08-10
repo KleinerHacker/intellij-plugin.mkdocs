@@ -18,10 +18,20 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 - A module of its own is created only for a site that belongs to no module at all; otherwise the surrounding
   module is used, which keeps Gradle and Maven imports untouched.
 - **Create a site from the IDE** — *New → MkDocs Site*, in the project view context menu and under
-  *File → New*. The wizard asks for the location, the site name, the documentation directory, the assets
-  directory and the build output directory, then writes `mkdocs.yml`, a start page and the directory
-  structure. A second step offers the optional features of a site; it is fed by the `siteFeature` extension
-  point and is empty until the first feature ships.
+  *File → New*. The five step wizard asks for the layout (name and location, documentation directory, assets
+  directory, build output directory), the site metadata (`site_name`, `site_author`, `site_description`,
+  `site_url`), the repository (`repo_name`, `repo_url`), the `copyright` notice and the optional features,
+  then writes `mkdocs.yml`, a start page and the directory structure. Everything left empty is omitted from
+  the configuration file. The last step is fed by the `siteFeature` extension point and is empty until the
+  first feature ships.
+- **Prefilled from the environment** — repository address, repository name and author come from the Git
+  repository the site is created in; an entry deviating from it is reported as a warning. The copyright
+  notice comes from the IDE's Copyright profiles, with a choice when several are configured and none is
+  marked as the default.
+- **Metadata banner** — a missing `site_name`, `site_author` or `site_description` is reported by a banner
+  above `mkdocs.yml` / `mkdocs.yaml`, each with a fix adding the key.
+- **JSON schema for both spellings** — `mkdocs.yaml` is mapped to the MkDocs schema, which the bundled
+  schema catalogue offers for `mkdocs.yml` only, so completion and validation work for either file name.
 - **Output directory follows the build system** — `site_dir` is pre-filled with `target/docs` in a Maven
   module, `build/docs` in a Gradle module, `out/docs` in a plain IntelliJ IDEA module and `site` everywhere
   else, so a build never drops its HTML next to the sources.

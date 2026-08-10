@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.types
 
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -26,10 +27,12 @@ import kotlin.io.path.name
  * Filled in by the creation wizard and handed to
  * [org.pcsoft.ij.plugin.mkdocs.services.MkDocsSiteCreationService].
  *
+ * Every property beyond the first five is optional: an empty value means the corresponding key is left out
+ * of the generated configuration file rather than written empty.
+ *
  * @property rootPath the directory the site is created in — it becomes the site root and holds `mkdocs.yml`.
- *                    It does not have to exist yet: like the new project dialog, the wizard appends the site
- *                    name to the selected directory, and every missing level of the path is created along
- *                    with the site
+ *                    It does not have to exist yet: the wizard appends the site directory name to the
+ *                    selected location, and every missing level of the path is created along with the site
  * @property siteName value written to `site_name`
  * @property docsDirName directory the documentation sources go into, written to `docs_dir` when it differs
  *                       from the MkDocs default
@@ -37,6 +40,12 @@ import kotlin.io.path.name
  * @property siteDirName directory `mkdocs build` writes the rendered site to, written to `site_dir` when it
  *                       differs from the MkDocs default. Unlike the other directories this one may carry
  *                       several levels, because the build systems keep their output nested
+ * @property siteAuthor value written to `site_author`
+ * @property siteDescription value written to `site_description`
+ * @property siteUrl value written to `site_url`
+ * @property repoName value written to `repo_name`
+ * @property repoUrl value written to `repo_url`
+ * @property copyright value written to `copyright`
  * @property features the features to switch on for the new site
  */
 data class MkDocsSiteTemplate(
@@ -45,8 +54,35 @@ data class MkDocsSiteTemplate(
     val docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR,
     val assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR,
     val siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR,
+    val siteAuthor: String = "",
+    val siteDescription: String = "",
+    val siteUrl: String = "",
+    val repoName: String = "",
+    val repoUrl: String = "",
+    val copyright: String = "",
     val features: List<MkDocsSiteFeature> = emptyList(),
 ) {
+
+    companion object {
+
+        /**
+         * Returns `true` if [url] can be used as a value of `site_url` or `repo_url`.
+         *
+         * An empty value is fine — both keys are optional and are then left out entirely. Everything else
+         * has to be an absolute `http` or `https` address, because that is the only thing MkDocs turns into
+         * a working link.
+         *
+         * @param url the address as typed by the user
+         */
+        @JvmStatic
+        fun isUsableUrl(url: String): Boolean {
+            val trimmed = url.trim()
+            if (trimmed.isEmpty()) return true
+            val uri = runCatching { URI(trimmed) }.getOrNull() ?: return false
+            if (!uri.isAbsolute || uri.host.isNullOrBlank()) return false
+            return uri.scheme.equals("http", ignoreCase = true) || uri.scheme.equals("https", ignoreCase = true)
+        }
+    }
 
     /**
      * The reason this template cannot be turned into a site, or `null` if it can.
@@ -60,6 +96,8 @@ data class MkDocsSiteTemplate(
         !MkDocsProject.isValidDirectoryName(docsDirName) -> MkDocsSiteTemplateError.INVALID_DOCS_DIR
         !MkDocsProject.isValidDirectoryName(assetsDirName) -> MkDocsSiteTemplateError.INVALID_ASSETS_DIR
         !MkDocsProject.isValidSiteDirName(siteDirName) -> MkDocsSiteTemplateError.INVALID_SITE_DIR
+        !isUsableUrl(siteUrl) -> MkDocsSiteTemplateError.INVALID_SITE_URL
+        !isUsableUrl(repoUrl) -> MkDocsSiteTemplateError.INVALID_REPO_URL
         holdsConfigFile() -> MkDocsSiteTemplateError.SITE_EXISTS
         else -> null
     }
@@ -112,6 +150,9 @@ enum class MkDocsSiteTemplateError(val messageKey: String) {
     /** The path is no directory, and neither is the directory it would be created in. */
     INVALID_ROOT("create.site.error.root"),
 
+    /** No name was given for the site directory. */
+    BLANK_NAME("create.site.error.name"),
+
     /** No site name was given. */
     BLANK_SITE_NAME("create.site.error.siteName"),
 
@@ -123,6 +164,12 @@ enum class MkDocsSiteTemplateError(val messageKey: String) {
 
     /** The output directory is empty, absolute, or climbs out of the site root. */
     INVALID_SITE_DIR("create.site.error.siteDir"),
+
+    /** The site address is neither empty nor an absolute `http` or `https` address. */
+    INVALID_SITE_URL("create.site.error.siteUrl"),
+
+    /** The repository address is neither empty nor an absolute `http` or `https` address. */
+    INVALID_REPO_URL("create.site.error.repoUrl"),
 
     /** The target directory already holds an MkDocs configuration file. */
     SITE_EXISTS("create.site.error.exists"),

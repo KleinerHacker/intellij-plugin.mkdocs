@@ -23,7 +23,7 @@ import java.nio.file.Path
  * Covers the validation of the first wizard step against the real Swing fields, which is where the step and
  * the template rules meet.
  */
-class MkDocsSiteStepValidationTest : BasePlatformTestCase() {
+class MkDocsLayoutStepValidationTest : BasePlatformTestCase() {
 
     private lateinit var baseDirectory: Path
 
@@ -41,17 +41,17 @@ class MkDocsSiteStepValidationTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: the ordinary input — a base directory that exists and a site name, which the step appends to
-     * it. The resulting directory does not exist yet, and that is exactly the state the wizard produces, so
-     * the step must report no error at all.
+     * Use case: the ordinary input — a location that exists and a name, which the step appends to it. The
+     * resulting directory does not exist yet, and that is exactly the state the wizard produces, so the step
+     * must report no error at all.
      *
      * This is the regression guard for a validation that reported every *valid* input as an invalid
      * directory: folding "no error" together with "no template" into one elvis chain made the success case
      * indistinguishable from a missing template.
      */
     fun `test reports no error for a valid location and name`() {
-        val step = MkDocsSiteStep(project, baseDirectory.toString())
-        step.setSiteNameForTest("demo")
+        val step = MkDocsLayoutStep(project, baseDirectory.toString())
+        step.setNameForTest("demo")
 
         val template = step.buildTemplate()
         assertNotNull("expected a template for valid input", template)
@@ -62,12 +62,13 @@ class MkDocsSiteStepValidationTest : BasePlatformTestCase() {
 
     /**
      * Use case: the user has not typed a name yet. The step must say what is actually missing instead of
-     * blaming the location, which is perfectly fine at that point.
+     * blaming the location, which is perfectly fine at that point. The name asked for here is a directory
+     * name, so it must not be reported as a missing *site* name either.
      */
     fun `test reports the missing name rather than the location`() {
-        val step = MkDocsSiteStep(project, baseDirectory.toString())
+        val step = MkDocsLayoutStep(project, baseDirectory.toString())
 
-        assertEquals(MkDocsSiteTemplateError.BLANK_SITE_NAME, step.validate())
+        assertEquals(MkDocsSiteTemplateError.BLANK_NAME, step.validate())
     }
 
     /**
@@ -78,23 +79,23 @@ class MkDocsSiteStepValidationTest : BasePlatformTestCase() {
         Files.createDirectory(baseDirectory.resolve("demo"))
         Files.createFile(baseDirectory.resolve("demo").resolve("mkdocs.yml"))
 
-        val step = MkDocsSiteStep(project, baseDirectory.toString())
-        step.setSiteNameForTest("demo")
+        val step = MkDocsLayoutStep(project, baseDirectory.toString())
+        step.setNameForTest("demo")
 
         assertEquals(MkDocsSiteTemplateError.SITE_EXISTS, step.validate())
     }
 
     /**
      * Use case: the wizard has to grey out *Next* while the input cannot produce a site. It learns about
-     * every keystroke through this callback, so the callback has to fire for each of the four fields.
+     * every keystroke through this callback, so the callback has to fire for each field.
      */
     fun `test notifies about every input change`() {
-        val step = MkDocsSiteStep(project, baseDirectory.toString())
+        val step = MkDocsLayoutStep(project, baseDirectory.toString())
         var notifications = 0
         step.onInputChanged = { notifications++ }
 
-        step.setSiteNameForTest("demo")
-        assertTrue("the site name must notify", notifications > 0)
+        step.setNameForTest("demo")
+        assertTrue("the name must notify", notifications > 0)
 
         val afterName = notifications
         step.setDocsDirNameForTest("sources")
@@ -114,8 +115,8 @@ class MkDocsSiteStepValidationTest : BasePlatformTestCase() {
      * than quietly falling back to the default.
      */
     fun `test reports an emptied directory field`() {
-        val step = MkDocsSiteStep(project, baseDirectory.toString())
-        step.setSiteNameForTest("demo")
+        val step = MkDocsLayoutStep(project, baseDirectory.toString())
+        step.setNameForTest("demo")
 
         step.setDocsDirNameForTest("")
         assertEquals(MkDocsSiteTemplateError.INVALID_DOCS_DIR, step.validate())
@@ -130,9 +131,21 @@ class MkDocsSiteStepValidationTest : BasePlatformTestCase() {
      * Everything missing is created with the site, so this is no error either.
      */
     fun `test accepts a location several levels below what exists`() {
-        val step = MkDocsSiteStep(project, baseDirectory.resolve("a").resolve("b").toString())
-        step.setSiteNameForTest("demo")
+        val step = MkDocsLayoutStep(project, baseDirectory.resolve("a").resolve("b").toString())
+        step.setNameForTest("demo")
 
         assertNull(step.validate())
+    }
+
+    /**
+     * Use case: the user edits the location after having typed a name. The site root is the combination of
+     * both, so the template has to follow the changed location.
+     */
+    fun `test builds the root from location and name`() {
+        val step = MkDocsLayoutStep(project, baseDirectory.toString())
+        step.setNameForTest("demo")
+        step.setLocationForTest(baseDirectory.resolve("nested").toString())
+
+        assertEquals(baseDirectory.resolve("nested").resolve("demo"), step.buildTemplate()!!.rootPath)
     }
 }

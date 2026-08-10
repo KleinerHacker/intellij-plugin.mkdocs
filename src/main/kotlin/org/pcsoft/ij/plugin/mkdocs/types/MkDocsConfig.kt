@@ -34,11 +34,37 @@ object MkDocsConfig {
     /** The MkDocs configuration key holding the human readable name of the site. */
     const val KEY_SITE_NAME: String = "site_name"
 
+    /** The MkDocs configuration key holding the author of the site. */
+    const val KEY_SITE_AUTHOR: String = "site_author"
+
+    /** The MkDocs configuration key holding the description shown to search engines. */
+    const val KEY_SITE_DESCRIPTION: String = "site_description"
+
+    /** The MkDocs configuration key holding the address the built site is published under. */
+    const val KEY_SITE_URL: String = "site_url"
+
+    /** The MkDocs configuration key holding the display name of the source repository. */
+    const val KEY_REPO_NAME: String = "repo_name"
+
+    /** The MkDocs configuration key holding the address of the source repository. */
+    const val KEY_REPO_URL: String = "repo_url"
+
+    /** The MkDocs configuration key holding the copyright notice shown in the footer. */
+    const val KEY_COPYRIGHT: String = "copyright"
+
     /** The MkDocs configuration key holding the directory the documentation sources live in. */
     const val KEY_DOCS_DIR: String = "docs_dir"
 
     /** The MkDocs configuration key holding the directory the rendered site is written to. */
     const val KEY_SITE_DIR: String = "site_dir"
+
+    /**
+     * The keys a site should carry so its pages carry usable metadata.
+     *
+     * Listed in the order they belong into the configuration file, which is also the order the inspection
+     * reports them in.
+     */
+    val METADATA_KEYS: List<String> = listOf(KEY_SITE_NAME, KEY_SITE_AUTHOR, KEY_SITE_DESCRIPTION)
 
     /**
      * Reads the scalar value of [key] from [configFile].

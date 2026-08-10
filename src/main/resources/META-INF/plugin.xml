@@ -31,9 +31,20 @@
                 documentation directory (<code>docs_dir</code>) as well as the assets directory are marked.</li>
             <li><b>File icons</b> &ndash; own icons for <code>mkdocs.yml</code> / <code>mkdocs.yaml</code> and for
                 the Markdown pages below <code>docs_dir</code>.</li>
-            <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> creates the configuration, the
-                documentation directory and a start page, including <code>docs_dir</code> and
-                <code>site_dir</code>.</li>
+            <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> walks through layout
+                (<code>docs_dir</code>, assets, <code>site_dir</code>), site metadata (<code>site_name</code>,
+                <code>site_author</code>, <code>site_description</code>, <code>site_url</code>), repository
+                (<code>repo_name</code>, <code>repo_url</code>), <code>copyright</code> and optional features,
+                and writes the configuration, the documentation directory and a start page.</li>
+            <li><b>Repository detection</b> &ndash; repository address, repository name and author are prefilled
+                from Git, and an entry deviating from the local repository is reported.</li>
+            <li><b>Copyright integration</b> &ndash; the notice is taken from the IDE's Copyright profiles, with a
+                choice when several are configured and no default is set.</li>
+            <li><b>Metadata banner</b> &ndash; a missing <code>site_name</code>, <code>site_author</code> or
+                <code>site_description</code> is reported by a banner above <code>mkdocs.yml</code> /
+                <code>mkdocs.yaml</code>, each with a fix adding the key.</li>
+            <li><b>JSON schema</b> &ndash; <code>mkdocs.yaml</code> is mapped to the MkDocs schema, which the
+                bundled catalogue only offers for <code>mkdocs.yml</code>.</li>
             <li><b>Directory completion</b> &ndash; missing site directories are suggested in the
                 <i>New Directory</i> dialog.</li>
             <li><b>Feature extension point</b> &ndash; <code>siteFeature</code> allows optional MkDocs extensions
@@ -53,6 +64,11 @@
     <depends>org.jetbrains.plugins.yaml</depends>
     <depends>com.intellij.modules.json</depends>
 
+    <!-- Optional: both plugins are bundled with every JetBrains IDE, but the user may switch them off. The
+         prefilling they enable is a convenience, never a requirement — so everything touching them lives in a
+         descriptor of its own that is simply not loaded when the plugin is missing. -->
+    <depends optional="true" config-file="mkdocs-git.xml">Git4Idea</depends>
+    <depends optional="true" config-file="mkdocs-copyright.xml">com.intellij.copyright</depends>
 
     <!-- Message bundle for every user visible text. -->
     <resource-bundle>messages.MkDocsBundle</resource-bundle>
@@ -64,6 +80,17 @@
              added without touching the wizard. -->
         <extensionPoint name="siteFeature"
                         interface="org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature"
+                        dynamic="true"/>
+
+        <!-- Reads remote and user from the version control system. Implemented per VCS, because neither is
+             part of the generic VCS API of the platform. -->
+        <extensionPoint name="scmProvider"
+                        interface="org.pcsoft.ij.plugin.mkdocs.types.MkDocsScmProvider"
+                        dynamic="true"/>
+
+        <!-- Reads the copyright notices configured in the IDE. -->
+        <extensionPoint name="copyrightProvider"
+                        interface="org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProvider"
                         dynamic="true"/>
     </extensionPoints>
 
@@ -100,8 +127,20 @@
         <createDirectoryCompletionContributor
                 implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsDirectoryCompletionContributor"/>
 
+        <!-- Banner above a configuration file missing its metadata keys. A file level annotation rather than
+             a highlight: what is reported is precisely what is not in the file, so there is nothing in the
+             text to underline. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.inspection.MkDocsMissingMetadataAnnotator"/>
+
         <!-- Colors of the plugin's own text attributes, for light and for dark themes. -->
         <additionalTextAttributes scheme="Default" file="colorSchemes/MkDocsDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/MkDocsDarcula.xml"/>
+    </extensions>
+
+    <!-- Maps mkdocs.yaml to the MkDocs JSON schema. The bundled SchemaStore catalogue matches mkdocs.yml
+         only, so the second spelling MkDocs accepts would otherwise stay without completion. -->
+    <extensions defaultExtensionNs="JavaScript.JsonSchema">
+        <ProviderFactory implementation="org.pcsoft.ij.plugin.mkdocs.schema.MkDocsSchemaProviderFactory"/>
     </extensions>
 </idea-plugin>
