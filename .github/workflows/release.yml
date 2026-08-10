@@ -9,8 +9,34 @@ permissions:
   contents: write
 
 jobs:
+  # Head of the whole release pipeline: nothing is built, tested or published before the CHANGELOG.md is
+  # known to describe the tag being released. The release job extracts the very same section later on to
+  # fill the GitHub release notes — without this gate that failure would only surface at the very end,
+  # after the plugin has already been pushed to the Marketplace and the docs to gh-pages.
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verify changelog entry for the release version
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [ ! -f CHANGELOG.md ]; then
+            echo "ERROR: CHANGELOG.md not found"
+            exit 1
+          fi
+          # Same extraction the release job uses: everything between `## [TAG]` and the next `## [` heading.
+          NOTES=$(awk "/^## \[$TAG\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md)
+          if [ -z "$(echo "$NOTES" | tr -d '[:space:]')" ]; then
+            echo "ERROR: No changelog entry found for tag $TAG — add a '## [$TAG]' section to CHANGELOG.md"
+            exit 1
+          fi
+          echo "Changelog entry for $TAG found."
+
   licences:
     runs-on: ubuntu-latest
+    needs: changelog
 
     steps:
       - uses: actions/checkout@v7
@@ -36,9 +62,16 @@ jobs:
           name: sbom
           path: build/reports/cyclonedx/bom.xml
 
-  # Developer tests: every test class NOT named *IT.
-  test-developer:
+  # Head of the pipeline: this job compiles everything once — the distributable plugin (`buildPlugin`) AND
+  # the test code (`testClasses`) — and publishes the result through the shared Gradle build cache. Both
+  # test jobs depend on it and restore that cache, so they no longer recompile what has already been built
+  # here. A compilation failure is therefore also reported as such, in one place, instead of surfacing
+  # identically in both test jobs.
+  build:
     runs-on: ubuntu-latest
+    needs: changelog
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
     steps:
       # The local composite action can only be resolved once the repo is on disk.
@@ -47,20 +80,70 @@ jobs:
 
       - uses: ./.github/actions/setup-gradle
 
-      - name: Run developer tests
-        run: ./gradlew test -PtestSuite=developer --stacktrace --info
+      - name: Build plugin
+        run: ./gradlew buildPlugin testClasses -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
 
+      # Must run here rather than inside the composite action: the cache can only be saved once the build
+      # has filled it, and a composite action cannot register a post-job step.
+      - name: Save shared build cache
+        if: always()
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ github.workspace }}/.gradle-build-cache
+          key: gradle-build-cache-${{ github.run_id }}
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-distribution
+          path: build/distributions/*.zip
+
+  # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
+  # Runs in parallel with the integration tests, both fed by the build job's cache.
+  test-developer:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # -Pversion mirrors the build job so both see identical task inputs — otherwise the cache entries
+      # written there would not match here.
+      - name: Run developer tests
+        run: ./gradlew test -PtestSuite=developer -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+
+      # Uploaded on failure too — that is the case the report is actually needed for. Three sources, because
+      # the HTML report alone is not enough to diagnose a failure that only happens on CI:
+      #   reports/      the browsable HTML report
+      #   test-results/ the JUnit XML, which carries the full stack trace and stdout/stderr per test
+      #   sandbox logs  the per-test idea.log under .intellijPlatform/sandbox/**/log-test/; platform tests
+      #                 write their diagnostics there rather than to the console
+      #                 (idea.split.test.logs=true, see build.gradle.kts)
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: test-report-developer
-          path: '**/build/reports/tests/test/**'
+          path: |
+            **/build/reports/tests/test/**
+            **/build/test-results/test/**
+            .intellijPlatform/sandbox/**/log-test/**
+          # An empty artifact would silently hide a broken path; fail loudly instead.
+          if-no-files-found: error
 
-  # Integration tests: test classes named *IT. Runs at the same time as the developer tests,
-  # from the identical setup.
+  # Integration tests: test classes named *IT — shipped-artifact smoke tests and the timing-based
+  # performance guards. Runs at the same time as the developer tests, off the same build-job cache.
   test-integration:
     runs-on: ubuntu-latest
+    needs: build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
     steps:
       # The local composite action can only be resolved once the repo is on disk.
@@ -69,15 +152,23 @@ jobs:
 
       - uses: ./.github/actions/setup-gradle
 
+      # -Pversion mirrors the build job so both see identical task inputs.
       - name: Run integration tests
-        run: ./gradlew test -PtestSuite=integration --stacktrace --info
+        run: ./gradlew test -PtestSuite=integration -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
 
+      # See the developer job above for what each of the three paths contributes.
+      # if-no-files-found stays on `ignore` here: the project has no *IT class yet, so the suite legitimately
+      # produces no report at all. Switch this to `error` as soon as the first integration test exists.
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: test-report-integration
-          path: '**/build/reports/tests/test/**'
+          path: |
+            **/build/reports/tests/test/**
+            **/build/test-results/test/**
+            .intellijPlatform/sandbox/**/log-test/**
+          if-no-files-found: ignore
 
   # Single gate name for everything that publishes: a release only happens when BOTH suites are green.
   # Until this was introduced a tagged release was published without running any test at all.
@@ -90,8 +181,13 @@ jobs:
       - name: Both test suites passed
         run: echo "Developer and integration tests are green."
 
-  build:
+  # Run the JetBrains Plugin Verifier against the full IDE matrix declared in build.gradle.kts
+  # (IntelliJ IDEA, Rider, CLion, GoLand). A release must never publish a plugin that fails verification
+  # on one of the supported products. See .claude/rules/plugin-verification.md.
+  verify-plugin:
     runs-on: ubuntu-latest
+    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
+    needs: tests
 
     steps:
       - uses: actions/checkout@v7
@@ -105,18 +201,20 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
-      - name: Build plugin
-        run: ./gradlew buildPlugin -Pversion=${{ github.ref_name }} --stacktrace
+      - name: Verify plugin
+        run: ./gradlew verifyPlugin -Pversion=${{ github.ref_name }} --stacktrace
 
-      - name: Upload plugin artifact
+      - name: Upload verification report
+        if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: plugin-distribution
-          path: build/distributions/*.zip
+          name: plugin-verification-report
+          path: '**/build/reports/pluginVerifier/**'
 
   # Build the docs as a generation test (mkdocs --strict) before they get deployed.
   validate-docs:
     runs-on: ubuntu-latest
+    needs: changelog
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -199,6 +297,7 @@ jobs:
       - licences
       - deploy-docs
       - tests
+      - verify-plugin
 
     steps:
       - uses: actions/checkout@v7
@@ -241,10 +340,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs:
-      - build
-      - licences
-      - deploy-docs
-      - tests
       - publish-marketplace
 
     steps:

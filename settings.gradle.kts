@@ -27,6 +27,19 @@ plugins {
     id("org.jetbrains.intellij.platform.settings") version "2.18.1"
 }
 
+// Relocate the local build cache when GRADLE_BUILD_CACHE_DIR is set. On CI the `build` job populates that
+// directory and the two test jobs restore it, so the test jobs reuse the compilation output of the build
+// instead of recompiling everything themselves (see .github/actions/setup-gradle). A directory inside the
+// workspace is used there because it must be handed to actions/cache, which cannot reach into the Gradle
+// user home managed by actions/setup-java. Without the variable Gradle keeps its default location.
+buildCache {
+    local {
+        System.getenv("GRADLE_BUILD_CACHE_DIR")?.takeIf { it.isNotBlank() }?.let { directory = file(it) }
+        // Every job pushes: the build job fills the cache, the test jobs add whatever they compile on top.
+        isPush = true
+    }
+}
+
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
