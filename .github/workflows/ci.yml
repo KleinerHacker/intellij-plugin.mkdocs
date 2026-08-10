@@ -9,8 +9,43 @@ permissions:
   contents: write
 
 jobs:
+  # Classifies the diff so that only the parts of the pipeline that can actually be affected run.
+  # Deliberately done here instead of with `on.<event>.paths`: a trigger-level filter would skip the whole
+  # workflow, leaving required status checks stuck on "Expected" for pull requests that touch nothing
+  # relevant. With a job-level `if` the workflow always starts and unaffected jobs report as "skipped",
+  # which counts as success for branch protection.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      docs: ${{ steps.filter.outputs.docs }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            code:
+              - '.github/workflows/**'
+              - '.github/actions/**'
+              - 'src/**'
+              - '**/*.gradle.kts'
+              - 'gradle/**'
+              - 'gradlew'
+              - 'gradlew.bat'
+              - 'gradle.properties'
+            docs:
+              - 'docs/**'
+              - '.github/workflows/**'
+
   check-licences:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
 
     steps:
       - name: Checkout repository
@@ -39,6 +74,8 @@ jobs:
   # in both test jobs.
   build:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
@@ -63,6 +100,8 @@ jobs:
 
   # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
   # Runs in parallel with the integration tests, both fed by the build job's cache.
+  # No path condition of its own: a skipped `needs` propagates the skip down the whole chain, so gating
+  # `build` above is enough to switch off everything that follows it.
   test-developer:
     runs-on: ubuntu-latest
     needs: build
@@ -235,8 +274,12 @@ jobs:
   # Build the docs as a generation test (mkdocs --strict) on every push and PR.
   # Verification only — the gh-pages site is updated solely by tag releases
   # (see release.yml). No deployment happens from this workflow.
+  # Runs independently of the build chain: a pure documentation change needs no compilation, and a pure
+  # code change needs no docs build.
   validate-docs:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7

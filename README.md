@@ -113,7 +113,6 @@ fast, because it is the inner feedback loop. CI runs both suites in parallel fro
 |--------------------------------------------------|-----------------|-----------------------------------------------------------------------------------------------|
 | [CI](.github/workflows/ci.yml)                   | Push / PR       | Licences, SBOM, assemble, both test suites, signability check, docs generation test           |
 | [Release](.github/workflows/release.yml)         | Tag push        | Tests, build, docs deploy (mike), Marketplace publish, GitHub release with artifacts and SBOM |
-| [Sign Plugin](.github/workflows/sign-manual.yml) | Manual dispatch | Produces a signed archive for the one-off first upload to the Marketplace                     |
 
 The `gh-pages` documentation site is updated **only** by tag releases. Pushes to the default branch merely
 build the docs for verification.
