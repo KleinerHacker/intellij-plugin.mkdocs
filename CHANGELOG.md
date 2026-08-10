@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- The plugin description shown in the marketplace and in the IDE plugin manager now lists all implemented
+  features instead of a single introductory sentence.
+
 ## [0.1.0]
 
 ### Added

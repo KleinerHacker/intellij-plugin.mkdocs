@@ -17,6 +17,31 @@
     <description><![CDATA[
         Support for <a href="https://www.mkdocs.org">MkDocs</a> projects in all IntelliJ-platform IDEs.<br>
         <br>
+        The plugin recognizes every MkDocs site inside your project, makes it visible in the IDE and lets you
+        create new sites without leaving the editor.<br>
+        <br>
+        <b>Features</b>
+        <ul>
+            <li><b>Automatic site detection</b> &ndash; every <code>mkdocs.yml</code> / <code>mkdocs.yaml</code>
+                turns its directory into an MkDocs site, re-detected after every file system change.</li>
+            <li><b>Module integration</b> &ndash; a detected site is represented by an <i>MkDocs</i> facet on the
+                surrounding module; if the site belongs to no module, an own module is created. Its name is taken
+                from <code>site_name</code>, falling back to the directory name.</li>
+            <li><b>Project view</b> &ndash; the site root is labelled with the site name and badged, and the
+                documentation directory (<code>docs_dir</code>) as well as the assets directory are marked.</li>
+            <li><b>File icons</b> &ndash; own icons for <code>mkdocs.yml</code> / <code>mkdocs.yaml</code> and for
+                the Markdown pages below <code>docs_dir</code>.</li>
+            <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> creates the configuration, the
+                documentation directory and a start page, including <code>docs_dir</code> and
+                <code>site_dir</code>.</li>
+            <li><b>Directory completion</b> &ndash; missing site directories are suggested in the
+                <i>New Directory</i> dialog.</li>
+            <li><b>Feature extension point</b> &ndash; <code>siteFeature</code> allows optional MkDocs extensions
+                (Angular Material, I18N, Mike) to plug into the creation wizard.</li>
+        </ul>
+        The current implementation status is tracked in
+        <a href="https://github.com/KleinerHacker/intellij-plugin.mkdocs/blob/master/STATUS.md">STATUS.md</a>.<br>
+        <br>
         Documentation: <a href="https://kleinerhacker.github.io/intellij-plugin.mkdocs/">kleinerhacker.github.io/intellij-plugin.mkdocs</a>
         ]]></description>
 

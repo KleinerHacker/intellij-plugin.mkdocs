@@ -18,6 +18,11 @@ name: documentation
 * There MUST be a reference to the MkDocs documentation (gh-pages), the API documentation and the licence report
 * The readme MUST be checked automatically after changes and adjusted if required
 
+# Plugin Description
+
+* Update all supported features ALWAYS in plugin.xml
+  * List MUST be up to date
+
 ## MkDocs
 
 * MkDocs MUST be integrated under `docs`
