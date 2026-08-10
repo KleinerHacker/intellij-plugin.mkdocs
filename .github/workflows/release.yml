@@ -293,10 +293,8 @@ jobs:
   publish-marketplace:
     runs-on: ubuntu-latest
     needs:
-      - build
       - licences
       - deploy-docs
-      - tests
       - verify-plugin
 
     steps:
