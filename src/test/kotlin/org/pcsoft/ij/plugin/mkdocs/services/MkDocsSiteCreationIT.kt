@@ -192,6 +192,62 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
     }
 
     /**
+     * Use case: the user filled in every optional page of the wizard. All of it has to reach the
+     * configuration file, in the order the keys belong there — the site describes itself first, then its
+     * repository, then its footer.
+     */
+    fun `test creating a site writes every optional key`() {
+        val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "complete")
+
+        val site = service.create(
+            MkDocsSiteTemplate(
+                rootPath = directory.toNioPath(),
+                siteName = "Complete",
+                siteAuthor = "Ada Lovelace",
+                siteDescription = "Everything about the machine.",
+                siteUrl = "https://example.org/docs",
+                repoName = "acme/machine",
+                repoUrl = "https://github.com/acme/machine",
+                copyright = "© 2026 Acme",
+            ),
+        )
+
+        assertEquals(
+            "site_name: Complete\n" +
+                "site_author: Ada Lovelace\n" +
+                "site_description: Everything about the machine.\n" +
+                "site_url: 'https://example.org/docs'\n" +
+                "repo_name: acme/machine\n" +
+                "repo_url: 'https://github.com/acme/machine'\n" +
+                "copyright: '© 2026 Acme'\n",
+            VfsUtilCore.loadText(site.configFile),
+        )
+    }
+
+    /**
+     * Use case: the user walked past every optional page without filling anything in. An empty key renders
+     * an empty link or an empty description, so nothing at all must be written for those pages.
+     */
+    fun `test creating a site omits every empty optional key`() {
+        val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "minimal")
+
+        val site = service.create(
+            MkDocsSiteTemplate(
+                rootPath = directory.toNioPath(),
+                siteName = "Minimal",
+                siteAuthor = "   ",
+                siteDescription = "",
+                siteUrl = "",
+                repoName = "",
+                repoUrl = "",
+                copyright = "",
+            ),
+        )
+
+        assertEquals("site_name: Minimal\n", VfsUtilCore.loadText(site.configFile))
+    }
+
+    /**
      * Use case: a selected feature has to be applied to the finished site, so it can add its own entries to
      * `mkdocs.yml`. It must see a site that already exists — not a half-written one.
      */

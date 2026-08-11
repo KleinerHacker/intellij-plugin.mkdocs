@@ -38,17 +38,19 @@ import javax.swing.JComponent
 import javax.swing.event.DocumentEvent
 
 /**
- * First step of the site creation wizard: where the site goes and how it is named.
+ * First step of the site creation wizard: the purely technical layout of the new site.
  *
- * The location follows the site name the way the new project dialog does it: the name is appended to the
- * directory the wizard started from, so typing a name is enough. As soon as the user edits the location
- * themselves the appending stops — from then on the field is theirs. The output directory follows the
- * location by the same rule, because which build system surrounds the site decides where its output belongs.
+ * The name asked for here is the *logical* name of the site, and it is also the directory the site is
+ * created in — location plus name form the site root. Everything the site is called towards its readers is
+ * asked for later, in [MkDocsSiteInfoStep]; this step decides only where files end up.
+ *
+ * The output directory follows the resulting root path, because which build system surrounds the site
+ * decides where its output belongs — until the user edits the field, from which point their value wins.
  *
  * @param project the project the site is created in
- * @param initialDirectory the directory the wizard started from, used as the base of the location
+ * @param initialDirectory the directory the wizard started from, prefilled into the location field
  */
-class MkDocsSiteStep(
+class MkDocsLayoutStep(
     project: Project,
     private val initialDirectory: String,
 ) : Step {
@@ -59,18 +61,18 @@ class MkDocsSiteStep(
         private val ILLEGAL_NAME_CHARACTERS = Regex("[\\\\/:*?\"<>|]")
 
         /**
-         * Returns the location a site with [siteName] gets below [baseDirectory].
+         * Returns the site root for a site named [name] below [baseDirectory].
          *
-         * The site name becomes a directory name, with characters no file system accepts replaced by `_`.
-         * An empty name leaves the base directory itself — the field must not show a dangling separator
-         * while the user has not typed anything yet.
+         * The name becomes a directory name, with characters no file system accepts replaced by `_`. An
+         * empty name leaves the base directory itself — the field must not show a dangling separator while
+         * the user has not typed anything yet.
          *
-         * @param baseDirectory the directory the wizard started from
-         * @param siteName the site name as typed so far
+         * @param baseDirectory the location the site is created in
+         * @param name the name as typed so far
          */
         @JvmStatic
-        fun locationFor(baseDirectory: String, siteName: String): String {
-            val directoryName = siteName.trim().replace(ILLEGAL_NAME_CHARACTERS, "_").trim()
+        fun locationFor(baseDirectory: String, name: String): String {
+            val directoryName = name.trim().replace(ILLEGAL_NAME_CHARACTERS, "_").trim()
             return if (directoryName.isEmpty()) baseDirectory else "$baseDirectory/$directoryName"
         }
 
@@ -79,7 +81,7 @@ class MkDocsSiteStep(
          *
          * A location that is no usable path yet keeps the MkDocs default — there is nothing to inspect.
          *
-         * @param location the location as typed so far
+         * @param location the site root as it stands so far
          */
         @JvmStatic
         fun siteDirFor(location: String): String {
@@ -90,8 +92,11 @@ class MkDocsSiteStep(
         }
     }
 
-    /** Value written to `site_name`. */
-    var siteName: String = ""
+    /** Logical name of the site, which is also the name of the directory it is created in. */
+    var name: String = ""
+
+    /** Directory the site directory is created in. */
+    var location: String = initialDirectory
 
     /** Name of the directory holding the documentation sources. */
     var docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR
@@ -102,14 +107,8 @@ class MkDocsSiteStep(
     /** Directory `mkdocs build` writes the rendered site to. */
     var siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR
 
-    /** `true` once the user edited the location, which stops it from following the site name. */
-    private var locationEditedByUser = false
-
-    /** `true` once the user edited the output directory, which stops it from following the location. */
+    /** `true` once the user edited the output directory, which stops it from following the site root. */
     private var siteDirEditedByUser = false
-
-    /** Guards the location field against mistaking the plugin's own writes for user input. */
-    private var updatingLocation = false
 
     /** Guards the output directory field against mistaking the plugin's own writes for user input. */
     private var updatingSiteDir = false
@@ -124,6 +123,15 @@ class MkDocsSiteStep(
      */
     var onInputChanged: (() -> Unit)? = null
 
+    private val nameField = JBTextField().apply {
+        document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) {
+                updateSiteDir()
+                refreshStatus()
+            }
+        })
+    }
+
     private val locationField = TextFieldWithBrowseButton().apply {
         text = FileUtil.toSystemDependentName(initialDirectory)
         addBrowseFolderListener(
@@ -133,17 +141,7 @@ class MkDocsSiteStep(
         )
         textField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
-                if (!updatingLocation) locationEditedByUser = true
                 updateSiteDir()
-                refreshStatus()
-            }
-        })
-    }
-
-    private val siteNameField = JBTextField().apply {
-        document.addDocumentListener(object : DocumentAdapter() {
-            override fun textChanged(e: DocumentEvent) {
-                updateLocation(text)
                 refreshStatus()
             }
         })
@@ -173,11 +171,11 @@ class MkDocsSiteStep(
     private val statusLabel = JBLabel().apply { isVisible = false }
 
     private val panel: DialogPanel = panel {
+        row(MkDocsBundle.message("create.site.field.name")) {
+            cell(nameField).align(AlignX.FILL)
+        }
         row(MkDocsBundle.message("create.site.field.location")) {
             cell(locationField).align(AlignX.FILL)
-        }
-        row(MkDocsBundle.message("create.site.field.siteName")) {
-            cell(siteNameField).align(AlignX.FILL)
         }
         row(MkDocsBundle.message("create.site.field.docsDir")) {
             cell(docsDirField).align(AlignX.FILL)
@@ -221,12 +219,13 @@ class MkDocsSiteStep(
     }
 
     /**
-     * Renders [error] for the user, passing the entered location so a path problem names the path it means.
+     * Renders [error] for the user, passing the resulting site root so a path problem names the path it
+     * means.
      *
      * @param error the reason the input was refused
      */
     fun messageFor(error: MkDocsSiteTemplateError): String =
-        MkDocsBundle.message(error.messageKey, locationField.text.trim())
+        MkDocsBundle.message(error.messageKey, rootPathText())
 
     /**
      * No icon: [com.intellij.ide.wizard.AbstractWizard] renders it as a strip down the left edge of the
@@ -236,35 +235,16 @@ class MkDocsSiteStep(
 
     override fun getComponent(): JComponent = panel
 
-    override fun getPreferredFocusedComponent(): JComponent = siteNameField
+    override fun getPreferredFocusedComponent(): JComponent = nameField
 
     /**
-     * Appends [name] to the directory the wizard started from.
+     * Points the output directory at what the build system around the site root expects.
      *
-     * Does nothing once the user edited the location themselves — their path wins, exactly as in the new
-     * project dialog.
-     *
-     * @param name the site name as typed so far
-     */
-    private fun updateLocation(name: String) {
-        if (locationEditedByUser) return
-        updatingLocation = true
-        try {
-            locationField.text = FileUtil.toSystemDependentName(locationFor(initialDirectory, name))
-        } finally {
-            updatingLocation = false
-        }
-    }
-
-    /**
-     * Points the output directory at what the build system around the location expects.
-     *
-     * Does nothing once the user edited the field themselves — from then on their value wins, the same way
-     * the location stops following the site name.
+     * Does nothing once the user edited the field themselves — from then on their value wins.
      */
     private fun updateSiteDir() {
         if (!uiReady || siteDirEditedByUser) return
-        val suggestion = siteDirFor(locationField.text)
+        val suggestion = siteDirFor(rootPathText())
         if (siteDirField.text == suggestion) return
         updatingSiteDir = true
         try {
@@ -314,23 +294,35 @@ class MkDocsSiteStep(
 
     /** Copies the current field contents into the properties of this step. */
     private fun readInput() {
-        siteName = siteNameField.text.trim()
+        name = nameField.text.trim()
+        location = locationField.text.trim()
         docsDirName = docsDirField.text.trim()
         assetsDirName = assetsDirField.text.trim()
         siteDirName = siteDirField.text.trim()
     }
 
+    /** The site root as text: the location the name is appended to. */
+    private fun rootPathText(): String = locationFor(locationField.text.trim(), nameField.text)
+
+    /**
+     * The site root, or `null` if the entered location is no usable path at all.
+     *
+     * The path does not have to exist — it usually does not, because the name was appended to the location.
+     */
+    fun rootPath(): Path? = runCatching { Path.of(rootPathText()) }.getOrNull()
+
     /**
      * Builds the template from the current input, or `null` if the location is not a usable path at all.
      *
-     * The path does not have to exist — it usually does not, because the site name was appended to it.
+     * `site_name` is filled with the technical name so the template can be validated on its own; the wizard
+     * replaces it with what the user enters in [MkDocsSiteInfoStep].
      */
     fun buildTemplate(): MkDocsSiteTemplate? {
         readInput()
-        val path = runCatching { Path.of(locationField.text.trim()) }.getOrNull() ?: return null
+        val path = rootPath() ?: return null
         return MkDocsSiteTemplate(
             rootPath = path,
-            siteName = siteName,
+            siteName = name,
             docsDirName = docsDirName,
             assetsDirName = assetsDirName,
             siteDirName = siteDirName,
@@ -340,37 +332,44 @@ class MkDocsSiteStep(
     /**
      * Returns why the current input cannot be used, or `null` if it is fine.
      *
-     * A location that is no usable path at all is reported as an invalid root — from the user's point of view
-     * that is exactly what it is. Written out rather than as an elvis chain on purpose: `validate` returning
-     * `null` *is* the success case, and folding it together with a missing template turns every valid input
-     * into an error.
+     * The missing name is reported first and separately: for this step the name is a directory name, not the
+     * site name, so the message of [MkDocsSiteTemplateError.BLANK_SITE_NAME] would point at the wrong field.
+     * A location that is no usable path at all is reported as an invalid root — from the user's point of
+     * view that is exactly what it is.
      */
     fun validate(): MkDocsSiteTemplateError? {
+        if (nameField.text.isBlank()) return MkDocsSiteTemplateError.BLANK_NAME
         val template = buildTemplate() ?: return MkDocsSiteTemplateError.INVALID_ROOT
         return template.validate()
     }
 
-    /** Sets the site name as if it had been typed. */
+    /** Sets the name as if it had been typed. */
     @TestOnly
-    internal fun setSiteNameForTest(name: String) {
-        siteNameField.text = name
+    internal fun setNameForTest(value: String) {
+        nameField.text = value
+    }
+
+    /** Sets the location as if it had been typed. */
+    @TestOnly
+    internal fun setLocationForTest(value: String) {
+        locationField.text = value
     }
 
     /** Sets the documentation directory as if it had been typed. */
     @TestOnly
-    internal fun setDocsDirNameForTest(name: String) {
-        docsDirField.text = name
+    internal fun setDocsDirNameForTest(value: String) {
+        docsDirField.text = value
     }
 
     /** Sets the assets directory as if it had been typed. */
     @TestOnly
-    internal fun setAssetsDirNameForTest(name: String) {
-        assetsDirField.text = name
+    internal fun setAssetsDirNameForTest(value: String) {
+        assetsDirField.text = value
     }
 
     /** Sets the output directory as if it had been typed. */
     @TestOnly
-    internal fun setSiteDirNameForTest(name: String) {
-        siteDirField.text = name
+    internal fun setSiteDirNameForTest(value: String) {
+        siteDirField.text = value
     }
 }

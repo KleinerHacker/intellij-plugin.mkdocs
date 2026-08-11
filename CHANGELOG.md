@@ -4,8 +4,29 @@
 
 ## [Unreleased]
 
+### Added
+
+- The site creation wizard now covers the metadata of a site. Beyond the technical layout it asks for
+  `site_name`, `site_author`, `site_description` and `site_url`, for `repo_name` and `repo_url`, and for the
+  `copyright` notice. Everything left empty is omitted from `mkdocs.yml` instead of being written empty.
+- Repository address, repository name and author are prefilled from the Git repository the site is created
+  in. SSH addresses are rewritten to their browser form and credentials are dropped.
+- An entry deviating from the local repository is reported as a warning, for both the address and the name,
+  without blocking the wizard — a site may well document another repository.
+- The copyright notice is taken from the Copyright settings of the IDE. With several notices configured and
+  none marked as the default, the notice can be picked from a list; the text stays editable either way.
+- A banner above `mkdocs.yml` / `mkdocs.yaml` reports a missing `site_name`, `site_author` or
+  `site_description`. Every key gets a banner of its own, carrying a fix that adds it.
+- `mkdocs.yaml` is now mapped to the MkDocs JSON schema, which the bundled schema catalogue offers for
+  `mkdocs.yml` only — the second spelling MkDocs accepts previously had no completion and no validation.
+
 ### Changed
 
+- The first wizard step now asks for a *name* rather than the site name: it is the directory the site is
+  created in, and it no longer doubles as `site_name`. The site name has moved to the second step and starts
+  out prefilled with it.
+- The site creation wizard grew from two steps to five: layout, site metadata, repository, copyright and
+  optional features.
 - The plugin description shown in the marketplace and in the IDE plugin manager now lists all implemented
   features instead of a single introductory sentence.
 

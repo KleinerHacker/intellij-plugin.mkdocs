@@ -13,7 +13,9 @@
 package org.pcsoft.ij.plugin.mkdocs.types
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -244,16 +246,64 @@ class MkDocsSiteTemplateTest {
         )
     }
 
+    /**
+     * Use case: the address fields were left alone, which is the normal case — both keys are optional and
+     * are simply not written. An empty field must therefore never be an error.
+     */
+    @Test
+    fun `accepts empty addresses`() {
+        assertTrue(MkDocsSiteTemplate.isUsableUrl(""))
+        assertTrue(MkDocsSiteTemplate.isUsableUrl("   "))
+        assertNull(template(siteName = "Handbook").validate())
+    }
+
+    /**
+     * Use case: the user entered the address the site is published under, or the browser address of the
+     * repository. Both are ordinary web addresses and must pass.
+     */
+    @Test
+    fun `accepts absolute web addresses`() {
+        assertTrue(MkDocsSiteTemplate.isUsableUrl("https://example.org/docs"))
+        assertTrue(MkDocsSiteTemplate.isUsableUrl("http://example.org"))
+        assertNull(
+            template(siteName = "Handbook", siteUrl = "https://example.org/docs", repoUrl = "http://git.example.org/x")
+                .validate(),
+        )
+    }
+
+    /**
+     * Use case: a half-typed address, a bare host or an address of a scheme no browser follows. MkDocs would
+     * render each of them into a link that leads nowhere, so they are refused while the wizard is still open.
+     */
+    @Test
+    fun `refuses an address that is no web address`() {
+        assertFalse(MkDocsSiteTemplate.isUsableUrl("example.org"))
+        assertFalse(MkDocsSiteTemplate.isUsableUrl("https://"))
+        assertFalse(MkDocsSiteTemplate.isUsableUrl("ftp://example.org/docs"))
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_SITE_URL,
+            template(siteName = "Handbook", siteUrl = "example.org").validate(),
+        )
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_REPO_URL,
+            template(siteName = "Handbook", repoUrl = "example.org").validate(),
+        )
+    }
+
     private fun template(
         siteName: String,
         docsDir: String = "docs",
         assetsDir: String = "assets",
         siteDir: String = "site",
+        siteUrl: String = "",
+        repoUrl: String = "",
     ): MkDocsSiteTemplate = MkDocsSiteTemplate(
         rootPath = root(),
         siteName = siteName,
         docsDirName = docsDir,
         assetsDirName = assetsDir,
         siteDirName = siteDir,
+        siteUrl = siteUrl,
+        repoUrl = repoUrl,
     )
 }

@@ -27,7 +27,12 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Topic                                                     | Status |
 |-----------------------------------------------------------|--------|
 | `site_name`                                               | ✅      |
-| Schema-based completion and annotation of all other keys  | ⬜      |
+| `site_author`, `site_description`, `site_url` written by the creation wizard | ✅ |
+| `repo_name`, `repo_url` written, prefilled from Git       | ✅      |
+| `copyright` written, prefilled from the IDE Copyright profiles | ✅ |
+| File level banner for missing `site_name` / `site_author` / `site_description` | ✅ |
+| Schema mapping for `mkdocs.yaml` (`mkdocs.yml` covered by the IDE catalogue) | ✅ |
+| Schema-based completion and annotation of all other keys  | ✅      |
 | `docs_dir` read and used (project view marking, site creation) | ✅   |
 | `site_dir` read and written by the creation wizard        | ✅      |
 | `site_dir` awareness (excludes)                           | ⬜      |

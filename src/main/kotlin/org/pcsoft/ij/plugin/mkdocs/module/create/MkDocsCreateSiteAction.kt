@@ -21,7 +21,6 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSiteCreationService
 
 /**
@@ -29,8 +28,12 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSiteCreationService
  *
  * Registered in the platform's *New* group, so it appears both in the project view context menu under *New*
  * and in *File → New*.
+ *
+ * Text, description and icon all come from the registration in `plugin.xml`. Passing any of them to a
+ * constructor of [AnAction] would build the action's presentation while the action is being instantiated,
+ * which the platform reports — and it would duplicate what the descriptor already says.
  */
-class MkDocsCreateSiteAction : AnAction(MkDocsIcons.MkDocs) {
+class MkDocsCreateSiteAction : AnAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
@@ -45,7 +48,7 @@ class MkDocsCreateSiteAction : AnAction(MkDocsIcons.MkDocs) {
             ?: project.guessProjectDir()
             ?: return
 
-        val wizard = MkDocsCreateSiteWizard(project, directory.path)
+        val wizard = MkDocsCreateSiteWizard(project, directory)
         if (!wizard.showAndGet()) return
 
         val template = wizard.template ?: return
