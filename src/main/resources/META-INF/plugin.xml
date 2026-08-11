@@ -1,8 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <!-- Note: the Plugin Verifier rejects an ID containing the word "intellij" (TemplateWordInPluginId),
-         hence "ij" — same convention as the inno-setup plugin. -->
     <id>org.pcsoft.ij.plugin.mkdocs</id>
 
     <!-- Public plugin name should be written in Title Case.
