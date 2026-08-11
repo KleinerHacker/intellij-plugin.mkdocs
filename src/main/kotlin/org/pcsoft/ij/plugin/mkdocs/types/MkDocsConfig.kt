@@ -17,6 +17,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
+import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.YAMLScalar
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
@@ -58,6 +59,9 @@ object MkDocsConfig {
     /** The MkDocs configuration key holding the directory the rendered site is written to. */
     const val KEY_SITE_DIR: String = "site_dir"
 
+    /** The MkDocs configuration key holding the navigation of the site. */
+    const val KEY_NAV: String = "nav"
+
     /**
      * The keys a site should carry so its pages carry usable metadata.
      *
@@ -65,6 +69,27 @@ object MkDocsConfig {
      * reports them in.
      */
     val METADATA_KEYS: List<String> = listOf(KEY_SITE_NAME, KEY_SITE_AUTHOR, KEY_SITE_DESCRIPTION)
+
+    /**
+     * Returns the mapping holding the configuration keys of [file], or `null` if it has none yet.
+     *
+     * A configuration file is a single YAML mapping. Reaching for it here rather than in each caller keeps
+     * the readers of structured keys — the navigation, the metadata inspection — on one understanding of
+     * what the top level of the file is.
+     *
+     * @param file the configuration file to inspect
+     */
+    fun topLevelMapping(file: YAMLFile): YAMLMapping? =
+        file.documents.firstNotNullOfOrNull { it.topLevelValue as? YAMLMapping }
+
+    /**
+     * Returns the PSI of [configFile], or `null` if it does not parse as YAML.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     */
+    fun yamlFileOf(project: Project, configFile: VirtualFile): YAMLFile? =
+        PsiManager.getInstance(project).findFile(configFile) as? YAMLFile
 
     /**
      * Reads the scalar value of [key] from [configFile].
@@ -79,7 +104,7 @@ object MkDocsConfig {
      *         scalar, or the value is blank
      */
     private fun readScalar(project: Project, configFile: VirtualFile, key: String): String? {
-        val yamlFile = PsiManager.getInstance(project).findFile(configFile) as? YAMLFile ?: return null
+        val yamlFile = yamlFileOf(project, configFile) ?: return null
         val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, key) ?: return null
         val scalar = keyValue.value as? YAMLScalar ?: return null
         return scalar.textValue.trim().takeIf { it.isNotEmpty() }

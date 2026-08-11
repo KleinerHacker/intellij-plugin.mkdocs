@@ -77,6 +77,16 @@ object MkDocsIcons {
     @JvmField
     val MarkdownFileLarge: Icon = load("mkdocs-md@32.svg")
 
+    /**
+     * Icon of the *Site Page* tool window, shown on the tool window stripe.
+     *
+     * Drawn at twenty pixels rather than sixteen, which is the size the stripe of the current IDE user
+     * interface renders. A plain outline without the gradient the file icons carry — at that size a gradient
+     * turns into a smudge.
+     */
+    @JvmField
+    val SitePageToolWindow: Icon = load("mkdocs-site-page@20.svg")
+
     /** Icon of an MkDocs configuration file, replacing the generic YAML icon. */
     @JvmField
     val ConfigFile: Icon = load("mkdocs-file@16.svg")

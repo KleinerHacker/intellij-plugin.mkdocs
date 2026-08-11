@@ -149,6 +149,29 @@ class MkDocsModuleServiceTest : BasePlatformTestCase() {
         assertEquals("Yml", sites.single().siteName)
     }
 
+    /**
+     * Use case: the tool window has to learn when to re-read the navigation of a site. Every scan therefore
+     * reports itself on the message bus — also when the set of modules came out unchanged, because the
+     * content of a configuration file may well have changed without adding or removing a site.
+     */
+    fun `test reports every scan on the message bus`() {
+        myFixture.addFileToProject("mkdocs.yml", "site_name: My Documentation\n")
+        var reported = 0
+        project.messageBus.connect(testRootDisposable).subscribe(
+            MkDocsSitesListener.TOPIC,
+            object : MkDocsSitesListener {
+                override fun sitesChanged() {
+                    reported++
+                }
+            },
+        )
+
+        service.sync()
+        service.sync()
+
+        assertEquals(2, reported)
+    }
+
     private fun findSites(): List<MkDocsSite> = runReadActionBlocking { service.findSites() }
 
     /**

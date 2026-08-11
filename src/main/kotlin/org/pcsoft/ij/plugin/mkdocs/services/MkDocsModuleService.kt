@@ -86,6 +86,11 @@ class MkDocsModuleService(private val project: Project) {
      *
      * Safe to call from any thread: the scan runs in a read action, the module changes in a write action on
      * the EDT. Calling it repeatedly is cheap and idempotent — unchanged modules are left untouched.
+     *
+     * Every scan ends with [MkDocsSitesListener.sitesChanged], even when the set of modules came out
+     * unchanged: a scan also runs after a configuration file was written, and its content is what the
+     * navigation of a site is read from. The notification goes out on the calling thread, which is usually
+     * the pooled thread [scheduleSync] uses.
      */
     fun sync() {
         if (project.isDisposed) return
@@ -93,6 +98,8 @@ class MkDocsModuleService(private val project: Project) {
         WriteAction.runAndWait<RuntimeException> {
             if (!project.isDisposed) apply(sites)
         }
+        if (project.isDisposed) return
+        project.messageBus.syncPublisher(MkDocsSitesListener.TOPIC).sitesChanged()
     }
 
     private val syncQueue = MergingUpdateQueue(

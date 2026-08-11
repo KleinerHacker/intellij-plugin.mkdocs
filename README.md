@@ -43,6 +43,11 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   them.
 - **Suggestions in *New Directory*** — a site missing its documentation or assets directory offers it in the
   platform dialog, with the same badge the project view uses.
+- ***Site Page* tool window** — one tab per detected site, each showing the navigation written under `nav` in
+  its `mkdocs.yml`. A node is labelled with the title from `nav`, else with the first `#` heading of the page,
+  else with the file name without its extension. Sections become folders, external targets become links, and
+  an entry pointing nowhere stays visible and greyed. Double clicking opens the page in the editor or the
+  address in the browser. A site without `nav` says so instead of showing an invented navigation.
 
 ## Project structure
 

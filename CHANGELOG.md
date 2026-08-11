@@ -6,6 +6,18 @@
 
 ### Added
 
+- A *Site Page* tool window on the left shows the navigation of the detected MkDocs sites. Every site gets a
+  tab of its own, and each tab renders the tree written under `nav` in its `mkdocs.yml`, in the order the file
+  gives it. Sections become folders, targets leaving the site become links.
+- A node is labelled with the title written in `nav`. Without one the first `#` heading of the page is used,
+  and without a heading the file name without its extension. Headings are read out of the open editor when
+  there are unsaved changes, so renaming one shows up without saving first.
+- An entry of `nav` whose page cannot be found stays in the tree, greyed and with the path in its tooltip,
+  rather than being dropped silently.
+- A site whose `mkdocs.yml` carries no `nav` — or an empty one — says so in place of the tree. No navigation
+  is invented from the contents of the documentation directory.
+- Double clicking a page opens it in the editor, double clicking an external entry opens it in the browser.
+  The tree follows changes to `mkdocs.yml` and to the pages by itself and can be re-read from the toolbar.
 - The site creation wizard now covers the metadata of a site. Beyond the technical layout it asks for
   `site_name`, `site_author`, `site_description` and `site_url`, for `repo_name` and `repo_url`, and for the
   `copyright` notice. Everything left empty is omitted from `mkdocs.yml` instead of being written empty.
