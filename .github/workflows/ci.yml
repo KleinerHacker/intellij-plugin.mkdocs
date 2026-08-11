@@ -275,25 +275,32 @@ jobs:
 
       # Secrets touch the environment only in this trusted printf-only step; the Gradle/signer
       # process below gets just file paths (umask 077 keeps the files private).
+      #
+      # What the signer needs is handed on through $GITHUB_ENV instead of through `env:` on the Gradle
+      # step: a step that calls a composite action does not documentedly pass its own `env:` down into
+      # that action's steps, whereas $GITHUB_ENV is the shared store composite actions do see. The only
+      # step that follows in this job is that Gradle call, so the reach of the values is unchanged.
       - name: Write signing material
         if: steps.secrets.outputs.available == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           umask 077
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.p12"
           printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
+          {
+            echo "KEYSTORE_FILE=$RUNNER_TEMP/keystore.p12"
+            echo "KEYSTORE_PASSWORD_FILE=$RUNNER_TEMP/keystore.pass"
+            echo "KEY_ALIAS=$KEY_ALIAS"
+          } >> "$GITHUB_ENV"
 
       # Signing itself is offline, but the task chain in front of it builds the plugin and therefore
       # resolves the whole platform — the same exposure as every other build job.
       - name: Build and sign the plugin (signability check)
         if: steps.secrets.outputs.available == 'true'
         uses: ./.github/actions/gradle
-        env:
-          KEYSTORE_FILE: ${{ runner.temp }}/keystore.p12
-          KEYSTORE_PASSWORD_FILE: ${{ runner.temp }}/keystore.pass
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         with:
           arguments: signPlugin --stacktrace --info
 

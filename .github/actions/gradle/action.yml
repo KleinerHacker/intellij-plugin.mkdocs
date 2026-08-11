@@ -17,8 +17,10 @@ description: >-
 inputs:
   arguments:
     description: >-
-      The full argument line handed to ./gradlew, e.g. "test -PtestSuite=integration --build-cache".
-      Word-split by the shell, so individual arguments must not contain spaces.
+      The full argument line handed to the Gradle wrapper, e.g. "test -PtestSuite=integration
+      --build-cache". Word-split by the shell WITHOUT quote processing, so a single argument must not
+      contain spaces and must not be quoted — `-Pversion="1.0.0"` would reach Gradle with the quotes
+      still attached. Write `-Pversion=1.0.0`.
     required: true
   attempts:
     description: Maximum number of attempts, the first one included.
@@ -32,6 +34,10 @@ runs:
       shell: bash
       # Passed as environment variables rather than interpolated into the script: the values never reach
       # the shell as code, only as data.
+      #
+      # Anything else the Gradle process needs has to come from the workflow's or the job's `env:`, or be
+      # written to $GITHUB_ENV by an earlier step — those are one shared store that composite actions see.
+      # `env:` on the step that calls this action is NOT a documented part of that store.
       env:
         GRADLE_ARGUMENTS: ${{ inputs.arguments }}
         GRADLE_ATTEMPTS: ${{ inputs.attempts }}
@@ -40,6 +46,15 @@ runs:
         # instead of aborting the step, so it is switched off deliberately.
         set +e
         set -uo pipefail
+
+        # Windows runners get the .bat wrapper, executed through cmd.exe by the MSYS layer. The POSIX
+        # wrapper would be the wrong choice there: without a .gitattributes pinning its line endings, a
+        # checkout with core.autocrlf=true turns its shebang into an unusable interpreter.
+        if [ "${RUNNER_OS:-}" = "Windows" ]; then
+          GRADLEW="./gradlew.bat"
+        else
+          GRADLEW="./gradlew"
+        fi
 
         # Markers of a failure that lies outside this repository. Kept deliberately narrow — every entry
         # describes the build talking to a repository, never the build itself producing a wrong result.
@@ -58,10 +73,10 @@ runs:
         DELAY=30
 
         while :; do
-          echo "::group::Gradle attempt ${ATTEMPT}/${GRADLE_ATTEMPTS}: ./gradlew ${GRADLE_ARGUMENTS}"
+          echo "::group::Gradle attempt ${ATTEMPT}/${GRADLE_ATTEMPTS}: ${GRADLEW} ${GRADLE_ARGUMENTS}"
           # Unquoted on purpose: the input is a whole argument line and has to be word-split.
           # shellcheck disable=SC2086
-          ./gradlew $GRADLE_ARGUMENTS 2>&1 | tee "$LOG"
+          "$GRADLEW" $GRADLE_ARGUMENTS 2>&1 | tee "$LOG"
           STATUS=${PIPESTATUS[0]}
           echo "::endgroup::"
 
