@@ -50,11 +50,19 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # Every Gradle invocation below goes through the local `gradle` action instead of calling ./gradlew
+      # directly: it repeats the run when it failed because a dependency repository was unreachable, and
+      # only then. A release is triggered by a tag and cannot simply be re-run, which makes that
+      # resilience worth even more here than in ci.yml. See .github/actions/gradle.
       - name: Check licences
-        run: ./gradlew licensee --stacktrace
+        uses: ./.github/actions/gradle
+        with:
+          arguments: licensee --stacktrace
 
       - name: Generate SBOM
-        run: ./gradlew cyclonedxBom --stacktrace
+        uses: ./.github/actions/gradle
+        with:
+          arguments: cyclonedxBom --stacktrace
 
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v7
@@ -81,7 +89,9 @@ jobs:
       - uses: ./.github/actions/setup-gradle
 
       - name: Build plugin
-        run: ./gradlew buildPlugin testClasses -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: buildPlugin testClasses -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
 
       # Must run here rather than inside the composite action: the cache can only be saved once the build
       # has filled it, and a composite action cannot register a post-job step.
@@ -116,7 +126,9 @@ jobs:
       # -Pversion mirrors the build job so both see identical task inputs — otherwise the cache entries
       # written there would not match here.
       - name: Run developer tests
-        run: ./gradlew test -PtestSuite=developer -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: test -PtestSuite=developer -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
 
       # Uploaded on failure too — that is the case the report is actually needed for. Three sources, because
       # the HTML report alone is not enough to diagnose a failure that only happens on CI:
@@ -154,7 +166,9 @@ jobs:
 
       # -Pversion mirrors the build job so both see identical task inputs.
       - name: Run integration tests
-        run: ./gradlew test -PtestSuite=integration -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: test -PtestSuite=integration -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
 
       # See the developer job above for what each of the three paths contributes.
       # if-no-files-found stays on `ignore` here: the project has no *IT class yet, so the suite legitimately
@@ -201,8 +215,12 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # The heaviest downloader of the whole pipeline — it pulls a complete IDE per matrix entry, so it is
+      # also the job most exposed to a hiccup on the JetBrains side.
       - name: Verify plugin
-        run: ./gradlew verifyPlugin -Pversion=${{ github.ref_name }} --stacktrace
+        uses: ./.github/actions/gradle
+        with:
+          arguments: verifyPlugin -Pversion=${{ github.ref_name }} --stacktrace
 
       - name: Upload verification report
         if: always()
@@ -237,8 +255,12 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # Retried as well: the task installs the MkDocs toolchain from PyPI, which is exactly the same kind
+      # of exposure to a remote repository.
       - name: Build docs
-        run: ./gradlew buildDocs --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: buildDocs --stacktrace --info
 
   # Publish the docs via mike under the release tag as the version. This is the only
   # place the gh-pages site is updated — pushes to the default branch merely build
@@ -278,14 +300,24 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy docs
+      # The tag decides whether this version also becomes 'latest'. Determined in its own step because the
+      # gradle action takes one flat argument line and cannot carry an if/else.
+      - name: Determine deployment arguments
+        id: args
         run: |
           TAG="${{ github.ref_name }}"
           if [[ "$TAG" =~ ^v?[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
-            ./gradlew deployDocs -Pversion="$TAG" --stacktrace --info
+            echo "gradle=deployDocs -Pversion=$TAG --stacktrace --info" >> "$GITHUB_OUTPUT"
           else
-            ./gradlew deployDocs -Pversion="$TAG" -PsetLatest=false --stacktrace --info
+            echo "gradle=deployDocs -Pversion=$TAG -PsetLatest=false --stacktrace --info" >> "$GITHUB_OUTPUT"
           fi
+
+      # Safe to repeat: mike overwrites the directory of the version being deployed, so a second run
+      # produces the same gh-pages state as the first.
+      - name: Deploy docs
+        uses: ./.github/actions/gradle
+        with:
+          arguments: ${{ steps.args.outputs.gradle }}
 
   # Sign the plugin and upload it to the JetBrains Marketplace. This is the last step
   # before the GitHub release is created (the release job depends on this job), so a
@@ -323,6 +355,10 @@ jobs:
           printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
           printf '%s' "$PUBLISH_TOKEN"               > "$RUNNER_TEMP/publish.token"
 
+      # The ONE Gradle call that is deliberately NOT wrapped in the retrying action: publishPlugin uploads
+      # to the Marketplace, and an upload that got through before the connection broke would be repeated by
+      # a retry. Publishing is not idempotent, so it stays a single attempt — `continue-on-error` already
+      # turns a failure here into a warning instead of a broken release (see .claude/rules/git.md).
       - name: Publish to JetBrains Marketplace
         env:
           KEYSTORE_FILE: ${{ runner.temp }}/keystore.p12

@@ -66,11 +66,18 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # Every Gradle invocation below goes through the local `gradle` action instead of calling ./gradlew
+      # directly: it repeats the run when it failed because a dependency repository was unreachable, and
+      # only then. See .github/actions/gradle for what counts as such a failure.
       - name: Check licences
-        run: ./gradlew licensee --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: licensee --stacktrace --info
 
       - name: Generate SBOM
-        run: ./gradlew cyclonedxBom --stacktrace
+        uses: ./.github/actions/gradle
+        with:
+          arguments: cyclonedxBom --stacktrace
 
   # Head of the pipeline: this job compiles everything once — production code (`assemble`) AND test code
   # (`testClasses`) — and publishes the result through the shared Gradle build cache. Both test jobs depend
@@ -92,7 +99,9 @@ jobs:
       - uses: ./.github/actions/setup-gradle
 
       - name: Assemble
-        run: ./gradlew assemble testClasses --build-cache --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: assemble testClasses --build-cache --stacktrace --info
 
       # Must run here rather than inside the composite action: the cache can only be saved once the build
       # has filled it, and a composite action cannot register a post-job step.
@@ -121,7 +130,9 @@ jobs:
       - uses: ./.github/actions/setup-gradle
 
       - name: Run developer tests
-        run: ./gradlew test -PtestSuite=developer --build-cache --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: test -PtestSuite=developer --build-cache --stacktrace --info
 
       # Uploaded on failure too — that is the case the report is actually needed for. Three sources, because
       # the HTML report alone is not enough to diagnose a failure that only happens on CI:
@@ -158,7 +169,9 @@ jobs:
       - uses: ./.github/actions/setup-gradle
 
       - name: Run integration tests
-        run: ./gradlew test -PtestSuite=integration --build-cache --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: test -PtestSuite=integration --build-cache --stacktrace --info
 
       # See the developer job above for what each of the three paths contributes.
       # if-no-files-found stays on `ignore` here: the project has no *IT class yet, so the suite legitimately
@@ -208,8 +221,12 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # The heaviest downloader of the whole pipeline — it pulls a complete IDE per matrix entry, so it is
+      # also the job most exposed to a hiccup on the JetBrains side.
       - name: Verify plugin
-        run: ./gradlew verifyPlugin --stacktrace
+        uses: ./.github/actions/gradle
+        with:
+          arguments: verifyPlugin --stacktrace
 
       - name: Upload verification report
         if: always()
@@ -268,13 +285,17 @@ jobs:
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.p12"
           printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
 
+      # Signing itself is offline, but the task chain in front of it builds the plugin and therefore
+      # resolves the whole platform — the same exposure as every other build job.
       - name: Build and sign the plugin (signability check)
         if: steps.secrets.outputs.available == 'true'
+        uses: ./.github/actions/gradle
         env:
           KEYSTORE_FILE: ${{ runner.temp }}/keystore.p12
           KEYSTORE_PASSWORD_FILE: ${{ runner.temp }}/keystore.pass
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        run: ./gradlew signPlugin --stacktrace --info
+        with:
+          arguments: signPlugin --stacktrace --info
 
   # Build the docs as a generation test (mkdocs --strict) on every push and PR.
   # Verification only — the gh-pages site is updated solely by tag releases
@@ -307,5 +328,9 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
+      # Retried as well: the task installs the MkDocs toolchain from PyPI, which is exactly the same kind
+      # of exposure to a remote repository.
       - name: Build docs
-        run: ./gradlew buildDocs --stacktrace --info
+        uses: ./.github/actions/gradle
+        with:
+          arguments: buildDocs --stacktrace --info
