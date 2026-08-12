@@ -64,18 +64,46 @@ class MkDocsNavTreeBuilderTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: a page of a site carries the icon the project view gives it, so the two views agree on what a
-     * page looks like. The path follows the label in grey, which is what tells two equally named pages apart.
+     * Use case: a page lying directly in the documentation directory. Its path is nothing but the file name,
+     * so repeating it in brackets would say nothing, and the hint stays the bare file name.
      */
-    fun `test carries the path of the page as its hint`() {
+    fun `test carries only the file name as the hint of a page in the root directory`() {
+        val docsDir = docsDirWith("index.md" to "# Home\n")
+
+        val node = firstNodeOf(docsDir, MkDocsNavPage(null, "index.md"))
+
+        assertEquals(MkDocsNavTreeNodeKind.PAGE, node.kind)
+        assertEquals("index.md", node.hint)
+        assertEquals("index.md", node.path)
+    }
+
+    /**
+     * Use case: a page lying in a subdirectory. The file name alone can well appear more than once in a site,
+     * so the hint names the file and puts the full path behind it, while the path itself stays untouched.
+     */
+    fun `test carries the file name and the full path as the hint of a page in a subdirectory`() {
         val docsDir = docsDirWith("guide/install.md" to "# Install\n")
 
         val node = firstNodeOf(docsDir, MkDocsNavPage(null, "guide/install.md"))
 
         assertEquals(MkDocsNavTreeNodeKind.PAGE, node.kind)
-        assertEquals("guide/install.md", node.hint)
+        assertEquals("install.md (guide/install.md)", node.hint)
+        assertEquals("guide/install.md", node.path)
         assertNotNull(node.file)
         assertFalse(node.unresolved)
+    }
+
+    /**
+     * Use case: a page whose path is written in another case than the file name suggests. There is still no
+     * directory in it, so the entry counts as lying in the root directory and the hint stays the file name.
+     */
+    fun `test ignores the case when deciding whether a page lies in a subdirectory`() {
+        val docsDir = docsDirWith("Index.md" to "# Home\n")
+
+        val node = firstNodeOf(docsDir, MkDocsNavPage(null, "Index.md"))
+
+        assertEquals("Index.md", node.hint)
+        assertEquals("Index.md", node.path)
     }
 
     /**

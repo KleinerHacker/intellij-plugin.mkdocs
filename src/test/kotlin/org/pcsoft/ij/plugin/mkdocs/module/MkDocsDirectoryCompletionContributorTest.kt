@@ -26,7 +26,8 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
  *
  * Covers what [MkDocsDirectoryCompletionContributor] offers in the *New Directory* dialog: the documentation
- * directory at the site root and the assets directory inside it, each only while it is still missing.
+ * directory at the site root, and the assets and stylesheets directories inside it, each only while it is
+ * still missing.
  */
 class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
 
@@ -44,7 +45,7 @@ class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
 
         assertEquals(1, variants.size)
         assertEquals("docs", variants.first().path)
-        assertSame(MkDocsIcons.DocsBadgeLarge, variants.first().icon)
+        assertSame(MkDocsIcons.DocsBadge, variants.first().icon)
     }
 
     /**
@@ -73,19 +74,70 @@ class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: creating a directory inside the documentation directory of a site that has no assets
-     * directory yet. That is the one place the assets directory belongs.
+     * Use case: creating a directory inside the documentation directory of a site that has neither an assets
+     * nor a stylesheets directory yet. That is the one place both of them belong.
      */
-    fun `test suggests the missing assets directory`() {
+    fun `test suggests the missing assets and stylesheets directories`() {
         addFile("assets-missing/mkdocs.yml", "site_name: Handbook\n")
         val docs = addFile("assets-missing/docs/index.md").parent
         syncAndKeepFacet()
-        MkDocsFacet.getInstance(myFixture.module)!!.configuration.assetsDirName = "assets"
+        configuration().assetsDirName = "assets"
+        configuration().stylesheetsDirName = "stylesheets"
+
+        val variants = contributor.getVariants(directoryOf(docs))
+
+        assertEquals(listOf("assets", "stylesheets"), variants.map { it.path })
+        assertSame(MkDocsIcons.AssetsBadge, variants.first().icon)
+        assertSame(MkDocsIcons.StylesheetsBadge, variants.last().icon)
+    }
+
+    /**
+     * Use case: a site that already carries its stylesheets directory but no assets directory. Creating one
+     * of the two must not make the other vanish from the dialog, so exactly the missing one is offered.
+     */
+    fun `test suggests only the directory that is still missing`() {
+        addFile("one-missing/mkdocs.yml", "site_name: Handbook\n")
+        val docs = addFile("one-missing/docs/index.md").parent
+        addFile("one-missing/docs/stylesheets/extra.css")
+        syncAndKeepFacet()
+        configuration().assetsDirName = "assets"
+        configuration().stylesheetsDirName = "stylesheets"
 
         val variants = contributor.getVariants(directoryOf(docs))
 
         assertEquals(listOf("assets"), variants.map { it.path })
-        assertSame(MkDocsIcons.AssetsBadgeLarge, variants.first().icon)
+        assertSame(MkDocsIcons.AssetsBadge, variants.first().icon)
+    }
+
+    /**
+     * Use case: a complete site. Both directories exist, so the dialog inside the documentation directory has
+     * nothing left to offer.
+     */
+    fun `test suggests nothing when both directories exist`() {
+        addFile("both-there/mkdocs.yml", "site_name: Handbook\n")
+        val docs = addFile("both-there/docs/index.md").parent
+        addFile("both-there/docs/assets/logo.png")
+        addFile("both-there/docs/stylesheets/extra.css")
+        syncAndKeepFacet()
+        configuration().assetsDirName = "assets"
+        configuration().stylesheetsDirName = "stylesheets"
+
+        assertEmpty(contributor.getVariants(directoryOf(docs)))
+    }
+
+    /**
+     * Use case: a site created with a differently named stylesheets directory. The facet remembers the name,
+     * and the suggestion has to follow it rather than the convention.
+     */
+    fun `test suggests the remembered stylesheets directory`() {
+        addFile("styles-renamed/mkdocs.yml", "site_name: Handbook\n")
+        val docs = addFile("styles-renamed/docs/index.md").parent
+        addFile("styles-renamed/docs/assets/logo.png")
+        syncAndKeepFacet()
+        configuration().assetsDirName = "assets"
+        configuration().stylesheetsDirName = "css"
+
+        assertEquals(listOf("css"), contributor.getVariants(directoryOf(docs)).map { it.path })
     }
 
     /**
@@ -95,8 +147,10 @@ class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
     fun `test suggests the remembered assets directory`() {
         addFile("assets-renamed/mkdocs.yml", "site_name: Handbook\n")
         val docs = addFile("assets-renamed/docs/index.md").parent
+        addFile("assets-renamed/docs/stylesheets/extra.css")
         syncAndKeepFacet()
-        MkDocsFacet.getInstance(myFixture.module)!!.configuration.assetsDirName = "media"
+        configuration().assetsDirName = "media"
+        configuration().stylesheetsDirName = "stylesheets"
 
         assertEquals(listOf("media"), contributor.getVariants(directoryOf(docs)).map { it.path })
     }
@@ -145,6 +199,9 @@ class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
             model.commit()
         }
     }
+
+    /** The MkDocs configuration of the facet the fixture module carries. */
+    private fun configuration() = MkDocsFacet.getInstance(myFixture.module)!!.configuration
 
     private fun directoryOf(file: VirtualFile): PsiDirectory =
         PsiManager.getInstance(project).findDirectory(file)!!

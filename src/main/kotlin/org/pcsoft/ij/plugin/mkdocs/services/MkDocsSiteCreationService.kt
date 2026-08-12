@@ -98,7 +98,7 @@ class MkDocsSiteCreationService(private val project: Project) {
             .compute<MkDocsSite, RuntimeException> { write(template) }
 
         MkDocsModuleService.getInstance(project).sync()
-        rememberAssetsDir(template, site)
+        rememberDirectoryNames(template, site)
 
         WriteCommandAction.runWriteCommandAction(project) {
             for (feature in template.features) {
@@ -129,6 +129,9 @@ class MkDocsSiteCreationService(private val project: Project) {
 
         VfsUtil.createDirectoryIfMissing(docsDir, template.assetsDirName)
             ?: error("Cannot create assets directory '${template.assetsDirName}'")
+
+        VfsUtil.createDirectoryIfMissing(docsDir, template.stylesheetsDirName)
+            ?: error("Cannot create stylesheets directory '${template.stylesheetsDirName}'")
 
         return MkDocsSite(root = root, configFile = configFile, siteName = template.siteName)
     }
@@ -175,15 +178,21 @@ class MkDocsSiteCreationService(private val project: Project) {
         "# ${template.siteName}\n"
 
     /**
-     * Stores the chosen assets directory in the facet the detection just created.
+     * Stores the chosen assets and stylesheets directories in the facet the detection just created.
      *
-     * MkDocs has no configuration key for it, so the facet is the only place the name can live.
+     * MkDocs has a configuration key for neither of them, so the facet is the only place the names can live.
+     * A name left at its default is not written: the facet already starts out with it, and writing it would
+     * only add noise to the `.iml` file.
      */
-    private fun rememberAssetsDir(template: MkDocsSiteTemplate, site: MkDocsSite) {
-        if (template.assetsDirName == MkDocsProject.DEFAULT_ASSETS_DIR) return
+    private fun rememberDirectoryNames(template: MkDocsSiteTemplate, site: MkDocsSite) {
+        val assetsDiffers = template.assetsDirName != MkDocsProject.DEFAULT_ASSETS_DIR
+        val stylesheetsDiffers = template.stylesheetsDirName != MkDocsProject.DEFAULT_STYLESHEETS_DIR
+        if (!assetsDiffers && !stylesheetsDiffers) return
+
         val module = ModuleUtilCore.findModuleForFile(site.root, project) ?: return
         val facet = MkDocsFacet.getInstance(module) ?: return
-        facet.configuration.assetsDirName = template.assetsDirName
+        if (assetsDiffers) facet.configuration.assetsDirName = template.assetsDirName
+        if (stylesheetsDiffers) facet.configuration.stylesheetsDirName = template.stylesheetsDirName
     }
 
     /**

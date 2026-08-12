@@ -91,6 +91,35 @@ class MkDocsSitePagePanelTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the tool window is docked narrow, which is the common case. The message telling why there is
+     * no tree must then be broken into several lines instead of being cut off at the border.
+     */
+    fun `test breaks the message into several lines when the tab is narrow`() {
+        myFixture.addFileToProject("docs/index.md", "# Home\n")
+        val panel = panelFor("site_name: Handbook\n")
+
+        panel.tree.setSize(NARROW_WIDTH, TAB_HEIGHT)
+
+        assertTrue(panel.emptyMessageLines().size > 1)
+    }
+
+    /**
+     * Use case: the tool window is docked wide. The message then fits as it is written and must not be broken
+     * for no reason.
+     */
+    fun `test keeps the message on one line when the tab is wide`() {
+        myFixture.addFileToProject("docs/index.md", "# Home\n")
+        val panel = panelFor("site_name: Handbook\n")
+
+        panel.tree.setSize(WIDE_WIDTH, TAB_HEIGHT)
+
+        assertEquals(
+            listOf(MkDocsBundle.message("toolwindow.sitePage.empty.noNav")),
+            panel.emptyMessageLines(),
+        )
+    }
+
+    /**
      * Creates a site from [configText], lets the detection pick it up, and returns a tab for it.
      *
      * @param configText the content of `mkdocs.yml`
@@ -121,4 +150,16 @@ class MkDocsSitePagePanelTest : BasePlatformTestCase() {
      */
     private fun nodeAt(parent: DefaultMutableTreeNode, index: Int): MkDocsNavTreeNode =
         (parent.getChildAt(index) as DefaultMutableTreeNode).userObject as MkDocsNavTreeNode
+
+    private companion object {
+
+        /** Width of a tool window docked as a narrow side bar. */
+        const val NARROW_WIDTH = 200
+
+        /** Width no message of the tab can fill. */
+        const val WIDE_WIDTH = 4000
+
+        /** Height of the tab, which plays no part in breaking the message. */
+        const val TAB_HEIGHT = 400
+    }
 }

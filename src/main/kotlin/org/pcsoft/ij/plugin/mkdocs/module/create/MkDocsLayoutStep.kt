@@ -104,6 +104,9 @@ class MkDocsLayoutStep(
     /** Name of the directory holding the asset files. */
     var assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR
 
+    /** Name of the directory holding the style sheets. */
+    var stylesheetsDirName: String = MkDocsProject.DEFAULT_STYLESHEETS_DIR
+
     /** Directory `mkdocs build` writes the rendered site to. */
     var siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR
 
@@ -159,6 +162,12 @@ class MkDocsLayoutStep(
         })
     }
 
+    private val stylesheetsDirField = JBTextField(MkDocsProject.DEFAULT_STYLESHEETS_DIR).apply {
+        document.addDocumentListener(object : DocumentAdapter() {
+            override fun textChanged(e: DocumentEvent) = refreshStatus()
+        })
+    }
+
     private val siteDirField = JBTextField(siteDirFor(initialDirectory)).apply {
         document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
@@ -182,6 +191,9 @@ class MkDocsLayoutStep(
         }
         row(MkDocsBundle.message("create.site.field.assetsDir")) {
             cell(assetsDirField).align(AlignX.FILL)
+        }
+        row(MkDocsBundle.message("create.site.field.stylesheetsDir")) {
+            cell(stylesheetsDirField).align(AlignX.FILL)
         }
         row(MkDocsBundle.message("create.site.field.siteDir")) {
             cell(siteDirField).align(AlignX.FILL)
@@ -298,6 +310,7 @@ class MkDocsLayoutStep(
         location = locationField.text.trim()
         docsDirName = docsDirField.text.trim()
         assetsDirName = assetsDirField.text.trim()
+        stylesheetsDirName = stylesheetsDirField.text.trim()
         siteDirName = siteDirField.text.trim()
     }
 
@@ -325,6 +338,7 @@ class MkDocsLayoutStep(
             siteName = name,
             docsDirName = docsDirName,
             assetsDirName = assetsDirName,
+            stylesheetsDirName = stylesheetsDirName,
             siteDirName = siteDirName,
         )
     }
@@ -365,6 +379,12 @@ class MkDocsLayoutStep(
     @TestOnly
     internal fun setAssetsDirNameForTest(value: String) {
         assetsDirField.text = value
+    }
+
+    /** Sets the stylesheets directory as if it had been typed. */
+    @TestOnly
+    internal fun setStylesheetsDirNameForTest(value: String) {
+        stylesheetsDirField.text = value
     }
 
     /** Sets the output directory as if it had been typed. */

@@ -25,8 +25,19 @@ nav:
 | `Guide:` with a list below it | a section, grouping its entries |
 | `API: https://example.org/api` | a link, opened in the browser |
 
-Behind every label the path or the address of the entry is shown in grey — two pages may well carry the same
-heading, and then only the path tells them apart.
+A section carries an MkDocs folder icon of its own rather than the generic folder of the platform, so a
+grouping node of the navigation is not mistaken for a directory of the project tree.
+
+Behind every label the file the entry points to is shown in grey — two pages may well carry the same heading,
+and then only the file tells them apart. A page directly inside the documentation directory shows its file
+name alone; a page in a subdirectory adds the path relative to the documentation directory in brackets:
+
+| Page below `docs_dir` | Shown behind the label   |
+|-----------------------|--------------------------|
+| `index.md`            | `index.md`               |
+| `guide/install.md`    | `install.md (guide/install.md)` |
+
+A link shows its address instead.
 
 ## How a node is labelled
 
@@ -53,6 +64,9 @@ see.
 MkDocs builds a navigation out of `docs_dir` when `mkdocs.yml` carries no `nav`. The tool window deliberately
 does **not** reproduce that: what it shows is the navigation the site has written down. A site without `nav`
 — or with an empty one — therefore shows a note saying so instead of a tree.
+
+The note is wrapped at word boundaries to the width the tool window currently has, and it is re-wrapped when
+that width changes — docking the tool window at the bottom or dragging its edge never cuts the text off.
 
 ## Keeping up to date
 

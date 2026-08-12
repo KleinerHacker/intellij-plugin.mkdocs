@@ -234,6 +234,59 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the stylesheets directory inside the documentation directory. Like the assets directory it
+     * has no MkDocs key, so the name comes from the facet — here the default.
+     */
+    fun `test badges the stylesheets directory`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val stylesheet = myFixture.addFileToProject("handbook/docs/stylesheets/extra.css", "")
+        MkDocsModuleService.getInstance(project).sync()
+        // The light fixture module is shared between tests and keeps whatever a previous test wrote into the
+        // facet, so the default this test is about has to be stated explicitly.
+        MkDocsFacet.getInstance(myFixture.module)!!.configuration.stylesheetsDirName = "stylesheets"
+
+        val data = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(stylesheet.virtualFile.parent), data)
+
+        assertTrue("expected the stylesheets folder to be badged", data.getIcon(false) is LayeredIcon)
+    }
+
+    /**
+     * Use case: the site was created with a differently named stylesheets directory. The facet remembers the
+     * name, and the badge has to follow it rather than the convention.
+     */
+    fun `test badges a renamed stylesheets directory`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val styled = myFixture.addFileToProject("handbook/docs/css/extra.css", "")
+        val conventional = myFixture.addFileToProject("handbook/docs/stylesheets/extra.css", "")
+        MkDocsModuleService.getInstance(project).sync()
+        MkDocsFacet.getInstance(myFixture.module)!!.configuration.stylesheetsDirName = "css"
+
+        val badged = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(styled.virtualFile.parent), badged)
+        assertTrue("expected the configured stylesheets folder to be badged", badged.getIcon(false) is LayeredIcon)
+
+        val plain = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(conventional.virtualFile.parent), plain)
+        assertSame("only the configured name counts", AllIcons.Nodes.Folder, plain.getIcon(false))
+    }
+
+    /**
+     * Use case: a directory named like the stylesheets directory but sitting somewhere else in the site. Only
+     * the one directly inside the documentation directory is the stylesheets directory.
+     */
+    fun `test leaves a directory named stylesheets elsewhere untouched`() {
+        myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
+        val stray = myFixture.addFileToProject("handbook/docs/guide/stylesheets/extra.css", "")
+        MkDocsModuleService.getInstance(project).sync()
+
+        val data = presentationWithFolderIcon()
+        decorator.decorate(nodeOf(stray.virtualFile.parent), data)
+
+        assertSame(AllIcons.Nodes.Folder, data.getIcon(false))
+    }
+
+    /**
      * Use case: a directory named like the assets directory but sitting somewhere else in the site. Only the
      * one directly inside the documentation directory is the assets directory.
      */

@@ -55,6 +55,11 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
             "the assets directory is created empty, without any placeholder file",
             directory.findFileByRelativePath("docs/assets")!!.children.toList(),
         )
+        assertNotNull(directory.findFileByRelativePath("docs/stylesheets"))
+        assertEmpty(
+            "the stylesheets directory is created empty as well",
+            directory.findFileByRelativePath("docs/stylesheets")!!.children.toList(),
+        )
 
         val module = ModuleManager.getInstance(project).findModuleByName("Handbook")
         assertNotNull("the detection must have created a module for the new site", module)
@@ -105,8 +110,8 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
 
     /**
      * Use case: a site created with renamed directories. `docs_dir` has to be written because MkDocs would
-     * otherwise not find the sources; the assets directory has no MkDocs key and therefore lives in the
-     * facet.
+     * otherwise not find the sources; the assets and stylesheets directories have no MkDocs key and therefore
+     * live in the facet.
      */
     fun `test creating a site keeps renamed directories`() {
         val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "manual")
@@ -117,16 +122,20 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
                 siteName = "Manual",
                 docsDirName = "sources",
                 assetsDirName = "media",
+                stylesheetsDirName = "css",
             ),
         )
 
         assertEquals("site_name: Manual\ndocs_dir: sources\n", VfsUtilCore.loadText(site.configFile))
         assertNotNull(directory.findFileByRelativePath("sources/index.md"))
         assertNotNull(directory.findFileByRelativePath("sources/media"))
+        assertNotNull(directory.findFileByRelativePath("sources/css"))
 
         val module = ModuleManager.getInstance(project).findModuleByName("Manual")
         assertNotNull(module)
-        assertEquals("media", MkDocsFacet.getInstance(module!!)!!.configuration.assetsDirName)
+        val configuration = MkDocsFacet.getInstance(module!!)!!.configuration
+        assertEquals("media", configuration.assetsDirName)
+        assertEquals("css", configuration.stylesheetsDirName)
     }
 
     /**

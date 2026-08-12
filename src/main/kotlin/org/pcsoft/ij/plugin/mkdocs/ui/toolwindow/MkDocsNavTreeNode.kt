@@ -35,8 +35,10 @@ enum class MkDocsNavTreeNodeKind {
  *
  * @property kind what the entry stands for
  * @property label the text of the node — the title from `nav`, the first heading of the page, or the file name
- * @property hint the greyed text behind the label: the path of a page or the address of a link, empty for a
- *                section
+ * @property hint the greyed text behind the label: the file name of a page — followed by its full path in
+ *                brackets if the page sits in a subdirectory — or the address of a link, empty for a section
+ * @property path the full path of the entry as `nav` writes it: the path of a page relative to the
+ *                documentation directory, the address of a link, and empty for a section
  * @property file the page the node opens, or `null` for a section, a link, or a path leading nowhere
  * @property url the address the node opens, or `null` for anything but a link
  */
@@ -44,6 +46,7 @@ data class MkDocsNavTreeNode(
     val kind: MkDocsNavTreeNodeKind,
     val label: String,
     val hint: String,
+    val path: String,
     val file: VirtualFile?,
     val url: String?,
 ) {

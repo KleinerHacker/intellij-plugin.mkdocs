@@ -54,7 +54,7 @@ class MkDocsPageTitleService {
      * Weak keys, so a file deleted or forgotten by the virtual file system does not stay alive because its
      * title was once read.
      */
-    private val cache = ContainerUtil.createConcurrentWeakKeyMap<VirtualFile, Entry>()
+    private val cache = ContainerUtil.createConcurrentWeakKeySoftValueMap<VirtualFile, Entry>()
 
     /**
      * Returns the title [file] presents itself with.

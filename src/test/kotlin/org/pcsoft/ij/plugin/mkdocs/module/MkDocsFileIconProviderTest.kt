@@ -153,6 +153,108 @@ class MkDocsFileIconProviderTest : BasePlatformTestCase() {
         assertNull(provider.getIcon(page, 0, null))
     }
 
+    /**
+     * Use case: the `requirements.txt` of a site, lying next to the configuration file. It pins the MkDocs
+     * version, the theme and the plugins the site is built with, so it gets the MkDocs requirements icon.
+     */
+    fun `test marks the requirements file in the site root`() {
+        addFile("reqroot/mkdocs.yml")
+        val requirements = addFile("reqroot/requirements.txt")
+
+        assertSame(MkDocsIcons.RequirementsFile, provider.getIcon(requirements, 0, project))
+    }
+
+    /**
+     * Use case: a `requirements.txt` of some unrelated Python setup, in a directory holding no MkDocs
+     * configuration. It has nothing to do with a site and must keep the platform icon.
+     */
+    fun `test leaves a requirements file outside a site alone`() {
+        val requirements = addFile("python/requirements.txt")
+
+        assertNull(provider.getIcon(requirements, 0, project))
+    }
+
+    /**
+     * Use case: a `requirements.txt` in a subdirectory of a site, for example inside `docs`. MkDocs reads its
+     * requirements from the site root only, so a nested one is not the requirements file of the site.
+     */
+    fun `test leaves a requirements file below the site root alone`() {
+        addFile("nestedreq/mkdocs.yml")
+        val requirements = addFile("nestedreq/docs/requirements.txt")
+
+        assertNull(provider.getIcon(requirements, 0, project))
+    }
+
+    /**
+     * Use case: the file was created as `Requirements.TXT` on a case insensitive file system. `pip` would
+     * still install from it, so the IDE has to recognise it as well.
+     */
+    fun `test recognises the requirements file name case insensitively`() {
+        addFile("reqcase/mkdocs.yml")
+        val requirements = addFile("reqcase/Requirements.TXT")
+
+        assertSame(MkDocsIcons.RequirementsFile, provider.getIcon(requirements, 0, project))
+    }
+
+    /**
+     * Use case: an icon for the requirements file is requested outside any project, for example from a file
+     * chooser. The decision needs the name of the file and the entries of its parent directory only, so it
+     * works without a project.
+     */
+    fun `test marks the requirements file without a project`() {
+        addFile("reqnoproject/mkdocs.yml")
+        val requirements = addFile("reqnoproject/requirements.txt")
+
+        assertSame(MkDocsIcons.RequirementsFile, provider.getIcon(requirements, 0, null))
+    }
+
+    /**
+     * Use case: a style sheet the configuration pulls in through `extra_css`. That file shapes the built
+     * site, so it gets an icon of its own wherever the IDE renders it.
+     */
+    fun `test marks a referenced style sheet`() {
+        addFile("css-ref/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n")
+        addFile("css-ref/docs/index.md")
+        val stylesheet = addFile("css-ref/docs/stylesheets/extra.css", "body { color: red; }\n")
+
+        assertSame(MkDocsIcons.StylesheetFile, provider.getIcon(stylesheet, 0, project))
+    }
+
+    /**
+     * Use case: a style sheet lying in the stylesheets directory that `extra_css` never names. MkDocs does
+     * not load it, so it stays an ordinary CSS file and keeps the icon of its file type.
+     */
+    fun `test leaves an unreferenced style sheet alone`() {
+        addFile("css-unref/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n")
+        addFile("css-unref/docs/index.md")
+        val other = addFile("css-unref/docs/stylesheets/unused.css", "body { color: red; }\n")
+
+        assertNull(provider.getIcon(other, 0, project))
+    }
+
+    /**
+     * Use case: a style sheet named from somewhere else below the documentation directory. `extra_css`
+     * resolves against that directory, so the location of the file decides nothing here.
+     */
+    fun `test marks a referenced style sheet outside the stylesheets directory`() {
+        addFile("css-elsewhere/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - theme/print.css\n")
+        addFile("css-elsewhere/docs/index.md")
+        val stylesheet = addFile("css-elsewhere/docs/theme/print.css", "body { color: red; }\n")
+
+        assertSame(MkDocsIcons.StylesheetFile, provider.getIcon(stylesheet, 0, project))
+    }
+
+    /**
+     * Use case: an icon for a style sheet is requested outside any project, for example from a file chooser.
+     * Without a project there is no PSI to read `extra_css` from, so nothing can be claimed.
+     */
+    fun `test leaves a style sheet alone without a project`() {
+        addFile("css-noproject/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n")
+        val stylesheet = addFile("css-noproject/docs/stylesheets/extra.css", "body { color: red; }\n")
+
+        assertNull(provider.getIcon(stylesheet, 0, null))
+    }
+
     private fun addFile(relativePath: String, text: String = ""): VirtualFile =
         myFixture.addFileToProject(relativePath, text).virtualFile
 }

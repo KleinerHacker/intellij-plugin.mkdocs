@@ -122,6 +122,60 @@ class MkDocsLayoutTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the stylesheets directory name of a module without a facet. Same situation as with the
+     * assets directory — MkDocs names the individual files, never the directory.
+     */
+    fun `test falls back to the conventional stylesheets directory`() {
+        assertEquals(MkDocsProject.DEFAULT_STYLESHEETS_DIR, MkDocsLayout.stylesheetsDirNameOf(null))
+    }
+
+    /**
+     * Use case: a style sheet the configuration names in `extra_css`. That is the one thing making MkDocs
+     * load it, so it has to be recognised wherever below the documentation directory it lies.
+     */
+    fun `test recognises a referenced style sheet`() {
+        addFile("styled/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n")
+        addFile("styled/docs/index.md")
+        val stylesheet = addFile("styled/docs/stylesheets/extra.css", "body { color: red; }\n")
+
+        assertTrue(runReadActionBlocking { MkDocsLayout.isReferencedStylesheet(project, stylesheet) })
+    }
+
+    /**
+     * Use case: a style sheet sitting in the stylesheets directory that `extra_css` does not name. The built
+     * site never loads it, so its convenient location must not be mistaken for a reference.
+     */
+    fun `test rejects an unreferenced style sheet`() {
+        addFile("unstyled/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n")
+        addFile("unstyled/docs/index.md")
+        val other = addFile("unstyled/docs/stylesheets/unused.css", "body { color: red; }\n")
+
+        assertFalse(runReadActionBlocking { MkDocsLayout.isReferencedStylesheet(project, other) })
+    }
+
+    /**
+     * Use case: a site naming a style sheet that lies outside the stylesheets directory. `extra_css` resolves
+     * against the documentation directory, not against a conventional folder, so this one counts too.
+     */
+    fun `test recognises a referenced style sheet outside the stylesheets directory`() {
+        addFile("elsewhere-css/mkdocs.yml", "site_name: Handbook\nextra_css:\n  - theme/print.css\n")
+        addFile("elsewhere-css/docs/index.md")
+        val stylesheet = addFile("elsewhere-css/docs/theme/print.css", "body { color: red; }\n")
+
+        assertTrue(runReadActionBlocking { MkDocsLayout.isReferencedStylesheet(project, stylesheet) })
+    }
+
+    /**
+     * Use case: a CSS file of the surrounding project, outside any MkDocs site. Nothing about MkDocs applies
+     * to it.
+     */
+    fun `test rejects a style sheet outside a site`() {
+        val loose = addFile("plain-project/style.css", "body { color: red; }\n")
+
+        assertFalse(runReadActionBlocking { MkDocsLayout.isReferencedStylesheet(project, loose) })
+    }
+
+    /**
      * Use case: the wizard suggests an output directory for a site created inside a Gradle module. The
      * location does not exist yet, so the search has to start at the innermost existing directory.
      */

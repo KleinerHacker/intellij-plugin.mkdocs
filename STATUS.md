@@ -17,7 +17,9 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Site root marked in the project view (site name + badge)        | ✅      |
 | Own file icon for `mkdocs.yml` / `mkdocs.yaml`                   | ✅      |
 | Own file icon for the Markdown pages below `docs_dir`           | ✅      |
-| Documentation and assets directory marked in the project view   | ✅      |
+| Own file icon for `requirements.txt` in the site root           | ✅      |
+| Documentation, assets and stylesheets directory marked in the project view | ✅ |
+| Own file icon for a `*.css` referenced by `extra_css`           | ✅      |
 | Create a new site from the IDE (*New → MkDocs Site*)            | ✅      |
 | Missing site directories suggested in *New Directory*           | ✅      |
 | Tool window listing the detected sites                          | ✅      |

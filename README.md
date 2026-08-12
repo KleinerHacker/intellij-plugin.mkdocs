@@ -19,7 +19,7 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   module is used, which keeps Gradle and Maven imports untouched.
 - **Create a site from the IDE** — *New → MkDocs Site*, in the project view context menu and under
   *File → New*. The five step wizard asks for the layout (name and location, documentation directory, assets
-  directory, build output directory), the site metadata (`site_name`, `site_author`, `site_description`,
+  directory, stylesheets directory, build output directory), the site metadata (`site_name`, `site_author`, `site_description`,
   `site_url`), the repository (`repo_name`, `repo_url`), the `copyright` notice and the optional features,
   then writes `mkdocs.yml`, a start page and the directory structure. Everything left empty is omitted from
   the configuration file. The last step is fed by the `siteFeature` extension point and is empty until the
@@ -37,12 +37,14 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   else, so a build never drops its HTML next to the sources.
 - **Marked in the project view** — the site root directory shows its `site_name` in brackets behind the
   directory name, like a Maven project directory, and its folder icon carries a small MkDocs badge. The
-  documentation directory and the assets directory get their own badge.
+  documentation directory, the assets directory and the stylesheets directory get their own badge.
 - **Own file icons** — `mkdocs.yml` / `mkdocs.yaml` is shown with a dedicated MkDocs icon instead of the
-  generic YAML one, and every Markdown file below `docs_dir` gets a page icon, everywhere the IDE renders
-  them.
-- **Suggestions in *New Directory*** — a site missing its documentation or assets directory offers it in the
-  platform dialog, with the same badge the project view uses.
+  generic YAML one, every Markdown file below `docs_dir` gets a page icon, and a `requirements.txt` sitting
+  directly next to the configuration file gets a requirements icon. A `*.css` file gets a style sheet icon
+  while `extra_css` names it — the key is what makes MkDocs load it, so an unreferenced style sheet keeps the
+  ordinary icon. All of this applies everywhere the IDE renders the files.
+- **Suggestions in *New Directory*** — a site missing its documentation, assets or stylesheets directory
+  offers it in the platform dialog, with the same badge the project view uses.
 - ***Site Page* tool window** — one tab per detected site, each showing the navigation written under `nav` in
   its `mkdocs.yml`. A node is labelled with the title from `nav`, else with the first `#` heading of the page,
   else with the file name without its extension. Sections become folders, external targets become links, and

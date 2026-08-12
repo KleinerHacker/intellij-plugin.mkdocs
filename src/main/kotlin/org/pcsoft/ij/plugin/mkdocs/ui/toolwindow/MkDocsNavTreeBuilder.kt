@@ -84,14 +84,21 @@ object MkDocsNavTreeBuilder {
         is MkDocsNavSection -> {
             val label = node.title ?: MkDocsBundle.message("toolwindow.sitePage.node.section")
             val treeNode = DefaultMutableTreeNode(
-                MkDocsNavTreeNode(MkDocsNavTreeNodeKind.SECTION, label, "", null, null),
+                MkDocsNavTreeNode(MkDocsNavTreeNodeKind.SECTION, label, "", "", null, null),
             )
             appendAll(project, docsDir, node.children, treeNode)
             treeNode
         }
 
         is MkDocsNavLink -> DefaultMutableTreeNode(
-            MkDocsNavTreeNode(MkDocsNavTreeNodeKind.LINK, node.title ?: node.url, node.url, null, node.url),
+            MkDocsNavTreeNode(
+                MkDocsNavTreeNodeKind.LINK,
+                node.title ?: node.url,
+                node.url,
+                node.url,
+                null,
+                node.url,
+            ),
         )
 
         is MkDocsNavPage -> {
@@ -100,8 +107,26 @@ object MkDocsNavTreeBuilder {
                 ?: file?.let { MkDocsPageTitleService.getInstance(project).titleOf(it) }
                 ?: MkDocsPageTitle.fallback(node.path)
             DefaultMutableTreeNode(
-                MkDocsNavTreeNode(MkDocsNavTreeNodeKind.PAGE, label, node.path, file, null),
+                MkDocsNavTreeNode(MkDocsNavTreeNodeKind.PAGE, label, hintOf(node.path), node.path, file, null),
             )
         }
     }
+
+    /**
+     * Builds the greyed text behind the label of a page.
+     *
+     * A navigation is read page by page, and the file name is what identifies a page at a glance. The full
+     * path only earns its place once the page sits in a subdirectory, where the file name alone can well
+     * appear more than once.
+     *
+     * @param path the path of the page as `nav` writes it, relative to the documentation directory
+     * @return the file name, followed by the full path in brackets for a page inside a subdirectory
+     */
+    private fun hintOf(path: String): String {
+        val fileName = path.substringAfterLast(PATH_SEPARATOR)
+        return if (fileName.equals(path, ignoreCase = true)) fileName else "$fileName ($path)"
+    }
+
+    /** Separator MkDocs writes paths of `nav` with, on every operating system. */
+    private const val PATH_SEPARATOR = '/'
 }

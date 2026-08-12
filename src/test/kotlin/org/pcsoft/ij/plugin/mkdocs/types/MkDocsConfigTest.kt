@@ -161,6 +161,52 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
     }
 
+    /**
+     * Use case: a site pulling in style sheets. Every entry of `extra_css` has to come back, in the order it
+     * is written, because those paths are what tells the plugin which files the built site actually loads.
+     */
+    fun `test reads the referenced style sheets`() {
+        val file = configFile(
+            "extra/mkdocs.yml",
+            "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n  - css/print.css\n",
+        )
+
+        assertEquals(listOf("stylesheets/extra.css", "css/print.css"), readExtraCss(file))
+    }
+
+    /**
+     * Use case: a site without the key. MkDocs then loads no style sheet at all, so the list has to be empty
+     * rather than a guess at a conventional directory.
+     */
+    fun `test reports no style sheets without the key`() {
+        val file = configFile("no-extra/mkdocs.yml", "site_name: Handbook\n")
+
+        assertEmpty(readExtraCss(file))
+    }
+
+    /**
+     * Use case: a half-written file where the key carries a plain scalar instead of a sequence. That is no
+     * usable list of paths and must not be turned into one.
+     */
+    fun `test ignores a scalar value behind the key`() {
+        val file = configFile("scalar/mkdocs.yml", "site_name: Handbook\nextra_css: stylesheets/extra.css\n")
+
+        assertEmpty(readExtraCss(file))
+    }
+
+    /**
+     * Use case: a sequence still being typed, carrying an empty entry between two usable ones. The blank has
+     * no path in it and has to be dropped instead of matching some file by accident.
+     */
+    fun `test drops blank entries of the sequence`() {
+        val file = configFile(
+            "blank/mkdocs.yml",
+            "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n  -\n  - '  '\n",
+        )
+
+        assertEquals(listOf("stylesheets/extra.css"), readExtraCss(file))
+    }
+
     private fun configFile(path: String, text: String): VirtualFile =
         myFixture.addFileToProject(path, text).virtualFile
 
@@ -181,4 +227,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
 
     private fun resolveSiteDir(file: VirtualFile): String =
         runReadActionBlocking { MkDocsConfig.resolveSiteDir(project, file) }
+
+    private fun readExtraCss(file: VirtualFile): List<String> =
+        runReadActionBlocking { MkDocsConfig.readExtraCss(project, file) }
 }

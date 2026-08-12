@@ -6,6 +6,16 @@
 
 ### Added
 
+- A site can now carry a **stylesheets directory** next to its assets directory. The creation wizard asks for
+  the name, defaulting to `stylesheets`, and creates the directory inside the documentation directory. Like
+  the assets directory it has no MkDocs key, so the chosen name is remembered in the MkDocs facet and shown
+  there.
+- The stylesheets directory carries a badge of its own in the project view, and both it and the assets
+  directory are offered side by side in the *New Directory* dialog while they are still missing — creating
+  one of the two no longer hides the other.
+- A `*.css` file gets a style sheet icon of its own while `extra_css` in `mkdocs.yml` names it. The key is
+  what makes MkDocs load a style sheet, so a file lying unreferenced in the stylesheets directory keeps the
+  ordinary icon, and one referenced from elsewhere below `docs_dir` gets the icon all the same.
 - A *Site Page* tool window on the left shows the navigation of the detected MkDocs sites. Every site gets a
   tab of its own, and each tab renders the tree written under `nav` in its `mkdocs.yml`, in the order the file
   gives it. Sections become folders, targets leaving the site become links.
@@ -29,6 +39,8 @@
   none marked as the default, the notice can be picked from a list; the text stays editable either way.
 - A banner above `mkdocs.yml` / `mkdocs.yaml` reports a missing `site_name`, `site_author` or
   `site_description`. Every key gets a banner of its own, carrying a fix that adds it.
+- `requirements.txt` gets an own MkDocs icon, but only when it sits directly next to `mkdocs.yml` /
+  `mkdocs.yaml` in the site root. A `requirements.txt` anywhere else keeps the icon the IDE gives it.
 - `mkdocs.yaml` is now mapped to the MkDocs JSON schema, which the bundled schema catalogue offers for
   `mkdocs.yml` only — the second spelling MkDocs accepts previously had no completion and no validation.
 
@@ -41,6 +53,12 @@
   optional features.
 - The plugin description shown in the marketplace and in the IDE plugin manager now lists all implemented
   features instead of a single introductory sentence.
+- Section nodes of the *Site Page* tool window carry an own MkDocs folder icon instead of the generic folder
+  of the platform.
+- The note shown in place of an empty tree wraps at word boundaries to the width of the tool window and
+  re-wraps when that width changes.
+- The grey text behind a page node shows the file name only. A page living in a subdirectory adds its path
+  relative to the documentation directory in brackets, for example `install.md (guide/install.md)`.
 
 ## [0.1.0]
 

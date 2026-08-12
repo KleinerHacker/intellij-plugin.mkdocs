@@ -41,7 +41,7 @@ class MkDocsNavTreeRenderer : ColoredTreeCellRenderer() {
         val node = (value as? DefaultMutableTreeNode)?.userObject as? MkDocsNavTreeNode ?: return
 
         icon = when (node.kind) {
-            MkDocsNavTreeNodeKind.SECTION -> AllIcons.Nodes.Folder
+            MkDocsNavTreeNodeKind.SECTION -> MkDocsIcons.NavSection
             MkDocsNavTreeNodeKind.PAGE -> MkDocsIcons.MarkdownFile
             MkDocsNavTreeNodeKind.LINK -> AllIcons.General.Web
         }
@@ -57,7 +57,8 @@ class MkDocsNavTreeRenderer : ColoredTreeCellRenderer() {
             append("  ${node.hint}", SimpleTextAttributes.GRAYED_ATTRIBUTES)
         }
         toolTipText = if (node.unresolved) {
-            MkDocsBundle.message("toolwindow.sitePage.node.missing", node.hint)
+            // The tooltip names the full path: a bare file name would not say where the page is missing from.
+            MkDocsBundle.message("toolwindow.sitePage.node.missing", node.path)
         } else {
             null
         }

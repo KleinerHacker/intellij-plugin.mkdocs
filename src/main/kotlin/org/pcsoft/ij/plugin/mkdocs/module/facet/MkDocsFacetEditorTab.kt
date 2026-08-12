@@ -122,6 +122,9 @@ class MkDocsFacetEditorTab(
             row(MkDocsBundle.message("facet.mkdocs.field.assetsDir")) {
                 label(configuration.assetsDirName)
             }
+            row(MkDocsBundle.message("facet.mkdocs.field.stylesheetsDir")) {
+                label(configuration.stylesheetsDirName)
+            }
             row {
                 comment(MkDocsBundle.message("facet.mkdocs.hint"))
             }
