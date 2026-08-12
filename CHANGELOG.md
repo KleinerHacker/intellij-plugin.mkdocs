@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.2.0]
+
 ### Added
 
 - Every path written in `mkdocs.yml` is now a real reference: the entries of `extra_css`, the targets of
