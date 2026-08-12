@@ -6,6 +6,19 @@
 
 ### Added
 
+- Every path written in `mkdocs.yml` is now a real reference: the entries of `extra_css`, the targets of
+  `nav`, `theme.logo` and `theme.favicon` point at their file, `docs_dir` and `site_dir` at their directory.
+  Ctrl+clicking follows the path, completion offers what is there, renaming a file rewrites the entry, and a
+  path leading nowhere is reported — except for `site_dir`, which names the build output and is therefore
+  never expected to exist.
+- Each of those paths carries a gutter icon opening the target with one click. A file shows the icon it
+  carries elsewhere in the IDE, so a page, a style sheet or an image is recognised in the configuration file
+  itself; `docs_dir` and `site_dir` show the badge of their directory.
+- A path that no file system would accept is reported: forbidden or control characters, an empty segment, a
+  segment ending in a dot or a space, an absolute path, a drive letter or a `..` leaving the site. What only
+  breaks on other operating systems — a backslash as separator, a reserved Windows name, non-ASCII characters
+  or a space in a segment — is reported as a warning, so a site stays portable without the current machine
+  complaining about paths that work on it.
 - A site can now carry a **stylesheets directory** next to its assets directory. The creation wizard asks for
   the name, defaulting to `stylesheets`, and creates the directory inside the documentation directory. Like
   the assets directory it has no MkDocs key, so the chosen name is remembered in the MkDocs facet and shown

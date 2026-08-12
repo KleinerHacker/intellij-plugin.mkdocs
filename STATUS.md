@@ -39,7 +39,11 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | `site_dir` read and written by the creation wizard        | ✅      |
 | `site_dir` awareness (excludes)                           | ⬜      |
 | `nav` navigation read and shown in the *Site Page* tool window | 🚧 |
-| `nav` navigation (references, completion, validation)     | ⬜      |
+| `nav` navigation (references, completion, validation)     | ✅      |
+| File references for `extra_css`, `theme.logo`, `theme.favicon` | ✅ |
+| Directory references for `docs_dir` and `site_dir`        | ✅      |
+| Gutter icon opening the target of every path              | ✅      |
+| Character and structure check of every path, OS aware     | ✅      |
 | `theme` (including `material`)                            | ⬜      |
 | `plugins` / `markdown_extensions`                         | ⬜      |
 
