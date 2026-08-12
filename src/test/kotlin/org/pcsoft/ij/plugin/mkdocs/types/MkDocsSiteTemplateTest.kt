@@ -125,6 +125,10 @@ class MkDocsSiteTemplateTest {
             MkDocsSiteTemplateError.INVALID_ASSETS_DIR,
             template(siteName = "Docs", assetsDir = "nested/assets").validate(),
         )
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_STYLESHEETS_DIR,
+            template(siteName = "Docs", stylesheetsDir = "nested/stylesheets").validate(),
+        )
     }
 
     /**
@@ -139,6 +143,10 @@ class MkDocsSiteTemplateTest {
         assertEquals(
             MkDocsSiteTemplateError.INVALID_ASSETS_DIR,
             template(siteName = "Docs", assetsDir = "").validate(),
+        )
+        assertEquals(
+            MkDocsSiteTemplateError.INVALID_STYLESHEETS_DIR,
+            template(siteName = "Docs", stylesheetsDir = " ").validate(),
         )
     }
 
@@ -294,6 +302,7 @@ class MkDocsSiteTemplateTest {
         siteName: String,
         docsDir: String = "docs",
         assetsDir: String = "assets",
+        stylesheetsDir: String = "stylesheets",
         siteDir: String = "site",
         siteUrl: String = "",
         repoUrl: String = "",
@@ -302,6 +311,7 @@ class MkDocsSiteTemplateTest {
         siteName = siteName,
         docsDirName = docsDir,
         assetsDirName = assetsDir,
+        stylesheetsDirName = stylesheetsDir,
         siteDirName = siteDir,
         siteUrl = siteUrl,
         repoUrl = repoUrl,

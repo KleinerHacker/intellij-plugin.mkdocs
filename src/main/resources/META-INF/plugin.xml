@@ -26,11 +26,20 @@
                 surrounding module; if the site belongs to no module, an own module is created. Its name is taken
                 from <code>site_name</code>, falling back to the directory name.</li>
             <li><b>Project view</b> &ndash; the site root is labelled with the site name and badged, and the
-                documentation directory (<code>docs_dir</code>) as well as the assets directory are marked.</li>
-            <li><b>File icons</b> &ndash; own icons for <code>mkdocs.yml</code> / <code>mkdocs.yaml</code> and for
-                the Markdown pages below <code>docs_dir</code>.</li>
+                documentation directory (<code>docs_dir</code>) as well as the assets and stylesheets directories are
+                marked.</li>
+            <li><b>File icons</b> &ndash; own icons for <code>mkdocs.yml</code> / <code>mkdocs.yaml</code>, for
+                the Markdown pages below <code>docs_dir</code>, for a <code>requirements.txt</code> sitting
+                directly next to the configuration file and for every style sheet listed in
+                <code>extra_css</code>.</li>
+            <li><b>Site Page tool window</b> &ndash; one tab per detected site, each showing the navigation
+                written under <code>nav</code>. A node is labelled with the title from <code>nav</code>, else
+                with the first <code>#</code> heading of the page, else with the file name, followed in grey by
+                the file name and, for a page in a subdirectory, its relative path. Sections carry an own
+                MkDocs folder icon. Double clicking opens the page in the editor or the address in the browser;
+                entries pointing nowhere are kept and marked.</li>
             <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> walks through layout
-                (<code>docs_dir</code>, assets, <code>site_dir</code>), site metadata (<code>site_name</code>,
+                (<code>docs_dir</code>, assets, stylesheets, <code>site_dir</code>), site metadata (<code>site_name</code>,
                 <code>site_author</code>, <code>site_description</code>, <code>site_url</code>), repository
                 (<code>repo_name</code>, <code>repo_url</code>), <code>copyright</code> and optional features,
                 and writes the configuration, the documentation directory and a start page.</li>
@@ -118,10 +127,10 @@
         <!-- Shows the site name behind the site root directory in the project view and badges its icon. -->
         <projectViewNodeDecorator implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsProjectViewDecorator"/>
 
-        <!-- Gives mkdocs.yml / mkdocs.yaml and the Markdown pages of a site their own icons. -->
+        <!-- Gives mkdocs.yml / mkdocs.yaml, the Markdown pages and the referenced style sheets their own icons. -->
         <fileIconProvider implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsFileIconProvider"/>
 
-        <!-- Suggests the missing documentation and assets directory in the New Directory dialog. -->
+        <!-- Suggests the missing documentation, assets and stylesheets directories in the New Directory dialog. -->
         <createDirectoryCompletionContributor
                 implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsDirectoryCompletionContributor"/>
 
@@ -131,10 +140,26 @@
         <annotator language="yaml"
                    implementationClass="org.pcsoft.ij.plugin.mkdocs.inspection.MkDocsMissingMetadataAnnotator"/>
 
+        <!-- One tab per detected site, each showing the navigation written under "nav" in mkdocs.yml.
+             Reading the navigation needs no index, so the tool window is available while the IDE is still
+             indexing. Its stripe title comes from the resource bundle, key toolwindow.stripe.MkDocs_Site_Page. -->
+        <toolWindow id="MkDocs Site Page"
+                    anchor="left"
+                    icon="org.pcsoft.ij.plugin.mkdocs.MkDocsIcons.SitePageToolWindow"
+                    factoryClass="org.pcsoft.ij.plugin.mkdocs.ui.toolwindow.MkDocsSitePageToolWindowFactory"/>
+
         <!-- Colors of the plugin's own text attributes, for light and for dark themes. -->
         <additionalTextAttributes scheme="Default" file="colorSchemes/MkDocsDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/MkDocsDarcula.xml"/>
     </extensions>
+
+    <!-- Shows, hides and refreshes the tool window as sites appear and disappear. A project can gain its
+         first site long after it was opened, so availability is decided after every detection run rather
+         than once at start up. -->
+    <projectListeners>
+        <listener class="org.pcsoft.ij.plugin.mkdocs.ui.toolwindow.MkDocsSitePageAvailabilityListener"
+                  topic="org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener"/>
+    </projectListeners>
 
     <!-- Maps mkdocs.yaml to the MkDocs JSON schema. The bundled SchemaStore catalogue matches mkdocs.yml
          only, so the second spelling MkDocs accepts would otherwise stay without completion. -->

@@ -45,6 +45,9 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
      *                         configuration file: MkDocs has no key for it, so the value chosen when the site
      *                         was created is remembered instead. Sites that came in through a checkout keep
      *                         the default
+     * @property stylesheetsDirName name of the directory holding the style sheets, inside the documentation
+     *                             directory. Remembered for the same reason as [assetsDirName]: MkDocs names
+     *                             the individual files in `extra_css`, but never the directory holding them
      */
     class State {
         @JvmField
@@ -61,6 +64,9 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
 
         @JvmField
         var assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR
+
+        @JvmField
+        var stylesheetsDirName: String = MkDocsProject.DEFAULT_STYLESHEETS_DIR
     }
 
     private var state = State()
@@ -98,6 +104,13 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
         get() = state.assetsDirName
         set(value) {
             state.assetsDirName = value
+        }
+
+    /** Name of the stylesheets directory inside the documentation directory. */
+    var stylesheetsDirName: String
+        get() = state.stylesheetsDirName
+        set(value) {
+            state.stylesheetsDirName = value
         }
 
     override fun getState(): State = state

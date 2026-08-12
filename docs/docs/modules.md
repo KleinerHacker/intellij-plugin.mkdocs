@@ -38,6 +38,7 @@ the remaining steps is optional, and a field left empty produces no key in `mkdo
 | Location                | the directory that name is created in                                    |
 | Documentation directory | holds the `*.md` files, default `docs`                                   |
 | Assets directory        | holds asset files, created inside the documentation directory, default `assets` |
+| Stylesheets directory   | holds `*.css` files, created inside the documentation directory, default `stylesheets` |
 | Output directory        | where `mkdocs build` writes the rendered site, written to `site_dir`     |
 
 This step decides only where files end up. The name asked for here is the logical name of the site *and* the
@@ -136,12 +137,16 @@ The result is the smallest structure MkDocs works with:
   docs/
     index.md
     assets/
+    stylesheets/
 ```
 
 `docs_dir` and `site_dir` are written to `mkdocs.yml` only when they differ from the MkDocs defaults —
 repeating a default in a configuration file tells the reader nothing. Values carrying YAML syntax, such as a
-site name with a colon or a hash in it, are quoted. The assets directory has no MkDocs key at all; the chosen
-name is remembered in the [MkDocs facet](#the-mkdocs-facet).
+site name with a colon or a hash in it, are quoted. Neither the assets nor the stylesheets directory has an
+MkDocs key at all; the chosen names are remembered in the [MkDocs facet](#the-mkdocs-facet).
+
+`extra_css` is not written. MkDocs loads a style sheet only once that key names it, and a freshly created site
+has no style sheet to name yet — the directory is a place to put them, not a promise that they are used.
 
 Detection runs immediately afterwards, so the new site is an MkDocs module as soon as the wizard closes.
 
@@ -161,6 +166,7 @@ A detected module is marked with the **MkDocs** facet. You can see it in
 | Configuration file      | the detected file, relative to the site root                  |
 | Documentation directory | `docs_dir` from the configuration file, default `docs`        |
 | Assets directory        | the name chosen when the site was created, default `assets`   |
+| Stylesheets directory   | the name chosen when the site was created, default `stylesheets` |
 
 Both values are read-only: the configuration file is the single source of truth. Change `site_name` in
 `mkdocs.yml` and the facet follows.
@@ -185,32 +191,39 @@ The name in brackets is the `site_name` stored in the MkDocs facet, so it change
 configuration file does. Only the site root itself gets the name, never the directories below it, and never a
 directory whose module has not been detected yet.
 
-Two directories inside a site are badged as well, each with a marker of its own:
+Three directories inside a site are badged as well, each with a marker of its own:
 
 | Directory               | Marker          | Recognised by                                                   |
 |-------------------------|-----------------|-----------------------------------------------------------------|
 | Site root               | circle          | it directly contains the configuration file                     |
 | Documentation directory | sheet of paper  | `docs_dir` of the site directly above it, default `docs`        |
 | Assets directory        | picture frame   | the name in the facet, directly inside the documentation directory |
+| Stylesheets directory   | brush           | the name in the facet, directly inside the documentation directory |
 
-The three markers differ in shape, not only in colour, so they stay apart at overlay size. A directory named
-`assets` somewhere deeper in the documentation tree is not the assets directory and stays unmarked.
+The four markers differ in shape, not only in colour, so they stay apart at overlay size. A directory named
+`assets` or `stylesheets` somewhere deeper in the documentation tree is neither of them and stays unmarked.
 
 The colour of the name comes from the colour scheme entry `MKDOCS_SITE_NAME`, which ships with a value for
 light themes and one for dark themes, so the marking stays readable in either.
 
-Two kinds of file get an icon of their own — in the project view, in editor tabs and in navigation popups
+Three kinds of file get an icon of their own — in the project view, in editor tabs and in navigation popups
 alike:
 
 | File                          | Icon                     | Recognised by                                        |
 |-------------------------------|--------------------------|------------------------------------------------------|
 | `mkdocs.yml` / `mkdocs.yaml`  | MkDocs configuration     | the file name                                        |
 | `*.md` below `docs_dir`       | MkDocs page              | it lives inside the documentation directory of a site |
+| `requirements.txt`            | MkDocs requirements      | it sits directly next to the configuration file      |
 
 The page icon applies recursively, so a file in `docs/guide/advanced/` is marked just like one directly in
 `docs/`. Markdown outside the documentation directory — a README in the site root, say — is not published by
 MkDocs and keeps the icon the IDE gives it. The file types stay YAML and Markdown, so all existing support
 keeps working; only the icons change.
+
+The requirements icon is deliberately narrow: only the `requirements.txt` in the site root — the one listing
+the MkDocs packages the site is built with — is marked. A `requirements.txt` of a Python project elsewhere in
+the repository, or one buried inside the documentation directory, has nothing to do with MkDocs and keeps the
+icon the IDE gives it.
 
 ## Suggested directories
 
@@ -219,7 +232,7 @@ A site that is missing one of its directories offers it in the platform's **New 
 | Invoked on                  | Suggestion                                          |
 |-----------------------------|-----------------------------------------------------|
 | the site root               | the documentation directory named by `docs_dir`     |
-| the documentation directory | the assets directory named in the facet             |
+| the documentation directory | the assets and stylesheets directories named in the facet |
 
 Each suggestion carries the same badge the project view puts on the finished directory. A directory that
 already exists is not offered — there would be nothing to create.

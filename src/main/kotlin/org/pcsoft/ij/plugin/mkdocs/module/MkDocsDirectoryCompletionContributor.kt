@@ -14,20 +14,22 @@ package org.pcsoft.ij.plugin.mkdocs.module
 
 import com.intellij.ide.actions.CreateDirectoryCompletionContributor
 import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
+import javax.swing.Icon
 
 /**
  * Offers the directories an MkDocs site is missing in the *New Directory* dialog.
  *
- * At the site root that is the documentation directory named by `docs_dir`, inside the documentation
- * directory it is the assets directory. Both carry the same badge the project view puts on them, so the
- * suggestion and the result look alike. A directory that already exists is not offered — there would be
- * nothing to create.
+ * At the site root that is the documentation directory named by `docs_dir`; inside the documentation
+ * directory those are the assets and the stylesheets directory. All of them carry the same badge the project
+ * view puts on them, so the suggestion and the result look alike. A directory that already exists is not
+ * offered — there would be nothing to create.
  */
 class MkDocsDirectoryCompletionContributor : CreateDirectoryCompletionContributor {
 
@@ -44,17 +46,38 @@ class MkDocsDirectoryCompletionContributor : CreateDirectoryCompletionContributo
         if (configFile != null) {
             val docsDir = MkDocsConfig.resolveDocsDir(project, configFile)
             if (virtualFile.findFileByRelativePath(docsDir) != null) return emptyList()
-            return listOf(variantOf(docsDir, MkDocsIcons.DocsBadgeLarge))
+            return listOf(variantOf(docsDir, MkDocsIcons.DocsBadge))
         }
 
         if (MkDocsLayout.isDocsDirectory(project, virtualFile)) {
-            val assetsDir = MkDocsLayout.assetsDirNameOf(module)
-            if (virtualFile.findChild(assetsDir) != null) return emptyList()
-            return listOf(variantOf(assetsDir, MkDocsIcons.AssetsBadgeLarge))
+            // Both directories are offered side by side, each only while it is still missing — creating one of
+            // them must not make the other disappear from the dialog.
+            return listOfNotNull(
+                missingVariant(virtualFile, MkDocsLayout.assetsDirNameOf(module), MkDocsIcons.AssetsBadge),
+                missingVariant(
+                    virtualFile,
+                    MkDocsLayout.stylesheetsDirNameOf(module),
+                    MkDocsIcons.StylesheetsBadge,
+                ),
+            )
         }
 
         return emptyList()
     }
+
+    /**
+     * Builds a suggestion for the child [name] of [parent], or `null` if that child already exists.
+     *
+     * @param parent the directory the *New Directory* dialog was opened on
+     * @param name the name of the directory to suggest
+     * @param icon the badge shown next to the suggestion
+     */
+    private fun missingVariant(
+        parent: VirtualFile,
+        name: String,
+        icon: Icon,
+    ): CreateDirectoryCompletionContributor.Variant? =
+        if (parent.findChild(name) != null) null else variantOf(name, icon)
 
     /**
      * Builds a suggestion for [path].
@@ -62,6 +85,6 @@ class MkDocsDirectoryCompletionContributor : CreateDirectoryCompletionContributo
      * No source root type is attached: MkDocs directories are no source roots of any build system, and the
      * parameter is optional precisely for contributors like this one.
      */
-    private fun variantOf(path: String, icon: javax.swing.Icon): CreateDirectoryCompletionContributor.Variant =
+    private fun variantOf(path: String, icon: Icon): CreateDirectoryCompletionContributor.Variant =
         CreateDirectoryCompletionContributor.Variant(path, null, icon)
 }

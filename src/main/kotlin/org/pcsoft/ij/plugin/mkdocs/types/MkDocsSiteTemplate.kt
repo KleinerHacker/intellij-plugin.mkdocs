@@ -37,6 +37,9 @@ import kotlin.io.path.name
  * @property docsDirName directory the documentation sources go into, written to `docs_dir` when it differs
  *                       from the MkDocs default
  * @property assetsDirName directory for asset files, created inside [docsDirName]
+ * @property stylesheetsDirName directory for style sheets, created inside [docsDirName]. MkDocs only loads a
+ *                             style sheet once `extra_css` names it, so the directory is a place to put them,
+ *                             not a promise that they are used
  * @property siteDirName directory `mkdocs build` writes the rendered site to, written to `site_dir` when it
  *                       differs from the MkDocs default. Unlike the other directories this one may carry
  *                       several levels, because the build systems keep their output nested
@@ -53,6 +56,7 @@ data class MkDocsSiteTemplate(
     val siteName: String,
     val docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR,
     val assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR,
+    val stylesheetsDirName: String = MkDocsProject.DEFAULT_STYLESHEETS_DIR,
     val siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR,
     val siteAuthor: String = "",
     val siteDescription: String = "",
@@ -95,6 +99,8 @@ data class MkDocsSiteTemplate(
         siteName.isBlank() -> MkDocsSiteTemplateError.BLANK_SITE_NAME
         !MkDocsProject.isValidDirectoryName(docsDirName) -> MkDocsSiteTemplateError.INVALID_DOCS_DIR
         !MkDocsProject.isValidDirectoryName(assetsDirName) -> MkDocsSiteTemplateError.INVALID_ASSETS_DIR
+        !MkDocsProject.isValidDirectoryName(stylesheetsDirName) ->
+            MkDocsSiteTemplateError.INVALID_STYLESHEETS_DIR
         !MkDocsProject.isValidSiteDirName(siteDirName) -> MkDocsSiteTemplateError.INVALID_SITE_DIR
         !isUsableUrl(siteUrl) -> MkDocsSiteTemplateError.INVALID_SITE_URL
         !isUsableUrl(repoUrl) -> MkDocsSiteTemplateError.INVALID_REPO_URL
@@ -161,6 +167,9 @@ enum class MkDocsSiteTemplateError(val messageKey: String) {
 
     /** The assets directory name is empty or carries a path of its own. */
     INVALID_ASSETS_DIR("create.site.error.assetsDir"),
+
+    /** The stylesheets directory name is empty or carries a path of its own. */
+    INVALID_STYLESHEETS_DIR("create.site.error.stylesheetsDir"),
 
     /** The output directory is empty, absolute, or climbs out of the site root. */
     INVALID_SITE_DIR("create.site.error.siteDir"),

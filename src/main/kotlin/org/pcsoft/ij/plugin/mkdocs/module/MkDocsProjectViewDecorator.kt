@@ -76,6 +76,17 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
             MkDocsLayout.isAssetsDirectory(project, module, directory)
 
         /**
+         * Returns `true` if [directory] is the stylesheets directory of its site.
+         *
+         * @param project the project [directory] belongs to
+         * @param module the module owning [directory]
+         * @param directory the directory to inspect
+         */
+        @JvmStatic
+        fun isStylesheetsDirectory(project: Project, module: Module, directory: VirtualFile): Boolean =
+            MkDocsLayout.isStylesheetsDirectory(project, module, directory)
+
+        /**
          * Puts [badge] into the lower right corner of [base].
          *
          * @param base the undecorated node icon
@@ -83,7 +94,7 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
          * @return a layered icon of the same size as [base]
          */
         @JvmStatic
-        fun withBadge(base: Icon, badge: Icon = MkDocsIcons.Badge): Icon {
+        fun withBadge(base: Icon, badge: Icon = MkDocsIcons.BadgeOverlay): Icon {
             val layered = LayeredIcon.layeredIcon(arrayOf(base, badge))
             layered.setIcon(badge, 1, SwingConstants.SOUTH_EAST)
             return layered
@@ -113,8 +124,9 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
         }
 
         val badge = when {
-            isDocsDirectory(project, virtualFile) -> MkDocsIcons.DocsBadge
-            isAssetsDirectory(project, module, virtualFile) -> MkDocsIcons.AssetsBadge
+            isDocsDirectory(project, virtualFile) -> MkDocsIcons.DocsBadgeOverlay
+            isAssetsDirectory(project, module, virtualFile) -> MkDocsIcons.AssetsBadgeOverlay
+            isStylesheetsDirectory(project, module, virtualFile) -> MkDocsIcons.StylesheetsBadgeOverlay
             else -> return
         }
         data.getIcon(false)?.let { data.setIcon(withBadge(it, badge)) }

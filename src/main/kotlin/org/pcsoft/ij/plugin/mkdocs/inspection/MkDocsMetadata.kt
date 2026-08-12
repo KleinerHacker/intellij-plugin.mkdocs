@@ -39,7 +39,7 @@ object MkDocsMetadata {
      * @param file the configuration file to inspect
      */
     fun missingKeys(file: YAMLFile): List<String> {
-        val present = topLevelMapping(file)
+        val present = MkDocsConfig.topLevelMapping(file)
             ?.keyValues
             ?.mapNotNull { it.keyText.trim().takeIf { key -> key.isNotEmpty() } }
             ?.toSet()
@@ -61,7 +61,7 @@ object MkDocsMetadata {
      */
     fun addKey(project: Project, file: YAMLFile, key: String) {
         val generator = YAMLElementGenerator.getInstance(project)
-        val mapping = topLevelMapping(file)
+        val mapping = MkDocsConfig.topLevelMapping(file)
 
         if (mapping == null) {
             val document = generator.createDummyYamlWithText("$key:").documents.firstOrNull() ?: return
@@ -78,14 +78,6 @@ object MkDocsMetadata {
             mapping.addBefore(generator.createEol(), anchor)
         }
     }
-
-    /**
-     * Returns the mapping holding the configuration keys, or `null` if [file] has none yet.
-     *
-     * @param file the configuration file to inspect
-     */
-    fun topLevelMapping(file: YAMLFile): YAMLMapping? =
-        file.documents.firstNotNullOfOrNull { it.topLevelValue as? YAMLMapping }
 
     /**
      * Returns the key a newly added [key] has to be placed in front of, or `null` if it belongs at the end.

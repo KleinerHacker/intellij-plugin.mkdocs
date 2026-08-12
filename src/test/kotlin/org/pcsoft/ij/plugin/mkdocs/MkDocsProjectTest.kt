@@ -59,6 +59,31 @@ class MkDocsProjectTest {
     }
 
     /**
+     * Use case: the icon provider asks whether a file is the requirements file of a site. Only the exact name
+     * counts, whatever way it is spelled — the location is decided elsewhere.
+     */
+    @Test
+    fun `recognises the requirements file name`() {
+        assertTrue(MkDocsProject.isRequirementsFile("requirements.txt"))
+        assertTrue(MkDocsProject.isRequirementsFile("Requirements.TXT"))
+        assertTrue(MkDocsProject.isRequirementsFile("REQUIREMENTS.txt"))
+    }
+
+    /**
+     * Use case: files merely looking like the requirements file, such as a variant for a second environment
+     * or a path instead of a bare name. None of them is the requirements file of a site.
+     */
+    @Test
+    fun `rejects file names that are no requirements file`() {
+        assertFalse(MkDocsProject.isRequirementsFile("requirements-dev.txt"))
+        assertFalse(MkDocsProject.isRequirementsFile("requirements"))
+        assertFalse(MkDocsProject.isRequirementsFile("requirements.txt.bak"))
+        assertFalse(MkDocsProject.isRequirementsFile(""))
+        // A path is not a bare file name — callers must strip the directory part themselves.
+        assertFalse(MkDocsProject.isRequirementsFile("docs/requirements.txt"))
+    }
+
+    /**
      * Use case: the wizard suggests an output directory. A Maven module keeps generated output under
      * `target`, so the site must not drop its HTML next to the sources.
      */

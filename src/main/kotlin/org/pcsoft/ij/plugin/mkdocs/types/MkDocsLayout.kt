@@ -141,6 +141,55 @@ object MkDocsLayout {
     }
 
     /**
+     * Returns the name of the stylesheets directory configured for [module].
+     *
+     * Same situation as with the assets directory: MkDocs has no key naming it, so the facet is the only
+     * source.
+     *
+     * @param module the module owning the site, or `null` if there is none
+     */
+    fun stylesheetsDirNameOf(module: Module?): String {
+        val configured = module?.let { MkDocsFacet.getInstance(it) }?.configuration?.stylesheetsDirName
+        return configured?.takeIf { it.isNotBlank() } ?: MkDocsProject.DEFAULT_STYLESHEETS_DIR
+    }
+
+    /**
+     * Returns `true` if [directory] is the stylesheets directory of the site it belongs to.
+     *
+     * @param project the project [directory] belongs to
+     * @param module the module owning [directory]
+     * @param directory the directory to inspect
+     */
+    fun isStylesheetsDirectory(project: Project, module: Module, directory: VirtualFile): Boolean {
+        if (!directory.isValid || !directory.isDirectory) return false
+        val docsDir = directory.parent ?: return false
+        if (!isDocsDirectory(project, docsDir)) return false
+        return directory.name == stylesheetsDirNameOf(module)
+    }
+
+    /**
+     * Returns `true` if [file] is a style sheet the site actually loads.
+     *
+     * Where the file lies is not what decides this — `extra_css` is. A style sheet the key does not name is
+     * never pulled into the built site, however conveniently it sits in the stylesheets directory, and one
+     * named from somewhere else below `docs_dir` is loaded all the same. The entries are resolved against the
+     * documentation directory, which is what MkDocs does with them.
+     *
+     * Must be called inside a read action: reading `extra_css` reads the PSI of the configuration file.
+     *
+     * @param project the project [file] belongs to
+     * @param file the file to inspect
+     */
+    fun isReferencedStylesheet(project: Project, file: VirtualFile): Boolean {
+        if (!file.isValid || file.isDirectory) return false
+        val siteRoot = findSiteRoot(file) ?: return false
+        val configFile = configFileOf(siteRoot) ?: return false
+        val docsDir = docsDirOf(project, siteRoot) ?: return false
+        return MkDocsConfig.readExtraCss(project, configFile)
+            .any { VfsUtilCore.findRelativeFile(it, docsDir) == file }
+    }
+
+    /**
      * Returns the build output directory a site created at [path] should use.
      *
      * The build system of the surrounding module decides where generated output belongs. [path] usually does

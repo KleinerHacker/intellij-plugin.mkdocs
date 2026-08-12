@@ -105,9 +105,14 @@ class MkDocsLayoutStepValidationTest : BasePlatformTestCase() {
         step.setAssetsDirNameForTest("media")
         assertTrue("the assets directory must notify", notifications > afterDocs)
 
+        val afterAssets = notifications
+        step.setStylesheetsDirNameForTest("css")
+        assertTrue("the stylesheets directory must notify", notifications > afterAssets)
+
         assertNull("the changed input is still valid", step.validate())
         assertEquals("sources", step.buildTemplate()!!.docsDirName)
         assertEquals("media", step.buildTemplate()!!.assetsDirName)
+        assertEquals("css", step.buildTemplate()!!.stylesheetsDirName)
     }
 
     /**
@@ -124,6 +129,10 @@ class MkDocsLayoutStepValidationTest : BasePlatformTestCase() {
         step.setDocsDirNameForTest("docs")
         step.setAssetsDirNameForTest("a/b")
         assertEquals(MkDocsSiteTemplateError.INVALID_ASSETS_DIR, step.validate())
+
+        step.setAssetsDirNameForTest("assets")
+        step.setStylesheetsDirNameForTest("")
+        assertEquals(MkDocsSiteTemplateError.INVALID_STYLESHEETS_DIR, step.validate())
     }
 
     /**

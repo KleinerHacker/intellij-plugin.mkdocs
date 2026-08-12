@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
+import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener
 
 /**
  * Re-runs the MkDocs module detection whenever the virtual file system changes in a way that could affect
@@ -28,17 +29,28 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
  * The filter is deliberately generous — a moved or renamed directory may carry a configuration file with it,
  * and that is not visible from the event alone. Over-triggering costs nothing because
  * [MkDocsModuleService.scheduleSync] merges bursts into a single scan.
+ *
+ * Changes to the pages of a site are watched as well, but they do not start a scan: a Markdown file cannot
+ * turn a directory into a site. They only change what the pages are called, which is reported through
+ * [MkDocsSitesListener.pagesChanged].
  */
 class MkDocsVfsListener : AsyncFileListener {
 
     override fun prepareChange(events: List<VFileEvent>): AsyncFileListener.ChangeApplier? {
-        if (events.none(::isRelevant)) return null
+        val sitesAffected = events.any(::isRelevant)
+        val pagesAffected = events.any(::isPage)
+        if (!sitesAffected && !pagesAffected) return null
 
         return object : AsyncFileListener.ChangeApplier {
             override fun afterVfsChange() {
                 for (project in ProjectManager.getInstance().openProjects) {
                     if (project.isDisposed) continue
-                    MkDocsModuleService.getInstance(project).scheduleSync()
+                    if (sitesAffected) {
+                        // The scan reports itself once it is through, so no separate page notification.
+                        MkDocsModuleService.getInstance(project).scheduleSync()
+                    } else {
+                        project.messageBus.syncPublisher(MkDocsSitesListener.TOPIC).pagesChanged()
+                    }
                 }
             }
         }
@@ -58,5 +70,20 @@ class MkDocsVfsListener : AsyncFileListener {
                         MkDocsProject.isConfigFile(event.newValue.toString()))
 
         else -> event.file?.let { it.isDirectory || MkDocsProject.isConfigFile(it.name) } == true
+    }
+
+    /**
+     * Decides whether [event] concerns a page of a site.
+     *
+     * @param event a single pending VFS event
+     * @return `true` for Markdown files
+     */
+    private fun isPage(event: VFileEvent): Boolean = when (event) {
+        is VFileCreateEvent -> !event.isDirectory && MkDocsProject.isPageFile(event.childName)
+        is VFilePropertyChangeEvent -> event.propertyName == VirtualFile.PROP_NAME &&
+                (MkDocsProject.isPageFile(event.oldValue.toString()) ||
+                        MkDocsProject.isPageFile(event.newValue.toString()))
+
+        else -> event.file?.let { MkDocsProject.isPageFile(it.name) } == true
     }
 }

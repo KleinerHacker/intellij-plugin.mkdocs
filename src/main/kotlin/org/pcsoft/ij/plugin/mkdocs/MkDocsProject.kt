@@ -31,6 +31,17 @@ object MkDocsProject {
     /** Extension of the Markdown files MkDocs turns into pages. */
     const val PAGE_EXTENSION: String = "md"
 
+    /** Extension of the style sheets a site pulls in through `extra_css`. */
+    const val STYLESHEET_EXTENSION: String = "css"
+
+    /**
+     * Name of the file pinning the Python packages a site is built with.
+     *
+     * MkDocs does not read it — `pip` does. It is a convention, but a firm one: it is how the MkDocs version,
+     * the theme and the plugins of a site are recorded, and it lives next to the configuration file.
+     */
+    const val REQUIREMENTS_FILE_NAME: String = "requirements.txt"
+
     /** The directory MkDocs reads the documentation sources from when `docs_dir` is not set. */
     const val DEFAULT_DOCS_DIR: String = "docs"
 
@@ -41,6 +52,15 @@ object MkDocsProject {
      * documentation directory so MkDocs ships its content with the site.
      */
     const val DEFAULT_ASSETS_DIR: String = "assets"
+
+    /**
+     * The directory the plugin puts style sheets into by default.
+     *
+     * Like [DEFAULT_ASSETS_DIR] this is a convention rather than an MkDocs key: MkDocs only learns about a
+     * style sheet once `extra_css` names it. The directory lives inside the documentation directory, because
+     * that is the only place MkDocs ships files from.
+     */
+    const val DEFAULT_STYLESHEETS_DIR: String = "stylesheets"
 
     /** The directory MkDocs builds the site into when `site_dir` is not set. */
     const val DEFAULT_SITE_DIR: String = "site"
@@ -128,6 +148,17 @@ object MkDocsProject {
         CONFIG_FILE_NAMES.any { it.equals(fileName, ignoreCase = true) }
 
     /**
+     * Returns `true` if [fileName] is the requirements file of a site.
+     *
+     * The comparison is case-insensitive for the same reason as in [isConfigFile]. Whether the file really
+     * belongs to a site is not decided here — that depends on its location, not on its name.
+     *
+     * @param fileName the bare file name, without any directory part
+     */
+    fun isRequirementsFile(fileName: String): Boolean =
+        REQUIREMENTS_FILE_NAME.equals(fileName, ignoreCase = true)
+
+    /**
      * Returns `true` if [fileName] is a Markdown file, and therefore a page of a site.
      *
      * @param fileName the bare file name, without any directory part
@@ -135,4 +166,16 @@ object MkDocsProject {
     fun isPageFile(fileName: String): Boolean =
         fileName.length > PAGE_EXTENSION.length + 1 &&
             fileName.endsWith(".$PAGE_EXTENSION", ignoreCase = true)
+
+    /**
+     * Returns `true` if [fileName] is a style sheet.
+     *
+     * Whether the style sheet is one MkDocs actually loads is not decided here — that depends on `extra_css`,
+     * not on the name.
+     *
+     * @param fileName the bare file name, without any directory part
+     */
+    fun isStylesheetFile(fileName: String): Boolean =
+        fileName.length > STYLESHEET_EXTENSION.length + 1 &&
+            fileName.endsWith(".$STYLESHEET_EXTENSION", ignoreCase = true)
 }

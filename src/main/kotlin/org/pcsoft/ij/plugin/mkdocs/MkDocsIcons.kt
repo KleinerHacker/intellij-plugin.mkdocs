@@ -13,77 +13,135 @@
 package org.pcsoft.ij.plugin.mkdocs
 
 import com.intellij.openapi.util.IconLoader
+import com.intellij.util.IconUtil
 import javax.swing.Icon
 
 /**
  * Central registry of every icon shipped with the plugin.
  *
- * Icon files live in the `icons` resource folder and are named `<name>@<size>.svg`, with a `_dark`
- * suffix for the dark theme variant. Loading goes through [IconLoader] to get lazy loading and caching.
+ * Icon files live in the `icons` resource folder and are named `<name>.svg`, with a `_dark` suffix for the
+ * dark theme variant. There is exactly one file per motif — the icons are vectors and the platform scales
+ * them to whatever size a place renders. A separate file exists only where the drawing itself differs, which
+ * is the case for the `-overlay` variants: at badge size the regular drawing collapses into a blot, so those
+ * are drawn as their own, far simpler shapes.
+ *
+ * Every file is drawn on a 48x48 canvas, which is the size the platform would otherwise render the icon at,
+ * so the size a place needs is set here on loading — see [load].
  */
 object MkDocsIcons {
 
     /** The MkDocs logo, used for the MkDocs facet. */
     @JvmField
-    val MkDocs: Icon = load("mkdocs@16.svg")
-
-    /** The MkDocs logo at double size, for places that render larger icons. */
-    @JvmField
-    val MkDocsLarge: Icon = load("mkdocs@32.svg")
+    val MkDocs: Icon = load("mkdocs.svg", 16)
 
     /**
-     * Small marker overlaid on the folder icon of an MkDocs site root in the project view.
+     * Marker of an MkDocs site root, for places rendering it on its own.
      *
      * A circle, so it stays apart from the other two site markers even at overlay size — all three can
      * appear directly below one another in the tree.
      */
     @JvmField
-    val Badge: Icon = load("mkdocs-badge@8.svg")
+    val Badge: Icon = load("mkdocs-badge.svg", 16)
 
-    /** The site marker at the regular icon size, for places rendering it on its own. */
+    /** The site marker as overlaid on the folder icon of a site root in the project view. */
     @JvmField
-    val BadgeLarge: Icon = load("mkdocs-badge@16.svg")
+    val BadgeOverlay: Icon = load("mkdocs-badge-overlay.svg", 8)
 
     /**
-     * Marker overlaid on the folder icon of the documentation directory of a site.
+     * Marker of the documentation directory of a site, for places rendering it on its own.
      *
      * A portrait sheet with a folded corner, keeping it apart from the circle of [Badge] by silhouette
      * alone.
      */
     @JvmField
-    val DocsBadge: Icon = load("mkdocs-docs-badge@8.svg")
+    val DocsBadge: Icon = load("mkdocs-docs-badge.svg", 16)
 
-    /** The documentation directory marker at the regular icon size, for places rendering it on its own. */
+    /** The documentation directory marker as overlaid on the folder icon in the project view. */
     @JvmField
-    val DocsBadgeLarge: Icon = load("mkdocs-docs-badge@16.svg")
+    val DocsBadgeOverlay: Icon = load("mkdocs-docs-badge-overlay.svg", 8)
 
     /**
-     * Marker overlaid on the folder icon of the assets directory of a site.
+     * Marker of the assets directory of a site, for places rendering it on its own.
      *
      * A landscape picture frame, again to keep the three markers of a site apart by silhouette alone.
      */
     @JvmField
-    val AssetsBadge: Icon = load("mkdocs-assets-badge@8.svg")
+    val AssetsBadge: Icon = load("mkdocs-assets-badge.svg", 16)
 
-    /** The assets directory marker at the regular icon size, for places rendering it on its own. */
+    /** The assets directory marker as overlaid on the folder icon in the project view. */
     @JvmField
-    val AssetsBadgeLarge: Icon = load("mkdocs-assets-badge@16.svg")
+    val AssetsBadgeOverlay: Icon = load("mkdocs-assets-badge-overlay.svg", 8)
+
+    /**
+     * Marker of the stylesheets directory of a site, for places rendering it on its own.
+     *
+     * A brush on a diagonal axis — none of the other three markers has a slanted main axis, so the four stay
+     * apart by silhouette even at overlay size.
+     */
+    @JvmField
+    val StylesheetsBadge: Icon = load("mkdocs-stylesheets-badge.svg", 16)
+
+    /** The stylesheets directory marker as overlaid on the folder icon in the project view. */
+    @JvmField
+    val StylesheetsBadgeOverlay: Icon = load("mkdocs-stylesheets-badge-overlay.svg", 8)
+
+    /**
+     * Icon of a style sheet the site loads.
+     *
+     * Only files named in `extra_css` get it. A style sheet MkDocs does not know about changes nothing about
+     * the built site, so it keeps the icon of a plain CSS file.
+     */
+    @JvmField
+    val StylesheetFile: Icon = load("mkdocs-css.svg", 16)
 
     /** Icon of a Markdown file below the documentation directory of a site, replacing the generic one. */
     @JvmField
-    val MarkdownFile: Icon = load("mkdocs-md@16.svg")
+    val MarkdownFile: Icon = load("mkdocs-md.svg", 16)
 
-    /** The Markdown page icon at double size, for places that render larger icons. */
+    /**
+     * Icon of the *Site Page* tool window, shown on the tool window stripe.
+     *
+     * A plain outline without the gradient the file icons carry — the stripe renders it small enough that a
+     * gradient turns into a smudge.
+     */
     @JvmField
-    val MarkdownFileLarge: Icon = load("mkdocs-md@32.svg")
+    val SitePageToolWindow: Icon = load("mkdocs-site-page.svg", 20)
+
+    /**
+     * Icon of a section of the navigation in the *Site Page* tool window.
+     *
+     * A folder, because a section groups entries without being a page of its own — but drawn in the blue of
+     * the other MkDocs icons, so a section of a site is not mistaken for a directory of the project.
+     */
+    @JvmField
+    val NavSection: Icon = load("mkdocs-section.svg", 16)
+
+    /**
+     * Icon of the `requirements.txt` next to the configuration file of a site.
+     *
+     * That file pins the MkDocs version and the theme and plugin packages a site is built with, so it belongs
+     * to the site rather than to the project at large. Only the one directly beside `mkdocs.yml` gets it.
+     */
+    @JvmField
+    val RequirementsFile: Icon = load("mkdocs-requirements.svg", 16)
 
     /** Icon of an MkDocs configuration file, replacing the generic YAML icon. */
     @JvmField
-    val ConfigFile: Icon = load("mkdocs-file@16.svg")
+    val ConfigFile: Icon = load("mkdocs-file.svg", 16)
 
-    /** The configuration file icon at double size, for places that render larger icons. */
-    @JvmField
-    val ConfigFileLarge: Icon = load("mkdocs-file@32.svg")
-
-    private fun load(fileName: String): Icon = IconLoader.getIcon("/icons/$fileName", MkDocsIcons::class.java)
+    /**
+     * Loads the icon [fileName] from the `icons` resource folder and brings it to [size] pixels.
+     *
+     * Every icon file is drawn on a 48x48 canvas, and that canvas is what the platform takes as the size of
+     * the icon — so without the scaling step here every icon would be rendered at 48 pixels. The scaling
+     * happens on the vector, not on a rasterised image: [IconLoader] hands out a `ScalableIcon` for an SVG,
+     * which [IconUtil.scale] re-renders at the requested size rather than resampling it.
+     *
+     * @param fileName name of the SVG below `/icons`, without the `_dark` suffix of the dark variant
+     * @param size the edge length in pixels the icon is to be rendered at
+     */
+    private fun load(fileName: String, size: Int): Icon {
+        val icon = IconLoader.getIcon("/icons/$fileName", MkDocsIcons::class.java)
+        return IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth)
+    }
 }

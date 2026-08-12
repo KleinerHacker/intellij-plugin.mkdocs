@@ -24,16 +24,35 @@ import javax.swing.Icon
 /**
  * Gives the files of an MkDocs site their own icons.
  *
- * Two kinds of file are recognised: the configuration file `mkdocs.yml` / `mkdocs.yaml`, and every Markdown
- * file below the documentation directory of a site — those are the pages MkDocs actually publishes. Both
- * keep their file type, only the icon changes, so they are recognisable at a glance wherever the IDE renders
- * them: project view, editor tabs, "Go to file" and navigation popups.
+ * Four kinds of file are recognised: the configuration file `mkdocs.yml` / `mkdocs.yaml`, the
+ * `requirements.txt` lying next to it in the site root, every Markdown file below the documentation directory
+ * of a site — those are the pages MkDocs actually publishes — and every style sheet the site loads. All of
+ * them keep their file type, only the icon changes, so they are recognisable at a glance wherever the IDE
+ * renders them: project view, editor tabs, "Go to file" and navigation popups.
+ *
+ * A `requirements.txt` is claimed only in the site root, because that is the only place where it pins the
+ * MkDocs version, the theme and the plugins of a site. Anywhere else it belongs to some other Python setup.
+ *
+ * A style sheet is claimed only while `extra_css` names it. Where the file lies decides nothing here: the key
+ * is what makes MkDocs load it, and a `.css` sitting unreferenced in the stylesheets directory has no effect
+ * on the built site.
  */
 class MkDocsFileIconProvider : FileIconProvider {
 
     override fun getIcon(file: VirtualFile, flags: Int, project: Project?): Icon? {
         if (file.isDirectory) return null
         if (MkDocsProject.isConfigFile(file.name)) return MkDocsIcons.ConfigFile
+        if (MkDocsProject.isRequirementsFile(file.name)) {
+            // Only a name comparison in the parent directory — no PSI, no read action and no project needed.
+            val parent = file.parent ?: return null
+            return if (MkDocsLayout.isSiteRoot(parent)) MkDocsIcons.RequirementsFile else null
+        }
+        if (MkDocsProject.isStylesheetFile(file.name)) {
+            // Without a project there is no PSI to read extra_css from, so the site cannot be identified.
+            val owningProject = project ?: return null
+            val isLoaded = runReadActionBlocking { MkDocsLayout.isReferencedStylesheet(owningProject, file) }
+            return if (isLoaded) MkDocsIcons.StylesheetFile else null
+        }
         if (!MkDocsProject.isPageFile(file.name)) return null
 
         // Without a project there is no PSI to read docs_dir from, so the site cannot be identified.

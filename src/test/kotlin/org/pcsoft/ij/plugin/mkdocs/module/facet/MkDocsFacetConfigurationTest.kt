@@ -43,6 +43,11 @@ class MkDocsFacetConfigurationTest {
             "assets",
             configuration.assetsDirName,
         )
+        assertEquals(
+            "MkDocs names the individual style sheets, never their directory, so the convention starts here",
+            "stylesheets",
+            configuration.stylesheetsDirName,
+        )
     }
 
     /**
@@ -57,6 +62,7 @@ class MkDocsFacetConfigurationTest {
             ownsModule = true
             ownerModuleName = "app"
             assetsDirName = "media"
+            stylesheetsDirName = "css"
         }
 
         val element = XmlSerializer.serialize(original.state)
@@ -76,6 +82,11 @@ class MkDocsFacetConfigurationTest {
             "the assets directory lives in no file MkDocs reads, so only the facet can carry it",
             "media",
             restored.assetsDirName,
+        )
+        assertEquals(
+            "the stylesheets directory lives in no file MkDocs reads either",
+            "css",
+            restored.stylesheetsDirName,
         )
     }
 

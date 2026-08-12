@@ -17,7 +17,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
+import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.YAMLScalar
+import org.jetbrains.yaml.psi.YAMLSequence
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
@@ -58,6 +60,12 @@ object MkDocsConfig {
     /** The MkDocs configuration key holding the directory the rendered site is written to. */
     const val KEY_SITE_DIR: String = "site_dir"
 
+    /** The MkDocs configuration key holding the navigation of the site. */
+    const val KEY_NAV: String = "nav"
+
+    /** The MkDocs configuration key listing the style sheets the built site loads. */
+    const val KEY_EXTRA_CSS: String = "extra_css"
+
     /**
      * The keys a site should carry so its pages carry usable metadata.
      *
@@ -65,6 +73,27 @@ object MkDocsConfig {
      * reports them in.
      */
     val METADATA_KEYS: List<String> = listOf(KEY_SITE_NAME, KEY_SITE_AUTHOR, KEY_SITE_DESCRIPTION)
+
+    /**
+     * Returns the mapping holding the configuration keys of [file], or `null` if it has none yet.
+     *
+     * A configuration file is a single YAML mapping. Reaching for it here rather than in each caller keeps
+     * the readers of structured keys — the navigation, the metadata inspection — on one understanding of
+     * what the top level of the file is.
+     *
+     * @param file the configuration file to inspect
+     */
+    fun topLevelMapping(file: YAMLFile): YAMLMapping? =
+        file.documents.firstNotNullOfOrNull { it.topLevelValue as? YAMLMapping }
+
+    /**
+     * Returns the PSI of [configFile], or `null` if it does not parse as YAML.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     */
+    fun yamlFileOf(project: Project, configFile: VirtualFile): YAMLFile? =
+        PsiManager.getInstance(project).findFile(configFile) as? YAMLFile
 
     /**
      * Reads the scalar value of [key] from [configFile].
@@ -79,7 +108,7 @@ object MkDocsConfig {
      *         scalar, or the value is blank
      */
     private fun readScalar(project: Project, configFile: VirtualFile, key: String): String? {
-        val yamlFile = PsiManager.getInstance(project).findFile(configFile) as? YAMLFile ?: return null
+        val yamlFile = yamlFileOf(project, configFile) ?: return null
         val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, key) ?: return null
         val scalar = keyValue.value as? YAMLScalar ?: return null
         return scalar.textValue.trim().takeIf { it.isNotEmpty() }
@@ -161,4 +190,29 @@ object MkDocsConfig {
      */
     fun resolveSiteDir(project: Project, configFile: VirtualFile): String =
         readSiteDir(project, configFile) ?: MkDocsProject.DEFAULT_SITE_DIR
+
+    /**
+     * Reads `extra_css` from [configFile].
+     *
+     * MkDocs takes the key as a sequence of paths relative to `docs_dir`, and only a style sheet named there
+     * is loaded by the built site. The values are returned as written, so the caller can resolve them against
+     * the documentation directory itself.
+     *
+     * Anything that is not a scalar sequence entry is skipped: a half-written file makes the parser see
+     * mappings and empty entries behind the key, and neither is a usable path. A missing key, a key whose
+     * value is a plain scalar and a key with an empty sequence all yield an empty list — in each case the site
+     * loads no style sheet.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @return the referenced paths, relative to the documentation directory, never containing a blank entry
+     */
+    fun readExtraCss(project: Project, configFile: VirtualFile): List<String> {
+        val yamlFile = yamlFileOf(project, configFile) ?: return emptyList()
+        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, KEY_EXTRA_CSS) ?: return emptyList()
+        val sequence = keyValue.value as? YAMLSequence ?: return emptyList()
+        return sequence.items.mapNotNull { item ->
+            (item.value as? YAMLScalar)?.textValue?.trim()?.takeIf { it.isNotEmpty() }
+        }
+    }
 }
