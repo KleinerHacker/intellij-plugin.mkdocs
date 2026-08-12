@@ -38,6 +38,18 @@
                 the file name and, for a page in a subdirectory, its relative path. Sections carry an own
                 MkDocs folder icon. Double clicking opens the page in the editor or the address in the browser;
                 entries pointing nowhere are kept and marked.</li>
+            <li><b>Path references</b> &ndash; the entries of <code>extra_css</code>, the targets of
+                <code>nav</code>, <code>theme.logo</code>, <code>theme.favicon</code>, <code>docs_dir</code>
+                and <code>site_dir</code> point at the file or directory they name: Ctrl+click follows the
+                path, completion offers what is there, renaming rewrites the entry, and a path leading
+                nowhere is reported &mdash; except <code>site_dir</code>, which names the build output.</li>
+            <li><b>Gutter icons</b> &ndash; every one of those paths carries an icon opening the target with
+                one click, a file with the icon it carries elsewhere in the IDE, <code>docs_dir</code> and
+                <code>site_dir</code> with the badge of their directory.</li>
+            <li><b>Path check</b> &ndash; forbidden or control characters, empty segments, a segment ending in
+                a dot or a space, an absolute path, a drive letter and a <code>..</code> leaving the site are
+                reported as errors; what only breaks on other operating systems &mdash; backslash separator,
+                reserved Windows names, non-ASCII characters, spaces in segments &mdash; as warnings.</li>
             <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> walks through layout
                 (<code>docs_dir</code>, assets, stylesheets, <code>site_dir</code>), site metadata (<code>site_name</code>,
                 <code>site_author</code>, <code>site_description</code>, <code>site_url</code>), repository
@@ -139,6 +151,23 @@
              text to underline. -->
         <annotator language="yaml"
                    implementationClass="org.pcsoft.ij.plugin.mkdocs.inspection.MkDocsMissingMetadataAnnotator"/>
+
+        <!-- Turns every path value of mkdocs.yml / mkdocs.yaml — docs_dir, site_dir, theme.logo,
+             theme.favicon, the entries of extra_css and the targets of nav — into a file reference, which
+             gives them navigation, completion, renaming and a marking of targets that do not exist. -->
+        <psi.referenceContributor language="yaml"
+                                  implementation="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathReferenceContributor"/>
+
+        <!-- Gutter icon next to every path value pointing somewhere, showing the icon of the target. Files go
+             through the file icon provider above, so a page and a loaded style sheet keep their MkDocs icon. -->
+        <codeInsight.lineMarkerProvider language="yaml"
+                                        implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathLineMarkerProvider"/>
+
+        <!-- Checks the characters and the structure of those path values. Separate from the references: they
+             answer whether a path leads anywhere, this answers whether any file system can read it — and a
+             value breaking only on another operating system is reported as a warning, not as an error. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathAnnotator"/>
 
         <!-- One tab per detected site, each showing the navigation written under "nav" in mkdocs.yml.
              Reading the navigation needs no index, so the tool window is available while the IDE is still

@@ -21,6 +21,62 @@ against instead of ageing inside the plugin.
     *Settings → Languages & Frameworks → Schemas and DTDs → JSON Schema Mappings* lists the mapping under the
     name *MkDocs*.
 
+## Paths are references
+
+A path in `mkdocs.yml` is not a piece of text to the plugin, it is a reference to the file or directory it
+names:
+
+| Key                              | Points at   | Resolved against |
+|----------------------------------|-------------|------------------|
+| `docs_dir`, `site_dir`           | a directory | the site root    |
+| `theme.logo`, `theme.favicon`    | a file      | `docs_dir`       |
+| every entry of `extra_css`       | a file      | `docs_dir`       |
+| every target of `nav`            | a file      | `docs_dir`       |
+
+That is what MkDocs itself resolves them against, so what the IDE follows is what the build reads. Being a
+reference brings everything the platform ties to one: **Ctrl+click** and *Go to declaration* open the target,
+completion offers what actually lies there — directories only where a directory is expected — **renaming** the
+file rewrites the entry, and *Find usages* on a page lists the `nav` entry pointing at it.
+
+A path leading nowhere is reported in the text. `site_dir` is the one exception: it names the output of the
+build, which is not expected to exist before the site has been built once.
+
+A target of `nav` leaving the site — an address with a scheme, or a protocol relative one — is left alone.
+There is no file behind it, and MkDocs passes it through to the theme unchanged.
+
+## Gutter icons
+
+Every one of those paths carries an icon in the gutter beside its line; one click opens the target.
+
+A file shows the icon it carries everywhere else in the IDE, which is what makes the line readable at a
+glance: a page below `docs_dir` shows the MkDocs page icon, a style sheet named in `extra_css` the style
+sheet icon, a logo its image icon. `docs_dir` and `site_dir` show the badge of their directory.
+
+An icon appears only where the target is actually there — an icon opening nothing would say the opposite of
+what it shows.
+
+## Path check
+
+Beyond *does it exist*, the plugin checks whether a path can exist at all, because a site is usually built on
+a machine other than the one it is written on.
+
+An **error** marks what no file system here would accept:
+
+- a forbidden or a control character
+- an empty segment, or a segment ending in a dot or a space
+- an absolute path, or one starting with a drive letter
+- a `..` climbing out of the directory the path is resolved against
+
+A **warning** marks what works here but breaks elsewhere:
+
+- a backslash as separator — MkDocs reads a path as POSIX
+- one of the reserved Windows names, such as `con` or `aux`
+- non-ASCII characters or a space inside a segment
+- a path longer than a conservative Windows setup accepts
+
+Which of the two a finding gets therefore depends on the operating system the IDE runs on: the same entry is
+an error where it cannot work and a warning where it merely will not travel.
+
 ## Missing site metadata
 
 Three keys decide how a built site presents itself:

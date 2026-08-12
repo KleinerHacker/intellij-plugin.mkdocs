@@ -61,6 +61,16 @@ object MkDocsIcons {
     val DocsBadgeOverlay: Icon = load("mkdocs-docs-badge-overlay.svg", 8)
 
     /**
+     * Marker of the build output directory of a site, for places rendering it on its own.
+     *
+     * A box seen from the side, which is what the directory holds: the built site, packed and ready to be
+     * published. The silhouette is closed and squat, so it does not get mistaken for the upright sheet of
+     * [DocsBadge] beside it in the gutter of the configuration file.
+     */
+    @JvmField
+    val SiteDirBadge: Icon = load("mkdocs-site-dir-badge.svg", 16)
+
+    /**
      * Marker of the assets directory of a site, for places rendering it on its own.
      *
      * A landscape picture frame, again to keep the three markers of a site apart by silhouette alone.

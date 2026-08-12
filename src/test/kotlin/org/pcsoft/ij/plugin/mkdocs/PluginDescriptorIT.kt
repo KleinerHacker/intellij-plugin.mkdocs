@@ -82,6 +82,61 @@ class PluginDescriptorIT {
     }
 
     /**
+     * Use case: Ctrl+Click, completion and renaming on the path values of `mkdocs.yml` only exist while the
+     * reference contributor is registered for YAML. A contributor that is not declared fails silently — the
+     * paths simply stay plain text — so the registration is checked against the shipped artifact.
+     */
+    @Test
+    fun `plugin descriptor registers the path reference contributor`() {
+        val content = descriptorText()
+
+        assertTrue(
+            "plugin.xml does not register a reference contributor for yaml",
+            content.contains("""<psi.referenceContributor language="yaml""""),
+        )
+        assertTrue(
+            "plugin.xml does not name the path reference contributor",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathReferenceContributor"),
+        )
+    }
+
+    /**
+     * Use case: the gutter icons next to the path values are drawn by a line marker provider, which the
+     * platform only asks once the descriptor declares it for YAML.
+     */
+    @Test
+    fun `plugin descriptor registers the path line marker provider`() {
+        val content = descriptorText()
+
+        assertTrue(
+            "plugin.xml does not register a line marker provider for yaml",
+            content.contains("""<codeInsight.lineMarkerProvider language="yaml""""),
+        )
+        assertTrue(
+            "plugin.xml does not name the path line marker provider",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathLineMarkerProvider"),
+        )
+    }
+
+    /**
+     * Use case: a path no file system can read is reported by an annotator of its own, separate from the one
+     * warning about missing metadata. Both are declared for YAML, so the check is on the class name.
+     */
+    @Test
+    fun `plugin descriptor registers the path annotator`() {
+        val content = descriptorText()
+
+        assertTrue(
+            "plugin.xml does not name the path annotator",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathAnnotator"),
+        )
+        assertTrue(
+            "plugin.xml declares no annotator for yaml",
+            content.contains("""<annotator language="yaml""""),
+        )
+    }
+
+    /**
      * Reads the plugin descriptor off the runtime classpath.
      */
     private fun descriptorText(): String {

@@ -38,6 +38,7 @@ class MkDocsIconsTest : BasePlatformTestCase() {
             "RequirementsFile" to MkDocsIcons.RequirementsFile,
             "ConfigFile" to MkDocsIcons.ConfigFile,
             "StylesheetsBadge" to MkDocsIcons.StylesheetsBadge,
+            "SiteDirBadge" to MkDocsIcons.SiteDirBadge,
             "StylesheetFile" to MkDocsIcons.StylesheetFile,
         )
         regular.forEach { (name, icon) -> assertSquareSize(name, icon, 16) }

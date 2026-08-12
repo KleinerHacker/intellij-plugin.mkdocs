@@ -43,6 +43,16 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   directly next to the configuration file gets a requirements icon. A `*.css` file gets a style sheet icon
   while `extra_css` names it — the key is what makes MkDocs load it, so an unreferenced style sheet keeps the
   ordinary icon. All of this applies everywhere the IDE renders the files.
+- **Paths in `mkdocs.yml` are references** — the entries of `extra_css`, the targets of `nav`, `theme.logo`,
+  `theme.favicon`, `docs_dir` and `site_dir` point at the file or directory they name. Ctrl+click follows the
+  path, completion offers what is there, renaming the file rewrites the entry, and a path leading nowhere is
+  reported — `site_dir` excepted, as the build output is not expected to exist yet.
+- **Gutter icon on every path** — one click opens the target. A file shows the icon it carries everywhere
+  else in the IDE, `docs_dir` and `site_dir` show the badge of their directory.
+- **Path check** — a path no file system would accept is an error: forbidden or control characters, an empty
+  segment, a segment ending in a dot or a space, an absolute path, a drive letter or a `..` leaving the site.
+  What only breaks elsewhere — a backslash separator, a reserved Windows name, non-ASCII characters, a space
+  in a segment — is a warning, so a site stays portable without the current machine complaining.
 - **Suggestions in *New Directory*** — a site missing its documentation, assets or stylesheets directory
   offers it in the platform dialog, with the same badge the project view uses.
 - ***Site Page* tool window** — one tab per detected site, each showing the navigation written under `nav` in
