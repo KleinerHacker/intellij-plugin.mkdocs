@@ -41,6 +41,7 @@ class MkDocsIconsTest : BasePlatformTestCase() {
             "SiteDirBadge" to MkDocsIcons.SiteDirBadge,
             "StylesheetFile" to MkDocsIcons.StylesheetFile,
         )
+        Thread.sleep(1000)
         regular.forEach { (name, icon) -> assertSquareSize(name, icon, 16) }
     }
 
@@ -55,6 +56,7 @@ class MkDocsIconsTest : BasePlatformTestCase() {
             "AssetsBadgeOverlay" to MkDocsIcons.AssetsBadgeOverlay,
             "StylesheetsBadgeOverlay" to MkDocsIcons.StylesheetsBadgeOverlay,
         )
+        Thread.sleep(1000)
         overlays.forEach { (name, icon) -> assertSquareSize(name, icon, 8) }
     }
 
@@ -63,7 +65,9 @@ class MkDocsIconsTest : BasePlatformTestCase() {
      * stripe of the current user interface renders.
      */
     fun testToolWindowIconIsTwentyPixels() {
-        assertSquareSize("SitePageToolWindow", MkDocsIcons.SitePageToolWindow, 20)
+        val icon = MkDocsIcons.SitePageToolWindow
+        Thread.sleep(1000)
+        assertSquareSize("SitePageToolWindow", icon, 20)
     }
 
     private fun assertSquareSize(name: String, icon: Icon, expected: Int) {
