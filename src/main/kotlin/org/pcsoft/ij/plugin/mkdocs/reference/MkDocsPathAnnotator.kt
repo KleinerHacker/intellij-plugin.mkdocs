@@ -34,14 +34,17 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
  * would claim the file does not work when it demonstrably does.
  *
  * The path check runs on `site_dir` as well, although the references leave that key alone: whether the build
- * output directory exists yet is nobody's business, but whether MkDocs can create it is.
+ * output directory exists yet is nobody's business, but whether MkDocs can create it is. It is checked with
+ * one rule lifted, though — `site_dir` names where the build writes, which may well be outside the site, so an
+ * absolute path, a drive letter and a `..` climbing above the site root are all legitimate there and are not
+ * reported. Every other key keeps them as findings, because a page outside the site is no page of the site.
  */
 class MkDocsPathAnnotator : Annotator {
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         // Annotators visit every element of the file; the scalars are the only ones carrying a path.
         val scalar = element as? YAMLScalar ?: return
-        if (MkDocsPathKind.of(scalar) == null) return
+        val kind = MkDocsPathKind.of(scalar) ?: return
 
         // The value range keeps the quotes of a quoted scalar out of both the checked text and the reported
         // ranges, so an offset inside the path can be shifted onto the file as it is.
@@ -49,7 +52,8 @@ class MkDocsPathAnnotator : Annotator {
         val path = valueRange.substring(scalar.text)
         val offset = scalar.textRange.startOffset + valueRange.startOffset
 
-        for (finding in MkDocsPathValidator.validate(path)) {
+        val mayLeave = kind == MkDocsPathKind.SITE_DIR
+        for (finding in MkDocsPathValidator.validate(path, mayLeave)) {
             val severity =
                 if (finding.problem.isError(SystemInfo.isWindows)) HighlightSeverity.ERROR
                 else HighlightSeverity.WARNING

@@ -18,7 +18,9 @@
   segment ending in a dot or a space, an absolute path, a drive letter or a `..` leaving the site. What only
   breaks on other operating systems — a backslash as separator, a reserved Windows name, non-ASCII characters
   or a space in a segment — is reported as a warning, so a site stays portable without the current machine
-  complaining about paths that work on it.
+  complaining about paths that work on it. `site_dir` is exempt from the last three: it names the build
+  output, which may well be written outside the site, so an absolute path, a drive letter and a `..` leaving
+  the site are all accepted there.
 - A site can now carry a **stylesheets directory** next to its assets directory. The creation wizard asks for
   the name, defaulting to `stylesheets`, and creates the directory inside the documentation directory. Like
   the assets directory it has no MkDocs key, so the chosen name is remembered in the MkDocs facet and shown

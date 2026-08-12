@@ -118,13 +118,83 @@ class MkDocsPathAnnotatorTest : BasePlatformTestCase() {
 
     /**
      * Use case: the build output directory. The references leave it alone because it need not exist yet — but
-     * whether MkDocs can create it at all is checked just like every other path.
+     * whether MkDocs can create it at all is checked just like every other path, here a name Windows refuses.
      */
     fun `test checks the site dir as well`() {
         site()
-        configure("site_name: Handbook\nsite_dir: /var/site\n")
+        configure("site_name: Handbook\nsite_dir: build/out put\n")
+
+        assertEquals(
+            HighlightSeverity.WARNING,
+            single(MkDocsBundle.message("reference.problem.spaceInSegment")).severity,
+        )
+    }
+
+    /**
+     * Use case: a site writing its build output outside the site — beside the checkout, at an absolute place
+     * or on another volume. `site_dir` names where the build writes, not a part of the site, so none of the
+     * three findings about leaving the site root may be reported for it.
+     */
+    fun `test allows a site dir beside the site`() {
+        site()
+        configure("site_name: Handbook\nsite_dir: ../build/docs\n")
+
+        assertEmpty(reportedProblems())
+    }
+
+    /**
+     * Use case: a site writing its build output to an absolute place, as a packaging step pointing at a web
+     * root does. `site_dir` is not read relative to the site, so the absolute path must not be reported.
+     */
+    fun `test allows an absolute site dir`() {
+        site()
+        configure("site_name: Handbook\nsite_dir: /var/www/site\n")
+
+        assertEmpty(reportedProblems())
+    }
+
+    /**
+     * Use case: a site writing its build output onto another Windows volume. The drive letter names a machine,
+     * which is exactly what a build output directory may do.
+     */
+    fun `test allows a site dir on another drive`() {
+        site()
+        configure("site_name: Handbook\nsite_dir: D:/out/site\n")
+
+        assertEmpty(reportedProblems())
+    }
+
+    /**
+     * Use case: the same values under `docs_dir`, which names the documentation sources. Those are part of the
+     * site, so climbing out of it, an absolute path and a drive letter are all still reported.
+     */
+    fun `test still reports leaving the site for the docs dir`() {
+        site()
+        configure("site_name: Handbook\ndocs_dir: ../build/docs\n")
+
+        assertEquals(HighlightSeverity.ERROR, single(MkDocsBundle.message("reference.problem.parentEscape")).severity)
+    }
+
+    /**
+     * Use case: a navigation entry pointing at an absolute place. A page of the site lies inside the site, so
+     * the value stays an error however `site_dir` is treated.
+     */
+    fun `test still reports an absolute nav target`() {
+        site()
+        configure("nav:\n  - /var/www/site\n")
 
         assertEquals(HighlightSeverity.ERROR, single(MkDocsBundle.message("reference.problem.absolutePath")).severity)
+    }
+
+    /**
+     * Use case: a style sheet named with a drive letter. `extra_css` is loaded from below the documentation
+     * directory, so naming a volume there is reported as before.
+     */
+    fun `test still reports a drive letter in extra css`() {
+        site()
+        configure("extra_css:\n  - D:/out/site.css\n")
+
+        assertEquals(HighlightSeverity.ERROR, single(MkDocsBundle.message("reference.problem.driveLetter")).severity)
     }
 
     /**

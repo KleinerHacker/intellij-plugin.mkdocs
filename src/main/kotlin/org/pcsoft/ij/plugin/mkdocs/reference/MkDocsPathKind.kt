@@ -55,6 +55,11 @@ enum class MkDocsPathKind(
      * site that has been built keeps it out of version control — so a fresh checkout would show a red key on
      * every open of the configuration file. Navigation and completion still work whenever the directory
      * happens to be there.
+     *
+     * It is also the one kind that need not stay inside the site: build output is regularly written next to
+     * the checkout, above it through `..` or onto an entirely different volume by absolute path. So neither
+     * the path check nor the references treat leaving the site root as a mistake here, while every other kind
+     * still does — those name parts of the site, and a part of the site lies inside it.
      */
     SITE_DIR(directory = true, soft = true, relativeToDocsDir = false),
 

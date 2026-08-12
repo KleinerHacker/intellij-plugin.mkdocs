@@ -205,6 +205,48 @@ class MkDocsPathReferenceContributorTest : BasePlatformTestCase() {
         assertContainsElements(myFixture.lookupElementStrings ?: emptyList(), "index.md")
     }
 
+    /**
+     * Use case: a site writing its build output to an absolute place. `site_dir` names where the build writes
+     * and not a part of the site, so the platform has to read the value as the absolute path it is instead of
+     * hunting for it below the site root — and nothing may be reported over it.
+     */
+    fun `test reads an absolute site dir as absolute`() {
+        site()
+        val references = fileReferencesAtCaret("site_name: Handbook\nsite_dir: /var/www/si<caret>te\n")
+
+        assertNotEmpty(references)
+        assertTrue("site_dir may name an absolute place", references.first().fileReferenceSet.isAbsolutePathReference)
+        assertEmpty(errorsOf())
+    }
+
+    /**
+     * Use case: a build output directory beside the checkout, written with `..`. It leaves the site root,
+     * which is ordinary for build output, so the value must not be marked.
+     */
+    fun `test leaves a site dir beside the site unmarked`() {
+        site()
+        val reference = referenceAtCaret("site_name: Handbook\nsite_dir: ../build/do<caret>cs\n")
+
+        assertNotNull("a path beside the site is still a path", reference)
+        assertTrue("a build output directory is nobody's business", reference!!.isSoft)
+        assertEmpty(errorsOf())
+    }
+
+    /**
+     * Use case: the same absolute value under `docs_dir`. MkDocs reads the documentation directory relative to
+     * the site, so the reference must not be read as an absolute path.
+     */
+    fun `test reads an absolute docs dir as relative`() {
+        site()
+        val references = fileReferencesAtCaret("site_name: Handbook\ndocs_dir: /var/www/si<caret>te\n")
+
+        assertNotEmpty(references)
+        assertFalse(
+            "only site_dir may name an absolute place",
+            references.first().fileReferenceSet.isAbsolutePathReference,
+        )
+    }
+
     /** Creates the documentation directory of the site the configuration file is written into. */
     private fun site(): PsiFile = myFixture.addFileToProject("docs/index.md", "# Handbook\n")
 

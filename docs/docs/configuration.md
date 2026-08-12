@@ -41,6 +41,11 @@ file rewrites the entry, and *Find usages* on a page lists the `nav` entry point
 A path leading nowhere is reported in the text. `site_dir` is the one exception: it names the output of the
 build, which is not expected to exist before the site has been built once.
 
+`site_dir` is also the one value that need not lie inside the site at all. It says where the build *writes*,
+so a directory beside the checkout, above it through `..` or an absolute one on another volume is perfectly
+ordinary — and an absolute value is followed as the absolute path it is. Every other key names a part of the
+site, and a part of the site lies inside it.
+
 A target of `nav` leaving the site — an address with a scheme, or a protocol relative one — is left alone.
 There is no file behind it, and MkDocs passes it through to the theme unchanged.
 
@@ -76,6 +81,11 @@ A **warning** marks what works here but breaks elsewhere:
 
 Which of the two a finding gets therefore depends on the operating system the IDE runs on: the same entry is
 an error where it cannot work and a warning where it merely will not travel.
+
+The last two errors are not reported for `site_dir`. The build output may lie outside the site, so an absolute
+path, a drive letter and a `..` climbing above the site root are all legitimate there; how the name itself is
+spelled is checked exactly as everywhere else, because a name no file system accepts stays unusable wherever
+the directory lies.
 
 ## Missing site metadata
 

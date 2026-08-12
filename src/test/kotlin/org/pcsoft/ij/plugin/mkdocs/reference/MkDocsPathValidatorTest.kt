@@ -265,6 +265,58 @@ class MkDocsPathValidatorTest {
         }
     }
 
+    /**
+     * Use case: the value of `site_dir`, which names the build output and may write outside the site — next to
+     * the checkout, above it or onto another volume. None of the three findings about leaving the base
+     * directory may be reported for such a value.
+     */
+    @Test
+    fun `a value allowed to leave the base directory reports no leaving problem`() {
+        for (path in listOf("../build/docs", "/var/www/site", "D:/out/site")) {
+            assertEquals(
+                "$path must not be reported for a value that may leave the site",
+                emptyList<MkDocsPathProblem>(),
+                MkDocsPathValidator.validate(path, mayLeaveBaseDirectory = true)
+                    .map { it.problem }
+                    .filter { it in LEAVING },
+            )
+        }
+    }
+
+    /**
+     * Use case: the same three values under a key that has to stay inside the site, such as `docs_dir` or a
+     * navigation entry. Here leaving the base directory is exactly what has to be reported, which is what the
+     * default of the new parameter keeps doing.
+     */
+    @Test
+    fun `the same values are reported for a value that has to stay inside`() {
+        assertTrue(problemsOf("../build/docs").contains(MkDocsPathProblem.PARENT_ESCAPE))
+        assertTrue(problemsOf("/var/www/site").contains(MkDocsPathProblem.ABSOLUTE_PATH))
+        assertTrue(problemsOf("D:/out/site").contains(MkDocsPathProblem.DRIVE_LETTER))
+    }
+
+    /**
+     * Use case: a build output directory whose name a file system refuses anyway. Being allowed to lie outside
+     * the site says nothing about how the name is spelled, so every other finding is still reported.
+     */
+    @Test
+    fun `everything else is still reported for a value that may leave the base directory`() {
+        val problems = MkDocsPathValidator.validate("/var/con/out put\u0007/x?y//z ", mayLeaveBaseDirectory = true)
+            .map { it.problem }
+
+        assertFalse("leaving the site is allowed here", problems.any { it in LEAVING })
+        for (expected in listOf(
+            MkDocsPathProblem.CONTROL_CHARACTER,
+            MkDocsPathProblem.EMPTY_SEGMENT,
+            MkDocsPathProblem.TRAILING_DOT_OR_SPACE,
+            MkDocsPathProblem.FORBIDDEN_CHARACTER,
+            MkDocsPathProblem.RESERVED_NAME,
+            MkDocsPathProblem.SPACE_IN_SEGMENT,
+        )) {
+            assertTrue("$expected is still reported", problems.contains(expected))
+        }
+    }
+
     /** Returns the single finding of [problem] in [path], failing if there is none or more than one. */
     private fun single(path: String, problem: MkDocsPathProblem): MkDocsPathFinding {
         val findings = MkDocsPathValidator.validate(path).filter { it.problem == problem }
@@ -276,4 +328,14 @@ class MkDocsPathValidatorTest {
     /** Returns the problems found in [path]. */
     private fun problemsOf(path: String): List<MkDocsPathProblem> =
         MkDocsPathValidator.validate(path).map { it.problem }
+
+    private companion object {
+
+        /** The problems that say nothing but "this path leads out of the base directory". */
+        val LEAVING = setOf(
+            MkDocsPathProblem.ABSOLUTE_PATH,
+            MkDocsPathProblem.DRIVE_LETTER,
+            MkDocsPathProblem.PARENT_ESCAPE,
+        )
+    }
 }

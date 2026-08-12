@@ -52,7 +52,9 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 - **Path check** — a path no file system would accept is an error: forbidden or control characters, an empty
   segment, a segment ending in a dot or a space, an absolute path, a drive letter or a `..` leaving the site.
   What only breaks elsewhere — a backslash separator, a reserved Windows name, non-ASCII characters, a space
-  in a segment — is a warning, so a site stays portable without the current machine complaining.
+  in a segment — is a warning, so a site stays portable without the current machine complaining. `site_dir`
+  names the build output and may lie outside the site, so an absolute path, a drive letter and a `..` are not
+  reported there.
 - **Suggestions in *New Directory*** — a site missing its documentation, assets or stylesheets directory
   offers it in the platform dialog, with the same badge the project view uses.
 - ***Site Page* tool window** — one tab per detected site, each showing the navigation written under `nav` in

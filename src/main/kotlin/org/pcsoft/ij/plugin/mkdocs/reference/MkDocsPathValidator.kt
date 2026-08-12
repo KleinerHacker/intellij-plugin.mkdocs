@@ -128,15 +128,38 @@ object MkDocsPathValidator {
     private val DRIVE_LETTER = Regex("^[A-Za-z]:")
 
     /**
+     * The problems that only say the path does not stay below the directory it is resolved against.
+     *
+     * They are about the place a path leads to, not about the path being spelled in a way a file system
+     * refuses — which is why they are the ones dropped for a value that is allowed to lead elsewhere.
+     */
+    private val LEAVING_PROBLEMS = setOf(
+        MkDocsPathProblem.ABSOLUTE_PATH,
+        MkDocsPathProblem.DRIVE_LETTER,
+        MkDocsPathProblem.PARENT_ESCAPE,
+    )
+
+    /**
      * Checks [path] and returns everything found wrong with it, in the order it appears in the text.
      *
      * Which operating system the IDE runs on plays no part here: a finding is reported wherever it is found,
      * and only how loudly it is reported depends on the platform — see [MkDocsPathProblem.isError].
      *
+     * Most values of a configuration file have to stay below the directory MkDocs resolves them against — a
+     * page outside the documentation directory is not part of the site and would never be rendered. One does
+     * not: `site_dir` names where the build *writes*, and writing next to the checkout, above it or onto an
+     * entirely different volume is a perfectly ordinary setup. For such a value [mayLeaveBaseDirectory] drops
+     * the three findings that say nothing but "this leads out of the base directory"; everything else — the
+     * characters, the segments, the reserved names, the length — is checked exactly as before, because a name
+     * the file system refuses stays refused wherever the directory lies.
+     *
      * @param path the path as written, without the quotes of a quoted scalar
+     * @param mayLeaveBaseDirectory `true` if the value is allowed to point outside the directory it is
+     *        resolved against, which suppresses [MkDocsPathProblem.ABSOLUTE_PATH],
+     *        [MkDocsPathProblem.DRIVE_LETTER] and [MkDocsPathProblem.PARENT_ESCAPE]
      * @return the findings, ordered by their position, empty if nothing is wrong
      */
-    fun validate(path: String): List<MkDocsPathFinding> {
+    fun validate(path: String, mayLeaveBaseDirectory: Boolean = false): List<MkDocsPathFinding> {
         if (path.isEmpty()) return emptyList()
 
         val findings = mutableListOf<MkDocsPathFinding>()
@@ -146,7 +169,9 @@ object MkDocsPathValidator {
         if (path.length > MAX_PATH_LENGTH) {
             findings += MkDocsPathFinding(MkDocsPathProblem.TOO_LONG, TextRange(0, path.length), path)
         }
-        return findings.sortedWith(compareBy({ it.range.startOffset }, { it.problem.ordinal }))
+        return findings
+            .filter { !mayLeaveBaseDirectory || it.problem !in LEAVING_PROBLEMS }
+            .sortedWith(compareBy({ it.range.startOffset }, { it.problem.ordinal }))
     }
 
     /**

@@ -82,9 +82,11 @@ class MkDocsPathReferenceProvider : PsiReferenceProvider() {
  *
  * Three things are adjusted against the platform default. The default context is the directory MkDocs
  * resolves the value against instead of the directory the configuration file lies in, which is what makes an
- * entry of `nav` find its page below `docs_dir`. An absolute path is never accepted, because MkDocs reads
- * none of these values as one. And a kind naming a directory offers only directories in the completion, so
- * `docs_dir` is not filled with the name of a page.
+ * entry of `nav` find its page below `docs_dir`. An absolute path is not accepted for any kind but
+ * [MkDocsPathKind.SITE_DIR], because MkDocs reads those values relative to the site — `site_dir` alone names
+ * the build output, which may lie anywhere, so there the platform decides as it does everywhere else and an
+ * absolute value resolves from the root of the file system. And a kind naming a directory offers only
+ * directories in the completion, so `docs_dir` is not filled with the name of a page.
  *
  * The set is created uninitialised and parsed from the initialiser below: parsing asks for
  * [isEndingSlashNotAllowed], and a set parsed from the constructor of its own superclass would ask before the
@@ -117,7 +119,8 @@ class MkDocsPathReferenceSet(
         reparse()
     }
 
-    override fun isAbsolutePathReference(): Boolean = false
+    override fun isAbsolutePathReference(): Boolean =
+        if (kind == MkDocsPathKind.SITE_DIR) super.isAbsolutePathReference() else false
 
     override fun isSoft(): Boolean = kind.soft
 

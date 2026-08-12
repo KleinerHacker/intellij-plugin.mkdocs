@@ -49,7 +49,9 @@
             <li><b>Path check</b> &ndash; forbidden or control characters, empty segments, a segment ending in
                 a dot or a space, an absolute path, a drive letter and a <code>..</code> leaving the site are
                 reported as errors; what only breaks on other operating systems &mdash; backslash separator,
-                reserved Windows names, non-ASCII characters, spaces in segments &mdash; as warnings.</li>
+                reserved Windows names, non-ASCII characters, spaces in segments &mdash; as warnings.
+                <code>site_dir</code> names the build output and may lie outside the site, so an absolute path,
+                a drive letter and a <code>..</code> are not reported there.</li>
             <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> walks through layout
                 (<code>docs_dir</code>, assets, stylesheets, <code>site_dir</code>), site metadata (<code>site_name</code>,
                 <code>site_author</code>, <code>site_description</code>, <code>site_url</code>), repository
