@@ -56,6 +56,7 @@ theme:
 nav:
   - Home: index.md
   - Modules: modules.md
+  - Angular Material: angular-material.md
   - Site Page tool window: toolwindow.md
   - Configuration file: configuration.md
   - API Docs: dokka/html/index.html

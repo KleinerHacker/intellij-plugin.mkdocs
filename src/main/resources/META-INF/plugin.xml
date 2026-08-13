@@ -70,6 +70,10 @@
                 <i>New Directory</i> dialog.</li>
             <li><b>Feature extension point</b> &ndash; <code>siteFeature</code> allows optional MkDocs extensions
                 (Angular Material, I18N, Mike) to plug into the creation wizard.</li>
+            <li><b>Angular Material</b> &ndash; a site using the Material theme carries the Angular Material facet,
+                detected from <code>theme.name</code>. The facet can be selected in the creation wizard and added
+                or removed in the Project Structure dialog, which writes the theme into <code>mkdocs.yml</code>
+                or takes it out again. It is bound to the MkDocs facet and disappears with it.</li>
         </ul>
         The current implementation status is tracked in
         <a href="https://github.com/KleinerHacker/intellij-plugin.mkdocs/blob/master/STATUS.md">STATUS.md</a>.<br>
@@ -133,6 +137,10 @@
              declaring "mkdocs" as their underlying facet type. -->
         <facetType implementation="org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetType"/>
 
+        <!-- The Angular Material theme, sitting next to the MkDocs facet: present exactly while the
+             configuration file names "material" as its theme. -->
+        <facetType implementation="org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetType"/>
+
         <!-- Initial detection when a project is opened … -->
         <postStartupActivity implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsStartupActivity"/>
         <!-- … and re-detection after every relevant virtual file system change. -->
@@ -190,7 +198,18 @@
     <projectListeners>
         <listener class="org.pcsoft.ij.plugin.mkdocs.ui.toolwindow.MkDocsSitePageAvailabilityListener"
                   topic="org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener"/>
+
+        <!-- Carries a facet added or removed by hand in the Project Structure dialog back into mkdocs.yml,
+             the opposite direction of the detection. -->
+        <listener class="org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetListener"
+                  topic="com.intellij.facet.FacetManagerListener"/>
     </projectListeners>
+
+    <!-- Features of the plugin's own extension points. -->
+    <extensions defaultExtensionNs="org.pcsoft.ij.plugin.mkdocs">
+        <!-- Offers the Material theme in the site creation wizard. -->
+        <siteFeature implementation="org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialSiteFeature"/>
+    </extensions>
 
     <!-- Maps mkdocs.yaml to the MkDocs JSON schema. The bundled SchemaStore catalogue matches mkdocs.yml
          only, so the second spelling MkDocs accepts would otherwise stay without completion. -->

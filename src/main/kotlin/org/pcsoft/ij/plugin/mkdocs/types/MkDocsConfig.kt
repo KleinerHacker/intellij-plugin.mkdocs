@@ -63,6 +63,15 @@ object MkDocsConfig {
     /** The MkDocs configuration key holding the navigation of the site. */
     const val KEY_NAV: String = "nav"
 
+    /** The MkDocs configuration key holding the theme of the site. */
+    const val KEY_THEME: String = "theme"
+
+    /** The MkDocs configuration key holding the name of the theme, below [KEY_THEME]. */
+    const val KEY_THEME_NAME: String = "theme.name"
+
+    /** The name MkDocs knows the Material theme under. */
+    const val THEME_MATERIAL: String = "material"
+
     /** The MkDocs configuration key listing the style sheets the built site loads. */
     const val KEY_EXTRA_CSS: String = "extra_css"
 
@@ -215,4 +224,38 @@ object MkDocsConfig {
             (item.value as? YAMLScalar)?.textValue?.trim()?.takeIf { it.isNotEmpty() }
         }
     }
+
+    /**
+     * Reads the name of the theme from [configFile].
+     *
+     * MkDocs accepts the theme in two shapes: as a mapping carrying a `name` key, which is what a themed site
+     * with settings of its own looks like, and as a plain scalar naming nothing but the theme. Both are read
+     * here, so a caller never has to know which one the author picked.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @return the trimmed name of the theme, or `null` if the file is not YAML, no theme is configured, or the
+     *         name is blank
+     */
+    fun readThemeName(project: Project, configFile: VirtualFile): String? {
+        val yamlFile = yamlFileOf(project, configFile) ?: return null
+        val nameValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, *KEY_THEME_NAME.split('.').toTypedArray())
+        val scalar = nameValue?.value as? YAMLScalar
+            ?: (YAMLUtil.getQualifiedKeyInFile(yamlFile, KEY_THEME)?.value as? YAMLScalar)
+            ?: return null
+        return scalar.textValue.trim().takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Tells whether the site described by [configFile] is built with the Material theme.
+     *
+     * The comparison ignores case: MkDocs matches the theme by its registered name, and an author writing it
+     * differently still gets the same theme.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     * @return `true` if the configured theme is [THEME_MATERIAL]
+     */
+    fun isMaterialTheme(project: Project, configFile: VirtualFile): Boolean =
+        readThemeName(project, configFile)?.equals(THEME_MATERIAL, ignoreCase = true) == true
 }

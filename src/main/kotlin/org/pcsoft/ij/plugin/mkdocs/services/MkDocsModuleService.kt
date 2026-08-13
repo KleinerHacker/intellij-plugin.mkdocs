@@ -36,6 +36,8 @@ import com.intellij.util.ui.update.Update
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetConfiguration
+import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
+import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetConfiguration
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
 
@@ -81,6 +83,40 @@ class MkDocsModuleService(private val project: Project) {
         fun getInstance(project: Project): MkDocsModuleService = project.service()
     }
 
+    /** Nesting depth of the facet changes this service is applying right now, see [isApplyingFacets]. */
+    private val facetUpdateDepth = ThreadLocal.withInitial { 0 }
+
+    /**
+     * Tells whether the facet change currently being announced comes from this service.
+     *
+     * A facet the detection adds or removes says nothing new: it was derived from the configuration file in
+     * the first place. Writing it back would be worse than pointless, because the two decisions are taken at
+     * different moments — the detection may read a file the IDE has not parsed yet, decide the site is not a
+     * Material site and drop the facet, and a listener acting on that removal would then take a `theme` out
+     * of a file that plainly declares one. Only a change made in the Project Structure dialog carries new
+     * information, and only that one may reach the file.
+     *
+     * Read from inside a facet event, which the platform fires while the model is committed — on the same
+     * thread that made the change, which is why the flag is per thread.
+     */
+    val isApplyingFacets: Boolean
+        get() = facetUpdateDepth.get() > 0
+
+    /**
+     * Runs [change] with [isApplyingFacets] set, so the facet events it causes are recognised as this
+     * service's own work.
+     *
+     * @param change the facet model change to run
+     */
+    private fun <T> applyingFacets(change: () -> T): T {
+        facetUpdateDepth.set(facetUpdateDepth.get() + 1)
+        try {
+            return change()
+        } finally {
+            facetUpdateDepth.set(facetUpdateDepth.get() - 1)
+        }
+    }
+
     /**
      * Scans the project and applies the result to the module model.
      *
@@ -96,7 +132,7 @@ class MkDocsModuleService(private val project: Project) {
         if (project.isDisposed) return
         val sites = runReadActionBlocking { if (project.isDisposed) emptyList() else findSites() }
         WriteAction.runAndWait<RuntimeException> {
-            if (!project.isDisposed) apply(sites)
+            if (!project.isDisposed) applyingFacets { apply(sites) }
         }
         if (project.isDisposed) return
         project.messageBus.syncPublisher(MkDocsSitesListener.TOPIC).sitesChanged()
@@ -330,10 +366,12 @@ class MkDocsModuleService(private val project: Project) {
         val existing = MkDocsFacet.getInstance(module)
         if (existing != null) {
             val configuration = existing.configuration
-            if (configuration.siteName == site.siteName && configuration.configFilePath == configFilePath) return
-            configuration.siteName = site.siteName
-            configuration.configFilePath = configFilePath
-            facetManager.facetConfigurationChanged(existing)
+            if (configuration.siteName != site.siteName || configuration.configFilePath != configFilePath) {
+                configuration.siteName = site.siteName
+                configuration.configFilePath = configFilePath
+                facetManager.facetConfigurationChanged(existing)
+            }
+            updateMaterialFacet(module, site)
             return
         }
 
@@ -346,6 +384,49 @@ class MkDocsModuleService(private val project: Project) {
         }
         val facet = facetType.createFacet(module, facetType.defaultFacetName, configuration, null)
         val model = facetManager.createModifiableModel()
+        model.addFacet(facet)
+        model.commit()
+        updateMaterialFacet(module, site)
+    }
+
+    /**
+     * Adds the Angular Material facet to [module] or drops it again, following the theme of the site.
+     *
+     * The facet mirrors `theme.name` of the configuration file, which is what makes the feature detected
+     * rather than remembered: a site that switches its theme by hand gains or loses the facet with the next
+     * detection run.
+     *
+     * Called only for a module that already carries the MkDocs facet. The Material facet is not a sub facet
+     * of it — the platform has deprecated those — so the pairing is this method's job, together with
+     * [dropFacet], which takes the Material facet away again with the MkDocs facet.
+     *
+     * @param module the module representing the site
+     * @param site the detected site
+     */
+    private fun updateMaterialFacet(module: Module, site: MkDocsSite) {
+        val isMaterial = MkDocsConfig.isMaterialTheme(project, site.configFile)
+        val existing = MkDocsMaterialFacet.getInstance(module)
+
+        if (!isMaterial) {
+            if (existing == null) return
+            val model = FacetManager.getInstance(module).createModifiableModel()
+            model.removeFacet(existing)
+            model.commit()
+            return
+        }
+
+        val themeName = MkDocsConfig.readThemeName(project, site.configFile) ?: MkDocsConfig.THEME_MATERIAL
+        if (existing != null) {
+            if (existing.configuration.themeName == themeName) return
+            existing.configuration.themeName = themeName
+            FacetManager.getInstance(module).facetConfigurationChanged(existing)
+            return
+        }
+
+        val facetType = MkDocsMaterialFacet.facetType
+        val configuration = MkDocsMaterialFacetConfiguration().apply { this.themeName = themeName }
+        val facet = facetType.createFacet(module, facetType.defaultFacetName, configuration, null)
+        val model = FacetManager.getInstance(module).createModifiableModel()
         model.addFacet(facet)
         model.commit()
     }
@@ -364,6 +445,7 @@ class MkDocsModuleService(private val project: Project) {
             return
         }
         val model = FacetManager.getInstance(module).createModifiableModel()
+        MkDocsMaterialFacet.getInstance(module)?.let { model.removeFacet(it) }
         model.removeFacet(facet)
         model.commit()
     }

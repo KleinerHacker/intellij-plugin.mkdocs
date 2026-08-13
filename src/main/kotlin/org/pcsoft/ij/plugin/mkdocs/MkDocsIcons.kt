@@ -13,8 +13,10 @@
 package org.pcsoft.ij.plugin.mkdocs
 
 import com.intellij.openapi.util.IconLoader
+import com.intellij.ui.LayeredIcon
 import com.intellij.util.IconUtil
 import javax.swing.Icon
+import javax.swing.SwingConstants
 
 /**
  * Central registry of every icon shipped with the plugin.
@@ -33,6 +35,37 @@ object MkDocsIcons {
     /** The MkDocs logo, used for the MkDocs facet. */
     @JvmField
     val MkDocs: Icon = load("mkdocs.svg", 16)
+
+    /**
+     * The Angular Material motif, for places rendering it on its own.
+     *
+     * The MkDocs shield of the other icons carrying the Material glyph — a circle filled in its lower half.
+     */
+    @JvmField
+    val MaterialBadge: Icon = load("mkdocs-angular-material.svg", 16)
+
+    /**
+     * The Material glyph as overlaid on the MkDocs logo, and nothing else.
+     *
+     * Drawn as its own shape rather than as a shrunk [MaterialBadge]: at badge size the ring of the full
+     * drawing closes into a blot, so the carrier disc takes the ring's place and only the filled lower half
+     * remains as the glyph. The disc is filled in a strong blue with a white glyph and a white outer rim,
+     * against the house colours of the other overlays — those sit on the folder icon of the project view,
+     * while this one sits on the near white body of the MkDocs logo, where a light fill would disappear.
+     */
+    @JvmField
+    val MaterialOverlay: Icon = load("mkdocs-angular-material-overlay.svg", 8)
+
+    /**
+     * Icon of the Angular Material facet: the MkDocs logo badged with the Material glyph.
+     *
+     * Composed rather than drawn, and deliberately so. The facet used to hang below the MkDocs facet in the
+     * Project Structure tree, which said what belongs to what; nested facets are on their way out of the
+     * platform (IDEA-309067), and the flat list says nothing. Sharing the MkDocs logo and adding a badge to
+     * it puts that statement back where the tree used to make it.
+     */
+    @JvmField
+    val Material: Icon = withBadge(MkDocs, MaterialOverlay)
 
     /**
      * Marker of an MkDocs site root, for places rendering it on its own.
@@ -138,6 +171,20 @@ object MkDocsIcons {
     /** Icon of an MkDocs configuration file, replacing the generic YAML icon. */
     @JvmField
     val ConfigFile: Icon = load("mkdocs-file.svg", 16)
+
+    /**
+     * Puts [badge] into the lower right corner of [base].
+     *
+     * @param base the icon to decorate
+     * @param badge the marker to overlay, drawn at overlay size
+     * @return a layered icon of the same size as [base]
+     */
+    @JvmStatic
+    fun withBadge(base: Icon, badge: Icon): Icon {
+        val layered = LayeredIcon.layeredIcon(arrayOf(base, badge))
+        layered.setIcon(badge, 1, SwingConstants.SOUTH_EAST)
+        return layered
+    }
 
     /**
      * Loads the icon [fileName] from the `icons` resource folder and brings it to [size] pixels.

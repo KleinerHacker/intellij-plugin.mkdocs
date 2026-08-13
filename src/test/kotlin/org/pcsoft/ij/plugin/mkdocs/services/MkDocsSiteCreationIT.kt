@@ -17,9 +17,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.HeavyPlatformTestCase
+import com.intellij.testFramework.PlatformTestUtil
 import com.intellij.testFramework.PsiTestUtil
 import com.intellij.testFramework.VfsTestUtil
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
+import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
+import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialSiteFeature
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
@@ -301,6 +304,58 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
         assertEquals(directory, service.targetDirectoryOf(file))
         assertEquals(directory, service.targetDirectoryOf(directory))
         assertNull(service.targetDirectoryOf(null))
+    }
+
+    /**
+     * Use case: the user ticks *Angular Material* in the feature step of the wizard. The finished site has to
+     * declare the Material theme and carry the facet right away, without waiting for the next detection run.
+     *
+     * The written file is checked in full, not just for a substring: the theme goes into a configuration file
+     * the wizard has only just written, so a second write from the facet listener would show up here as a
+     * duplicated key or a mangled mapping. The event queue is drained before the check, because that listener
+     * does its work deferred.
+     */
+    fun `test creating a site with the angular material feature writes the theme`() {
+        val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "handbook")
+
+        val site = service.create(
+            MkDocsSiteTemplate(
+                rootPath = directory.toNioPath(),
+                siteName = "Handbook",
+                features = listOf(MkDocsMaterialSiteFeature()),
+            )
+        )
+        PlatformTestUtil.dispatchAllInvocationEventsInIdeEventQueue()
+
+        assertEquals(
+            "the feature adds exactly one theme key to what the wizard wrote",
+            "site_name: Handbook\ntheme:\n  name: material",
+            VfsUtilCore.loadText(site.configFile).trimEnd(),
+        )
+
+        val module = ModuleManager.getInstance(project).findModuleByName("Handbook")
+        assertNotNull(module)
+        assertNotNull(
+            "the feature must attach the facet without waiting for the next detection run",
+            MkDocsMaterialFacet.getInstance(module!!),
+        )
+    }
+
+    /**
+     * Use case: the wizard runs without the feature ticked, which is the default. Nothing may write a theme
+     * into the new site then, and no Angular Material facet may appear.
+     */
+    fun `test creating a site without the feature writes no theme`() {
+        val directory = VfsTestUtil.createDir(getOrCreateProjectBaseDir(), "plain")
+
+        val site = service.create(MkDocsSiteTemplate(rootPath = directory.toNioPath(), siteName = "Plain"))
+        PlatformTestUtil.dispatchAllInvocationEventsInIdeEventQueue()
+
+        assertEquals("site_name: Plain\n", VfsUtilCore.loadText(site.configFile))
+
+        val module = ModuleManager.getInstance(project).findModuleByName("Plain")
+        assertNotNull(module)
+        assertNull(MkDocsMaterialFacet.getInstance(module!!))
     }
 
     /** Test double recording every site it is applied to. */

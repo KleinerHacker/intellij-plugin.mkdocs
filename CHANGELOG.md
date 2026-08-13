@@ -4,6 +4,20 @@
 
 ## [Unreleased]
 
+### Added
+
+- A site rendered with the **Material theme** now carries the *MkDocs Angular Material* facet, next to the
+  MkDocs facet and visible in *Project Structure → Facets*. It wears the MkDocs logo with the Material glyph
+  badged into its corner, so it reads as part of MkDocs in a list that shows facets flat. It appears as soon
+  as `mkdocs.yml` names `material` as
+  its theme — written as a mapping or as a plain scalar, in any case — and disappears again when the theme is
+  taken out or switched to another one.
+- The facet can also be added and removed by hand: adding it writes `theme.name: material` into `mkdocs.yml`,
+  removing it takes the whole `theme` key out again. Settings written next to the theme name survive, and a
+  file that already declares the theme is left untouched.
+- The feature step of the creation wizard offers **Angular Material**, which writes the theme into the new
+  site and attaches the facet right away. It is the first feature filling that step.
+
 ## [0.2.0]
 
 ### Added

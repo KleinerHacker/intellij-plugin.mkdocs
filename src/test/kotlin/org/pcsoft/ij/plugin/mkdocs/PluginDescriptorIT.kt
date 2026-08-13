@@ -137,6 +137,57 @@ class PluginDescriptorIT {
     }
 
     /**
+     * Use case: the Angular Material facet only exists while its type is registered. An unregistered facet
+     * type makes every lookup of the facet return nothing, without any error — the site would simply never
+     * be marked as a Material site — so the registration is checked against the shipped artifact.
+     */
+    @Test
+    fun `plugin descriptor registers the angular material facet type`() {
+        val content = descriptorText()
+
+        assertTrue(
+            "plugin.xml does not register the Angular Material facet type",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetType"),
+        )
+    }
+
+    /**
+     * Use case: adding or removing the facet in the Project Structure dialog only reaches `mkdocs.yml` while
+     * the listener is subscribed to the facet topic of the platform.
+     */
+    @Test
+    fun `plugin descriptor subscribes the angular material facet listener`() {
+        val content = descriptorText()
+
+        assertTrue(
+            "plugin.xml does not subscribe the Angular Material facet listener",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetListener"),
+        )
+        assertTrue(
+            "plugin.xml does not name the facet topic",
+            content.contains("""topic="com.intellij.facet.FacetManagerListener""""),
+        )
+    }
+
+    /**
+     * Use case: the Angular Material feature appears in the site creation wizard through the plugin's own
+     * `siteFeature` extension point. A feature that is not contributed leaves the wizard step empty.
+     */
+    @Test
+    fun `plugin descriptor contributes the angular material site feature`() {
+        val content = descriptorText()
+
+        assertTrue(
+            "plugin.xml declares no extensions for the plugin's own namespace",
+            content.contains("""<extensions defaultExtensionNs="org.pcsoft.ij.plugin.mkdocs">"""),
+        )
+        assertTrue(
+            "plugin.xml does not contribute the Angular Material site feature",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialSiteFeature"),
+        )
+    }
+
+    /**
      * Reads the plugin descriptor off the runtime classpath.
      */
     private fun descriptorText(): String {

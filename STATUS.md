@@ -44,18 +44,18 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Directory references for `docs_dir` and `site_dir`        | ✅      |
 | Gutter icon opening the target of every path              | ✅      |
 | Character and structure check of every path, OS aware     | ✅      |
-| `theme` (including `material`)                            | ⬜      |
+| `theme` (including `material`)                            | 🚧      |
 | `plugins` / `markdown_extensions`                         | ⬜      |
 
 ## Features (optional MkDocs extensions)
 
-Planned as facets stacked on the MkDocs facet. The `siteFeature` extension point and the feature step of the
-creation wizard exist; no feature implements them yet.
+Implemented as facets next to the MkDocs facet. The `siteFeature` extension point and the feature step of
+the creation wizard exist; Angular Material is the first feature using them.
 
 | Feature                                        | Status |
 |------------------------------------------------|--------|
 | `siteFeature` extension point and wizard step  | ✅      |
-| Angular Material                               | ⬜      |
+| Angular Material                               | ✅      |
 | I18N                                           | ⬜      |
 | Mike                                           | ⬜      |
 

@@ -22,8 +22,14 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   directory, stylesheets directory, build output directory), the site metadata (`site_name`, `site_author`, `site_description`,
   `site_url`), the repository (`repo_name`, `repo_url`), the `copyright` notice and the optional features,
   then writes `mkdocs.yml`, a start page and the directory structure. Everything left empty is omitted from
-  the configuration file. The last step is fed by the `siteFeature` extension point and is empty until the
-  first feature ships.
+  the configuration file. The last step is fed by the `siteFeature` extension point and currently offers
+  *Angular Material*.
+- **Angular Material facet** — a site whose `mkdocs.yml` names `material` as its theme carries the
+  *MkDocs Angular Material* facet, next to the *MkDocs* facet and wearing the MkDocs logo badged with the
+  Material glyph. The facet follows the file, and the file follows
+  the facet: adding it in *Project Structure* writes `theme.name: material`, removing it takes the `theme`
+  key out again, and settings written next to the name survive. Both shapes MkDocs accepts — `theme` as a
+  mapping and `theme` as a plain scalar — are recognised.
 - **Prefilled from the environment** — repository address, repository name and author come from the Git
   repository the site is created in; an entry deviating from it is reported as a warning. The copyright
   notice comes from the IDE's Copyright profiles, with a choice when several are configured and none is

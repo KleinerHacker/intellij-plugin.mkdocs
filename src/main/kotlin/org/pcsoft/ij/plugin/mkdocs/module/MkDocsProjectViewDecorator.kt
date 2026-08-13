@@ -20,14 +20,12 @@ import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
-import com.intellij.ui.LayeredIcon
 import com.intellij.ui.SimpleTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import javax.swing.Icon
-import javax.swing.SwingConstants
 
 /**
  * Renders the directories of an MkDocs site the way Maven renders a project directory: the site name in
@@ -94,11 +92,8 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
          * @return a layered icon of the same size as [base]
          */
         @JvmStatic
-        fun withBadge(base: Icon, badge: Icon = MkDocsIcons.BadgeOverlay): Icon {
-            val layered = LayeredIcon.layeredIcon(arrayOf(base, badge))
-            layered.setIcon(badge, 1, SwingConstants.SOUTH_EAST)
-            return layered
-        }
+        fun withBadge(base: Icon, badge: Icon = MkDocsIcons.BadgeOverlay): Icon =
+            MkDocsIcons.withBadge(base, badge)
     }
 
     override fun decorate(node: ProjectViewNode<*>, data: PresentationData) {
