@@ -29,6 +29,7 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Topic                                                     | Status |
 |-----------------------------------------------------------|--------|
 | `site_name`                                               | ✅      |
+| `site_name` written from the facet page                   | ✅      |
 | `site_author`, `site_description`, `site_url` written by the creation wizard | ✅ |
 | `repo_name`, `repo_url` written, prefilled from Git       | ✅      |
 | `copyright` written, prefilled from the IDE Copyright profiles | ✅ |
@@ -37,6 +38,7 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 | Schema-based completion and annotation of all other keys  | ✅      |
 | `docs_dir` read and used (project view marking, site creation) | ✅   |
 | `site_dir` read and written by the creation wizard        | ✅      |
+| `docs_dir` / `site_dir` written from the facet page, directories renamed with their references | ✅ |
 | `site_dir` awareness (excludes)                           | ⬜      |
 | `nav` navigation read and shown in the *Site Page* tool window | 🚧 |
 | `nav` navigation (references, completion, validation)     | ✅      |

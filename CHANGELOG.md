@@ -17,6 +17,17 @@
   file that already declares the theme is left untouched.
 - The feature step of the creation wizard offers **Angular Material**, which writes the theme into the new
   site and attaches the facet right away. It is the first feature filling that step.
+- The **site name** can now be changed on the facet page in *Project Structure*. It is written into
+  `site_name`, so the module, the project view and the *Site Page* tool window follow. An empty name is
+  refused.
+- The **technical directories** of a site can now be changed on its facet page in *Project Structure*: the
+  documentation directory, the output directory, the assets directory and the stylesheets directory. Applying
+  the page renames the directory on disk and every reference to it follows — the entries of `extra_css`, the
+  targets of `nav`, `theme.logo`, `theme.favicon` and the links of the pages. `docs_dir` and `site_dir` are
+  written back into `mkdocs.yml`, and taken out again once they carry nothing but the MkDocs default. The
+  output directory is only written, never moved: it holds build output, which the next build writes anyway.
+- A name that cannot be applied is reported before anything is moved: a name carrying a path of its own, a
+  directory that is not there, and a name already taken inside the site.
 
 ## [0.2.0]
 

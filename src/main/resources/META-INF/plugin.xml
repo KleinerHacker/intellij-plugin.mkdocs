@@ -24,7 +24,11 @@
                 turns its directory into an MkDocs site, re-detected after every file system change.</li>
             <li><b>Module integration</b> &ndash; a detected site is represented by an <i>MkDocs</i> facet on the
                 surrounding module; if the site belongs to no module, an own module is created. Its name is taken
-                from <code>site_name</code>, falling back to the directory name.</li>
+                from <code>site_name</code>, falling back to the directory name. Its page in
+                <i>Project Structure</i> lets the site be renamed through <code>site_name</code> and the technical
+                directories along with it: the directory is moved and every
+                reference to it &ndash; in <code>mkdocs.yml</code> and in the pages &ndash; follows, while
+                <code>docs_dir</code> and <code>site_dir</code> are written back into the configuration file.</li>
             <li><b>Project view</b> &ndash; the site root is labelled with the site name and badged, and the
                 documentation directory (<code>docs_dir</code>) as well as the assets and stylesheets directories are
                 marked.</li>

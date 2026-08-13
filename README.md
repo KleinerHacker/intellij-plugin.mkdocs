@@ -13,6 +13,12 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   assigned by the detection only — it cannot be added by hand, and a facet without a configuration file
   behind it reports an error.
 - The module name is taken from `site_name`, falling back to the directory name.
+- **Rename the site on the facet page** — the site name is written into `site_name`, so the module and the
+  project view follow.
+- **Rename the technical directories on the facet page** — the documentation, output, assets and stylesheets
+  directory can be changed in *Project Structure*. The directory is renamed and every reference to it follows
+  (`extra_css`, `nav`, `theme.logo`, `theme.favicon` and the links of the pages); `docs_dir` and `site_dir`
+  are written back into `mkdocs.yml` and taken out again once they hold nothing but the MkDocs default.
 - Detection re-runs after every relevant change to the virtual file system, so adding, renaming or deleting a
   configuration file is picked up without a reload.
 - A module of its own is created only for a site that belongs to no module at all; otherwise the surrounding

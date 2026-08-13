@@ -36,7 +36,9 @@ names:
 That is what MkDocs itself resolves them against, so what the IDE follows is what the build reads. Being a
 reference brings everything the platform ties to one: **Ctrl+click** and *Go to declaration* open the target,
 completion offers what actually lies there — directories only where a directory is expected — **renaming** the
-file rewrites the entry, and *Find usages* on a page lists the `nav` entry pointing at it.
+file rewrites the entry, and *Find usages* on a page lists the `nav` entry pointing at it. The rewritten entry
+stays relative to the directory MkDocs reads it against, so renaming the stylesheets directory leaves the
+`extra_css` entries pointing at their style sheets rather than at a path relative to the site root.
 
 A path leading nowhere is reported in the text. `site_dir` is the one exception: it names the output of the
 build, which is not expected to exist before the site has been built once.

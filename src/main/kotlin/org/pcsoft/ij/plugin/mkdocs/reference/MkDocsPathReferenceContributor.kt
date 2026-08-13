@@ -12,8 +12,11 @@
 
 package org.pcsoft.ij.plugin.mkdocs.reference
 
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Condition
 import com.intellij.openapi.util.SystemInfo
+import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.ElementManipulators
 import com.intellij.psi.PsiElement
@@ -23,6 +26,8 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.PsiReferenceRegistrar
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.util.ProcessingContext
 import org.jetbrains.yaml.psi.YAMLScalar
@@ -128,4 +133,38 @@ class MkDocsPathReferenceSet(
 
     override fun getReferenceCompletionFilter(): Condition<PsiFileSystemItem> =
         if (kind.directory) Condition { it.isDirectory } else super.getReferenceCompletionFilter()
+
+    override fun createFileReference(range: TextRange, index: Int, text: String?): FileReference =
+        MkDocsPathReference(this, range, index, text, baseDirectory)
+}
+
+/**
+ * One segment of a path value of an MkDocs configuration file.
+ *
+ * Exists for a single reason: the platform resolves a reference against the contexts of its *set*, but
+ * rewrites it after a rename against the contexts of the file the reference is written in. For an entry of
+ * `extra_css` those two are not the same — the entry is resolved against `docs_dir`, while the file it stands
+ * in is the configuration file next to it — so a renamed style sheet would come back written relative to the
+ * site root, and MkDocs would no longer find it. Reporting the same base directory for both makes the rewritten
+ * value the one MkDocs reads.
+ *
+ * @param referenceSet the set this reference belongs to
+ * @param range the range of the segment inside the scalar
+ * @param index the position of the segment in the path
+ * @param text the text of the segment
+ * @param baseDirectory the directory MkDocs resolves the value against
+ */
+class MkDocsPathReference(
+    referenceSet: FileReferenceSet,
+    range: TextRange,
+    index: Int,
+    text: String?,
+    private val baseDirectory: PsiFileSystemItem,
+) : FileReference(referenceSet, range, index, text) {
+
+    override fun getContextsForBindToElement(
+        curVFile: VirtualFile?,
+        project: Project?,
+        helper: FileReferenceHelper?,
+    ): Collection<PsiFileSystemItem> = listOf(baseDirectory)
 }
