@@ -100,6 +100,8 @@ class MkDocsPathLineMarkerProvider : RelatedItemLineMarkerProvider() {
         MkDocsPathKind.LOGO -> MkDocsBundle.message("reference.marker.tooltip.logo")
         MkDocsPathKind.FAVICON -> MkDocsBundle.message("reference.marker.tooltip.favicon")
         MkDocsPathKind.EXTRA_CSS -> MkDocsBundle.message("reference.marker.tooltip.extraCss")
+        MkDocsPathKind.EXTRA_JAVASCRIPT -> MkDocsBundle.message("reference.marker.tooltip.extraJavascript")
+        MkDocsPathKind.CUSTOM_DIR -> MkDocsBundle.message("reference.marker.tooltip.customDir")
         MkDocsPathKind.NAV -> MkDocsBundle.message("reference.marker.tooltip.nav")
     }
 }

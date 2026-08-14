@@ -72,6 +72,23 @@ enum class MkDocsPathKind(
     /** An entry of the `extra_css` sequence, naming a style sheet the built site loads. */
     EXTRA_CSS(directory = false, soft = false, relativeToDocsDir = true),
 
+    /**
+     * An entry of the `extra_javascript` sequence, naming a script the built site loads.
+     *
+     * Written in two shapes since MkDocs 1.6: the plain `- extra.js`, and the mapping
+     * `- path: extra.js` carrying `type` and `defer` next to it. Both name the same thing, and both are
+     * resolved against `docs_dir` exactly like a style sheet is.
+     */
+    EXTRA_JAVASCRIPT(directory = false, soft = false, relativeToDocsDir = true),
+
+    /**
+     * The `custom_dir` key below `theme`, naming the directory the theme's own templates are overridden from.
+     *
+     * Resolved against the configuration file rather than against `docs_dir`: the overrides are not content
+     * of the site, they are what renders it, and MkDocs reads them next to `mkdocs.yml`.
+     */
+    CUSTOM_DIR(directory = true, soft = false, relativeToDocsDir = false),
+
     /** The target of a `nav` entry, naming a page of the site, at any nesting depth of the navigation. */
     NAV(directory = false, soft = false, relativeToDocsDir = true);
 
@@ -97,8 +114,17 @@ enum class MkDocsPathKind(
         /** The `favicon` key MkDocs reads below `theme`. */
         private const val KEY_FAVICON = "favicon"
 
-        /** The `theme` key the two image keys live below. */
+        /** The `custom_dir` key MkDocs reads below `theme`. */
+        private const val KEY_CUSTOM_DIR = "custom_dir"
+
+        /** The `theme` key the three keys above live below. */
         private const val KEY_THEME = "theme"
+
+        /** The top level key listing the scripts the built site loads. */
+        private const val KEY_EXTRA_JAVASCRIPT = "extra_javascript"
+
+        /** The key naming the script inside the mapping form of an `extra_javascript` entry. */
+        private const val KEY_PATH = "path"
 
         /**
          * How many levels the search for the owning top level key climbs.
@@ -146,6 +172,10 @@ enum class MkDocsPathKind(
                 topLevel && keyValue.keyText == MkDocsConfig.KEY_SITE_DIR -> SITE_DIR
                 keyValue.keyText == KEY_LOGO && isBelowTheme(keyValue) -> LOGO
                 keyValue.keyText == KEY_FAVICON && isBelowTheme(keyValue) -> FAVICON
+                keyValue.keyText == KEY_CUSTOM_DIR && isBelowTheme(keyValue) -> CUSTOM_DIR
+                // "- path: extra.js" — the mapping form of an extra_javascript entry.
+                keyValue.keyText == KEY_PATH && isBelowTopLevelSequence(keyValue, KEY_EXTRA_JAVASCRIPT) ->
+                    EXTRA_JAVASCRIPT
                 // "- Title: page.md" — the title is the key, the path is what the entry points at.
                 !topLevel && isBelowNav(keyValue) -> NAV
                 else -> null
@@ -159,11 +189,30 @@ enum class MkDocsPathKind(
          */
         private fun kindOfItem(item: YAMLSequenceItem): MkDocsPathKind? {
             val owner = (item.parent as? YAMLSequence)?.parent as? YAMLKeyValue
-            if (owner != null && isTopLevel(owner) && owner.keyText == MkDocsConfig.KEY_EXTRA_CSS) {
-                return EXTRA_CSS
+            if (owner != null && isTopLevel(owner)) {
+                when (owner.keyText) {
+                    MkDocsConfig.KEY_EXTRA_CSS -> return EXTRA_CSS
+                    KEY_EXTRA_JAVASCRIPT -> return EXTRA_JAVASCRIPT
+                }
             }
             // "- index.md" — a navigation entry written without a title of its own.
             return if (isBelowNav(item)) NAV else null
+        }
+
+        /**
+         * Returns `true` if [keyValue] is a key of a mapping that is an entry of the top level sequence [key].
+         *
+         * Exactly one level of nesting is accepted, which is what the mapping form of an `extra_javascript`
+         * entry has: the sequence holds mappings, and the mappings hold plain keys. Anything deeper belongs
+         * to something else that happens to sit in the same place.
+         *
+         * @param keyValue the pair to inspect
+         * @param key the top level key the sequence belongs to
+         */
+        private fun isBelowTopLevelSequence(keyValue: YAMLKeyValue, key: String): Boolean {
+            val item = (keyValue.parent as? YAMLMapping)?.parent as? YAMLSequenceItem ?: return false
+            val owner = (item.parent as? YAMLSequence)?.parent as? YAMLKeyValue ?: return false
+            return owner.keyText == key && isTopLevel(owner)
         }
 
         /**

@@ -45,6 +45,31 @@
 - The refined schema is bound to the facet: a site on another theme keeps the plain MkDocs schema, so no key is
   offered that the theme rendering the site does not read. Both schemas apply side by side, the refined one
   first, and the MkDocs schema it builds on is bundled with the plugin rather than fetched at runtime.
+- A **Markdown extension that the configuration forces** is now reported above `mkdocs.yml` as an error: a flag
+  such as `content.code.annotate` renders nothing at all without `pymdownx.superfences`, and nothing in the
+  file shows it. The quick fix adds the extension together with the options it needs. Nothing is reported for a
+  site that ticks no such flag — the theme renders a plain site without a single extension.
+- Everything the theme merely **builds on** is offered separately, as a weak warning that can be switched off
+  in *Settings → Editor → Inspections*: a site keeping its Markdown plain is not doing anything wrong.
+- **Quick documentation** on an entry of `markdown_extensions` now explains what the extension does and links
+  to its own documentation, instead of saying nothing.
+- `theme.custom_dir` and the entries of `extra_javascript` — in both the plain and the mapping form MkDocs 1.6
+  accepts — are now **path values** like every other: navigation, completion, renaming, the gutter icon and the
+  path check apply to them. The override directory is resolved next to `mkdocs.yml`, a script below `docs_dir`.
+- A new intention **creates the target** a path points at, with the directories along the way, as a directory or
+  as an empty file depending on the key. Not offered for `site_dir`, which the build writes itself.
+- The **icons of the installed Material for MkDocs** are now completed in `mkdocs.yml` — at `theme.icon.*`, at
+  the toggle of a palette and at the icons of `extra.social` — and in the pages of a site as the shorthands
+  `:material-check:` and their like. The drawing is shown next to each entry. The names are read from the
+  installed package, so they always match the version of the theme that is actually there.
+- The installation is looked for in the virtual environments next to the site (`.venv`, `venv`, `env`,
+  `.virtualenv`, on Windows and on POSIX layouts alike). A new settings page under *Tools → MkDocs* takes the
+  path for every other setup.
+- The **custom properties of the theme** (`--md-…`) are completed inside CSS files, each with the part of the
+  page it paints.
+- **Template overrides** can now be created from the context menu of a site root: the override directory, the
+  selected files with a working Jinja scaffold in them, and `theme.custom_dir` pointing at the directory — all
+  in one undoable step. Live templates for the Jinja blocks come with it.
 
 ## [0.2.0]
 

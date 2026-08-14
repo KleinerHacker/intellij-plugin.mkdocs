@@ -1,0 +1,15 @@
+<html>
+<body>
+Creates the target a path value of <code>mkdocs.yml</code> points at.
+<p>
+    The value is resolved the way MkDocs resolves it &mdash; <code>docs_dir</code>, <code>site_dir</code> and
+    <code>theme.custom_dir</code> against the configuration file, everything else against
+    <code>docs_dir</code> &mdash; the missing directories along the way are created, and a directory or an
+    empty file is put at the end of it. The value itself is left exactly as written.
+</p>
+<p>
+    Not offered for <code>site_dir</code>: that directory is build output, and creating it by hand only
+    produces an empty directory MkDocs would have written itself.
+</p>
+</body>
+</html>

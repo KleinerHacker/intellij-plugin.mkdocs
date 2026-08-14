@@ -19,6 +19,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener
 
@@ -39,6 +40,12 @@ class MkDocsVfsListener : AsyncFileListener {
     override fun prepareChange(events: List<VFileEvent>): AsyncFileListener.ChangeApplier? {
         val sitesAffected = events.any(::isRelevant)
         val pagesAffected = events.any(::isPage)
+        val iconsAffected = events.any(::isInstalledPackage)
+        if (iconsAffected) {
+            for (project in ProjectManager.getInstance().openProjects) {
+                if (!project.isDisposed) MkDocsMaterialIconIndex.getInstance(project).invalidate()
+            }
+        }
         if (!sitesAffected && !pagesAffected) return null
 
         return object : AsyncFileListener.ChangeApplier {
@@ -85,5 +92,24 @@ class MkDocsVfsListener : AsyncFileListener {
                         MkDocsProject.isPageFile(event.newValue.toString()))
 
         else -> event.file?.let { MkDocsProject.isPageFile(it.name) } == true
+    }
+
+    /**
+     * Decides whether [event] concerns an installed Python package.
+     *
+     * Deciding on the path alone keeps this cheap: an installation, an upgrade or a removal of
+     * `mkdocs-material` writes below `site-packages`, and nothing else the plugin cares about does. What the
+     * icon index then remembers is stale, so it is thrown away — building it again costs one directory
+     * listing, and only once something asks for an icon.
+     *
+     * @param event a single pending VFS event
+     * @return `true` for anything below a `site-packages` directory
+     */
+    private fun isInstalledPackage(event: VFileEvent): Boolean = event.path.contains(SITE_PACKAGES)
+
+    private companion object {
+
+        /** The path fragment every installed Python package carries. */
+        const val SITE_PACKAGES = "site-packages"
     }
 }

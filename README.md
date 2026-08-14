@@ -44,6 +44,18 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   in front of the MkDocs schema rather than replacing it, applies only where the facet is, and leaves
   `extra.version` and `extra.alternate` open for the planned Mike and I18N features. The MkDocs schema it
   builds on is bundled, so it works offline.
+- **Markdown extensions of a Material site** — an extension the configuration forces, because a flag under
+  `theme.features` does not render without it, is reported above `mkdocs.yml` as an error, with a fix adding
+  it together with the options it needs. Everything the theme merely builds on is a weak warning that can be
+  switched off. Quick documentation explains every entry of `markdown_extensions`.
+- **Icons of the installed theme** — the icons of `mkdocs-material` are completed in `mkdocs.yml`
+  (`theme.icon.*`, the toggle of a palette, `extra.social`) and in the pages as the shorthands
+  `:material-check:`, each showing its drawing. They are read from the installed package, which is looked for
+  in the virtual environments next to the site or named under *Tools → MkDocs*. The custom properties of the
+  theme (`--md-…`) are completed inside CSS files.
+- **Template overrides** — the context menu of a site root creates the override directory, the selected
+  templates with a working Jinja scaffold, and `theme.custom_dir` pointing at them, in one undoable step.
+  Live templates for the Jinja blocks come with it.
 - **Prefilled from the environment** — repository address, repository name and author come from the Git
   repository the site is created in; an entry deviating from it is reported as a warning. The copyright
   notice comes from the IDE's Copyright profiles, with a choice when several are configured and none is

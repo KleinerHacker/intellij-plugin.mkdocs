@@ -38,9 +38,16 @@ names:
 | Key                              | Points at   | Resolved against |
 |----------------------------------|-------------|------------------|
 | `docs_dir`, `site_dir`           | a directory | the site root    |
+| `theme.custom_dir`               | a directory | the site root    |
 | `theme.logo`, `theme.favicon`    | a file      | `docs_dir`       |
 | every entry of `extra_css`       | a file      | `docs_dir`       |
+| every entry of `extra_javascript`| a file      | `docs_dir`       |
 | every target of `nav`            | a file      | `docs_dir`       |
+
+`theme.custom_dir` is read next to `mkdocs.yml` rather than below `docs_dir`: the templates it holds are not
+content of the site, they are what renders it. An entry of `extra_javascript` counts in both shapes MkDocs
+1.6 accepts — the plain `- extra.js` and the mapping `- path: extra.js` carrying `type` and `defer` next to
+it.
 
 That is what MkDocs itself resolves them against, so what the IDE follows is what the build reads. Being a
 reference brings everything the platform ties to one: **Ctrl+click** and *Go to declaration* open the target,
@@ -59,6 +66,16 @@ site, and a part of the site lies inside it.
 
 A target of `nav` leaving the site — an address with a scheme, or a protocol relative one — is left alone.
 There is no file behind it, and MkDocs passes it through to the theme unchanged.
+
+### Creating the target
+
+**Alt+Enter** on a path that leads nowhere offers *Create the missing target*. It creates the directories
+along the way and puts a directory or an empty file at the end of it, depending on what the key names — a
+page, a style sheet and a script become files, `docs_dir` and `theme.custom_dir` become directories. The
+value itself is left exactly as written: what is created is what was already asked for.
+
+It is not offered for `site_dir`. That directory is build output, and creating it by hand only produces an
+empty directory the next build would have written anyway.
 
 ## Gutter icons
 

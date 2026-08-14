@@ -1,0 +1,18 @@
+<html>
+<body>
+Reports Markdown extensions that <i>Material for MkDocs</i> builds on, but which the configuration file does
+not list under <code>markdown_extensions</code>.
+
+<p>
+    Nothing is wrong with a site that lists none of them: it builds and it renders. What it loses is the
+    markup the theme styles &mdash; call-outs, content tabs, key caps, highlighted code and footnotes. The
+    quick fix adds the extension together with the options it needs to render as the theme expects.
+</p>
+
+<p>
+    Extensions that the configuration actually <i>forces</i> &mdash; because a flag under
+    <code>theme.features</code> does not work without them &mdash; are reported separately as an error above
+    the file and are not affected by this inspection.
+</p>
+</body>
+</html>

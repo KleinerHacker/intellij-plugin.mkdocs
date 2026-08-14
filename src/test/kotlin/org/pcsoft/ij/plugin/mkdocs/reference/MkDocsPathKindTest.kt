@@ -190,6 +190,54 @@ class MkDocsPathKindTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the override directory of the theme. It is the one key below `theme` that is *not* read
+     * below `docs_dir`: the templates it holds are not content of the site, they are what renders it, and
+     * MkDocs looks for them next to `mkdocs.yml`.
+     */
+    fun `test reads the override directory of the theme`() {
+        val kind = kindOf("theme:\n  name: material\n  custom_dir: overrides\n", "overrides")
+
+        assertEquals(MkDocsPathKind.CUSTOM_DIR, kind)
+        assertTrue("custom_dir names a directory", kind!!.directory)
+        assertFalse("a missing override directory breaks the build", kind.soft)
+        assertFalse("custom_dir is resolved against the site root", kind.relativeToDocsDir)
+    }
+
+    /**
+     * Use case: a script written in the plain form MkDocs has always accepted. It is loaded by the built site
+     * from below `docs_dir`, exactly like a style sheet is.
+     */
+    fun `test reads a plain extra javascript entry`() {
+        val kind = kindOf("extra_javascript:\n  - js/extra.js\n", "js/extra.js")
+
+        assertEquals(MkDocsPathKind.EXTRA_JAVASCRIPT, kind)
+        assertFalse("a script is a file", kind!!.directory)
+        assertTrue("a script is resolved against docs_dir", kind.relativeToDocsDir)
+    }
+
+    /**
+     * Use case: the mapping form MkDocs 1.6 added, where the script carries `type` and `defer` next to it.
+     * The path sits behind the `path` key there, and it means exactly what the plain form means.
+     */
+    fun `test reads the mapping form of an extra javascript entry`() {
+        val kind = kindOf(
+            "extra_javascript:\n  - path: js/extra.js\n    defer: true\n",
+            "js/extra.js",
+        )
+
+        assertEquals(MkDocsPathKind.EXTRA_JAVASCRIPT, kind)
+    }
+
+    /**
+     * Use case: a `path` key somewhere else in the file — a plugin option, for instance. Only an entry of the
+     * top level `extra_javascript` sequence names a script; everywhere else the same word is someone's
+     * setting that happens to share the name.
+     */
+    fun `test ignores a path key outside extra javascript`() {
+        assertNull(kindOf("plugins:\n  - search:\n      path: js/extra.js\n", "js/extra.js"))
+    }
+
+    /**
      * Returns the kind of the first scalar of [text] whose value is [value].
      *
      * @param text the content of the configuration file

@@ -105,3 +105,57 @@ without waiting for the next detection run.
 
     The facet records what `mkdocs.yml` declares — it does not install the theme. The
     `mkdocs-material` package still has to be available to the MkDocs build itself.
+
+## Markdown extensions
+
+The theme renders a plain site without a single entry under `markdown_extensions`, so nothing is required
+just because it is absent. What *is* required follows from the configuration itself: a feature flag such as
+`content.code.annotate` renders nothing without `pymdownx.superfences`, `attr_list` and `md_in_html`.
+
+Those forced extensions are reported as an **error** in a banner above `mkdocs.yml`, one per extension, each
+with a fix that adds it — together with the options it needs, because `pymdownx.tabbed` without
+`alternate_style: true` renders the old tab style and looks broken.
+
+Everything the theme merely builds on — call-outs, key caps, highlighted code — is offered separately as a
+**weak warning**, and that inspection can be switched off entirely under *Settings → Editor → Inspections →
+MkDocs*. Keeping the Markdown of a site plain is a decision, not a defect.
+
+Pressing ++ctrl+q++ on an entry of `markdown_extensions` explains what the extension does and links to its
+own documentation.
+
+## Icons
+
+The icons the theme offers are the SVG files of the installed `mkdocs-material` package, so they are read
+from the installation rather than carried as a list. They are completed in three places of `mkdocs.yml` —
+`theme.icon.*`, the `toggle.icon` of a palette and the `icon` of an entry of `extra.social` — and in the
+pages of the site as the shorthands `:material-check:`, `:fontawesome-brands-github:` and their like. Each
+entry shows the drawing next to the name.
+
+The installation is looked for next to the site, in `.venv`, `venv`, `env` and `.virtualenv`, in the Windows
+and the POSIX layout alike. For every other setup — a system wide interpreter, a container mount — the
+directory can be named under *Tools → MkDocs*; see [Settings](settings.md).
+
+!!! note
+
+    Without an installed `mkdocs-material` nothing is offered. That is the normal state of a fresh checkout
+    whose virtual environment has not been created yet, and not an error.
+
+## Style sheets
+
+A site is restyled beyond the palette by redefining the custom properties of the theme in a style sheet
+listed under `extra_css`. All of them are completed inside CSS files, each with the part of the page it
+paints.
+
+## Template overrides
+
+*Material Template Overrides…* in the context menu of a site root creates what an override needs, in one
+undoable step: the override directory, the selected files at exactly the path the theme reads them from, a
+Jinja scaffold inside each of them, and `theme.custom_dir` pointing at the directory. A file that is already
+there keeps its content.
+
+Offered are `main.html` and the partials for header, footer, navigation, copyright notice and logo. The
+scaffold of `main.html` extends `base.html` and opens a block with `{{ super() }}` in it; a partial is
+*replaced* rather than extended, which its scaffold says, because MkDocs includes the file of `custom_dir`
+instead of the original.
+
+Live templates for the Jinja constructs come with it: `mext`, `mblock`, `mblockr`, `minc` and `mif`.

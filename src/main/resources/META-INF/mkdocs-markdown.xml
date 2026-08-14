@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+  ~ This work is licensed under the Apache License, Version 2.0.
+  -->
+<!-- Loaded only where the Markdown plugin is present. Everything in here registers against its language,
+     which does not exist without it — and the plugin has to keep working in an IDE that ships no Markdown
+     support, so this must never become a hard dependency. -->
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Completes the icon shorthands of the theme, :material-check: and its like, inside the pages of a
+             detected site. The names follow from the installed icon sets, so they come from the same index
+             the completion in mkdocs.yml uses. -->
+        <completion.contributor
+                language="Markdown"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialShorthandCompletionContributor"/>
+    </extensions>
+</idea-plugin>

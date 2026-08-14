@@ -1,0 +1,56 @@
+<templateSet group="MkDocs Material">
+    <!-- The Jinja constructs an override file of Material for MkDocs is written with. Nothing here knows
+         about Jinja as a language — these are text expansions, which is exactly the point: the plugin adds
+         no PSI for the templates of the theme, it only saves the typing that is always the same. -->
+
+    <template name="mext" value="{% extends &quot;$PARENT$&quot; %}&#10;$END$"
+              description="Material override: extend a template of the theme"
+              toReformat="false" toShortenFQNames="false">
+        <variable name="PARENT" expression="" defaultValue="&quot;base.html&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="HTML" value="true"/>
+            <option name="OTHER" value="true"/>
+        </context>
+    </template>
+
+    <template name="mblock"
+              value="{% block $NAME$ %}&#10;  {{ super() }}&#10;  $END$&#10;{% endblock %}"
+              description="Material override: add to a block of the theme"
+              toReformat="false" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="&quot;extrahead&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="HTML" value="true"/>
+            <option name="OTHER" value="true"/>
+        </context>
+    </template>
+
+    <template name="mblockr" value="{% block $NAME$ %}&#10;  $END$&#10;{% endblock %}"
+              description="Material override: replace a block of the theme"
+              toReformat="false" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="&quot;content&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="HTML" value="true"/>
+            <option name="OTHER" value="true"/>
+        </context>
+    </template>
+
+    <template name="minc" value="{% include &quot;$PATH$&quot; %}$END$"
+              description="Material override: include a partial of the theme"
+              toReformat="false" toShortenFQNames="false">
+        <variable name="PATH" expression="" defaultValue="&quot;partials/logo.html&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="HTML" value="true"/>
+            <option name="OTHER" value="true"/>
+        </context>
+    </template>
+
+    <template name="mif" value="{% if $CONDITION$ %}&#10;  $END$&#10;{% endif %}"
+              description="Material override: a conditional section"
+              toReformat="false" toShortenFQNames="false">
+        <variable name="CONDITION" expression="" defaultValue="&quot;config.extra.social&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="HTML" value="true"/>
+            <option name="OTHER" value="true"/>
+        </context>
+    </template>
+</templateSet>

@@ -51,6 +51,15 @@ class MkDocsSiteCreationService(private val project: Project) {
         private val PLAIN_SCALAR = Regex("^[A-Za-z0-9][A-Za-z0-9 ._/-]*$")
 
         /**
+         * Values that are a YAML tag rather than text, and therefore must not be quoted.
+         *
+         * `markdown_extensions` carries them: `pymdownx.emoji` is configured with
+         * `!!python/name:material.extensions.emoji.twemoji`, which MkDocs resolves to a function. Quoting it
+         * would hand the extension the string instead, and the site would fail to build.
+         */
+        private val PYTHON_TAG = Regex("^!![A-Za-z0-9_]+[A-Za-z0-9_./:-]*$")
+
+        /**
          * Returns the service instance for [project].
          *
          * @param project the project whose service is requested
@@ -68,7 +77,7 @@ class MkDocsSiteCreationService(private val project: Project) {
          */
         @JvmStatic
         fun yamlScalar(value: String): String =
-            if (PLAIN_SCALAR.matches(value) && !value.endsWith(" ")) {
+            if ((PLAIN_SCALAR.matches(value) || PYTHON_TAG.matches(value)) && !value.endsWith(" ")) {
                 value
             } else {
                 "'${value.replace("'", "''")}'"
