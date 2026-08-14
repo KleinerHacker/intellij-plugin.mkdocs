@@ -21,6 +21,15 @@ against instead of ageing inside the plugin.
     *Settings → Languages & Frameworks → Schemas and DTDs → JSON Schema Mappings* lists the mapping under the
     name *MkDocs*.
 
+### Refined for the Material theme
+
+The MkDocs schema stops where the theme begins: it describes `theme` with a handful of keys and `extra` with
+none, which is all MkDocs itself defines. A site rendered with the Material theme keeps most of its
+configuration in exactly those two blocks, so a site carrying the *MkDocs Angular Material* facet is edited
+against a refined schema on top — the feature flags, the palette, the fonts, the icons and the Material part
+of `extra`, each key completed, validated and documented. It comes in front of the MkDocs schema rather than
+in place of it, so both are in force. See [Angular Material](angular-material.md#editing-the-configuration-file).
+
 ## Paths are references
 
 A path in `mkdocs.yml` is not a piece of text to the plugin, it is a reference to the file or directory it

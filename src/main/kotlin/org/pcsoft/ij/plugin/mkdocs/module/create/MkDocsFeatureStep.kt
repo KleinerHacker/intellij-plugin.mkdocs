@@ -12,11 +12,11 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module.create
 
-import com.intellij.ide.wizard.Step
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
+import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
 import javax.swing.Icon
@@ -24,19 +24,30 @@ import javax.swing.JCheckBox
 import javax.swing.JComponent
 
 /**
- * Second step of the site creation wizard: which optional features the new site starts with.
+ * Fifth step of the site creation wizard: which optional features the new site starts with.
  *
- * The step is built entirely from the `siteFeature` extension point. No feature ships with the plugin yet,
- * so what the user sees today is the empty-state hint — the step exists so the planned MkDocs extensions can
- * be plugged in without touching the wizard.
+ * The step is built entirely from the `siteFeature` extension point. Whatever a feature wants to ask beyond
+ * the tick itself lives on pages of its own, which the wizard shows behind this one for as long as the
+ * feature is selected — this page stays a list of decisions, not a form.
+ *
+ * The features handed out here are per-wizard instances (see [MkDocsSiteFeature.forWizard]), so the object
+ * the wizard collected input into is the very object the creation service applies afterwards.
  *
  * @param project the project the site is created in, used to ask features whether they apply
  */
-class MkDocsFeatureStep(project: Project) : Step {
+class MkDocsFeatureStep(project: Project) : MkDocsValidatingStep {
 
-    private val features: List<MkDocsSiteFeature> = MkDocsSiteFeature.availableFeatures(project)
+    private val features: List<MkDocsSiteFeature> =
+        MkDocsSiteFeature.availableFeatures(project).map { it.forWizard() }
 
     private val checkBoxes = LinkedHashMap<MkDocsSiteFeature, JCheckBox>()
+
+    /**
+     * Called after every change to the selection, so the wizard can add or drop the pages of a feature.
+     *
+     * Set by [MkDocsCreateSiteWizard]; the step itself knows nothing about the other pages.
+     */
+    var onSelectionChanged: () -> Unit = {}
 
     /** The features the user switched on, in the order they are registered. */
     val selectedFeatures: List<MkDocsSiteFeature>
@@ -55,15 +66,11 @@ class MkDocsFeatureStep(project: Project) : Step {
                 row {
                     val box = checkBox(feature.displayName)
                     feature.icon?.let { box.component.icon = it }
+                    box.component.addActionListener { onSelectionChanged() }
                     checkBoxes[feature] = box.component
                 }
                 row {
                     comment(feature.description)
-                }
-                feature.createSettingsComponent()?.let { settings ->
-                    row {
-                        cell(settings)
-                    }
                 }
             }
         }
@@ -73,10 +80,26 @@ class MkDocsFeatureStep(project: Project) : Step {
 
     override fun _commit(finishChosen: Boolean) = Unit
 
-    /** No icon, for the same reason as in [MkDocsSiteStep]. */
+    /** No icon, for the same reason as in [MkDocsLayoutStep]. */
     override fun getIcon(): Icon? = null
 
     override fun getComponent(): JComponent = panel
 
     override fun getPreferredFocusedComponent(): JComponent? = checkBoxes.values.firstOrNull()
+
+    /**
+     * Ticks or unticks the box of [feature] as if the user had clicked it.
+     *
+     * @param feature the feature to switch
+     * @param selected `true` to switch it on
+     */
+    @TestOnly
+    internal fun setSelectedForTest(feature: MkDocsSiteFeature, selected: Boolean) {
+        val box = checkBoxes[feature] ?: return
+        if (box.isSelected == selected) return
+        box.doClick()
+    }
+
+    /** The features offered on this page, in registration order. */
+    internal fun offeredFeatures(): List<MkDocsSiteFeature> = features
 }

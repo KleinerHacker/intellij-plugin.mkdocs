@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.schema
 
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
@@ -20,17 +21,24 @@ import com.jetbrains.jsonSchema.extension.SchemaType
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 
 /**
- * Gives `mkdocs.yaml` the same JSON schema `mkdocs.yml` already gets.
+ * Contributes the schema mappings of the plugin to a project.
  *
- * MkDocs accepts both spellings of its configuration file, but the SchemaStore catalogue the IDE reads its
- * schema mappings from lists only `mkdocs.yml` — so the `.yaml` spelling ends up without completion and
- * without validation, while the two files are the same thing to MkDocs. This provider closes that gap and
- * deliberately covers nothing else: `mkdocs.yml` is left to the catalogue, because two mappings for the same
- * file would only compete with each other.
+ * Two of them, and they answer two different questions. [MkDocsMaterialSchemaFileProvider] knows about the
+ * project: it hands the refined schema to the configuration files of sites rendered with the Material theme,
+ * whichever of the two spellings they use. [MkDocsSchemaFileProvider] knows nothing about the project and
+ * closes a gap in the bundled catalogue for every other site. The Material provider comes first, so a file it
+ * claims is not answered by the plain mapping as well.
+ *
+ * [DumbAware], and that is not a detail: a factory the platform cannot use during indexing is not asked right
+ * away but on a pooled thread once the project is smart again, and until that pass has run the file is mapped
+ * by whatever the bundled catalogue says. A site would then be edited against the plain MkDocs schema for the
+ * first seconds after every start. Nothing here needs an index — the mapping is decided by the module of the
+ * file and by its facets.
  */
-class MkDocsSchemaProviderFactory : JsonSchemaProviderFactory {
+class MkDocsSchemaProviderFactory : JsonSchemaProviderFactory, DumbAware {
 
-    override fun getProviders(project: Project): List<JsonSchemaFileProvider> = listOf(MkDocsSchemaFileProvider())
+    override fun getProviders(project: Project): List<JsonSchemaFileProvider> =
+        listOf(MkDocsMaterialSchemaFileProvider(project), MkDocsSchemaFileProvider())
 }
 
 /**

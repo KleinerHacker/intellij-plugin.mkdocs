@@ -49,6 +49,52 @@ mapping. A file without a `theme` at all gets the key appended.
 
 Removing the facet removes the `theme` key as a whole, and MkDocs falls back to its built-in theme.
 
+## Editing the configuration file
+
+MkDocs itself knows next to nothing about the theme it renders with. Its schema describes `theme` with a
+handful of keys and `extra` with none at all, which is correct for MkDocs and of very little use here: those
+two blocks are where a Material site keeps most of its configuration. A site carrying the facet is therefore
+edited against a **refined schema**, which describes them properly — so the keys are completed, an unknown one
+is reported, and every offered value comes with a line saying what it does.
+
+What the refinement covers:
+
+| Block | What it describes |
+|-------|-------------------|
+| `theme.features` | all 28 feature flags of the theme, each with its own description |
+| `theme.palette` | `scheme`, `primary`, `accent`, `media` and `toggle`, in both shapes the theme accepts |
+| `theme.font` | the text and the code font |
+| `theme.language`, `theme.direction` | the language of the built-in labels and the reading direction |
+| `theme.icon` | the icons the theme lets you replace — logo, repository, edit, menu, search and the rest |
+| `theme.logo`, `theme.favicon`, `theme.custom_dir` | the assets and the override directory |
+| `extra` | the Material part of it: `social`, `analytics`, `consent`, `generator` and `status` |
+
+The palette is written either as a single mapping or as a sequence of them, the latter being what gives a site
+its light/dark toggle. Both forms are described the same way, because a colour offered in one and missing in
+the other would be an arbitrary difference. The colour names are the ones the theme actually ships, and
+primary and accent get their own sets — the accent set is the shorter one, the theme having no accent for the
+neutral colours.
+
+The refinement is bound to the facet. A site on another theme keeps the plain MkDocs schema and is offered
+nothing the theme rendering it would not read; take the theme out of `mkdocs.yml` and the refinement goes with
+it. Where it does apply it does not replace the MkDocs schema but stands in front of it — both are in force,
+so the keys MkDocs defines keep their completion and their documentation exactly as before.
+
+Two keys under `extra` are deliberately left open:
+
+| Key | Left to |
+|-----|---------|
+| `extra.version` | the planned Mike feature |
+| `extra.alternate` | the planned I18N feature |
+
+They are not part of the theme, and reporting them as unknown while the features that own them are still being
+built would be wrong in the one direction that matters — a warning on a line that is perfectly correct.
+
+!!! note
+
+    The MkDocs schema the refinement builds on is bundled with the plugin instead of being fetched, so the
+    completion in a Material site works offline and cannot change under you between two IDE starts.
+
 ## In the creation wizard
 
 *New → MkDocs Site* offers **Angular Material** in its feature step. Switching it on writes the theme into

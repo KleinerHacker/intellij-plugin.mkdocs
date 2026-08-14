@@ -12,7 +12,6 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module.create
 
-import com.intellij.ide.wizard.Step
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogPanel
@@ -41,7 +40,7 @@ import javax.swing.event.DocumentEvent
  *
  * @param project the project the site is created in
  */
-class MkDocsCopyrightStep(project: Project) : Step {
+class MkDocsCopyrightStep(project: Project) : MkDocsValidatingStep {
 
     /** Value written to `copyright`. */
     var copyright: String = ""
@@ -147,6 +146,15 @@ class MkDocsCopyrightStep(project: Project) : Step {
         } finally {
             updatingNotice = false
         }
+    }
+
+    /**
+     * Pulls the author of the site information step in, every time this page is entered.
+     *
+     * @param wizard the wizard showing this page
+     */
+    override fun onEnter(wizard: MkDocsCreateSiteWizard) {
+        suggestNoticeFor(wizard.siteInfoStep.currentAuthor())
     }
 
     /**

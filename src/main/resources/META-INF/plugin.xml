@@ -78,6 +78,14 @@
                 detected from <code>theme.name</code>. The facet can be selected in the creation wizard and added
                 or removed in the Project Structure dialog, which writes the theme into <code>mkdocs.yml</code>
                 or takes it out again. It is bound to the MkDocs facet and disappears with it.</li>
+            <li><b>Material schema</b> &ndash; a site carrying the Angular Material facet is edited against a refined
+                schema for the blocks the theme fills: all 28 flags of <code>theme.features</code> with a description
+                each, <code>theme.palette</code> in both its shapes with the colours and schemes of the theme,
+                <code>theme.font</code>, <code>theme.language</code>, <code>theme.icon</code>,
+                <code>theme.direction</code>, <code>theme.logo</code>, <code>theme.favicon</code>,
+                <code>theme.custom_dir</code>, and <code>social</code>, <code>analytics</code>, <code>consent</code>,
+                <code>generator</code> and <code>status</code> below <code>extra</code>. It stands in front of the
+                MkDocs schema instead of replacing it and is bundled with the plugin, so it works offline.</li>
         </ul>
         The current implementation status is tracked in
         <a href="https://github.com/KleinerHacker/intellij-plugin.mkdocs/blob/master/STATUS.md">STATUS.md</a>.<br>

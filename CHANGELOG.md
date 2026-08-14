@@ -28,6 +28,23 @@
   output directory is only written, never moved: it holds build output, which the next build writes anyway.
 - A name that cannot be applied is reported before anything is moved: a name carrying a path of its own, a
   directory that is not there, and a name already taken inside the site.
+- A site carrying the *MkDocs Angular Material* facet now gets a **refined JSON schema** for its `mkdocs.yml` /
+  `mkdocs.yaml`, so the two blocks the Material theme actually fills — `theme` and `extra` — are completed,
+  validated and explained instead of being waved through. The plain MkDocs schema describes `theme` with four
+  keys and `extra` with none, which is correct for MkDocs and of no use to a site rendered with Material.
+- `theme.features` offers all 28 feature flags of the theme, each with a one line description shown next to the
+  offered value, and a flag the theme does not know is reported.
+- `theme.palette` is covered in both shapes the theme accepts — a single mapping and a sequence for the colour
+  scheme toggle — with `scheme`, `primary`, `accent`, `media` and `toggle`. The colour names offered are the
+  ones the theme ships, primary and accent each with their own set.
+- `theme.font`, `theme.language`, `theme.icon`, `theme.logo`, `theme.favicon`, `theme.custom_dir` and
+  `theme.direction` are described as well, as is the Material part of `extra`: `social`, `analytics`,
+  `consent`, `generator` and `status`.
+- `extra.version` and `extra.alternate` are deliberately left unconstrained — they belong to the coming Mike
+  and I18N features and must not be reported as unknown in the meantime.
+- The refined schema is bound to the facet: a site on another theme keeps the plain MkDocs schema, so no key is
+  offered that the theme rendering the site does not read. Both schemas apply side by side, the refined one
+  first, and the MkDocs schema it builds on is bundled with the plugin rather than fetched at runtime.
 
 ## [0.2.0]
 

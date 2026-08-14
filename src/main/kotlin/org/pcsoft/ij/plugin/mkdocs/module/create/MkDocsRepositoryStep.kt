@@ -14,7 +14,6 @@ package org.pcsoft.ij.plugin.mkdocs.module.create
 
 import com.intellij.icons.AllIcons
 import com.intellij.ide.wizard.CommitStepException
-import com.intellij.ide.wizard.Step
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.vfs.VirtualFile
@@ -45,7 +44,7 @@ import javax.swing.event.DocumentEvent
  * @param project the project the site is created in
  * @param directory the directory the wizard started from, used to find the repository
  */
-class MkDocsRepositoryStep(project: Project, directory: VirtualFile?) : Step {
+class MkDocsRepositoryStep(project: Project, directory: VirtualFile?) : MkDocsValidatingStep {
 
     /** Value written to `repo_name`. */
     var repoName: String = ""
@@ -207,7 +206,7 @@ class MkDocsRepositoryStep(project: Project, directory: VirtualFile?) : Step {
     }
 
     /** Returns why the current input cannot be used, or `null` if it is fine. */
-    fun validate(): MkDocsSiteTemplateError? =
+    override fun validate(): MkDocsSiteTemplateError? =
         if (MkDocsSiteTemplate.isUsableUrl(urlField.text)) null else MkDocsSiteTemplateError.INVALID_REPO_URL
 
     /**

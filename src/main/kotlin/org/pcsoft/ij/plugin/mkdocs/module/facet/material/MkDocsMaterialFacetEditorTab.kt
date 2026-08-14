@@ -18,10 +18,12 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import javax.swing.JComponent
 
 /**
- * Project Structure tab of the Angular Material facet.
+ * The overview tab of the Angular Material facet.
  *
  * The tab is informational: the theme is declared in `mkdocs.yml`, and the facet mirrors it. What the user can
- * do here is add or remove the facet itself, which is handled by the dialog rather than by this tab.
+ * do here is add or remove the facet itself, which is handled by the dialog rather than by this tab. The
+ * settings of the theme live on the four tabs next to this one
+ * ([MkDocsMaterialSettingsEditorTab]).
  *
  * @param configuration the facet configuration whose values are displayed
  */
@@ -29,7 +31,7 @@ class MkDocsMaterialFacetEditorTab(
     private val configuration: MkDocsMaterialFacetConfiguration,
 ) : FacetEditorTab() {
 
-    override fun getDisplayName(): String = MkDocsBundle.message("facet.angularMaterial.tab.title")
+    override fun getDisplayName(): String = MkDocsBundle.message("facet.angularMaterial.tab.overview")
 
     override fun createComponent(): JComponent = panel {
         row(MkDocsBundle.message("facet.angularMaterial.field.theme")) {

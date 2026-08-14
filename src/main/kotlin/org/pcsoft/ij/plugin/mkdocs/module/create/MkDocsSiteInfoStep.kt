@@ -13,7 +13,6 @@
 package org.pcsoft.ij.plugin.mkdocs.module.create
 
 import com.intellij.ide.wizard.CommitStepException
-import com.intellij.ide.wizard.Step
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.vfs.VirtualFile
@@ -42,7 +41,7 @@ import javax.swing.event.DocumentEvent
  * @param project the project the site is created in
  * @param directory the directory the wizard started from, used to find the author in the repository
  */
-class MkDocsSiteInfoStep(project: Project, directory: VirtualFile?) : Step {
+class MkDocsSiteInfoStep(project: Project, directory: VirtualFile?) : MkDocsValidatingStep {
 
     /** Value written to `site_name`. */
     var siteName: String = ""
@@ -154,6 +153,15 @@ class MkDocsSiteInfoStep(project: Project, directory: VirtualFile?) : Step {
         }
     }
 
+    /**
+     * Pulls the technical name of the first step in, every time this page is entered.
+     *
+     * @param wizard the wizard showing this page
+     */
+    override fun onEnter(wizard: MkDocsCreateSiteWizard) {
+        suggestSiteName(wizard.layoutStep.name)
+    }
+
     /** Copies the current field contents into the properties of this step. */
     private fun readInput() {
         siteName = siteNameField.text.trim()
@@ -163,7 +171,7 @@ class MkDocsSiteInfoStep(project: Project, directory: VirtualFile?) : Step {
     }
 
     /** Returns why the current input cannot be used, or `null` if it is fine. */
-    fun validate(): MkDocsSiteTemplateError? = when {
+    override fun validate(): MkDocsSiteTemplateError? = when {
         siteNameField.text.isBlank() -> MkDocsSiteTemplateError.BLANK_SITE_NAME
         !MkDocsSiteTemplate.isUsableUrl(urlField.text) -> MkDocsSiteTemplateError.INVALID_SITE_URL
         else -> null

@@ -14,7 +14,6 @@ package org.pcsoft.ij.plugin.mkdocs.module.create
 
 import com.intellij.icons.AllIcons
 import com.intellij.ide.wizard.CommitStepException
-import com.intellij.ide.wizard.Step
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
@@ -53,7 +52,7 @@ import javax.swing.event.DocumentEvent
 class MkDocsLayoutStep(
     project: Project,
     private val initialDirectory: String,
-) : Step {
+) : MkDocsValidatingStep {
 
     companion object {
 
@@ -351,7 +350,7 @@ class MkDocsLayoutStep(
      * A location that is no usable path at all is reported as an invalid root — from the user's point of
      * view that is exactly what it is.
      */
-    fun validate(): MkDocsSiteTemplateError? {
+    override fun validate(): MkDocsSiteTemplateError? {
         if (nameField.text.isBlank()) return MkDocsSiteTemplateError.BLANK_NAME
         val template = buildTemplate() ?: return MkDocsSiteTemplateError.INVALID_ROOT
         return template.validate()

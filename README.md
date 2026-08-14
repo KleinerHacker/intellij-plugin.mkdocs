@@ -36,6 +36,14 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   the facet: adding it in *Project Structure* writes `theme.name: material`, removing it takes the `theme`
   key out again, and settings written next to the name survive. Both shapes MkDocs accepts — `theme` as a
   mapping and `theme` as a plain scalar — are recognised.
+- **Refined schema for a Material site** — a site carrying the Angular Material facet is edited against a
+  schema describing the two blocks the theme actually fills: all 28 flags of `theme.features` with a
+  description each, `theme.palette` in both its shapes with the colours and schemes the theme ships,
+  `theme.font`, `theme.language`, `theme.icon`, `theme.direction`, `theme.logo`, `theme.favicon`,
+  `theme.custom_dir`, and `social`, `analytics`, `consent`, `generator` and `status` under `extra`. It stands
+  in front of the MkDocs schema rather than replacing it, applies only where the facet is, and leaves
+  `extra.version` and `extra.alternate` open for the planned Mike and I18N features. The MkDocs schema it
+  builds on is bundled, so it works offline.
 - **Prefilled from the environment** — repository address, repository name and author come from the Git
   repository the site is created in; an entry deviating from it is reported as a warning. The copyright
   notice comes from the IDE's Copyright profiles, with a choice when several are configured and none is

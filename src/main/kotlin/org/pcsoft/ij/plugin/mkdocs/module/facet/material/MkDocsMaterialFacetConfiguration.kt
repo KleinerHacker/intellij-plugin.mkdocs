@@ -16,8 +16,16 @@ import com.intellij.facet.FacetConfiguration
 import com.intellij.facet.ui.FacetEditorContext
 import com.intellij.facet.ui.FacetEditorTab
 import com.intellij.facet.ui.FacetValidatorsManager
+import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.vfs.VfsUtilCore
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.xmlb.XmlSerializerUtil
+import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialSettingsPages
+import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
+import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetEditorTab
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 
 /**
@@ -58,8 +66,48 @@ class MkDocsMaterialFacetConfiguration :
         XmlSerializerUtil.copyBean(state, this.state)
     }
 
+    /**
+     * Builds the tabs of the facet: the overview of what the site declares, and the four settings pages.
+     *
+     * The four pages are the very ones the site creation wizard shows — one implementation, two hosts. They
+     * are created as a set rather than one by one, because the extensions page has to see what the features
+     * page has ticked.
+     */
     override fun createEditorTabs(
         editorContext: FacetEditorContext,
         validatorsManager: FacetValidatorsManager,
-    ): Array<FacetEditorTab> = arrayOf(MkDocsMaterialFacetEditorTab(this))
+    ): Array<FacetEditorTab> {
+        val pages = MkDocsMaterialSettingsPages(
+            project = editorContext.project,
+            docsDir = { docsDirOf(editorContext) },
+            siteRoot = { configFileOf(editorContext)?.parent },
+        )
+        val tabs = mutableListOf<FacetEditorTab>(MkDocsMaterialFacetEditorTab(this))
+        pages.pages.mapTo(tabs) { MkDocsMaterialSettingsEditorTab(it, editorContext) }
+        return tabs.toTypedArray()
+    }
+
+    /**
+     * The documentation directory of the edited site, or `null` while there is none.
+     *
+     * @param editorContext the context of the edited facet
+     */
+    private fun docsDirOf(editorContext: FacetEditorContext): VirtualFile? {
+        val configFile = configFileOf(editorContext) ?: return null
+        val root = configFile.parent ?: return null
+        val name = runReadActionBlocking { MkDocsConfig.readDocsDir(editorContext.project, configFile) }
+            ?: MkDocsProject.DEFAULT_DOCS_DIR
+        return VfsUtilCore.findRelativeFile(name, root)?.takeIf { it.isDirectory }
+    }
+
+    /**
+     * The configuration file of the edited site, or `null` if the module holds no MkDocs site.
+     *
+     * @param editorContext the context of the edited facet
+     */
+    private fun configFileOf(editorContext: FacetEditorContext): VirtualFile? {
+        val module: Module = editorContext.module.takeIf { !it.isDisposed } ?: return null
+        val mkDocsFacet = runReadActionBlocking { MkDocsFacet.getInstance(module) } ?: return null
+        return MkDocsFacetEditorTab.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
+    }
 }

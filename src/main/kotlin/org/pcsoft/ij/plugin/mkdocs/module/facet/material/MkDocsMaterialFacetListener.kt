@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetEditorTab
+import org.pcsoft.ij.plugin.mkdocs.schema.MkDocsMaterialSchemaCache
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
@@ -39,6 +40,9 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
  * only written when it does not already say what the facet says, so a facet the detection itself created
  * writes nothing.
  *
+ * Independently of who caused the change, the facet decides which JSON schema the configuration file is
+ * validated against, so every appearance and disappearance of it invalidates the cached schema assignment.
+ *
  * Registered in `plugin.xml` under `projectListeners`.
  *
  * @param project the project the facets belong to
@@ -46,6 +50,7 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
 class MkDocsMaterialFacetListener(private val project: Project) : FacetManagerListener {
 
     override fun facetAdded(facet: Facet<*>) {
+        invalidateSchema(facet)
         if (!isUserChange(facet)) return
         applyToConfigFile(facet.module, MkDocsBundle.message("facet.angularMaterial.command.add")) { configFile ->
             if (MkDocsConfig.isMaterialTheme(project, configFile)) return@applyToConfigFile
@@ -54,11 +59,25 @@ class MkDocsMaterialFacetListener(private val project: Project) : FacetManagerLi
     }
 
     override fun facetRemoved(facet: Facet<*>) {
+        invalidateSchema(facet)
         if (!isUserChange(facet)) return
         applyToConfigFile(facet.module, MkDocsBundle.message("facet.angularMaterial.command.remove")) { configFile ->
             if (!MkDocsConfig.isMaterialTheme(project, configFile)) return@applyToConfigFile
             MkDocsConfigWriter.removeTheme(project, configFile)
         }
+    }
+
+    /**
+     * Drops the cached schema assignment when [facet] is an Angular Material facet.
+     *
+     * Unlike the write-back below this does not care who caused the change: a facet the detection attached
+     * changes which schema the file has to be validated against just as much as one added by hand.
+     *
+     * @param facet the facet the platform announced
+     */
+    private fun invalidateSchema(facet: Facet<*>) {
+        if (facet !is MkDocsMaterialFacet) return
+        MkDocsMaterialSchemaCache.invalidate(project)
     }
 
     /**

@@ -15,7 +15,6 @@ package org.pcsoft.ij.plugin.mkdocs.types
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
-import javax.swing.JComponent
 
 /**
  * An optional feature that can be switched on for an MkDocs site.
@@ -70,11 +69,28 @@ interface MkDocsSiteFeature {
     fun isAvailable(project: Project): Boolean = true
 
     /**
-     * Creates the settings component shown in the wizard while the feature is selected.
+     * Returns an instance of this feature dedicated to a single wizard.
      *
-     * @return the component, or `null` if the feature has nothing to configure
+     * Extensions are application level singletons: two open wizards would otherwise share the same object,
+     * and with it the pending input of the steps created by [createSteps]. A feature that carries such state
+     * therefore returns a fresh instance here; a stateless one can keep returning itself.
+     *
+     * The instance handed out here is the one that ends up in [MkDocsSiteTemplate.features], so
+     * [apply] runs on exactly the object the wizard filled in.
      */
-    fun createSettingsComponent(): JComponent? = null
+    fun forWizard(): MkDocsSiteFeature = this
+
+    /**
+     * Creates the wizard pages this feature contributes, in the order they are shown.
+     *
+     * Called once per wizard, right after [forWizard], and the returned steps are kept for as long as that
+     * wizard is open — they may hold user input, and they do keep it while the feature is unticked and
+     * ticked again.
+     *
+     * @param project the project the site is created in
+     * @return the pages, or an empty list if the feature has nothing to ask
+     */
+    fun createSteps(project: Project): List<MkDocsFeatureWizardStep> = emptyList()
 
     /**
      * Applies the feature to a freshly created site.

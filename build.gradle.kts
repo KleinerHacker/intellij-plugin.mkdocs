@@ -258,6 +258,30 @@ tasks {
         )
     }
 
+    //region Schema
+    // The MkDocs base schema is vendored into the plugin (src/main/resources/schema/mkdocs-1.6.json) because
+    // a bundled schema cannot reference a remote one: the platform resolves a $ref against the parent of the
+    // schema's own VirtualFile, and remote fetching is driven by SchemaType.remoteSchema and the catalogue,
+    // not by ref resolution. A remote $ref would therefore silently drop the whole base branch. This task
+    // refreshes the snapshot with a single command so it stays maintainable.
+    register("refreshMkDocsSchema") {
+        group = "schema"
+        description = "Re-download the SchemaStore MkDocs schema into src/main/resources/schema/mkdocs-1.6.json"
+
+        val source = "https://www.schemastore.org/mkdocs-1.6.json"
+        val target = layout.projectDirectory.file("src/main/resources/schema/mkdocs-1.6.json").asFile
+        outputs.upToDateWhen { false }
+
+        doLast {
+            val text = uri(source).toURL().openStream().use { it.readBytes().toString(Charsets.UTF_8) }
+            check(text.isNotBlank()) { "Downloaded an empty schema from $source" }
+            target.parentFile.mkdirs()
+            target.writeText(text, Charsets.UTF_8)
+            logger.lifecycle("Schema von $source aktualisiert: ${target.absolutePath}")
+        }
+    }
+    //endregion
+
     //region Dokka
     register<Copy>("copyDokka") {
         group = "dokka"

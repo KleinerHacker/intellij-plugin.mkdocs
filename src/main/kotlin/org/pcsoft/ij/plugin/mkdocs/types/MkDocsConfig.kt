@@ -226,6 +226,86 @@ object MkDocsConfig {
     }
 
     /**
+     * Reads the scalar value addressed by the dotted [path] from [configFile].
+     *
+     * The counterpart of [MkDocsConfigWriter.setNestedScalar]: a path of a single segment reads a top level
+     * key, a longer one walks the block mappings below it, as in `theme.palette.primary`.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @param path the dotted path of the key to read
+     * @return the trimmed value, or `null` if the file is not YAML, the path does not exist, its value is not
+     *         a scalar, or the value is blank
+     */
+    fun readNestedScalar(project: Project, configFile: VirtualFile, path: String): String? {
+        val yamlFile = yamlFileOf(project, configFile) ?: return null
+        val segments = path.split('.').map { it.trim() }.filter { it.isNotEmpty() }
+        if (segments.isEmpty()) return null
+        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, *segments.toTypedArray()) ?: return null
+        val scalar = keyValue.value as? YAMLScalar ?: return null
+        return scalar.textValue.trim().takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Reads the sequence of scalars addressed by the dotted [path] from [configFile].
+     *
+     * Anything that is not a scalar entry is skipped: a half-written file makes the parser see mappings and
+     * empty entries behind the key, and neither is a usable value. A missing key, a key holding a plain scalar
+     * and a key holding an empty sequence all yield an empty list.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @param path the dotted path of the sequence to read
+     * @return the entries as written, never containing a blank one
+     */
+    fun readScalarSequence(project: Project, configFile: VirtualFile, path: String): List<String> {
+        val sequence = sequenceAt(project, configFile, path) ?: return emptyList()
+        return sequence.items.mapNotNull { item ->
+            (item.value as? YAMLScalar)?.textValue?.trim()?.takeIf { it.isNotEmpty() }
+        }
+    }
+
+    /**
+     * Reads the sequence of mappings addressed by the dotted [path] from [configFile].
+     *
+     * The shape `extra.social` and `theme.palette` are written in. Each entry is returned as the keys it
+     * carries, in the order the file has them; entries that are not mappings are skipped, and inside an entry
+     * only scalar values are taken, for the same reason as in [readScalarSequence].
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @param path the dotted path of the sequence to read
+     * @return one map per entry, each holding the scalar keys of that entry
+     */
+    fun readMappingSequence(project: Project, configFile: VirtualFile, path: String): List<Map<String, String>> {
+        val sequence = sequenceAt(project, configFile, path) ?: return emptyList()
+        return sequence.items
+            .mapNotNull { item -> item.value as? YAMLMapping }
+            .map { mapping ->
+                mapping.keyValues
+                    .mapNotNull { keyValue ->
+                        (keyValue.value as? YAMLScalar)?.textValue?.trim()?.let { keyValue.keyText.trim() to it }
+                    }
+                    .toMap()
+            }
+    }
+
+    /**
+     * Returns the sequence addressed by the dotted [path], or `null` if there is none.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @param path the dotted path of the sequence
+     */
+    private fun sequenceAt(project: Project, configFile: VirtualFile, path: String): YAMLSequence? {
+        val yamlFile = yamlFileOf(project, configFile) ?: return null
+        val segments = path.split('.').map { it.trim() }.filter { it.isNotEmpty() }
+        if (segments.isEmpty()) return null
+        val keyValue = YAMLUtil.getQualifiedKeyInFile(yamlFile, *segments.toTypedArray()) ?: return null
+        return keyValue.value as? YAMLSequence
+    }
+
+    /**
      * Reads the name of the theme from [configFile].
      *
      * MkDocs accepts the theme in two shapes: as a mapping carrying a `name` key, which is what a themed site

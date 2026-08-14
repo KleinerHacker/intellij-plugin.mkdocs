@@ -52,14 +52,40 @@ Legend: ✅ done · 🚧 in progress · ⬜ not started
 ## Features (optional MkDocs extensions)
 
 Implemented as facets next to the MkDocs facet. The `siteFeature` extension point and the feature step of
-the creation wizard exist; Angular Material is the first feature using them.
+the creation wizard exist; Angular Material is the first feature using them. A feature can contribute wizard
+pages of its own, which appear behind the feature step while the feature is selected.
 
 | Feature                                        | Status |
 |------------------------------------------------|--------|
 | `siteFeature` extension point and wizard step  | ✅      |
-| Angular Material                               | ✅      |
+| Feature contributed wizard pages               | ✅      |
+| Angular Material                               | 🚧      |
 | I18N                                           | ⬜      |
 | Mike                                           | ⬜      |
+
+## Angular Material (`mkdocs-material`)
+
+Tracks what the plugin supports compared to
+[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+
+| Topic                                                                                 | Status |
+|---------------------------------------------------------------------------------------|--------|
+| Theme detected from `mkdocs.yml`, mapping and scalar form                              | ✅      |
+| *MkDocs Angular Material* facet, added and removed by hand as well                     | ✅      |
+| Offered in the feature step of the creation wizard                                     | ✅      |
+| Refined JSON schema bound to the facet, base MkDocs schema bundled                     | ✅      |
+| `theme.features` — all 28 flags, each with a description                               | ✅      |
+| `theme.palette` — single mapping and toggle sequence, colours and schemes              | ✅      |
+| `theme.font`, `theme.language`, `theme.icon`, `theme.direction`                        | ✅      |
+| `theme.logo`, `theme.favicon`, `theme.custom_dir`                                      | ✅      |
+| `extra.social`, `extra.analytics`, `extra.consent`, `extra.generator`, `extra.status`  | ✅      |
+| `extra.version` / `extra.alternate` left open for Mike and I18N                        | ✅      |
+| Settings pages on the facet and in the wizard                                          | ⬜      |
+| Required and recommended `markdown_extensions` reported with a fix                     | ⬜      |
+| `theme.custom_dir` and `extra_javascript` as path references                           | ⬜      |
+| Icon completion from the installed `mkdocs-material` package                           | ⬜      |
+| Markdown front matter and `--md-*` CSS variables                                       | ⬜      |
+| Theme override scaffolding                                                             | ⬜      |
 
 ## Build / run
 
