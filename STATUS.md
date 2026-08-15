@@ -90,6 +90,8 @@ Tracks what the plugin supports compared to
 | Icon shorthands `:material-…:` completed in the pages                                  | ✅      |
 | Icon directory override in the settings                                                | ✅      |
 | `--md-*` CSS variables completed in style sheets                                       | ✅      |
+| Inlay hint marking the keys the theme alone reads                                      | ✅      |
+| Completion entries of the theme marked with its icon                                   | ✅      |
 | Markdown front matter                                                                  | ⬜      |
 | Theme override scaffolding, with live templates for the Jinja blocks                   | ✅      |
 

@@ -146,6 +146,25 @@ A site is restyled beyond the palette by redefining the custom properties of the
 listed under `extra_css`. All of them are completed inside CSS files, each with the part of the page it
 paints.
 
+## Where a key comes from
+
+A configuration file of a Material site mixes two vocabularies. Some keys are read by MkDocs and work with any
+theme; others exist only because this theme renders the site, and would be silently ignored the moment the
+theme changes. Nothing in the file says which is which.
+
+The plugin says it. An icon sits in front of every key the theme alone reads — `theme.features`,
+`theme.palette`, `theme.font`, `theme.icon`, `theme.direction` and the theme's own keys below `extra` — and
+its tooltip states that MkDocs itself does not read the key. The hint is an inlay hint like any other and can
+be switched off under *Settings → Editor → Inlay Hints*.
+
+What MkDocs reads stays unmarked, on purpose: `theme.name` names the theme, `theme.logo`, `theme.favicon` and
+`theme.custom_dir` are part of the theme contract of MkDocs, and `markdown_extensions` is a top level key of
+MkDocs. The theme uses all of them, but it does not own them.
+
+The same icon appears on the completion entries that come from the theme — in `mkdocs.yml`, on the icon
+shorthands in the pages and on the custom properties in the style sheets. An entry that already shows a
+drawing of its own, such as an icon name, keeps the drawing and carries the mark as a small badge on it.
+
 ## Template overrides
 
 *Material Template Overrides…* in the context menu of a site root creates what an override needs, in one

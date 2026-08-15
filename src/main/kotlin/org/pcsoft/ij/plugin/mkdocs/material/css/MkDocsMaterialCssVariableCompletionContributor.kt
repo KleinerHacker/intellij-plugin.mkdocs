@@ -17,6 +17,7 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialCssVariables
 
 /**
@@ -40,6 +41,9 @@ class MkDocsMaterialCssVariableCompletionContributor : CompletionContributor() {
         prefixed.addAllElements(
             MkDocsMaterialCssVariables.all.map { variable ->
                 LookupElementBuilder.create(variable.name)
+                    // A style sheet of a site mixes these with the custom properties of the author, and the
+                    // icon is what tells the two apart in the popup.
+                    .withIcon(MkDocsIcons.MaterialBadge)
                     .withTypeText(MkDocsBundle.message(variable.group.titleKey), true)
                     .withTailText("  ${MkDocsBundle.message(variable.descriptionKey)}", true)
             }

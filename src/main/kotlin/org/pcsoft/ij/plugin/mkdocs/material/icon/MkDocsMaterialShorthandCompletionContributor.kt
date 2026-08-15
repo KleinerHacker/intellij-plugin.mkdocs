@@ -21,6 +21,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.LookupElementRenderer
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
@@ -59,6 +60,10 @@ class MkDocsMaterialShorthandCompletionContributor : CompletionContributor() {
     /**
      * Returns the lookup element offering the shorthand of the icon [name].
      *
+     * The drawing stays the icon of the entry — that is what the author is picking from — and the mark of the
+     * theme is badged onto it. A Markdown file mixes the shorthands of the theme with everything else the
+     * editor offers, and without the badge nothing in the popup says that this syntax is the theme's.
+     *
      * @param index the index the drawing is loaded from
      * @param siteRoot the directory holding `mkdocs.yml`
      * @param name the name of the icon, as the theme addresses it
@@ -75,6 +80,8 @@ class MkDocsMaterialShorthandCompletionContributor : CompletionContributor() {
                     presentation.itemText = shorthand
                     presentation.typeText = name.substringBefore('/')
                     presentation.icon = index.icon(siteRoot, name)
+                        ?.let { MkDocsIcons.withBadge(it, MkDocsIcons.MaterialOverlay) }
+                        ?: MkDocsIcons.MaterialBadge
                 }
             })
     }

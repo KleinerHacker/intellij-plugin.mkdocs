@@ -100,6 +100,12 @@
                 named under <i>Tools &rarr; MkDocs</i>.</li>
             <li><b>Material style sheets</b> &ndash; the custom properties of the theme (<code>--md-…</code>) are
                 completed inside CSS files.</li>
+            <li><b>Material origin</b> &ndash; the keys a site owes to the Material theme are marked as such:
+                an icon in front of <code>theme.features</code>, <code>theme.palette</code>,
+                <code>theme.font</code>, <code>theme.icon</code>, <code>theme.direction</code> and the theme's
+                keys below <code>extra</code>, and the same icon on the completion entries coming from the
+                theme, in <code>mkdocs.yml</code>, in the pages and in the style sheets. What MkDocs itself
+                reads stays unmarked.</li>
             <li><b>Template overrides</b> &ndash; the context menu of a site root creates the override directory,
                 the selected templates with a working Jinja scaffold, and <code>theme.custom_dir</code> pointing at
                 them, in one undoable step. Live templates for the Jinja blocks come with it.</li>
@@ -250,6 +256,21 @@
         <completion.contributor
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconCompletionContributor"/>
+
+        <!-- Puts the mark of the Material theme on the completion entries that come from it. Runs first and
+             lets the other contributors — the JSON schema above all — produce their entries through it, which
+             is the only place all of them pass through. -->
+        <completion.contributor
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialOriginCompletionContributor"/>
+
+        <!-- The same statement in the editor: an icon in front of every key of a configuration file that the
+             Material theme alone reads. Built on the imperative hints API because the mark is an icon, which
+             the declarative one cannot render. -->
+        <codeInsight.inlayProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialKeyInlayHintsProvider"/>
 
         <!-- Creates the target a path value points at, resolved the way MkDocs resolves it. The path check
              above says whether a value can be read at all, the references say whether it leads anywhere —

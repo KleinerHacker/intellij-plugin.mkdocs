@@ -53,6 +53,11 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   `:material-check:`, each showing its drawing. They are read from the installed package, which is looked for
   in the virtual environments next to the site or named under *Tools → MkDocs*. The custom properties of the
   theme (`--md-…`) are completed inside CSS files.
+- **Origin of a Material key** — the keys a site owes to the theme rather than to MkDocs carry an icon in
+  front of them in the editor: `theme.features`, `theme.palette`, `theme.font`, `theme.icon`,
+  `theme.direction` and the theme's own keys below `extra`. The same icon marks the completion entries that
+  come from the theme, in `mkdocs.yml`, in the pages and in the style sheets. What MkDocs itself reads stays
+  unmarked, and the hint can be switched off under *Settings → Editor → Inlay Hints*.
 - **Template overrides** — the context menu of a site root creates the override directory, the selected
   templates with a working Jinja scaffold, and `theme.custom_dir` pointing at them, in one undoable step.
   Live templates for the Jinja blocks come with it.

@@ -45,6 +45,20 @@ object MkDocsIcons {
     val MaterialBadge: Icon = load("mkdocs-angular-material.svg", 16)
 
     /**
+     * The Angular Material motif at the size an inlay hint renders it at.
+     *
+     * An inlay sits inside a line of the editor and has to stay below the line height, which the 16 pixels of
+     * [MaterialBadge] already exceed at the default font size.
+     *
+     * The place that made the fixing in [load] necessary: everything the hints API offers for an icon —
+     * `smallScaledIcon`, `ScaleAwarePresentationFactory` — scales a `ScalableIcon` from the size it was
+     * *loaded from*, which is the 48 unit canvas of the file, and hands out the full 48 pixels no matter what
+     * was set on loading.
+     */
+    @JvmField
+    val MaterialInlay: Icon = load("mkdocs-angular-material.svg", 12)
+
+    /**
      * The Material glyph as overlaid on the MkDocs logo, and nothing else.
      *
      * Drawn as its own shape rather than as a shrunk [MaterialBadge]: at badge size the ring of the full
@@ -194,11 +208,32 @@ object MkDocsIcons {
      * happens on the vector, not on a rasterised image: [IconLoader] hands out a `ScalableIcon` for an SVG,
      * which [IconUtil.scale] re-renders at the requested size rather than resampling it.
      *
+     * The scaled icon is then fixed at that size and handed out as a plain [Icon]. [IconUtil.scale] returns a
+     * `ScalableIcon`, and a `ScalableIcon` scales from the size it was *loaded from* — the 48 unit canvas —
+     * not from the size it was brought to here. Anything scaling it once more therefore throws that size away
+     * and renders the icon at 48 pixels, which is what the inlay hints API does to every icon it is handed.
+     * A fixed icon has nothing left to scale back up by, so the size set here is the size that is painted.
+     *
      * @param fileName name of the SVG below `/icons`, without the `_dark` suffix of the dark variant
      * @param size the edge length in pixels the icon is to be rendered at
      */
     private fun load(fileName: String, size: Int): Icon {
         val icon = IconLoader.getIcon("/icons/$fileName", MkDocsIcons::class.java)
-        return IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth)
+        return FixedSizeIcon(IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth))
+    }
+
+    /**
+     * An [Icon] painting [delegate] and nothing else, deliberately not a `ScalableIcon`.
+     *
+     * @property delegate the icon to paint, already at the size it is to keep
+     */
+    private class FixedSizeIcon(private val delegate: Icon) : Icon {
+
+        override fun paintIcon(component: java.awt.Component?, graphics: java.awt.Graphics?, x: Int, y: Int) =
+            delegate.paintIcon(component, graphics, x, y)
+
+        override fun getIconWidth(): Int = delegate.iconWidth
+
+        override fun getIconHeight(): Int = delegate.iconHeight
     }
 }

@@ -70,6 +70,14 @@
 - **Template overrides** can now be created from the context menu of a site root: the override directory, the
   selected files with a working Jinja scaffold in them, and `theme.custom_dir` pointing at the directory — all
   in one undoable step. Live templates for the Jinja blocks come with it.
+- The keys a configuration file owes to the **Material theme** are now marked as such. An icon sits in front of
+  `theme.features`, `theme.palette`, `theme.font`, `theme.icon`, `theme.direction` and the theme's own keys
+  below `extra`, with a tooltip saying that MkDocs itself does not read them. What MkDocs reads — `theme.name`,
+  `theme.logo`, `theme.favicon`, `theme.custom_dir`, `markdown_extensions` — stays unmarked. The hint can be
+  switched off under *Settings → Editor → Inlay Hints*.
+- The same mark now appears on the **completion entries** coming from the theme: in `mkdocs.yml`, on the icon
+  shorthands `:material-…:` in the pages, and on the `--md-*` custom properties in the style sheets. An entry
+  that already shows a drawing of its own keeps it and is badged instead.
 - The user interface is now **localised** into the three languages JetBrains ships a language pack for:
   Simplified Chinese, Japanese and Korean. The IDE picks the texts up on its own once the matching language
   pack is installed; without one everything stays English as before.
