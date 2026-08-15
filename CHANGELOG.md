@@ -70,6 +70,9 @@
 - **Template overrides** can now be created from the context menu of a site root: the override directory, the
   selected files with a working Jinja scaffold in them, and `theme.custom_dir` pointing at the directory — all
   in one undoable step. Live templates for the Jinja blocks come with it.
+- The user interface is now **localised** into the three languages JetBrains ships a language pack for:
+  Simplified Chinese, Japanese and Korean. The IDE picks the texts up on its own once the matching language
+  pack is installed; without one everything stays English as before.
 
 ## [0.2.0]
 
