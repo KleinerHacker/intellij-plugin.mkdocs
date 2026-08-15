@@ -171,7 +171,7 @@ class MkDocsMaterialExtensionsPage(
         }
 
         override fun getColumnClass(columnIndex: Int): Class<*> =
-            if (columnIndex == COLUMN_ENABLED) java.lang.Boolean::class.java else String::class.java
+            if (columnIndex == COLUMN_ENABLED) Boolean::class.javaObjectType else String::class.java
 
         override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean = columnIndex == COLUMN_ENABLED
 

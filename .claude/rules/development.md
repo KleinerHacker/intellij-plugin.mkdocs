@@ -4,7 +4,9 @@ name: development
 
 # Development
 
-* NEVER run `verifyPlugin`
+* NEVER run `verifyPlugin` on your own initiative
+    * It MAY ONLY be run when the user explicitly asks for it
+    * An explicit request overrides every other rule that would trigger a verification
 
 ## Planning
 
@@ -46,7 +48,7 @@ name: development
 ## Building
 
 * A build MUST always be performed with the Gradle target `build` after every change
-* A plugin verification MUST always be performed with the Gradle target `verifyPlugin` after every change
+* A plugin verification with the Gradle target `verifyPlugin` MUST only be performed when the user explicitly asks for it
     * The verification MUST pass without errors, but MAY contain warnings
     * If a DEPRECATION or REMOVAL warning is reported, the code MUST be adjusted
     * If an error is detected, the code MUST be adjusted

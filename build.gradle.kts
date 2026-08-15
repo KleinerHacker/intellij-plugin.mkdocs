@@ -73,7 +73,8 @@ intellijPlatform {
     pluginVerification {
         ides {
             create(IntelliJPlatformType.IntellijIdea, libs.versions.idea.get())
-            create(IntelliJPlatformType.Rider, libs.versions.idea.get())
+            // Rider is not distributed in a form the installer path can consume, so it is taken as an archive.
+            create(IntelliJPlatformType.Rider, libs.versions.idea.get()) { useInstaller = false }
             create(IntelliJPlatformType.CLion, libs.versions.idea.get())
             create(IntelliJPlatformType.GoLand, libs.versions.idea.get())
         }
