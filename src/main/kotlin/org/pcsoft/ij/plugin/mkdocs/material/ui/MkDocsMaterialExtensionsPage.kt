@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.ui
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -22,6 +23,8 @@ import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtensionLevel
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import javax.swing.table.AbstractTableModel
 
 /**
@@ -76,6 +79,9 @@ class MkDocsMaterialExtensionsPage(
         OPTIONAL("material.page.extensions.status.off"),
     }
 
+    /** The extensions the theme knows, read from the bundled `facets/material` resources. */
+    private val extensions = service<MkDocsMaterialDataService>().extensions
+
     /** The extensions the site lists, as identifiers, including the ones this plugin does not know. */
     private var enabled: MutableSet<String> = mutableSetOf()
 
@@ -118,7 +124,7 @@ class MkDocsMaterialExtensionsPage(
      * content, which the annotator answers on the file itself and a settings page cannot.
      */
     fun requiredExtensions(): Set<MkDocsMarkdownExtension> =
-        MkDocsMarkdownExtension.requiredBy(features(), false)
+        extensions.requiredBy(features(), false)
 
     /**
      * What [extension] is worth to the site as it is currently configured.
@@ -127,7 +133,7 @@ class MkDocsMaterialExtensionsPage(
      */
     fun statusOf(extension: MkDocsMarkdownExtension): Status = when {
         extension in requiredExtensions() -> Status.REQUIRED
-        extension.level == MkDocsMarkdownExtension.Level.RECOMMENDED -> Status.RECOMMENDED
+        extension.level == MkDocsMarkdownExtensionLevel.RECOMMENDED -> Status.RECOMMENDED
         else -> Status.OPTIONAL
     }
 
@@ -160,7 +166,7 @@ class MkDocsMaterialExtensionsPage(
      */
     private inner class ExtensionTableModel : AbstractTableModel() {
 
-        override fun getRowCount(): Int = MkDocsMarkdownExtension.entries.size
+        override fun getRowCount(): Int = extensions.all.size
 
         override fun getColumnCount(): Int = 3
 
@@ -176,7 +182,7 @@ class MkDocsMaterialExtensionsPage(
         override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean = columnIndex == COLUMN_ENABLED
 
         override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
-            val extension = MkDocsMarkdownExtension.entries[rowIndex]
+            val extension = extensions.all[rowIndex]
             return when (columnIndex) {
                 COLUMN_ID -> extension.id
                 COLUMN_STATUS -> statusOf(extension).let {
@@ -189,7 +195,7 @@ class MkDocsMaterialExtensionsPage(
 
         override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
             if (columnIndex != COLUMN_ENABLED) return
-            setEnabled(MkDocsMarkdownExtension.entries[rowIndex], aValue == true)
+            setEnabled(extensions.all[rowIndex], aValue == true)
         }
     }
 }

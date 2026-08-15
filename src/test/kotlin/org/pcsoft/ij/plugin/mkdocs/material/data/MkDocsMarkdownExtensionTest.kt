@@ -14,14 +14,31 @@ package org.pcsoft.ij.plugin.mkdocs.material.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
+ *
+ * The service is constructed directly rather than looked up with `service<…>()`: it only reads bundled
+ * classpath resources, so a running application is not needed to exercise what these tests are about.
  */
 class MkDocsMarkdownExtensionTest {
+
+    private val data = MkDocsMaterialDataService()
+    private val extensions = data.extensions
+
+    /**
+     * Use case: the resource is bundled with the plugin, so a missing or unreadable file would silently
+     * disable every recommendation, the annotator and the quick fix at once.
+     */
+    @Test
+    fun `the bundled resource is read`() {
+        assertTrue(extensions.all.isNotEmpty())
+        assertNotNull(extensions.byId("pymdownx.superfences"))
+    }
 
     /**
      * Use case: an extension is looked up by the identifier read from `markdown_extensions`; a duplicate
@@ -29,7 +46,7 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `identifiers are unique`() {
-        val ids = MkDocsMarkdownExtension.entries.map { it.id }
+        val ids = extensions.all.map { it.id }
         assertEquals(ids.size, ids.toSet().size)
     }
 
@@ -39,7 +56,7 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `pymdown extensions name their package`() {
-        MkDocsMarkdownExtension.entries.forEach { extension ->
+        extensions.all.forEach { extension ->
             if (extension.id.startsWith("pymdownx.")) {
                 assertEquals(extension.id, "pymdown-extensions", extension.pipPackage)
             } else {
@@ -54,9 +71,25 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `every extension carries a documentation address`() {
-        MkDocsMarkdownExtension.entries.forEach { extension ->
+        extensions.all.forEach { extension ->
             assertTrue(extension.id, extension.docUrl.startsWith("https://"))
         }
+    }
+
+    /**
+     * Use case: the default options the quick fix writes come from the resource as key and value pairs; an
+     * entry with a blank key would produce a configuration file the site cannot load.
+     */
+    @Test
+    fun `default options carry a key and a value`() {
+        extensions.all.forEach { extension ->
+            extension.defaultOptions.forEach { (key, value) ->
+                assertTrue(extension.id, key.isNotBlank())
+                assertTrue(extension.id, value.isNotBlank())
+            }
+        }
+        val toc = extensions.byId("toc")
+        assertEquals(listOf("permalink" to "true"), toc?.defaultOptions)
     }
 
     /**
@@ -65,7 +98,7 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `nothing is required unconditionally`() {
-        assertTrue(MkDocsMarkdownExtension.requiredBy(emptySet(), false).isEmpty())
+        assertTrue(extensions.requiredBy(emptySet(), false).isEmpty())
     }
 
     /**
@@ -75,8 +108,8 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `code annotations force super fences only`() {
-        val required = MkDocsMarkdownExtension.requiredBy(setOf("content.code.annotate"), false)
-        assertEquals(setOf(MkDocsMarkdownExtension.PYMDOWNX_SUPERFENCES), required)
+        val required = extensions.requiredBy(setOf("content.code.annotate"), false)
+        assertEquals(setOfExtensions("pymdownx.superfences"), required)
     }
 
     /**
@@ -85,7 +118,7 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `tooltips force no extension`() {
-        assertTrue(MkDocsMarkdownExtension.requiredBy(setOf("content.tooltips"), false).isEmpty())
+        assertTrue(extensions.requiredBy(setOf("content.tooltips"), false).isEmpty())
     }
 
     /**
@@ -95,8 +128,8 @@ class MkDocsMarkdownExtensionTest {
     @Test
     fun `code copy forces the highlight extension`() {
         assertEquals(
-            setOf(MkDocsMarkdownExtension.PYMDOWNX_HIGHLIGHT),
-            MkDocsMarkdownExtension.requiredBy(setOf("content.code.copy"), false)
+            setOfExtensions("pymdownx.highlight"),
+            extensions.requiredBy(setOf("content.code.copy"), false)
         )
     }
 
@@ -106,8 +139,8 @@ class MkDocsMarkdownExtensionTest {
     @Test
     fun `linked content tabs force the tab extensions`() {
         assertEquals(
-            setOf(MkDocsMarkdownExtension.PYMDOWNX_TABBED, MkDocsMarkdownExtension.PYMDOWNX_SUPERFENCES),
-            MkDocsMarkdownExtension.requiredBy(setOf("content.tabs.link"), false)
+            setOfExtensions("pymdownx.tabbed", "pymdownx.superfences"),
+            extensions.requiredBy(setOf("content.tabs.link"), false)
         )
     }
 
@@ -118,9 +151,18 @@ class MkDocsMarkdownExtensionTest {
     @Test
     fun `icons force the emoji extension`() {
         assertEquals(
-            setOf(MkDocsMarkdownExtension.PYMDOWNX_EMOJI),
-            MkDocsMarkdownExtension.requiredBy(emptySet(), true)
+            setOfExtensions("pymdownx.emoji"),
+            extensions.requiredBy(emptySet(), true)
         )
+    }
+
+    /**
+     * Use case: exactly one extension answers the icon shorthands. Marking a second one would make every
+     * site using an icon report two missing extensions instead of one.
+     */
+    @Test
+    fun `exactly one extension serves the icon shorthands`() {
+        assertEquals(1, extensions.all.count { it.iconShorthand })
     }
 
     /**
@@ -129,7 +171,7 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `unknown flags are ignored`() {
-        assertTrue(MkDocsMarkdownExtension.requiredBy(setOf("navigation.nonsense"), false).isEmpty())
+        assertTrue(extensions.requiredBy(setOf("navigation.nonsense"), false).isEmpty())
     }
 
     /**
@@ -137,11 +179,11 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `requirements of several features are merged`() {
-        val required = MkDocsMarkdownExtension.requiredBy(
+        val required = extensions.requiredBy(
             setOf("content.code.annotate", "content.tabs.link"), false
         )
-        assertTrue(required.contains(MkDocsMarkdownExtension.PYMDOWNX_TABBED))
-        assertTrue(required.contains(MkDocsMarkdownExtension.PYMDOWNX_SUPERFENCES))
+        assertTrue(required.contains(extensions.byId("pymdownx.tabbed")))
+        assertTrue(required.contains(extensions.byId("pymdownx.superfences")))
         assertEquals(2, required.size)
     }
 
@@ -151,12 +193,25 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `recommended extensions are never forced by a feature`() {
-        val forceable = MkDocsMaterialFeatureFlag.entries
+        val forceable = data.featureFlags.all
             .flatMap { it.requiredExtensions }
-            .mapNotNull { MkDocsMarkdownExtension.byId(it) }
+            .mapNotNull { extensions.byId(it) }
             .toSet()
-        MkDocsMarkdownExtension.recommended().forEach { extension ->
+        extensions.recommended().forEach { extension ->
             assertFalse(extension.id, forceable.contains(extension))
+        }
+    }
+
+    /**
+     * Use case: an extension a feature can force has to be marked as such, otherwise the annotator would
+     * report it while the settings page still calls it a recommendation.
+     */
+    @Test
+    fun `forced extensions are marked as required by a feature`() {
+        data.featureFlags.all.flatMap { it.requiredExtensions }.forEach { id ->
+            val extension = extensions.byId(id)
+            assertNotNull(id, extension)
+            assertEquals(id, MkDocsMarkdownExtensionLevel.REQUIRED_BY_FEATURE, extension?.level)
         }
     }
 
@@ -166,9 +221,13 @@ class MkDocsMarkdownExtensionTest {
      */
     @Test
     fun `byId round-trips and rejects unknown identifiers`() {
-        MkDocsMarkdownExtension.entries.forEach { extension ->
-            assertEquals(extension, MkDocsMarkdownExtension.byId(extension.id))
+        extensions.all.forEach { extension ->
+            assertEquals(extension, extensions.byId(extension.id))
         }
-        assertNull(MkDocsMarkdownExtension.byId("pymdownx.nonsense"))
+        assertNull(extensions.byId("pymdownx.nonsense"))
     }
+
+    /** The extensions written as [ids], for comparing against what [MkDocsMarkdownExtensions.requiredBy] returns. */
+    private fun setOfExtensions(vararg ids: String): Set<MkDocsMarkdownExtension> =
+        ids.mapNotNull { extensions.byId(it) }.toSet()
 }

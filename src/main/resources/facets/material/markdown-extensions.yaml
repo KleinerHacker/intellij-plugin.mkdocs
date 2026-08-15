@@ -1,0 +1,193 @@
+# yaml-language-server: $schema=./markdown-extensions.schema.json
+#
+# The Markdown extensions the *Material for MkDocs* theme builds upon, as listed under `markdown_extensions`.
+#
+# The theme renders a plain site without any of them, so **no extension is required unconditionally**. An
+# extension only becomes mandatory once something in the configuration actually asks for it — that is what
+# `level: REQUIRED_BY_FEATURE` marks, together with the `requiredExtensions` of a feature flag. Everything
+# else is a recommendation the site is free to ignore, which is why the annotator may only report the former
+# as an error.
+#
+# `pipPackage` names the PyPI package the extension comes from, and is absent when Python Markdown itself
+# ships it.
+
+# --- Python Markdown -----------------------------------------------------------------------------------
+
+# Call-out blocks such as note, warning and tip.
+- id: admonition
+  level: RECOMMENDED
+  descriptionKey: material.extension.admonition
+  docUrl: https://python-markdown.github.io/extensions/admonition/
+
+# HTML attributes and CSS classes attached to Markdown elements.
+#
+# No feature forces it: it widens what an author may write — buttons, grids, annotations outside of code
+# blocks — but every one of those is a choice made on a page, not something `theme.features` implies.
+- id: attr_list
+  level: RECOMMENDED
+  descriptionKey: material.extension.attr_list
+  docUrl: https://python-markdown.github.io/extensions/attr_list/
+
+# Markdown inside HTML blocks marked with markdown="1". Recommended for the same reason as attr_list: it is
+# the pages that ask for it, never the theme.
+- id: md_in_html
+  level: RECOMMENDED
+  descriptionKey: material.extension.md_in_html
+  docUrl: https://python-markdown.github.io/extensions/md_in_html/
+
+# Definition lists, and the base of task lists.
+- id: def_list
+  level: RECOMMENDED
+  descriptionKey: material.extension.def_list
+  docUrl: https://python-markdown.github.io/extensions/definition_lists/
+
+# Footnote references and their definitions.
+- id: footnotes
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.footnotes
+  docUrl: https://python-markdown.github.io/extensions/footnotes/
+
+# Pipe tables.
+- id: tables
+  level: RECOMMENDED
+  descriptionKey: material.extension.tables
+  docUrl: https://python-markdown.github.io/extensions/tables/
+
+# The table of contents and the anchor links next to the headings.
+- id: toc
+  level: RECOMMENDED
+  descriptionKey: material.extension.toc
+  docUrl: https://python-markdown.github.io/extensions/toc/
+  defaultOptions:
+    - key: permalink
+      value: "true"
+
+# --- PyMdown Extensions --------------------------------------------------------------------------------
+
+# Nested fenced blocks, custom fences and diagram support.
+- id: pymdownx.superfences
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.superfences
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/superfences/
+
+# Syntax highlighting of code blocks through Pygments.
+- id: pymdownx.highlight
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.highlight
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/highlight/
+  defaultOptions:
+    - key: anchor_linenums
+      value: "true"
+    - key: line_spans
+      value: __span
+    - key: pygments_lang_class
+      value: "true"
+
+# Syntax highlighting of inline code spans.
+- id: pymdownx.inlinehilite
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.inlinehilite
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/inlinehilite/
+
+# Content of other files embedded into a page.
+- id: pymdownx.snippets
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.snippets
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
+
+# Content tabs.
+- id: pymdownx.tabbed
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.tabbed
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/
+  defaultOptions:
+    - key: alternate_style
+      value: "true"
+
+# Emoji shorthands, and the icon shorthands of the theme. This is the extension a site needs as soon as it
+# writes shorthands such as :material-check:, which is what `iconShorthand` marks.
+- id: pymdownx.emoji
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.emoji
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/emoji/
+  defaultOptions:
+    - key: emoji_index
+      value: "!!python/name:material.extensions.emoji.twemoji"
+    - key: emoji_generator
+      value: "!!python/name:material.extensions.emoji.to_svg"
+  iconShorthand: true
+
+# Collapsible call-outs.
+- id: pymdownx.details
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.details
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/details/
+
+# The markup of Critic Markup for tracked changes.
+- id: pymdownx.critic
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.critic
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/critic/
+
+# Superscript and inserted text.
+- id: pymdownx.caret
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.caret
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/caret/
+
+# Keyboard keys rendered as key caps.
+- id: pymdownx.keys
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.keys
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/keys/
+
+# Highlighted text.
+- id: pymdownx.mark
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.mark
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/mark/
+
+# Subscript and deleted text.
+- id: pymdownx.tilde
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.tilde
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/tilde/
+
+# Lists of check boxes.
+- id: pymdownx.tasklist
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.tasklist
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/tasklist/
+  defaultOptions:
+    - key: custom_checkbox
+      value: "true"
+
+# Typographic replacements such as arrows and fractions.
+- id: pymdownx.smartsymbols
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.smartsymbols
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/smartsymbols/
+
+# Mathematical expressions handed to MathJax or KaTeX.
+- id: pymdownx.arithmatex
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.arithmatex
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
+  defaultOptions:
+    - key: generic
+      value: "true"

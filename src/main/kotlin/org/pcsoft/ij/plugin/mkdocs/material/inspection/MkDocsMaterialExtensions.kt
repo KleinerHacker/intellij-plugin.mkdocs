@@ -12,12 +12,14 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.inspection
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.yaml.psi.YAMLFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
 
@@ -51,8 +53,9 @@ object MkDocsMaterialExtensions {
         val settings = settingsOf(project, file) ?: return emptyList()
         // Icon shorthands are a question about the Markdown pages of the site, not about this file; until the
         // icon index answers it, nothing here may claim that pymdownx.emoji is forced.
-        val required = MkDocsMarkdownExtension.requiredBy(settings.features, usesIcons = false)
-        return MkDocsMarkdownExtension.entries.filter { it in required && it.id !in settings.extensions }
+        val extensions = service<MkDocsMaterialDataService>().extensions
+        val required = extensions.requiredBy(settings.features, usesIcons = false)
+        return extensions.all.filter { it in required && it.id !in settings.extensions }
     }
 
     /**
@@ -64,7 +67,8 @@ object MkDocsMaterialExtensions {
      */
     fun missingRecommended(project: Project, file: YAMLFile): List<MkDocsMarkdownExtension> {
         val settings = settingsOf(project, file) ?: return emptyList()
-        return MkDocsMarkdownExtension.recommended().filter { it.id !in settings.extensions }
+        return service<MkDocsMaterialDataService>().extensions.recommended()
+            .filter { it.id !in settings.extensions }
     }
 
     /**

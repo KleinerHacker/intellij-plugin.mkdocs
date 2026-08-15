@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.schema
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
+import com.intellij.openapi.components.service
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 
 /**
@@ -27,6 +27,9 @@ import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
  * value offered by completion cannot be one the theme has never heard of.
  */
 class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
+
+    /** The theme description the generator splices into the schema. */
+    private val data get() = service<MkDocsMaterialDataService>()
 
     private val generator: MkDocsMaterialSchemaGenerator get() = MkDocsMaterialSchemaGenerator.getInstance()
 
@@ -48,16 +51,16 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: a feature flag is added to [MkDocsMaterialFeatureFlag]. Completion in `theme.features` has to
+     * Use case: a feature flag is added to the bundled feature flag resource. Completion in `theme.features` has to
      * offer it right away, and validation must not report it as unknown, without anybody editing a resource.
      */
     fun `test offers every known feature flag`() {
         val enum = featureItems().getAsJsonArray("enum").map { it.asString }
 
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
+        data.featureFlags.all.forEach { flag ->
             assertTrue("theme.features must offer '${flag.id}'", flag.id in enum)
         }
-        assertEquals("theme.features must offer nothing else", MkDocsMaterialFeatureFlag.entries.size, enum.size)
+        assertEquals("theme.features must offer nothing else", data.featureFlags.all.size, enum.size)
     }
 
     /**
@@ -69,7 +72,7 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
             .map { it.asJsonObject }
             .associate { it.get("const").asString to it.get("description").asString }
 
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
+        data.featureFlags.all.forEach { flag ->
             val description = described[flag.id]
             assertNotNull("'${flag.id}' must carry a description", description)
             assertTrue("the description of '${flag.id}' must not be blank", description!!.isNotBlank())
@@ -152,8 +155,8 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
         val accent = properties.getAsJsonObject("accent").getAsJsonArray("enum").map { it.asString }
         val scheme = properties.getAsJsonObject("scheme").getAsJsonArray("enum").map { it.asString }
 
-        assertEquals("$name.primary", MkDocsMaterialColor.primaries().map { it.id }, primary)
-        assertEquals("$name.accent", MkDocsMaterialColor.accents().map { it.id }, accent)
+        assertEquals("$name.primary", data.colors.primaries().map { it.id }, primary)
+        assertEquals("$name.accent", data.colors.accents().map { it.id }, accent)
         assertEquals("$name.scheme", MkDocsMaterialScheme.entries.map { it.id }, scheme)
     }
 }

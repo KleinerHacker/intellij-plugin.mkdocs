@@ -21,7 +21,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 
@@ -146,7 +146,7 @@ class MkDocsMaterialSchemaGenerator {
 
         val values = JsonArray()
         val described = JsonArray()
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
+        service<MkDocsMaterialDataService>().featureFlags.all.forEach { flag ->
             values.add(flag.id)
             described.add(JsonObject().apply {
                 addProperty("const", flag.id)
@@ -166,8 +166,9 @@ class MkDocsMaterialSchemaGenerator {
      * @param definitions the `definitions` object of the schema being built
      */
     private fun spliceColours(definitions: JsonObject) {
-        val primaries = idsOf(MkDocsMaterialColor.primaries().map { it.id })
-        val accents = idsOf(MkDocsMaterialColor.accents().map { it.id })
+        val colors = service<MkDocsMaterialDataService>().colors
+        val primaries = idsOf(colors.primaries().map { it.id })
+        val accents = idsOf(colors.accents().map { it.id })
         val schemes = idsOf(MkDocsMaterialScheme.entries.map { it.id })
 
         listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->

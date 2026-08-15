@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.material.config
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
+import org.pcsoft.ij.plugin.mkdocs.material.data.color
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -67,8 +67,8 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
 
         assertEquals(MkDocsMaterialSettings.PaletteMode.SINGLE, settings.paletteMode)
         assertEquals(MkDocsMaterialScheme.SLATE, settings.light.scheme)
-        assertEquals(MkDocsMaterialColor.DEEP_PURPLE, settings.light.primary)
-        assertEquals(MkDocsMaterialColor.LIME, settings.light.accent)
+        assertEquals(color("deep-purple"), settings.light.primary)
+        assertEquals(color("lime"), settings.light.accent)
         assertTrue(settings.editable)
     }
 
@@ -103,12 +103,12 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
         assertEquals(MkDocsMaterialSettings.PaletteMode.LIGHT_DARK_TOGGLE, settings.paletteMode)
         assertTrue(settings.editable)
         assertEquals(MkDocsMaterialScheme.DEFAULT, settings.light.scheme)
-        assertEquals(MkDocsMaterialColor.INDIGO, settings.light.primary)
-        assertEquals(MkDocsMaterialColor.PINK, settings.light.accent)
+        assertEquals(color("indigo"), settings.light.primary)
+        assertEquals(color("pink"), settings.light.accent)
         assertEquals("material/brightness-7", settings.light.toggleIcon)
         assertEquals("Switch to dark mode", settings.light.toggleName)
         assertEquals(MkDocsMaterialScheme.SLATE, settings.dark.scheme)
-        assertEquals(MkDocsMaterialColor.BLUE, settings.dark.primary)
+        assertEquals(color("blue"), settings.dark.primary)
         assertNull(settings.dark.accent)
         assertEquals("material/brightness-4", settings.dark.toggleIcon)
         assertEquals("Switch to light mode", settings.dark.toggleName)

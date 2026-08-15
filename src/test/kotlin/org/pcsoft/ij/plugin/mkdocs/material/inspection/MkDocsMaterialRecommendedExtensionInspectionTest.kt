@@ -14,8 +14,9 @@ package org.pcsoft.ij.plugin.mkdocs.material.inspection
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.lang.annotation.HighlightSeverity
+import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -43,7 +44,7 @@ class MkDocsMaterialRecommendedExtensionInspectionTest : BasePlatformTestCase() 
             """.trimIndent()
         )
 
-        assertEquals(MkDocsMarkdownExtension.recommended().size, warnings.size)
+        assertEquals(service<MkDocsMaterialDataService>().extensions.recommended().size, warnings.size)
         assertTrue(warnings.any { it.description.contains("admonition") })
     }
 

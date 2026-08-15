@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=./fonts.schema.json
+#
+# The font families offered for `theme.font.text` and `theme.font.code`.
+#
+# The theme loads whatever is named there from Google Fonts, so any family hosted by Google Fonts is valid —
+# this list is a curated selection for completion and for the drop downs of the settings page, not a closed
+# set. A family that is not listed stays perfectly usable; the settings page falls back to the `custom` entry
+# at the end of this file for it.
+
+# Text fonts.
+- id: Roboto
+  text: true
+  code: false
+
+- id: Open Sans
+  text: true
+  code: false
+
+- id: Lato
+  text: true
+  code: false
+
+- id: Montserrat
+  text: true
+  code: false
+
+- id: Nunito
+  text: true
+  code: false
+
+- id: Nunito Sans
+  text: true
+  code: false
+
+- id: Inter
+  text: true
+  code: false
+
+- id: Poppins
+  text: true
+  code: false
+
+- id: Raleway
+  text: true
+  code: false
+
+- id: Merriweather
+  text: true
+  code: false
+
+- id: Noto Sans
+  text: true
+  code: false
+
+- id: Noto Serif
+  text: true
+  code: false
+
+- id: Source Sans 3
+  text: true
+  code: false
+
+- id: Work Sans
+  text: true
+  code: false
+
+- id: Ubuntu
+  text: true
+  code: false
+
+# Code fonts.
+- id: Roboto Mono
+  text: false
+  code: true
+
+- id: Fira Code
+  text: false
+  code: true
+
+- id: JetBrains Mono
+  text: false
+  code: true
+
+- id: Source Code Pro
+  text: false
+  code: true
+
+- id: IBM Plex Mono
+  text: false
+  code: true
+
+- id: Inconsolata
+  text: false
+  code: true
+
+- id: Space Mono
+  text: false
+  code: true
+
+- id: Ubuntu Mono
+  text: false
+  code: true
+
+# A family that is not part of the curated list, or none at all. Written with an empty id: `theme.font: false`
+# switches font loading off entirely, and a family typed by hand is kept as it stands. Offered for both roles
+# and always listed last.
+- id: ""
+  text: true
+  code: true
+  custom: true

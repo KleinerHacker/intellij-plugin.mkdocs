@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.ui
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.SimpleListCellRenderer
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFont
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 import java.awt.Color
@@ -71,17 +73,20 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
         }
     }
 
+    /** The colours, fonts and schemes the theme offers, read from the bundled `facets/material` resources. */
+    private val data = service<MkDocsMaterialDataService>()
+
     private val lightScheme = schemeCombo()
 
-    private val lightPrimary = colorCombo(MkDocsMaterialColor.primaries())
+    private val lightPrimary = colorCombo(data.colors.primaries())
 
-    private val lightAccent = colorCombo(MkDocsMaterialColor.accents())
+    private val lightAccent = colorCombo(data.colors.accents())
 
     private val darkScheme = schemeCombo()
 
-    private val darkPrimary = colorCombo(MkDocsMaterialColor.primaries())
+    private val darkPrimary = colorCombo(data.colors.primaries())
 
-    private val darkAccent = colorCombo(MkDocsMaterialColor.accents())
+    private val darkAccent = colorCombo(data.colors.accents())
 
     private val fontEnabledBox = JCheckBox(MkDocsBundle.message("material.page.appearance.font.enabled")).apply {
         addActionListener {
@@ -90,9 +95,9 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
         }
     }
 
-    private val fontTextCombo = fontCombo(MkDocsMaterialFont.textFonts())
+    private val fontTextCombo = fontCombo(data.fonts.textFonts())
 
-    private val fontCodeCombo = fontCombo(MkDocsMaterialFont.codeFonts())
+    private val fontCodeCombo = fontCombo(data.fonts.codeFonts())
 
     /** The rows holding the dark palette, hidden while the site has no second palette. */
     private val darkRows = mutableListOf<Row>()

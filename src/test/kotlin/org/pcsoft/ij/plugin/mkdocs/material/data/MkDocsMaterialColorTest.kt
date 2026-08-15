@@ -14,14 +14,30 @@ package org.pcsoft.ij.plugin.mkdocs.material.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
+ *
+ * The service is constructed directly rather than looked up with `service<…>()`: it only reads bundled
+ * classpath resources, so a running application is not needed to exercise what these tests are about.
  */
 class MkDocsMaterialColorTest {
+
+    private val colors = MkDocsMaterialDataService().colors
+
+    /**
+     * Use case: the resource is bundled with the plugin, so a missing or unreadable file would leave every
+     * palette drop down and the generated schema empty without anything failing loudly.
+     */
+    @Test
+    fun `the bundled resource is read`() {
+        assertTrue(colors.all.isNotEmpty())
+        assertNotNull(colors.custom)
+    }
 
     /**
      * Use case: the identifiers become a JSON schema enumeration; a duplicate would make one entry
@@ -29,7 +45,7 @@ class MkDocsMaterialColorTest {
      */
     @Test
     fun `identifiers are unique`() {
-        val ids = MkDocsMaterialColor.entries.map { it.id }
+        val ids = colors.all.map { it.id }
         assertEquals(ids.size, ids.toSet().size)
     }
 
@@ -40,7 +56,7 @@ class MkDocsMaterialColorTest {
     @Test
     fun `identifiers are lower case and hyphenated`() {
         val pattern = Regex("^[a-z]+(-[a-z]+)*$")
-        MkDocsMaterialColor.entries.forEach { color ->
+        colors.all.forEach { color ->
             assertTrue(color.id, pattern.matches(color.id))
             assertFalse(color.id, color.id.contains(' '))
         }
@@ -52,20 +68,32 @@ class MkDocsMaterialColorTest {
      */
     @Test
     fun `every colour is usable in at least one role`() {
-        MkDocsMaterialColor.entries.forEach { color ->
+        colors.all.forEach { color ->
             assertTrue(color.id, color.primary || color.accent)
         }
     }
 
     /**
      * Use case: the swatch painted next to a colour is built from the RGB value, so it has to stay inside
-     * the 24 bit range — a value outside it would paint a wrong or transparent swatch.
+     * the 24 bit range — a value outside it would paint a wrong or transparent swatch. The resource writes
+     * the value as `#RRGGBB`, and a malformed one is dropped rather than turned into a wrong colour.
      */
     @Test
     fun `hex values are plain RGB`() {
-        MkDocsMaterialColor.entries.forEach { color ->
+        colors.all.forEach { color ->
             assertTrue(color.id, color.hex in 0x000000..0xFFFFFF)
         }
+    }
+
+    /**
+     * Use case: the hex value of the resource has to survive the way into the model — a colour parsed with
+     * the digits transposed would paint the wrong swatch without any test noticing.
+     */
+    @Test
+    fun `hex values are parsed as written`() {
+        assertEquals(0xF44336, colors.byId("red")?.hex)
+        assertEquals(0x000000, colors.byId("black")?.hex)
+        assertEquals(0xFFFFFF, colors.byId("white")?.hex)
     }
 
     /**
@@ -74,11 +102,11 @@ class MkDocsMaterialColorTest {
      */
     @Test
     fun `byId round-trips and rejects unknown identifiers`() {
-        MkDocsMaterialColor.entries.forEach { color ->
-            assertEquals(color, MkDocsMaterialColor.byId(color.id))
+        colors.all.forEach { color ->
+            assertEquals(color, colors.byId(color.id))
         }
-        assertNull(MkDocsMaterialColor.byId("deep purple"))
-        assertNull(MkDocsMaterialColor.byId("turquoise"))
+        assertNull(colors.byId("deep purple"))
+        assertNull(colors.byId("turquoise"))
     }
 
     /**
@@ -87,11 +115,14 @@ class MkDocsMaterialColorTest {
      */
     @Test
     fun `primaries and accents differ where Material says they do`() {
-        assertTrue(MkDocsMaterialColor.primaries().contains(MkDocsMaterialColor.BLUE_GREY))
-        assertFalse(MkDocsMaterialColor.accents().contains(MkDocsMaterialColor.BLUE_GREY))
-        assertFalse(MkDocsMaterialColor.accents().contains(MkDocsMaterialColor.BLACK))
-        assertFalse(MkDocsMaterialColor.accents().contains(MkDocsMaterialColor.WHITE))
-        assertTrue(MkDocsMaterialColor.accents().contains(MkDocsMaterialColor.CUSTOM))
-        assertTrue(MkDocsMaterialColor.accents().size < MkDocsMaterialColor.primaries().size)
+        val blueGrey = colors.byId("blue-grey")
+        val black = colors.byId("black")
+        val white = colors.byId("white")
+        assertTrue(colors.primaries().contains(blueGrey))
+        assertFalse(colors.accents().contains(blueGrey))
+        assertFalse(colors.accents().contains(black))
+        assertFalse(colors.accents().contains(white))
+        assertTrue(colors.accents().contains(colors.custom))
+        assertTrue(colors.accents().size < colors.primaries().size)
     }
 }

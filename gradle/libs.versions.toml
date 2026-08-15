@@ -14,6 +14,10 @@ junit = { module = "junit:junit", version.ref = "junit" }
 # coroutine debug probes with "Debug metadata version mismatch" during platform tests.
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+# Unused on purpose. The plugin reads YAML with the Jackson the platform bundles as IDE jars, wired up with
+# `bundledLibrary(...)` in build.gradle.kts, so no Jackson artifact is resolved from Maven or shipped. These
+# entries are kept as the fallback should the platform ever stop bundling the libraries; note that the version
+# here is ahead of the bundled 2.19.0 and would have to be reconciled before switching over.
 jackson-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 

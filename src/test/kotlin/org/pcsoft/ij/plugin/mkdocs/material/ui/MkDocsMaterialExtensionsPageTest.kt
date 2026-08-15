@@ -14,8 +14,8 @@ package org.pcsoft.ij.plugin.mkdocs.material.ui
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
+import org.pcsoft.ij.plugin.mkdocs.material.data.extension
+import org.pcsoft.ij.plugin.mkdocs.material.data.flag
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -46,7 +46,7 @@ class MkDocsMaterialExtensionsPageTest : BasePlatformTestCase() {
         val page = MkDocsMaterialExtensionsPage()
         page.reset(MkDocsMaterialSettings.EMPTY)
 
-        page.setEnabled(MkDocsMarkdownExtension.ADMONITION, true)
+        page.setEnabled(extension("admonition"), true)
 
         assertTrue(page.isModified(MkDocsMaterialSettings.EMPTY))
         assertEquals(setOf("admonition"), page.applyTo(MkDocsMaterialSettings.EMPTY).extensions)
@@ -61,7 +61,7 @@ class MkDocsMaterialExtensionsPageTest : BasePlatformTestCase() {
         val settings = MkDocsMaterialSettings(extensions = setOf("mdx_truly_sane_lists"))
         page.reset(settings)
 
-        page.setEnabled(MkDocsMarkdownExtension.ADMONITION, true)
+        page.setEnabled(extension("admonition"), true)
 
         assertEquals(setOf("mdx_truly_sane_lists", "admonition"), page.applyTo(settings).extensions)
     }
@@ -75,8 +75,7 @@ class MkDocsMaterialExtensionsPageTest : BasePlatformTestCase() {
         val pages = MkDocsMaterialSettingsPages()
         pages.reset(MkDocsMaterialSettings.EMPTY)
 
-        val forced = MkDocsMaterialFeatureFlag.CONTENT_CODE_ANNOTATE.requiredExtensions
-            .mapNotNull { MkDocsMarkdownExtension.byId(it) }
+        val forced = flag("content.code.annotate").requiredExtensions.map { extension(it) }
         assertTrue("the flag has to force something, or this test says nothing", forced.isNotEmpty())
         forced.forEach {
             assertNotSame(
@@ -85,7 +84,7 @@ class MkDocsMaterialExtensionsPageTest : BasePlatformTestCase() {
             )
         }
 
-        pages.features.setSelectedForTest(MkDocsMaterialFeatureFlag.CONTENT_CODE_ANNOTATE, true)
+        pages.features.setSelectedForTest(flag("content.code.annotate"), true)
 
         forced.forEach {
             assertEquals(MkDocsMaterialExtensionsPage.Status.REQUIRED, pages.extensions.statusOf(it))

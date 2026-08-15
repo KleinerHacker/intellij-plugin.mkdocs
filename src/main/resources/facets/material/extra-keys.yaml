@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=./extra-keys.schema.json
+#
+# The keys below `extra` the *Material for MkDocs* theme reads.
+#
+# Described as data rather than as a class per key: the description is what the generated JSON schema and the
+# completion need, and neither cares about behaviour.
+#
+# `extra.version` and `extra.alternate` are deliberately absent from `fields`: the first belongs to *mike*, the
+# second to the I18N support, and both are described by the features of their own. They are listed under
+# `reserved` so a schema built from this model leaves them alone instead of reporting them as unknown.
+
+# The keys other features own.
+reserved:
+  - version
+  - alternate
+
+fields:
+
+  # extra.social — the icons linking to the accounts of the project, shown in the footer.
+  - name: social
+    kind: SEQUENCE_OF_MAPPINGS
+    descriptionKey: material.extra.social
+    children:
+      - name: icon
+        kind: STRING
+        descriptionKey: material.extra.social.icon
+      - name: link
+        kind: STRING
+        descriptionKey: material.extra.social.link
+      - name: name
+        kind: STRING
+        descriptionKey: material.extra.social.name
+
+  # extra.analytics — the site analytics provider and the feedback widget below each page.
+  - name: analytics
+    kind: MAPPING
+    descriptionKey: material.extra.analytics
+    children:
+      - name: provider
+        kind: STRING
+        descriptionKey: material.extra.analytics.provider
+      - name: property
+        kind: STRING
+        descriptionKey: material.extra.analytics.property
+      - name: feedback
+        kind: MAPPING
+        descriptionKey: material.extra.analytics.feedback
+        children:
+          - name: title
+            kind: STRING
+            descriptionKey: material.extra.analytics.feedback.title
+          - name: ratings
+            kind: SEQUENCE_OF_MAPPINGS
+            descriptionKey: material.extra.analytics.feedback.ratings
+            children:
+              - name: icon
+                kind: STRING
+                descriptionKey: material.extra.analytics.feedback.ratings.icon
+              - name: name
+                kind: STRING
+                descriptionKey: material.extra.analytics.feedback.ratings.name
+              - name: data
+                kind: STRING
+                descriptionKey: material.extra.analytics.feedback.ratings.data
+              - name: note
+                kind: STRING
+                descriptionKey: material.extra.analytics.feedback.ratings.note
+
+  # extra.consent — the cookie consent dialogue shown before analytics are loaded.
+  - name: consent
+    kind: MAPPING
+    descriptionKey: material.extra.consent
+    children:
+      - name: title
+        kind: STRING
+        descriptionKey: material.extra.consent.title
+      - name: description
+        kind: STRING
+        descriptionKey: material.extra.consent.description
+      - name: cookies
+        kind: MAP_OF_STRINGS
+        descriptionKey: material.extra.consent.cookies
+      - name: actions
+        kind: SEQUENCE_OF_STRINGS
+        descriptionKey: material.extra.consent.actions
+
+  # extra.generator — whether the "Made with Material for MkDocs" notice is rendered.
+  - name: generator
+    kind: BOOLEAN
+    descriptionKey: material.extra.generator
+
+  # extra.status — the badges a page may carry through its `status` front matter key.
+  - name: status
+    kind: MAP_OF_STRINGS
+    descriptionKey: material.extra.status

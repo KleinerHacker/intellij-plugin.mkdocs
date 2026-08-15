@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.config
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.yaml.YAMLUtil
@@ -19,7 +20,8 @@ import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.YAMLScalar
 import org.jetbrains.yaml.psi.YAMLSequence
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig.readPalette
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigEditScope
@@ -248,11 +250,12 @@ object MkDocsMaterialConfig {
      */
     private fun entryOf(mapping: YAMLMapping): MkDocsMaterialSettings.PaletteEntry {
         val toggle = mapping.keyValues.firstOrNull { it.keyText.trim() == KEY_TOGGLE }?.value as? YAMLMapping
+        val colors = service<MkDocsMaterialDataService>().colors
         return MkDocsMaterialSettings.PaletteEntry(
             scheme = scalarOf(mapping, KEY_SCHEME)?.let { MkDocsMaterialScheme.byId(it) }
                 ?: MkDocsMaterialScheme.DEFAULT,
-            primary = scalarOf(mapping, KEY_PRIMARY)?.let { MkDocsMaterialColor.byId(it) },
-            accent = scalarOf(mapping, KEY_ACCENT)?.let { MkDocsMaterialColor.byId(it) },
+            primary = scalarOf(mapping, KEY_PRIMARY)?.let { colors.byId(it) },
+            accent = scalarOf(mapping, KEY_ACCENT)?.let { colors.byId(it) },
             toggleIcon = toggle?.let { scalarOf(it, KEY_ICON) },
             toggleName = toggle?.let { scalarOf(it, KEY_NAME) },
         )

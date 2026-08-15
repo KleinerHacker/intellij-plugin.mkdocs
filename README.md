@@ -111,7 +111,8 @@ Single-project Gradle build — the root project *is* the publishable plugin.
 ├── src/main
 │   ├── kotlin/             Kotlin production sources
 │   └── resources/
-│       └── META-INF/       plugin.xml and plugin logo
+│       ├── META-INF/       plugin.xml and plugin logo
+│       └── facets/         What a feature offers, as YAML next to its JSON schema
 ├── build.gradle.kts        The entire build: plugin, quality gates and docs tasks
 ├── gradle.properties       Gradle configuration properties
 ├── settings.gradle.kts     Gradle project settings

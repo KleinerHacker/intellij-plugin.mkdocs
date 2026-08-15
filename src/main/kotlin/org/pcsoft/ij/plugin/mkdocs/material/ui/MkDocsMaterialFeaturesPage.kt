@@ -12,11 +12,13 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.ui
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.panel
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureGroup
 import javax.swing.JCheckBox
@@ -47,8 +49,11 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
         const val ID: String = "material.features"
     }
 
+    /** The flags the theme knows, read from the bundled `facets/material` resources. */
+    private val featureFlags = service<MkDocsMaterialDataService>().featureFlags
+
     private val checkBoxes: Map<MkDocsMaterialFeatureFlag, JCheckBox> =
-        MkDocsMaterialFeatureFlag.entries.associateWith { flag ->
+        featureFlags.all.associateWith { flag ->
             JCheckBox(flag.id).apply {
                 addActionListener {
                     enforceRequirements()
@@ -63,7 +68,7 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
 
     override fun createContent(): DialogPanel = panel {
         for (group in MkDocsMaterialFeatureGroup.entries) {
-            val flags = MkDocsMaterialFeatureFlag.entries.filter { it.group == group }
+            val flags = featureFlags.all.filter { it.group == group }
             if (flags.isEmpty()) continue
             group(MkDocsBundle.messageOrDefault(group.titleKey, group.name) ?: group.name) {
                 for (flag in flags) {
@@ -83,7 +88,7 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
     }.also { updateAvailability() }
 
     override fun reset(settings: MkDocsMaterialSettings) {
-        unknown = settings.features.filter { MkDocsMaterialFeatureFlag.byId(it) == null }.toSet()
+        unknown = settings.features.filter { featureFlags.byId(it) == null }.toSet()
         checkBoxes.forEach { (flag, box) -> box.isSelected = flag.id in settings.features }
         updateAvailability()
     }
@@ -122,7 +127,7 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
                 box.toolTipText = insidersHint(flag)
                 return@forEach
             }
-            val blocker = flag.conflicts().firstOrNull { isSelected(it.id) }
+            val blocker = featureFlags.conflictsOf(flag).firstOrNull { isSelected(it.id) }
             val missing = flag.requires.firstOrNull { !isSelected(it) }
             box.isEnabled = blocker == null && missing == null
             box.toolTipText = when {
@@ -139,7 +144,7 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
 
     /** Tells whether the flag written as [id] is currently ticked. */
     private fun isSelected(id: String): Boolean =
-        MkDocsMaterialFeatureFlag.byId(id)?.let { checkBoxes[it]?.isSelected } == true
+        featureFlags.byId(id)?.let { checkBoxes[it]?.isSelected } == true
 
     /**
      * Ticks or unticks [flag] as if the user had clicked its box.

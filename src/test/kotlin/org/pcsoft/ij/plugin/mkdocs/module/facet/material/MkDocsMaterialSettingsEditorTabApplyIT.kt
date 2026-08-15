@@ -29,8 +29,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.HeavyPlatformTestCase
 import com.intellij.testFramework.VfsTestUtil
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
+import org.pcsoft.ij.plugin.mkdocs.material.data.color
+import org.pcsoft.ij.plugin.mkdocs.material.data.flag
 import org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialSettingsPages
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
@@ -71,7 +71,7 @@ class MkDocsMaterialSettingsEditorTabApplyIT : HeavyPlatformTestCase() {
         val page = pages()
 
         val shown = page.set.applyTo(MkDocsMaterialSettings.EMPTY)
-        assertEquals(MkDocsMaterialColor.INDIGO, shown.light.primary)
+        assertEquals(color("indigo"), shown.light.primary)
         assertEquals(MkDocsMaterialSettings.PaletteMode.SINGLE, shown.paletteMode)
         assertEquals(setOf("admonition"), shown.extensions)
         page.tabs.forEach { assertFalse("nothing may be modified after reset", it.isModified) }
@@ -86,7 +86,7 @@ class MkDocsMaterialSettingsEditorTabApplyIT : HeavyPlatformTestCase() {
         val configFile = createSite(siteText)
         val page = pages()
 
-        page.set.appearance.setPrimaryForTest(MkDocsMaterialColor.TEAL)
+        page.set.appearance.setPrimaryForTest(color("teal"))
 
         val tab = page.tabs[Tab.APPEARANCE.ordinal]
         assertTrue("the tab must notice the change", tab.isModified)
@@ -109,7 +109,7 @@ class MkDocsMaterialSettingsEditorTabApplyIT : HeavyPlatformTestCase() {
         val configFile = createSite(siteText)
         val page = pages()
 
-        page.set.features.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_TABS, true)
+        page.set.features.setSelectedForTest(flag("navigation.tabs"), true)
 
         val tab = page.tabs[Tab.FEATURES.ordinal]
         assertTrue(tab.isModified)

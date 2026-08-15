@@ -27,6 +27,8 @@ class MkDocsMaterialBundleKeysTest {
 
     private val bundle: ResourceBundle = ResourceBundle.getBundle("messages.MkDocsBundle")
 
+    private val data = MkDocsMaterialDataService()
+
     private fun assertResolves(key: String) {
         assertTrue("missing bundle key: $key", bundle.containsKey(key))
         assertTrue("blank bundle value: $key", bundle.getString(key).isNotBlank())
@@ -45,7 +47,7 @@ class MkDocsMaterialBundleKeysTest {
      */
     @Test
     fun `feature descriptions resolve`() {
-        MkDocsMaterialFeatureFlag.entries.forEach { assertResolves(it.descriptionKey) }
+        data.featureFlags.all.forEach { assertResolves(it.descriptionKey) }
     }
 
     /**
@@ -61,7 +63,7 @@ class MkDocsMaterialBundleKeysTest {
      */
     @Test
     fun `extension descriptions resolve`() {
-        MkDocsMarkdownExtension.entries.forEach { assertResolves(it.descriptionKey) }
+        data.extensions.all.forEach { assertResolves(it.descriptionKey) }
     }
 
     /**
@@ -84,6 +86,6 @@ class MkDocsMaterialBundleKeysTest {
             assertResolves(field.descriptionKey)
             field.children.forEach(::walk)
         }
-        MkDocsMaterialExtraKeys.ALL.forEach(::walk)
+        data.extraKeys.all.forEach(::walk)
     }
 }

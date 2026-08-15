@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.inspection
 
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.lang.documentation.DocumentationMarkup
+import com.intellij.openapi.components.service
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
@@ -24,6 +25,7 @@ import org.jetbrains.yaml.psi.YAMLSequenceItem
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 
 /**
  * Explains a Markdown extension listed under `markdown_extensions` in the quick documentation popup.
@@ -109,7 +111,7 @@ class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvid
             is YAMLScalar -> value.textValue.trim()
             else -> item.keysValues.firstOrNull()?.keyText?.trim()
         } ?: return null
-        return MkDocsMarkdownExtension.byId(id)
+        return service<MkDocsMaterialDataService>().extensions.byId(id)
     }
 
     private companion object {

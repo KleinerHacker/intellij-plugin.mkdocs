@@ -14,8 +14,8 @@ package org.pcsoft.ij.plugin.mkdocs.material.ui
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
+import org.pcsoft.ij.plugin.mkdocs.material.data.color
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -36,14 +36,14 @@ class MkDocsMaterialAppearancePageTest : BasePlatformTestCase() {
             paletteMode = MkDocsMaterialSettings.PaletteMode.LIGHT_DARK_TOGGLE,
             light = MkDocsMaterialSettings.PaletteEntry(
                 scheme = MkDocsMaterialScheme.DEFAULT,
-                primary = MkDocsMaterialColor.INDIGO,
-                accent = MkDocsMaterialColor.PINK,
+                primary = color("indigo"),
+                accent = color("pink"),
                 toggleIcon = "material/brightness-7",
                 toggleName = "Switch to dark mode",
             ),
             dark = MkDocsMaterialSettings.PaletteEntry(
                 scheme = MkDocsMaterialScheme.SLATE,
-                primary = MkDocsMaterialColor.TEAL,
+                primary = color("teal"),
             ),
             fontText = "Inter",
             fontCode = "Fira Code",
@@ -65,19 +65,19 @@ class MkDocsMaterialAppearancePageTest : BasePlatformTestCase() {
         val settings = MkDocsMaterialSettings(
             paletteMode = MkDocsMaterialSettings.PaletteMode.SINGLE,
             light = MkDocsMaterialSettings.PaletteEntry(
-                primary = MkDocsMaterialColor.INDIGO,
+                primary = color("indigo"),
                 toggleName = "Switch to dark mode",
             ),
         )
         page.reset(settings)
 
-        page.setPrimaryForTest(MkDocsMaterialColor.TEAL)
+        page.setPrimaryForTest(color("teal"))
         page.setPaletteModeForTest(MkDocsMaterialSettings.PaletteMode.LIGHT_DARK_TOGGLE)
 
         val applied = page.applyTo(settings)
         assertTrue(page.isModified(settings))
         assertEquals(MkDocsMaterialSettings.PaletteMode.LIGHT_DARK_TOGGLE, applied.paletteMode)
-        assertEquals(MkDocsMaterialColor.TEAL, applied.light.primary)
+        assertEquals(color("teal"), applied.light.primary)
         assertEquals("Switch to dark mode", applied.light.toggleName)
     }
 
@@ -103,19 +103,19 @@ class MkDocsMaterialAppearancePageTest : BasePlatformTestCase() {
         val page = MkDocsMaterialAppearancePage()
         val settings = MkDocsMaterialSettings(
             paletteMode = MkDocsMaterialSettings.PaletteMode.NONE,
-            light = MkDocsMaterialSettings.PaletteEntry(primary = MkDocsMaterialColor.RED),
+            light = MkDocsMaterialSettings.PaletteEntry(primary = color("red")),
             editable = false,
         )
         page.reset(settings)
 
         assertFalse("the palette must not accept input", page.isPaletteEditableForTest())
 
-        page.setPrimaryForTest(MkDocsMaterialColor.TEAL)
+        page.setPrimaryForTest(color("teal"))
         page.setPaletteModeForTest(MkDocsMaterialSettings.PaletteMode.SINGLE)
 
         val applied = page.applyTo(settings)
         assertEquals(MkDocsMaterialSettings.PaletteMode.NONE, applied.paletteMode)
-        assertEquals(MkDocsMaterialColor.RED, applied.light.primary)
+        assertEquals(color("red"), applied.light.primary)
         assertFalse(page.isModified(settings))
     }
 

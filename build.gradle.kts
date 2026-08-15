@@ -118,10 +118,10 @@ dependencies {
 
     testImplementation(libs.junit)
 
-    // Jackson (libs.jackson.yaml / libs.jackson.kotlin) is deliberately NOT bundled yet: the plugin has no
-    // code that needs it, and shipping it makes the Plugin Verifier report dozens of unresolved references
-    // inside the jars' multi-release internals. Add it back here once something actually parses YAML —
-    // the catalog entries and the Kotlin constraints above are already in place for that.
+    // Jackson is NOT taken from Maven (libs.jackson.yaml / libs.jackson.kotlin stay unused in the catalog):
+    // shipping those jars makes the Plugin Verifier report dozens of unresolved references inside their
+    // multi-release internals. It needs no declaration at all — the platform dependency below already brings
+    // it along, the same way it brings gson.
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
@@ -159,6 +159,11 @@ dependencies {
         // excluded ("dependency on 'IDEA CORE' which cannot be loaded") — every platform feature test then
         // fails with no language support.
         bundledPlugin("intellij.libraries.misc.plugin")
+
+        // Nothing is declared here for Jackson on purpose. It arrives transitively with the platform
+        // dependency above, exactly as gson does — both are IDE libraries the platform itself loads. Naming
+        // them with `bundledLibrary(…)` compiles too, but the Gradle plugin warns against it: reaching into
+        // the platform's own jars is not a supported dependency path.
     }
 }
 

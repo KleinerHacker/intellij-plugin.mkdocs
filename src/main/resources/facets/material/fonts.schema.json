@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/fonts.schema.json",
+  "title": "Material for MkDocs fonts",
+  "description": "The curated font families offered for theme.font.text and theme.font.code.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "text", "code"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The family name as written into the configuration file and requested from Google Fonts. Empty for the custom placeholder."
+      },
+      "text": {
+        "type": "boolean",
+        "description": "Whether the family is offered for theme.font.text."
+      },
+      "code": {
+        "type": "boolean",
+        "description": "Whether the family is offered for theme.font.code."
+      },
+      "custom": {
+        "type": "boolean",
+        "description": "Whether this entry is the placeholder for a family outside the curated list rather than a family of its own.",
+        "default": false
+      }
+    }
+  }
+}

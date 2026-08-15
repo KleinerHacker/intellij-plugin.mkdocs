@@ -20,8 +20,24 @@ import org.junit.Test
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
+ *
+ * The service is constructed directly rather than looked up with `service<…>()`: it only reads bundled
+ * classpath resources, so a running application is not needed to exercise what these tests are about.
  */
 class MkDocsMaterialFeatureFlagTest {
+
+    private val data = MkDocsMaterialDataService()
+    private val featureFlags = data.featureFlags
+
+    /**
+     * Use case: the resource is bundled with the plugin, so a missing or unreadable file would leave the
+     * features page empty and drop every flag out of the generated schema.
+     */
+    @Test
+    fun `the bundled resource is read`() {
+        assertTrue(featureFlags.all.isNotEmpty())
+        assertNotNull(featureFlags.byId("navigation.tabs"))
+    }
 
     /**
      * Use case: the identifiers end up in a JSON schema enumeration and in completion. A duplicate would make
@@ -29,7 +45,7 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `identifiers are unique`() {
-        val ids = MkDocsMaterialFeatureFlag.entries.map { it.id }
+        val ids = featureFlags.all.map { it.id }
         assertEquals(ids.size, ids.toSet().size)
     }
 
@@ -40,7 +56,7 @@ class MkDocsMaterialFeatureFlagTest {
     @Test
     fun `identifiers are lower case dotted names`() {
         val pattern = Regex("^[a-z]+(\\.[a-z]+)*$")
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
+        featureFlags.all.forEach { flag ->
             assertTrue(flag.id, pattern.matches(flag.id))
         }
     }
@@ -51,11 +67,11 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `conflicts are symmetric`() {
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
-            flag.conflicts().forEach { other ->
+        featureFlags.all.forEach { flag ->
+            featureFlags.conflictsOf(flag).forEach { other ->
                 assertTrue(
                     "${other.id} does not conflict back with ${flag.id}",
-                    other.conflicts().contains(flag)
+                    featureFlags.conflictsOf(other).contains(flag)
                 )
             }
         }
@@ -67,8 +83,8 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `no flag conflicts with itself`() {
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
-            assertTrue(flag.id, !flag.conflicts().contains(flag))
+        featureFlags.all.forEach { flag ->
+            assertTrue(flag.id, !featureFlags.conflictsOf(flag).contains(flag))
         }
     }
 
@@ -78,17 +94,13 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `documented conflicts are known from both sides`() {
-        assertTrue(
-            MkDocsMaterialFeatureFlag.NAVIGATION_EXPAND.conflicts()
-                .contains(MkDocsMaterialFeatureFlag.NAVIGATION_PRUNE)
-        )
-        assertTrue(
-            MkDocsMaterialFeatureFlag.NAVIGATION_PRUNE.conflicts()
-                .contains(MkDocsMaterialFeatureFlag.NAVIGATION_EXPAND)
-        )
-        assertTrue(
-            MkDocsMaterialFeatureFlag.TOC_FOLLOW.conflicts().contains(MkDocsMaterialFeatureFlag.TOC_INTEGRATE)
-        )
+        val expand = flag("navigation.expand")
+        val prune = flag("navigation.prune")
+        val follow = flag("toc.follow")
+        val integrate = flag("toc.integrate")
+        assertTrue(featureFlags.conflictsOf(expand).contains(prune))
+        assertTrue(featureFlags.conflictsOf(prune).contains(expand))
+        assertTrue(featureFlags.conflictsOf(follow).contains(integrate))
     }
 
     /**
@@ -97,12 +109,12 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `every requirement names a known flag`() {
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
+        featureFlags.all.forEach { flag ->
             flag.requires.forEach { id ->
-                assertNotNull("${flag.id} requires unknown $id", MkDocsMaterialFeatureFlag.byId(id))
+                assertNotNull("${flag.id} requires unknown $id", featureFlags.byId(id))
             }
             flag.conflictsWith.forEach { id ->
-                assertNotNull("${flag.id} conflicts with unknown $id", MkDocsMaterialFeatureFlag.byId(id))
+                assertNotNull("${flag.id} conflicts with unknown $id", featureFlags.byId(id))
             }
         }
     }
@@ -113,9 +125,9 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `every forced extension names a known extension`() {
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
+        featureFlags.all.forEach { flag ->
             flag.requiredExtensions.forEach { id ->
-                assertNotNull("${flag.id} requires unknown extension $id", MkDocsMarkdownExtension.byId(id))
+                assertNotNull("${flag.id} requires unknown extension $id", data.extensions.byId(id))
             }
         }
     }
@@ -126,21 +138,26 @@ class MkDocsMaterialFeatureFlagTest {
      */
     @Test
     fun `byId round-trips and rejects unknown identifiers`() {
-        MkDocsMaterialFeatureFlag.entries.forEach { flag ->
-            assertEquals(flag, MkDocsMaterialFeatureFlag.byId(flag.id))
+        featureFlags.all.forEach { flag ->
+            assertEquals(flag, featureFlags.byId(flag.id))
         }
-        assertNull(MkDocsMaterialFeatureFlag.byId("navigation.nonsense"))
-        assertNull(MkDocsMaterialFeatureFlag.byId(""))
+        assertNull(featureFlags.byId("navigation.nonsense"))
+        assertNull(featureFlags.byId(""))
     }
 
     /**
-     * Use case: completion offers the identifiers, and it offers each one exactly once, in declaration order.
+     * Use case: completion offers the identifiers, and it offers each one exactly once, in the order of the
+     * resource.
      */
     @Test
     fun `allIds lists every flag once`() {
-        val allIds = MkDocsMaterialFeatureFlag.allIds()
-        assertEquals(MkDocsMaterialFeatureFlag.entries.size, allIds.size)
+        val allIds = featureFlags.allIds()
+        assertEquals(featureFlags.all.size, allIds.size)
         assertEquals(allIds.size, allIds.toSet().size)
-        assertEquals(MkDocsMaterialFeatureFlag.entries.first().id, allIds.first())
+        assertEquals(featureFlags.all.first().id, allIds.first())
     }
+
+    /** The flag written as [id], failing the test when the resource does not describe it. */
+    private fun flag(id: String): MkDocsMaterialFeatureFlag =
+        requireNotNull(featureFlags.byId(id)) { "the bundled resource does not describe $id" }
 }

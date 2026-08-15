@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/markdown-extensions.schema.json",
+  "title": "Material for MkDocs markdown extensions",
+  "description": "The Markdown extensions the Material for MkDocs theme builds upon, as listed under markdown_extensions.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "level", "descriptionKey", "docUrl"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The identifier as it appears under markdown_extensions, for example pymdownx.superfences."
+      },
+      "pipPackage": {
+        "type": "string",
+        "description": "The PyPI package providing the extension. Absent if Python Markdown itself ships it."
+      },
+      "level": {
+        "type": "string",
+        "description": "How strongly the extension is tied to the configuration of the site.",
+        "enum": ["REQUIRED_BY_FEATURE", "RECOMMENDED"]
+      },
+      "descriptionKey": {
+        "type": "string",
+        "description": "The bundle key of the one line description shown in QuickDoc and in the settings page."
+      },
+      "docUrl": {
+        "type": "string",
+        "description": "The address of the documentation of the extension, offered as a link in QuickDoc.",
+        "format": "uri"
+      },
+      "defaultOptions": {
+        "type": "array",
+        "description": "The options the quick fix writes below the extension when it adds it, in order.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["key", "value"],
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The name of the option."
+            },
+            "value": {
+              "type": "string",
+              "description": "The value written for the option, verbatim."
+            }
+          }
+        }
+      },
+      "iconShorthand": {
+        "type": "boolean",
+        "description": "Whether this extension is the one the icon and emoji shorthands of the theme need.",
+        "default": false
+      }
+    }
+  }
+}

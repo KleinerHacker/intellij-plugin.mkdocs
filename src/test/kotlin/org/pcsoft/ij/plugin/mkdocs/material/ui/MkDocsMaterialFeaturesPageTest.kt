@@ -14,7 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.ui
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
+import org.pcsoft.ij.plugin.mkdocs.material.data.flag
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -46,7 +46,7 @@ class MkDocsMaterialFeaturesPageTest : BasePlatformTestCase() {
         val page = MkDocsMaterialFeaturesPage()
         page.reset(MkDocsMaterialSettings.EMPTY)
 
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_TABS, true)
+        page.setSelectedForTest(flag("navigation.tabs"), true)
 
         assertTrue(page.isModified(MkDocsMaterialSettings.EMPTY))
         assertEquals(setOf("navigation.tabs"), page.applyTo(MkDocsMaterialSettings.EMPTY).features)
@@ -60,13 +60,13 @@ class MkDocsMaterialFeaturesPageTest : BasePlatformTestCase() {
         val page = MkDocsMaterialFeaturesPage()
         page.reset(MkDocsMaterialSettings.EMPTY)
 
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_EXPAND, true)
+        page.setSelectedForTest(flag("navigation.expand"), true)
 
-        val blocked = page.checkBoxForTest(MkDocsMaterialFeatureFlag.NAVIGATION_PRUNE)
+        val blocked = page.checkBoxForTest(flag("navigation.prune"))
         assertFalse("the conflicting flag must be unavailable", blocked.isEnabled)
         assertTrue("the tooltip names the blocker", blocked.toolTipText!!.contains("navigation.expand"))
 
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_EXPAND, false)
+        page.setSelectedForTest(flag("navigation.expand"), false)
         assertTrue("and is available again once the blocker is gone", blocked.isEnabled)
     }
 
@@ -78,15 +78,15 @@ class MkDocsMaterialFeaturesPageTest : BasePlatformTestCase() {
         val page = MkDocsMaterialFeaturesPage()
         page.reset(MkDocsMaterialSettings.EMPTY)
 
-        val dependent = page.checkBoxForTest(MkDocsMaterialFeatureFlag.NAVIGATION_INSTANT_PROGRESS)
+        val dependent = page.checkBoxForTest(flag("navigation.instant.progress"))
         assertFalse("unavailable without its prerequisite", dependent.isEnabled)
         assertTrue(dependent.toolTipText!!.contains("navigation.instant"))
 
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_INSTANT, true)
+        page.setSelectedForTest(flag("navigation.instant"), true)
         assertTrue(dependent.isEnabled)
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_INSTANT_PROGRESS, true)
+        page.setSelectedForTest(flag("navigation.instant.progress"), true)
 
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.NAVIGATION_INSTANT, false)
+        page.setSelectedForTest(flag("navigation.instant"), false)
         assertFalse("the dependent goes with its prerequisite", dependent.isSelected)
         assertEquals(emptySet<String>(), page.applyTo(MkDocsMaterialSettings.EMPTY).features)
     }
@@ -100,7 +100,7 @@ class MkDocsMaterialFeaturesPageTest : BasePlatformTestCase() {
         val settings = MkDocsMaterialSettings(features = setOf("navigation.tabs", "future.flag"))
         page.reset(settings)
 
-        page.setSelectedForTest(MkDocsMaterialFeatureFlag.TOC_FOLLOW, true)
+        page.setSelectedForTest(flag("toc.follow"), true)
 
         assertEquals(
             setOf("navigation.tabs", "toc.follow", "future.flag"),
@@ -119,8 +119,8 @@ class MkDocsMaterialFeaturesPageTest : BasePlatformTestCase() {
 
         page.reset(settings)
 
-        assertTrue(page.checkBoxForTest(MkDocsMaterialFeatureFlag.NAVIGATION_EXPAND).isSelected)
-        assertTrue(page.checkBoxForTest(MkDocsMaterialFeatureFlag.NAVIGATION_PRUNE).isSelected)
+        assertTrue(page.checkBoxForTest(flag("navigation.expand")).isSelected)
+        assertTrue(page.checkBoxForTest(flag("navigation.prune")).isSelected)
         assertEquals(settings, page.applyTo(settings))
     }
 }
