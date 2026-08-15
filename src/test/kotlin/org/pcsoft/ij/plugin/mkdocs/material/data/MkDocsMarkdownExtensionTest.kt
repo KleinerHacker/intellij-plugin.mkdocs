@@ -69,20 +69,23 @@ class MkDocsMarkdownExtensionTest {
     }
 
     /**
-     * Use case: code annotations only render with super fences plus the two extensions that let the theme
-     * attach markup to the block, so enabling the feature forces exactly those three.
+     * Use case: code annotations render inside a code block with super fences alone. `attr_list` and
+     * `md_in_html` are what annotations outside of code blocks would additionally need, which is a choice made
+     * on a page — a site ticking the feature without them is correct and must not be reported.
      */
     @Test
-    fun `code annotations force super fences and its companions`() {
+    fun `code annotations force super fences only`() {
         val required = MkDocsMarkdownExtension.requiredBy(setOf("content.code.annotate"), false)
-        assertEquals(
-            setOf(
-                MkDocsMarkdownExtension.PYMDOWNX_SUPERFENCES,
-                MkDocsMarkdownExtension.ATTR_LIST,
-                MkDocsMarkdownExtension.MD_IN_HTML
-            ),
-            required
-        )
+        assertEquals(setOf(MkDocsMarkdownExtension.PYMDOWNX_SUPERFENCES), required)
+    }
+
+    /**
+     * Use case: `content.tooltips` restyles tooltips that are already on the page, so it forces no extension
+     * of its own — a site enabling it without `attr_list` renders exactly as intended.
+     */
+    @Test
+    fun `tooltips force no extension`() {
+        assertTrue(MkDocsMarkdownExtension.requiredBy(setOf("content.tooltips"), false).isEmpty())
     }
 
     /**
@@ -138,8 +141,8 @@ class MkDocsMarkdownExtensionTest {
             setOf("content.code.annotate", "content.tabs.link"), false
         )
         assertTrue(required.contains(MkDocsMarkdownExtension.PYMDOWNX_TABBED))
-        assertTrue(required.contains(MkDocsMarkdownExtension.MD_IN_HTML))
-        assertEquals(4, required.size)
+        assertTrue(required.contains(MkDocsMarkdownExtension.PYMDOWNX_SUPERFENCES))
+        assertEquals(2, required.size)
     }
 
     /**

@@ -26,8 +26,8 @@ class MkDocsMaterialExtensionAnnotatorTest : BasePlatformTestCase() {
 
     /**
      * Use case: a site that ticked `content.code.annotate` on the features page. That flag renders nothing
-     * without `pymdownx.superfences`, `attr_list` and `md_in_html`, so each of the three is reported — and
-     * each gets a banner of its own so they can be added one at a time.
+     * without `pymdownx.superfences`, so exactly that one is reported — and nothing else: `attr_list` and
+     * `md_in_html` are a choice of the author, not something the flag breaks without.
      */
     fun `test reports every extension a feature forces`() {
         val banners = bannersOf(
@@ -40,14 +40,12 @@ class MkDocsMaterialExtensionAnnotatorTest : BasePlatformTestCase() {
             """.trimIndent()
         )
 
-        assertEquals(3, banners.size)
+        assertEquals(1, banners.size)
         assertTrue(banners.any { it.description.contains("pymdownx.superfences") })
-        assertTrue(banners.any { it.description.contains("attr_list") })
-        assertTrue(banners.any { it.description.contains("md_in_html") })
     }
 
     /**
-     * Use case: the same site after the extensions were added. Nothing forces anything that is missing, so
+     * Use case: the same site after the extension was added. Nothing forces anything that is missing, so
      * the banner has to disappear entirely rather than keep reporting what is already there.
      */
     fun `test stays quiet once the extensions are listed`() {
@@ -60,8 +58,6 @@ class MkDocsMaterialExtensionAnnotatorTest : BasePlatformTestCase() {
                 - content.code.annotate
             markdown_extensions:
               - pymdownx.superfences
-              - attr_list
-              - md_in_html
             """.trimIndent()
         )
 

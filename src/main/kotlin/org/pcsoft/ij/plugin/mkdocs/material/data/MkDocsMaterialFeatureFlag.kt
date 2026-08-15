@@ -51,10 +51,16 @@ enum class MkDocsMaterialFeatureFlag(
     /** `content.action.view` — a button showing the raw source of the page in the repository. */
     CONTENT_ACTION_VIEW("content.action.view", MkDocsMaterialFeatureGroup.CONTENT, "material.feature.content.action.view"),
 
-    /** `content.code.annotate` — numbered annotations attached to lines of a code block. */
+    /**
+     * `content.code.annotate` — numbered annotations attached to lines of a code block.
+     *
+     * Only `pymdownx.superfences` is forced: annotations inside code blocks render with it alone. `attr_list`
+     * and `md_in_html` are what annotations *outside* of code blocks additionally need, which is a choice of
+     * the author and must not be reported as a broken configuration.
+     */
     CONTENT_CODE_ANNOTATE(
         "content.code.annotate", MkDocsMaterialFeatureGroup.CONTENT, "material.feature.content.code.annotate",
-        requiredExtensions = setOf("pymdownx.superfences", "attr_list", "md_in_html")
+        requiredExtensions = setOf("pymdownx.superfences")
     ),
 
     /** `content.code.copy` — a copy to clipboard button on every code block. */
@@ -81,11 +87,13 @@ enum class MkDocsMaterialFeatureFlag(
         requiredExtensions = setOf("pymdownx.tabbed", "pymdownx.superfences")
     ),
 
-    /** `content.tooltips` — titles and abbreviations are rendered as styled tooltips. */
-    CONTENT_TOOLTIPS(
-        "content.tooltips", MkDocsMaterialFeatureGroup.CONTENT, "material.feature.content.tooltips",
-        requiredExtensions = setOf("attr_list", "md_in_html")
-    ),
+    /**
+     * `content.tooltips` — titles and abbreviations are rendered as styled tooltips.
+     *
+     * The flag restyles the tooltips of links and abbreviations that are already there, so it forces no
+     * extension of its own; `attr_list` and `abbr` only widen what the author can attach a tooltip to.
+     */
+    CONTENT_TOOLTIPS("content.tooltips", MkDocsMaterialFeatureGroup.CONTENT, "material.feature.content.tooltips"),
     //endregion
 
     //region header

@@ -42,15 +42,24 @@ enum class MkDocsMarkdownExtension(
         "https://python-markdown.github.io/extensions/admonition/"
     ),
 
-    /** `attr_list` — HTML attributes and CSS classes attached to Markdown elements. */
+    /**
+     * `attr_list` — HTML attributes and CSS classes attached to Markdown elements.
+     *
+     * No feature forces it: it widens what an author may write — buttons, grids, annotations outside of code
+     * blocks — but every one of those is a choice made on a page, not something `theme.features` implies.
+     */
     ATTR_LIST(
-        "attr_list", null, Level.REQUIRED_BY_FEATURE, "material.extension.attr_list",
+        "attr_list", null, Level.RECOMMENDED, "material.extension.attr_list",
         "https://python-markdown.github.io/extensions/attr_list/"
     ),
 
-    /** `md_in_html` — Markdown inside HTML blocks marked with `markdown="1"`. */
+    /**
+     * `md_in_html` — Markdown inside HTML blocks marked with `markdown="1"`.
+     *
+     * Recommended for the same reason as [ATTR_LIST]: it is the pages that ask for it, never the theme.
+     */
     MD_IN_HTML(
-        "md_in_html", null, Level.REQUIRED_BY_FEATURE, "material.extension.md_in_html",
+        "md_in_html", null, Level.RECOMMENDED, "material.extension.md_in_html",
         "https://python-markdown.github.io/extensions/md_in_html/"
     ),
 
