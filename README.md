@@ -102,7 +102,10 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 
 ## Project structure
 
-Single-project Gradle build — the root project *is* the publishable plugin.
+Multi-project Gradle build — the root project *is* the publishable plugin, the projects below it carry the
+code and are merged into the plugin jar. An optional feature of a site is a project of its own and reaches
+the plugin through the `siteFeature` extension point alone, which is what lets it be built, tested and left
+out on its own.
 
 ```
 .
@@ -113,16 +116,34 @@ Single-project Gradle build — the root project *is* the publishable plugin.
 │   ├── wrapper/            Gradle wrapper
 │   ├── libs.versions.toml  Version catalog — the single source of truth for versions
 │   └── test-logging.properties  JUL config that silences platform-test logging
+├── build-logic/            Convention plugins shared by every project (included build)
+├── utils/                  Shared model and helpers, plus the vendored MkDocs schema
+├── facets/
+│   ├── api/                The contract between the plugin and a feature
+│   └── material/           The Material for MkDocs feature: code, spec and descriptors
 ├── src/main
-│   ├── kotlin/             Kotlin production sources
+│   ├── kotlin/             Kotlin production sources of the plugin itself
 │   └── resources/
 │       ├── META-INF/       plugin.xml and plugin logo
-│       └── facets/         What a feature offers, as YAML next to its JSON schema
-├── build.gradle.kts        The entire build: plugin, quality gates and docs tasks
+│       ├── icons/          Icons of the plugin
+│       └── messages/       Message bundles of the plugin
+├── build.gradle.kts        The plugin build: packaging, quality gates and docs tasks
 ├── gradle.properties       Gradle configuration properties
 ├── settings.gradle.kts     Gradle project settings
 └── CHANGELOG.md            Release notes — the release workflow reads them from here
 ```
+
+| Project            | Applies                                   | Depends on                     |
+|--------------------|-------------------------------------------|--------------------------------|
+| `.` (the plugin)   | `org.jetbrains.intellij.platform`         | every project below            |
+| `:utils`           | `org.jetbrains.intellij.platform.module`  | nothing                        |
+| `:facets:api`      | `org.jetbrains.intellij.platform.module`  | `:utils` (`compileOnly`)       |
+| `:facets:material` | `org.jetbrains.intellij.platform.module`  | `:facets:api`, `:utils`        |
+
+Each facet is registered as a plugin content module of the V2 model: `plugin.xml` names it under `<content>`,
+and its descriptor sits in the resource root of its project, named after the module. A part needing an IDE
+plugin that not every IDE ships — CSS, Markdown — is a module of its own marked `loading="optional"`, so the
+plugin keeps loading where that plugin is absent.
 
 ## Target platform
 

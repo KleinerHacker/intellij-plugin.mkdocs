@@ -17,8 +17,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.ExtensionTestUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsScmProvider
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplateError
 import java.nio.file.Path
 
 /**

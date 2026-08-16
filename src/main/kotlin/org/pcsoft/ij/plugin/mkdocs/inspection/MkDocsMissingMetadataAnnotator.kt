@@ -18,7 +18,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import org.jetbrains.yaml.psi.YAMLFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 
 /**
  * Shows a banner above an MkDocs configuration file missing its metadata keys.

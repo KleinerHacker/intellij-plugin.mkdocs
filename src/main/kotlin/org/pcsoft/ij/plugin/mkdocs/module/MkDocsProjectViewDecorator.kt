@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.SimpleTextAttributes
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIconLoader
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet

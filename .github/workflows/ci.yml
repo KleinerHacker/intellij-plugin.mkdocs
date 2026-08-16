@@ -39,6 +39,9 @@ jobs:
               - '.github/**'
             code:
               - 'src/**'
+              - 'utils/**'
+              - 'facets/**'
+              - 'build-logic/**'
               - '**/*.gradle.kts'
               - 'gradle/**'
               - 'gradlew'

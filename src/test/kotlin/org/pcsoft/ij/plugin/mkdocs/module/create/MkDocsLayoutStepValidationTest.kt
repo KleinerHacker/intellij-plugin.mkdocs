@@ -13,7 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.module.create
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplateError
 import java.nio.file.Files
 import java.nio.file.Path
 

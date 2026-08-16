@@ -33,13 +33,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileVisitor
 import com.intellij.util.ui.update.MergingUpdateQueue
 import com.intellij.util.ui.update.Update
-import org.pcsoft.ij.plugin.mkdocs.MkDocsFacetSync
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsFacetSync
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetConfiguration
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
 
 /**
  * Keeps the IDE's module model in sync with the MkDocs sites found in the project.

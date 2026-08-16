@@ -14,44 +14,23 @@ import com.github.jk1.license.render.ReportRenderer
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.SignPluginTask
-import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.time.Duration
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
-// Single-project build: the root project IS the publishable IntelliJ plugin. Everything lives here —
-// the plugin itself, the quality gates (coverage, licences, SBOM), and the MkDocs documentation site.
+// The root project IS the publishable IntelliJ plugin: the plugin implementation, `META-INF/plugin.xml`,
+// signing, publishing and the `pluginVerification` matrix, plus the quality gates (coverage, licences, SBOM)
+// and the MkDocs documentation site. The code shared with the facets lives in the module projects, which are
+// merged into the plugin jar as plugin modules below.
 // ─────────────────────────────────────────────────────────────────────────────────────────────
 
 plugins {
-    // kotlin.jvm and changelog are versioned via the catalog; the IntelliJ Platform project plugin gets
-    // its version from the `intellij.platform.settings` plugin applied in settings.gradle.kts.
-    alias(libs.plugins.kotlin.jvm)
+    // The Kotlin toolchain, the bytecode level and the developer/integration test split are shared with every
+    // module project and therefore come from the convention plugin in `build-logic`.
+    id("mkdocs.kotlin-conventions")
     alias(libs.plugins.changelog)
     id("org.jetbrains.intellij.platform")
     id("org.jetbrains.dokka") version "2.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.9"
     id("com.github.jk1.dependency-license-report") version "3.1.4"
     id("org.cyclonedx.bom") version "3.3.0"
-    id("app.cash.licensee") version "1.14.1"
-}
-
-kotlin {
-    // Compile with JDK 25: since IntelliJ 2026.2 the platform jars are Java 25 (class file 69), so an
-    // older javac/kotlinc cannot even read them. The emitted bytecode is pinned to Java 21 below so the
-    // plugin still loads on the whole supported IDE range (sinceBuild 262).
-    jvmToolchain(25)
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-        // Inherit Java default methods instead of generating an override for each of them. Without this a
-        // class implementing a platform interface silently overrides *every* default method it declares,
-        // including the deprecated ones — which the plugin verifier reports as a deprecation of ours.
-        jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
-    }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
 }
 
 intellijPlatform {
@@ -105,19 +84,6 @@ intellijPlatform {
 }
 
 dependencies {
-    // The IntelliJ Platform ships its own kotlin-stdlib as an IDE jar (not a resolved Gradle module), so it
-    // does NOT participate in dependency conflict resolution. Transitive dependencies (jackson-module-kotlin
-    // pulls kotlin-reflect → kotlin-stdlib) therefore decide the version on the test/runtime classpath. If
-    // that resolves to a stdlib older than the compiler, the platform's coroutine debug probes crash with
-    // "Debug metadata version mismatch", which kills the plugin-descriptor-loading workers and hangs every
-    // platform test. Pin the Kotlin artifacts to the catalog version.
-    constraints {
-        implementation(libs.kotlin.stdlib)
-        implementation(libs.kotlin.reflect)
-    }
-
-    testImplementation(libs.junit)
-
     // Jackson is NOT taken from Maven (libs.jackson.yaml / libs.jackson.kotlin stay unused in the catalog):
     // shipping those jars makes the Plugin Verifier report dozens of unresolved references inside their
     // multi-release internals. It needs no declaration at all — the platform dependency below already brings
@@ -125,6 +91,19 @@ dependencies {
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
+        // The projects carrying the code. `pluginComposedModule` puts each of them on the compile classpath
+        // *and* merges its jar into the single plugin jar, classes and resources alike.
+        //
+        // Deliberately not `pluginModule`, which ships every project as a jar of its own under `lib/modules/`
+        // named after the *Gradle* project (`mkdocs.facets.material.jar`). The V2 loader looks a content
+        // module up by its own name — it reads `org.pcsoft.ij.plugin.mkdocs.material.xml` off the plugin
+        // classpath — and fails with "Cannot resolve org.pcsoft.ij.plugin.mkdocs.material.xml" when the
+        // descriptor sits in a jar it does not read. Merged into the plugin jar, all three module descriptors
+        // lie in its root, which is exactly where the loader looks.
+        pluginComposedModule(implementation(project(":utils")))
+        pluginComposedModule(implementation(project(":facets:api")))
+        pluginComposedModule(implementation(project(":facets:material")))
+
         // Single source of truth for the target IDE: a local IDE when configured (Gradle property
         // `localIdePath` or env `LOCAL_IDE_PATH`), otherwise the downloaded SDK. Pointing this at an IDE
         // whose build differs from the target version makes the platform tests hang during app boot.
@@ -183,62 +162,13 @@ licenseReport {
     )
 }
 
-plugins.withId("org.jetbrains.kotlin.jvm") {
-    plugins.withId("app.cash.licensee") {
-        extensions.configure<app.cash.licensee.LicenseeExtension> {
-            listOf("Apache-2.0").forEach(::allow)
-        }
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────────────────────
-// Developer tests vs. integration tests
-//
-// Project-wide convention: a test class whose name ends in `IT` is an *integration test* — it exercises a
-// shipped artifact or the interplay of several layers, and may measure time. Everything else is a
-// *developer test* and must stay fast, because it is the inner feedback loop.
-//
-//     ./gradlew test                         → everything (what `check` runs)
-//     ./gradlew test -PtestSuite=developer   → every class NOT named *IT
-//     ./gradlew test -PtestSuite=integration → only classes named *IT
-//
-// Deliberately a filter on the existing `test` task rather than a second Test task: the IntelliJ Platform
-// Gradle plugin configures `test` extensively (sandbox, IDE system properties, platform classpath) and a
-// separately registered task inherits none of it — it starts a bare JVM and finds no platform tests at all.
-// ─────────────────────────────────────────────────────────────────────────────────────────────
-val testSuite: String? = providers.gradleProperty("testSuite").orNull
-
-tasks.withType<Test>().configureEach {
-    // Without this a second invocation on the same machine would be UP-TO-DATE and skip its suite.
-    inputs.property("testSuite", testSuite ?: "all")
-
-    filter {
-        when (testSuite) {
-            "developer" -> excludeTestsMatching("*IT")
-            "integration" -> includeTestsMatching("*IT")
-            null -> Unit
-            else -> throw GradleException(
-                "Unknown -PtestSuite=$testSuite (expected 'developer' or 'integration')"
-            )
-        }
-        // The project may legitimately contain no test of the selected kind.
-        isFailOnNoMatchingTests = false
-    }
-
-    // Platform tests log through java.util.logging (JUL) via TestLoggerFactory — NOT log4j. The old
-    // idea/log4j.xml + idea.log.level were silently ignored. Two independent knobs actually matter:
-    //   1. intellij.console.log.level — the IntelliJ Platform Gradle plugin sets this to "warning" by
-    //      default; it is the threshold of the JUL console handler that echoes WARN+ records to stdout.
-    //      Override it to "off" to silence the console entirely (records still go to the per-test idea.log).
-    //   2. idea.log.config.file — read as a JUL .properties file and loaded into the LogManager.
-    systemProperty("intellij.console.log.level", "off")
-    systemProperty("idea.log.config.file", "${rootDir}/gradle/test-logging.properties")
-    // On a FAILED test the framework dumps the full buffered debug log (down to FINE/TRACE) somewhere.
-    // Default target is stderr (floods the console); with this flag it goes to a per-test file under the
-    // sandbox log dir and only a short "Log saved to: …" line is printed.
-    systemProperty("idea.split.test.logs", "true")
-    // Hard backstop so a hung test cannot stall the build indefinitely.
-    timeout.set(Duration.ofMinutes(15))
+// Coverage of the whole plugin, not of the plugin project alone: a class of `:utils` exercised by a test of
+// `:facets:material` is covered, and the report has to say so. `koverVerify` therefore checks the sum of every
+// project the plugin is built from — the same set that is merged into the published artifact.
+dependencies {
+    kover(project(":utils"))
+    kover(project(":facets:api"))
+    kover(project(":facets:material"))
 }
 
 tasks {
@@ -263,30 +193,6 @@ tasks {
                 .orElse(providers.environmentVariable("KEYSTORE_PASSWORD"))
         )
     }
-
-    //region Schema
-    // The MkDocs base schema is vendored into the plugin (src/main/resources/schema/mkdocs-1.6.json) because
-    // a bundled schema cannot reference a remote one: the platform resolves a $ref against the parent of the
-    // schema's own VirtualFile, and remote fetching is driven by SchemaType.remoteSchema and the catalogue,
-    // not by ref resolution. A remote $ref would therefore silently drop the whole base branch. This task
-    // refreshes the snapshot with a single command so it stays maintainable.
-    register("refreshMkDocsSchema") {
-        group = "schema"
-        description = "Re-download the SchemaStore MkDocs schema into src/main/resources/schema/mkdocs-1.6.json"
-
-        val source = "https://www.schemastore.org/mkdocs-1.6.json"
-        val target = layout.projectDirectory.file("src/main/resources/schema/mkdocs-1.6.json").asFile
-        outputs.upToDateWhen { false }
-
-        doLast {
-            val text = uri(source).toURL().openStream().use { it.readBytes().toString(Charsets.UTF_8) }
-            check(text.isNotBlank()) { "Downloaded an empty schema from $source" }
-            target.parentFile.mkdirs()
-            target.writeText(text, Charsets.UTF_8)
-            logger.lifecycle("Schema von $source aktualisiert: ${target.absolutePath}")
-        }
-    }
-    //endregion
 
     //region Dokka
     register<Copy>("copyDokka") {

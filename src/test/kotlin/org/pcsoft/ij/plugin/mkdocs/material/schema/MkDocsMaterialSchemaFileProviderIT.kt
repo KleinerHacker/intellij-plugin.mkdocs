@@ -20,7 +20,7 @@ import com.intellij.testFramework.HeavyPlatformTestCase
 import com.intellij.testFramework.PlatformTestUtil
 import com.intellij.testFramework.VfsTestUtil
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
-import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
+import org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacet
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 
 /**

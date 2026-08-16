@@ -1,0 +1,113 @@
+<!--
+  ~ Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+  ~ This work is licensed under the Apache License, Version 2.0.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, this software is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations.
+  -->
+
+<!-- The Angular Material facet, as a plugin content module of the V2 model. Named after the module and living
+     in the resource root, which is where the platform looks for it — under META-INF it would not be found.
+     Everything the theme contributes is registered here rather than in plugin.xml, so the plugin knows nothing
+     about the feature beyond the `siteFeature` extension point it plugs into. -->
+<idea-plugin package="org.pcsoft.ij.plugin.mkdocs.material">
+    <!-- Every user visible text of the feature. Kept apart from the bundle of the plugin: a text about the
+         theme is none of the plugin's business. -->
+    <resource-bundle>messages.MkDocsMaterialBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- The Angular Material theme, sitting next to the MkDocs facet: present exactly while the
+             configuration file names "material" as its theme. -->
+        <facetType implementation="org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacetType"/>
+
+        <!-- The feature watches the installed package its icon sets come from. -->
+        <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialVfsListener"/>
+
+        <!-- The settings page holding the icon directory of Material for MkDocs. The id is kept as it was so a
+             link or a search hit pointing at the page keeps working. -->
+        <projectConfigurable
+                id="org.pcsoft.ij.plugin.mkdocs.settings"
+                parentId="tools"
+                bundle="messages.MkDocsMaterialBundle"
+                key="settings.title"
+                instance="org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialIconSettingsConfigurable"/>
+
+        <!-- Completes the icons of the installed Material for MkDocs. Not part of the schema: which icons
+             exist is a property of the installed package, and there are several thousand of them. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconCompletionContributor"/>
+
+        <!-- Puts the mark of the Material theme on the completion entries that come from it. Runs first and
+             lets the other contributors — the JSON schema above all — produce their entries through it, which
+             is the only place all of them pass through. -->
+        <completion.contributor
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialOriginCompletionContributor"/>
+
+        <!-- The same statement in the editor: an icon in front of every key of a configuration file that the
+             Material theme alone reads. Built on the imperative hints API because the mark is an icon, which
+             the declarative one cannot render. -->
+        <codeInsight.inlayProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialKeyInlayHintsProvider"/>
+
+        <!-- Banner above a Material configuration file whose own features ask for a Markdown extension it
+             does not list. An error, and only for extensions that are actually forced: the site renders
+             nothing for such a feature, and there is nothing in the file to see it on. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialExtensionAnnotator"/>
+
+        <!-- The counterpart of that annotator for everything the theme merely builds on. A weak warning
+             that can be switched off: a site keeping its Markdown plain is not doing anything wrong. -->
+        <localInspection language="yaml"
+                         shortName="MkDocsMaterialRecommendedExtension"
+                         bundle="messages.MkDocsMaterialBundle"
+                         key="inspection.material.recommendedExtension"
+                         groupBundle="messages.MkDocsBundle"
+                         groupKey="inspection.group.mkdocs"
+                         level="WEAK WARNING"
+                         enabledByDefault="true"
+                         implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialRecommendedExtensionInspection"/>
+
+        <!-- Quick documentation for the entries of markdown_extensions. The JSON schema describes the shape
+             of that list, not what a single entry does — which is the question an author actually has. -->
+        <lang.documentationProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialExtensionDocumentationProvider"/>
+
+        <!-- The Jinja constructs an override file of the theme is written with. Text expansions rather than
+             a language: the plugin adds no PSI for the templates of the theme. -->
+        <defaultLiveTemplates file="/material/liveTemplates/MkDocsMaterial.xml"/>
+    </extensions>
+
+    <!-- Carries a facet added or removed by hand in the Project Structure dialog back into mkdocs.yml,
+         the opposite direction of the detection. -->
+    <projectListeners>
+        <listener class="org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacetListener"
+                  topic="com.intellij.facet.FacetManagerListener"/>
+    </projectListeners>
+
+    <!-- The one place the plugin and the feature meet. -->
+    <extensions defaultExtensionNs="org.pcsoft.ij.plugin.mkdocs">
+        <!-- Offers the Material theme in the site creation wizard, mirrors the facet after every detection
+             run and contributes the refined JSON schema. -->
+        <siteFeature implementation="org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialSiteFeature"/>
+    </extensions>
+
+    <actions resource-bundle="messages.MkDocsMaterialBundle">
+        <!-- Offered on the root directory of a site using the Material theme. Creating an override means a
+             directory, a key in mkdocs.yml and a file at exactly the right path — all three at once, because
+             missing one of them produces a site that builds and ignores the override. -->
+        <action id="org.pcsoft.ij.plugin.mkdocs.CreateMaterialOverride"
+                class="org.pcsoft.ij.plugin.mkdocs.material.override.MkDocsMaterialCreateOverrideAction"
+                icon="org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons.Feature">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>

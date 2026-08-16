@@ -23,11 +23,11 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.refactoring.RefactoringFactory
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfigWriter
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 
 /**
  * The technical directories of a site, as the facet editor shows them.

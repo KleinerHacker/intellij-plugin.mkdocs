@@ -18,7 +18,7 @@ import com.intellij.facet.ui.FacetEditorTab
 import com.intellij.facet.ui.FacetValidatorsManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.util.xmlb.XmlSerializerUtil
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 
 /**
  * Persistent state of the MkDocs facet.

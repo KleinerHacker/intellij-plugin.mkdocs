@@ -27,8 +27,8 @@ import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsScmService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsScmUrl
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplateError
 import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.event.DocumentEvent

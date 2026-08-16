@@ -21,11 +21,11 @@ import com.intellij.testFramework.PlatformTestUtil
 import com.intellij.testFramework.PsiTestUtil
 import com.intellij.testFramework.VfsTestUtil
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialSiteFeature
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacet
+import org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.

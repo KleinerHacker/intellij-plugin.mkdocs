@@ -16,12 +16,14 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 
 /**
  * Answers where things are inside an MkDocs site.

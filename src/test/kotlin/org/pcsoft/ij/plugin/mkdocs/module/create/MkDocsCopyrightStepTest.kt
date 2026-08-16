@@ -17,7 +17,7 @@ import com.intellij.testFramework.ExtensionTestUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProfile
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProvider
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 import java.nio.file.Path
 import java.time.Year
 

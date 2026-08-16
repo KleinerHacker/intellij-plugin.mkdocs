@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+ * This work is licensed under the Apache License, Version 2.0.
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, this software is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations.
+ */
+
+package org.pcsoft.ij.plugin.mkdocs.material.facet
+
+import com.intellij.facet.ui.FacetEditorTab
+import com.intellij.ui.dsl.builder.panel
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import javax.swing.JComponent
+
+/**
+ * The overview tab of the Angular Material facet.
+ *
+ * The tab is informational: the theme is declared in `mkdocs.yml`, and the facet mirrors it. What the user can
+ * do here is add or remove the facet itself, which is handled by the dialog rather than by this tab. The
+ * settings of the theme live on the four tabs next to this one
+ * ([MkDocsMaterialSettingsEditorTab]).
+ *
+ * @param configuration the facet configuration whose values are displayed
+ */
+class MkDocsMaterialFacetEditorTab(
+    private val configuration: MkDocsMaterialFacetConfiguration,
+) : FacetEditorTab() {
+
+    override fun getDisplayName(): String = MkDocsMaterialBundle.message("facet.angularMaterial.tab.overview")
+
+    override fun createComponent(): JComponent = panel {
+        row(MkDocsMaterialBundle.message("facet.angularMaterial.field.theme")) {
+            label(configuration.themeName)
+        }
+        row {
+            comment(MkDocsMaterialBundle.message("facet.angularMaterial.hint"))
+        }
+    }
+
+    /** The tab never edits anything, so there is nothing that could become modified. */
+    override fun isModified(): Boolean = false
+}

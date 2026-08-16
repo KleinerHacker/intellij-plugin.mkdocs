@@ -18,7 +18,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener
 

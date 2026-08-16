@@ -21,12 +21,12 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
-import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsSiteFiles
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsDirectoryLayout
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsDirectoryService
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 import javax.swing.JComponent
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener

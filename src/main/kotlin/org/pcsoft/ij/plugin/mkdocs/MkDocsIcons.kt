@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs
 
 import javax.swing.Icon
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
 
 /**
  * Central registry of every icon shipped with the plugin itself.
@@ -31,9 +32,15 @@ import javax.swing.Icon
  */
 object MkDocsIcons {
 
-    /** The MkDocs logo, used for the MkDocs facet. */
+    /**
+     * The MkDocs logo, used for the MkDocs facet.
+     *
+     * The only icon of the plugin that does not live here: a feature badges it to say that its own facet
+     * belongs to an MkDocs site, so the file and the loaded icon sit in [MkDocsIconLoader], which every
+     * feature can reach without reaching into the plugin.
+     */
     @JvmField
-    val MkDocs: Icon = load("mkdocs.svg", 16)
+    val MkDocs: Icon = MkDocsIconLoader.Logo
 
     /**
      * Marker of an MkDocs site root, for places rendering it on its own.

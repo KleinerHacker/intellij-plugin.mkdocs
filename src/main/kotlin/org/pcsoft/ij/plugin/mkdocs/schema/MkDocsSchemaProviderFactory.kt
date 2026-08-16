@@ -19,7 +19,7 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
 import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory
 import com.jetbrains.jsonSchema.extension.SchemaType
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
 
 /**
  * Contributes the schema mappings of the plugin to a project.

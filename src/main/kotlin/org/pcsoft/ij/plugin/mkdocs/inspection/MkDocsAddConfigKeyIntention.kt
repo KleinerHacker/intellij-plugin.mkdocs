@@ -18,7 +18,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import org.jetbrains.yaml.psi.YAMLFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 
 /**
  * Adds a missing configuration key with an empty value.

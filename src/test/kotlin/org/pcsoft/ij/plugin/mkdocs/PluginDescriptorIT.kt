@@ -137,53 +137,66 @@ class PluginDescriptorIT {
     }
 
     /**
-     * Use case: the Angular Material facet only exists while its type is registered. An unregistered facet
-     * type makes every lookup of the facet return nothing, without any error — the site would simply never
-     * be marked as a Material site — so the registration is checked against the shipped artifact.
+     * Use case: every optional feature is shipped as a content module of the V2 model. A module the plugin
+     * descriptor does not list is not loaded at all — the facet, its schema and its wizard step would be
+     * absent without anything failing — so the declaration is checked against the shipped artifact.
+     *
+     * What each module registers is checked by the feature itself; the plugin only has to name them, and the
+     * two needing another IDE plugin have to stay optional so the plugin keeps loading without it.
      */
     @Test
-    fun `plugin descriptor registers the angular material facet type`() {
+    fun `plugin descriptor declares the feature content modules`() {
         val content = descriptorText()
 
         assertTrue(
-            "plugin.xml does not register the Angular Material facet type",
-            content.contains("org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetType"),
+            "plugin.xml declares no content modules",
+            content.contains("<content>"),
+        )
+        assertTrue(
+            "plugin.xml does not declare the Angular Material module",
+            declaresModule(content, "org.pcsoft.ij.plugin.mkdocs.material"),
+        )
+        assertTrue(
+            "the CSS part of the Angular Material feature must be an optional module",
+            declaresModule(content, "org.pcsoft.ij.plugin.mkdocs.material.css", optional = true),
+        )
+        assertTrue(
+            "the Markdown part of the Angular Material feature must be an optional module",
+            declaresModule(content, "org.pcsoft.ij.plugin.mkdocs.material.markdown", optional = true),
         )
     }
 
     /**
-     * Use case: adding or removing the facet in the Project Structure dialog only reaches `mkdocs.yml` while
-     * the listener is subscribed to the facet topic of the platform.
+     * Returns `true` if [content] declares [name] as a content module.
+     *
+     * Matched with a pattern rather than compared as text: what is checked is the descriptor of the *built*
+     * plugin, which the build re-serialises on its way into the artifact — the attributes keep their values,
+     * the white space around them does not.
+     *
+     * @param content the descriptor to search
+     * @param name the module name as declared in the `<content>` block
+     * @param optional whether the module has to be marked `loading="optional"`
      */
-    @Test
-    fun `plugin descriptor subscribes the angular material facet listener`() {
-        val content = descriptorText()
-
-        assertTrue(
-            "plugin.xml does not subscribe the Angular Material facet listener",
-            content.contains("org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetListener"),
-        )
-        assertTrue(
-            "plugin.xml does not name the facet topic",
-            content.contains("""topic="com.intellij.facet.FacetManagerListener""""),
-        )
+    private fun declaresModule(content: String, name: String, optional: Boolean = false): Boolean {
+        val loading = if (optional) """\s+loading="optional"""" else """\s*"""
+        return Regex("""<module\s+name="${Regex.escape(name)}"$loading\s*/>""").containsMatchIn(content)
     }
 
     /**
-     * Use case: the Angular Material feature appears in the site creation wizard through the plugin's own
-     * `siteFeature` extension point. A feature that is not contributed leaves the wizard step empty.
+     * Use case: a feature reaches the plugin through the `siteFeature` extension point and through nothing
+     * else. A point that is not declared makes every registration of a feature module fail on load.
      */
     @Test
-    fun `plugin descriptor contributes the angular material site feature`() {
+    fun `plugin descriptor declares the site feature extension point`() {
         val content = descriptorText()
 
         assertTrue(
-            "plugin.xml declares no extensions for the plugin's own namespace",
-            content.contains("""<extensions defaultExtensionNs="org.pcsoft.ij.plugin.mkdocs">"""),
+            "plugin.xml does not declare the siteFeature extension point",
+            content.contains("""<extensionPoint name="siteFeature"""),
         )
         assertTrue(
-            "plugin.xml does not contribute the Angular Material site feature",
-            content.contains("org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialSiteFeature"),
+            "the siteFeature extension point must name the interface of the facet API",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature"),
         )
     }
 

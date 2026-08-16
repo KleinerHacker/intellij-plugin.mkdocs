@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.services
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.

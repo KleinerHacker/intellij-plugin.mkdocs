@@ -18,10 +18,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsFeatureWizardStep
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsFeatureWizardStep
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplateError
 
 /**
  * Wizard creating a new MkDocs site.

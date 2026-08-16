@@ -46,6 +46,35 @@ class MkDocsCoreIndependenceTest {
     }
 
     /**
+     * Use case: an extension of a feature is registered in `plugin.xml` instead of in the descriptor of its
+     * own content module. The plugin would then name a class it must not know, and the feature could not be
+     * left out of an IDE that cannot load it — which is the whole point of the module split.
+     *
+     * The `<content>` block is the one place a feature may be named, because that is where the plugin
+     * declares which modules belong to it.
+     */
+    @Test
+    fun `no plugin descriptor registers a feature`() {
+        val descriptors = File(projectRoot(), DESCRIPTOR_ROOT)
+            .walkTopDown()
+            .filter { it.isFile && it.extension == "xml" }
+
+        val offenders = descriptors.flatMap { file ->
+            file.readLines()
+                .withIndex()
+                .filterNot { (_, line) -> line.contains("<module name=") }
+                .filter { (_, line) -> FORBIDDEN.any { line.contains(it) } }
+                .map { (index, line) -> "${file.path}:${index + 1}: ${line.trim()}" }
+        }.toList()
+
+        assertTrue(
+            "these descriptors register an optional feature, which belongs into the descriptor of its own " +
+                    "content module:\n${offenders.joinToString("\n")}",
+            offenders.isEmpty(),
+        )
+    }
+
+    /**
      * Returns every production Kotlin source of the plugin itself, leaving the features out.
      */
     private fun coreSources(): List<File> {
@@ -76,6 +105,9 @@ class MkDocsCoreIndependenceTest {
 
         /** Where the production sources of the plugin live, relative to the project. */
         const val SOURCE_ROOT = "src/main/kotlin/org/pcsoft/ij/plugin/mkdocs"
+
+        /** Where the descriptors of the plugin live, relative to the project. */
+        const val DESCRIPTOR_ROOT = "src/main/resources/META-INF"
 
         /** The path fragment marking a source as belonging to a feature rather than to the plugin. */
         const val FEATURE_DIRECTORY = "/material/"

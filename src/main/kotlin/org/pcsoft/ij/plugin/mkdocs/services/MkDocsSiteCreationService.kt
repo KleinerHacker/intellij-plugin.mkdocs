@@ -21,16 +21,21 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.types.*
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfigWriter
 
 /**
  * Creates the file structure of a new MkDocs site.
  *
  * What is written is deliberately the bare minimum MkDocs needs — a `site_name`, a documentation directory
  * and a start page. Everything beyond that is left to the user or to a
- * [org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature].
+ * [org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature].
  *
  * @param project the project the site is created in
  */

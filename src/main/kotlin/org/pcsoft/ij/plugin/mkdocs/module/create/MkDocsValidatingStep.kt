@@ -22,7 +22,7 @@ import com.intellij.ide.wizard.Step
  * usable, and what it wants to pull from earlier pages when it is entered.
  *
  * Only implemented by the pages of this wizard — a feature contributes
- * [org.pcsoft.ij.plugin.mkdocs.types.MkDocsFeatureWizardStep] instead, which the wizard treats the same way.
+ * [org.pcsoft.ij.plugin.mkdocs.api.MkDocsFeatureWizardStep] instead, which the wizard treats the same way.
  */
 interface MkDocsValidatingStep : Step {
 

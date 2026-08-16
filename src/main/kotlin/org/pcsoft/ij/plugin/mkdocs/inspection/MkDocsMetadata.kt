@@ -17,7 +17,7 @@ import org.jetbrains.yaml.YAMLElementGenerator
 import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLMapping
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 
 /**
  * Finding and adding the metadata keys a configuration file should carry.

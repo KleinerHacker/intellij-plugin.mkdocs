@@ -18,7 +18,7 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
 import javax.swing.Icon
 import javax.swing.JCheckBox
 import javax.swing.JComponent

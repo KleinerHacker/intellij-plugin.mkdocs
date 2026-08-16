@@ -15,9 +15,10 @@ package org.pcsoft.ij.plugin.mkdocs.types
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import java.nio.file.Files
 import java.nio.file.Path
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -202,6 +203,76 @@ class MkDocsLayoutTest : BasePlatformTestCase() {
             plainDir.toFile().deleteRecursively()
         }
     }
+
+    /**
+     * Use case: a site points `docs_dir` at a directory of its own naming. What the file says is what has to
+     * be resolved — the project view marks exactly that directory as the documentation directory.
+     */
+    fun `test resolves the documentation directory a site configures`() {
+        val file = addFile("configured/mkdocs.yml", "site_name: Handbook\ndocs_dir: sources\n")
+
+        assertEquals("sources", resolveDocsDir(file))
+    }
+
+    /**
+     * Use case: the ordinary site without `docs_dir`. MkDocs falls back to `docs`, so the plugin has to do
+     * the same instead of marking nothing.
+     */
+    fun `test resolves the documentation directory to the MkDocs default`() {
+        val file = addFile("plain-docs/mkdocs.yml", "site_name: Handbook\n")
+
+        assertEquals(MkDocsSiteTemplate.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+    }
+
+    /**
+     * Use case: a half-written file makes the parser see a sequence behind `docs_dir`, or leaves the value
+     * empty. Neither is a usable directory name, so the default has to apply rather than a guess.
+     */
+    fun `test resolves an unusable documentation directory to the default`() {
+        val sequence = addFile("seq-docs/mkdocs.yml", "site_name: Handbook\ndocs_dir:\n  - one\n  - two\n")
+        val blank = addFile("blank-docs/mkdocs.yml", "site_name: Handbook\ndocs_dir: \"   \"\n")
+
+        assertEquals(MkDocsSiteTemplate.DEFAULT_DOCS_DIR, resolveDocsDir(sequence))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_DOCS_DIR, resolveDocsDir(blank))
+    }
+
+    /**
+     * Use case: a site builds into a directory of the surrounding build system. The configured value has to
+     * come back as written, so the plugin knows where the rendered site lands.
+     */
+    fun `test resolves the output directory a site configures`() {
+        val file = addFile("configured-out/mkdocs.yml", "site_name: Handbook\nsite_dir: target/docs\n")
+
+        assertEquals("target/docs", resolveSiteDir(file))
+    }
+
+    /**
+     * Use case: a site without `site_dir`, which is the common case. MkDocs then builds into `site`, and so
+     * must the plugin assume.
+     */
+    fun `test resolves the output directory to the MkDocs default`() {
+        val file = addFile("plain-out/mkdocs.yml", "site_name: Handbook\n")
+
+        assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, resolveSiteDir(file))
+    }
+
+    /**
+     * Use case: the same two broken shapes behind `site_dir` — a sequence and an empty value. Both have to
+     * fall back to the default MkDocs builds into.
+     */
+    fun `test resolves an unusable output directory to the default`() {
+        val sequence = addFile("seq-out/mkdocs.yml", "site_name: Handbook\nsite_dir:\n  - one\n  - two\n")
+        val blank = addFile("blank-out/mkdocs.yml", "site_name: Handbook\nsite_dir: \"   \"\n")
+
+        assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, resolveSiteDir(sequence))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, resolveSiteDir(blank))
+    }
+
+    private fun resolveDocsDir(file: VirtualFile): String =
+        runReadActionBlocking { MkDocsLayout.resolveDocsDir(project, file) }
+
+    private fun resolveSiteDir(file: VirtualFile): String =
+        runReadActionBlocking { MkDocsLayout.resolveSiteDir(project, file) }
 
     private fun addFile(relativePath: String, text: String = ""): VirtualFile =
         myFixture.addFileToProject(relativePath, text).virtualFile

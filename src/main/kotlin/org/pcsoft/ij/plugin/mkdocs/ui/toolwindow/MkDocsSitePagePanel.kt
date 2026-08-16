@@ -36,7 +36,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue
 import com.intellij.util.ui.update.Update
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsSiteFiles
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout

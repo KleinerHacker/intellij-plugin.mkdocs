@@ -74,7 +74,7 @@ Tracks what the plugin supports compared to
 | *MkDocs Angular Material* facet, added and removed by hand as well                     | ✅      |
 | Offered in the feature step of the creation wizard                                     | ✅      |
 | Refined JSON schema bound to the facet, base MkDocs schema bundled                     | ✅      |
-| Theme description kept as bundled YAML under `facets/material`, each with a JSON schema | ✅      |
+| Theme description kept as bundled YAML under `material/spec`, each with a JSON schema | ✅      |
 | `theme.features` — all 28 flags, each with a description                               | ✅      |
 | `theme.palette` — single mapping and toggle sequence, colours and schemes              | ✅      |
 | `theme.font`, `theme.language`, `theme.icon`, `theme.direction`                        | ✅      |

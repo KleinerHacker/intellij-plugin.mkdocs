@@ -24,7 +24,7 @@ import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsCopyrightService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProfile
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 import javax.swing.DefaultComboBoxModel
 import javax.swing.Icon
 import javax.swing.JComponent

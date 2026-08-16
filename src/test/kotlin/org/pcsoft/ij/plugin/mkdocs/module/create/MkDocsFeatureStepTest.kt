@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.module.create
 import com.intellij.openapi.project.Project
 import com.intellij.testFramework.ExtensionTestUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.

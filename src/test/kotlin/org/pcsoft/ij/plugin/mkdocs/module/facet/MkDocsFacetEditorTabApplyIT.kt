@@ -31,7 +31,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.components.JBTextField
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 import java.awt.Container
 import javax.swing.JComponent
 import javax.swing.JTextField

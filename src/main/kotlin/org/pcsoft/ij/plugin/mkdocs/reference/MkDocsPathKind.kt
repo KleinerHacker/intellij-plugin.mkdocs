@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.reference
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.yaml.psi.*
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNav
 

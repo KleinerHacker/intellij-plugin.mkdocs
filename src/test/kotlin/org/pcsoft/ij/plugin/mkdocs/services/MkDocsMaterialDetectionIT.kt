@@ -22,8 +22,8 @@ import com.intellij.testFramework.HeavyPlatformTestCase
 import com.intellij.testFramework.PlatformTestUtil
 import com.intellij.testFramework.VfsTestUtil
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacet
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.

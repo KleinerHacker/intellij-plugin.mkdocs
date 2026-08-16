@@ -17,7 +17,7 @@ import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import javax.swing.Icon
 

@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
+import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
