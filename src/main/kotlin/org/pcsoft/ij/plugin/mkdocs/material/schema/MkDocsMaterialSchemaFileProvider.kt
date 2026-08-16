@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.schema
+package org.pcsoft.ij.plugin.mkdocs.material.schema
 
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.components.Service
@@ -21,10 +21,10 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
 import com.jetbrains.jsonSchema.extension.SchemaType
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -115,7 +115,7 @@ class MkDocsMaterialSchemaFileProvider(private val project: Project) : JsonSchem
         return MkDocsMaterialSchemaCache.getInstance(project).get(file) { candidate -> isMaterialSite(candidate) }
     }
 
-    override fun getName(): String = MkDocsBundle.message("schema.material.name")
+    override fun getName(): String = MkDocsMaterialBundle.message("schema.material.name")
 
     override fun getSchemaFile(): VirtualFile = MkDocsMaterialSchemaGenerator.getInstance().schemaFile
 
@@ -136,7 +136,7 @@ class MkDocsMaterialSchemaFileProvider(private val project: Project) : JsonSchem
             if (project.isDisposed || !file.isValid) return@runReadActionBlocking false
             val module = ProjectFileIndex.getInstance(project).getModuleForFile(file)
             when {
-                module == null -> MkDocsConfig.isMaterialTheme(project, file)
+                module == null -> MkDocsMaterialConfig.isMaterialTheme(project, file)
                 module.isDisposed -> false
                 else -> MkDocsMaterialFacet.getInstance(module) != null
             }

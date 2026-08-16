@@ -19,15 +19,19 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
 import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory
 import com.jetbrains.jsonSchema.extension.SchemaType
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
 
 /**
  * Contributes the schema mappings of the plugin to a project.
  *
- * Two of them, and they answer two different questions. [MkDocsMaterialSchemaFileProvider] knows about the
- * project: it hands the refined schema to the configuration files of sites rendered with the Material theme,
- * whichever of the two spellings they use. [MkDocsSchemaFileProvider] knows nothing about the project and
- * closes a gap in the bundled catalogue for every other site. The Material provider comes first, so a file it
+ * Two kinds, and they answer two different questions. A site feature may refine the schema for the sites it
+ * recognises — it knows about the project and hands its schema to the configuration files it claims, whichever
+ * of the two spellings they use. [MkDocsSchemaFileProvider] knows nothing about the project and closes a gap
+ * in the bundled catalogue for every other site. The feature providers come first, so a file one of them
  * claims is not answered by the plain mapping as well.
+ *
+ * Which features exist is none of this factory's business: it asks the extension point and keeps the order it
+ * gets, so a feature added later needs no change here.
  *
  * [DumbAware], and that is not a detail: a factory the platform cannot use during indexing is not asked right
  * away but on a pooled thread once the project is smart again, and until that pass has run the file is mapped
@@ -38,7 +42,8 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 class MkDocsSchemaProviderFactory : JsonSchemaProviderFactory, DumbAware {
 
     override fun getProviders(project: Project): List<JsonSchemaFileProvider> =
-        listOf(MkDocsMaterialSchemaFileProvider(project), MkDocsSchemaFileProvider())
+        MkDocsSiteFeature.EP_NAME.extensionList.mapNotNull { it.schemaProvider(project) } +
+                MkDocsSchemaFileProvider()
 }
 
 /**

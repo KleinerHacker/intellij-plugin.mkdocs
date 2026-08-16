@@ -15,7 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.settings.MkDocsSettings
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 
 /**
  * Finds the directory holding the icon sets of the *Material for MkDocs* theme.
@@ -88,7 +88,7 @@ object MkDocsMaterialIconLocator {
      * @param project the project whose settings are read
      */
     private fun configured(project: Project): VirtualFile? {
-        val path = MkDocsSettings.getInstance(project).iconPath.trim()
+        val path = MkDocsMaterialIconSettings.getInstance(project).iconPath.trim()
         if (path.isEmpty()) return null
         return LocalFileSystem.getInstance().findFileByPath(path)?.takeIf { it.isValid && it.isDirectory }
     }

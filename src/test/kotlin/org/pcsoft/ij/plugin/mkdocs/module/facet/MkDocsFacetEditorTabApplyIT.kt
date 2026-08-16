@@ -125,7 +125,9 @@ class MkDocsFacetEditorTabApplyIT : BasePlatformTestCase() {
         assertFalse("an untouched page is not modified", page.tab.isModified)
         page.tab.apply()
 
-        assertEquals("site_name: Handbook\n", runReadActionBlocking { MkDocsConfig.yamlFileOf(project, configFile)!!.text })
+        assertEquals(
+            "site_name: Handbook\n",
+            runReadActionBlocking { MkDocsConfig.yamlFileOf(project, configFile)!!.text })
         assertNotNull(configFile.parent.findChild("docs"))
     }
 

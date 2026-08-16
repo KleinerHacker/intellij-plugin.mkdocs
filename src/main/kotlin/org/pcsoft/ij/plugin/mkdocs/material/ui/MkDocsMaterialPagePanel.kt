@@ -16,8 +16,8 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.JComponent
@@ -56,7 +56,11 @@ class MkDocsMaterialPagePanel(content: JComponent) : JPanel(BorderLayout()) {
     private fun header(): JComponent = JPanel(FlowLayout(FlowLayout.LEFT, JBUI.scale(4), 0)).apply {
         isOpaque = false
         add(
-            JBLabel(MkDocsBundle.message("material.page.header"), MkDocsIcons.Material, JBLabel.LEFT).apply {
+            JBLabel(
+                MkDocsMaterialBundle.message("material.page.header"),
+                MkDocsMaterialIcons.Feature,
+                JBLabel.LEFT
+            ).apply {
                 font = JBFont.label().asBold()
             }
         )

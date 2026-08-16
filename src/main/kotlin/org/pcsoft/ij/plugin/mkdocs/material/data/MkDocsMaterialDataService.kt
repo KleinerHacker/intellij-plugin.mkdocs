@@ -93,7 +93,14 @@ class MkDocsMaterialDataService {
 
     /** The curated font families offered for `theme.font`. */
     val fonts: MkDocsMaterialFonts by lazy {
-        MkDocsMaterialFonts(readList<FontEntry>(RESOURCE_FONTS).map { MkDocsMaterialFont(it.id, it.text, it.code, it.custom) })
+        MkDocsMaterialFonts(readList<FontEntry>(RESOURCE_FONTS).map {
+            MkDocsMaterialFont(
+                it.id,
+                it.text,
+                it.code,
+                it.custom
+            )
+        })
     }
 
     /** The colours offered for `theme.palette`. */

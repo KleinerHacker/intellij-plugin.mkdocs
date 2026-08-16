@@ -21,7 +21,7 @@ name: Icons
 
 * The size of an icon MUST ALWAYS be adjusted to the place that renders it
   * The 48x48 canvas of the file is the drawing, NEVER the size a place renders at
-  * The adjustment happens ONLY on loading, in `MkDocsIcons.load(fileName, size)`, on the vector -
+  * The adjustment happens ONLY on loading, in `MkDocsIconLoader.load(path, size, owner)`, on the vector -
     NEVER by adding a file of another resolution
 * EVERY icon MUST leave `load` with its size fixed, wrapped in `FixedSizeIcon`
   * Observed: without it an inlay hint paints the icon at 48x48, whatever size `load` set
@@ -34,7 +34,7 @@ name: Icons
 
 ### Inlay Hint
 
-* Observed with `MkDocsIcons.MaterialInlay`, and to be kept unless measured otherwise:
+* Observed with `MkDocsMaterialIcons.Inlay`, and to be kept unless measured otherwise:
   * `PresentationFactory.smallScaledIcon` and `ScaleAwarePresentationFactory` paint the icon at 48x48
   * `PresentationFactory.icon(...)` paints it at the size `load` set, but sits on the text baseline
   * `factory.inset(factory.icon(...), top = 5, right = 1)` places it in the middle of the line

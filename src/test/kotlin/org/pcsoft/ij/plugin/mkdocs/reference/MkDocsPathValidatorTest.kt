@@ -13,9 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.reference
 
 import com.intellij.openapi.util.TextRange
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 /**
@@ -42,7 +40,11 @@ class MkDocsPathValidatorTest {
             "./index.md",
             "sub/../index.md",
         )) {
-            assertEquals("$path must not be reported", emptyList<MkDocsPathFinding>(), MkDocsPathValidator.validate(path))
+            assertEquals(
+                "$path must not be reported",
+                emptyList<MkDocsPathFinding>(),
+                MkDocsPathValidator.validate(path)
+            )
         }
     }
 
@@ -129,7 +131,10 @@ class MkDocsPathValidatorTest {
         val problems = problemsOf("C:/docs")
 
         assertTrue(problems.contains(MkDocsPathProblem.DRIVE_LETTER))
-        assertFalse("the colon of the drive is not a forbidden character", problems.contains(MkDocsPathProblem.FORBIDDEN_CHARACTER))
+        assertFalse(
+            "the colon of the drive is not a forbidden character",
+            problems.contains(MkDocsPathProblem.FORBIDDEN_CHARACTER)
+        )
     }
 
     /**

@@ -23,10 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.types.*
 
 /**
  * Creates the file structure of a new MkDocs site.
@@ -43,45 +40,12 @@ class MkDocsSiteCreationService(private val project: Project) {
     companion object {
 
         /**
-         * Values matching this can go into the configuration file as they are.
-         *
-         * Everything else is quoted: a site name carrying a colon, a hash or a leading indicator character
-         * would otherwise turn the generated file into something YAML reads differently, or not at all.
-         */
-        private val PLAIN_SCALAR = Regex("^[A-Za-z0-9][A-Za-z0-9 ._/-]*$")
-
-        /**
-         * Values that are a YAML tag rather than text, and therefore must not be quoted.
-         *
-         * `markdown_extensions` carries them: `pymdownx.emoji` is configured with
-         * `!!python/name:material.extensions.emoji.twemoji`, which MkDocs resolves to a function. Quoting it
-         * would hand the extension the string instead, and the site would fail to build.
-         */
-        private val PYTHON_TAG = Regex("^!![A-Za-z0-9_]+[A-Za-z0-9_./:-]*$")
-
-        /**
          * Returns the service instance for [project].
          *
          * @param project the project whose service is requested
          */
         @JvmStatic
         fun getInstance(project: Project): MkDocsSiteCreationService = project.service()
-
-        /**
-         * Renders [value] as a YAML scalar.
-         *
-         * Single quoting is enough for everything the wizard can produce, and inside single quotes YAML
-         * gives no character but the quote itself a meaning — which is escaped by doubling it.
-         *
-         * @param value the raw value as the user typed it
-         */
-        @JvmStatic
-        fun yamlScalar(value: String): String =
-            if ((PLAIN_SCALAR.matches(value) || PYTHON_TAG.matches(value)) && !value.endsWith(" ")) {
-                value
-            } else {
-                "'${value.replace("'", "''")}'"
-            }
     }
 
     /**
@@ -152,18 +116,18 @@ class MkDocsSiteCreationService(private val project: Project) {
      * configuration file repeating the defaults tells the reader nothing.
      */
     private fun buildConfigText(template: MkDocsSiteTemplate): String = buildString {
-        append("${MkDocsConfig.KEY_SITE_NAME}: ${yamlScalar(template.siteName)}\n")
+        append("${MkDocsConfig.KEY_SITE_NAME}: ${MkDocsConfigWriter.yamlScalar(template.siteName)}\n")
         appendOptional(MkDocsConfig.KEY_SITE_AUTHOR, template.siteAuthor)
         appendOptional(MkDocsConfig.KEY_SITE_DESCRIPTION, template.siteDescription)
         appendOptional(MkDocsConfig.KEY_SITE_URL, template.siteUrl)
         appendOptional(MkDocsConfig.KEY_REPO_NAME, template.repoName)
         appendOptional(MkDocsConfig.KEY_REPO_URL, template.repoUrl)
         appendOptional(MkDocsConfig.KEY_COPYRIGHT, template.copyright)
-        if (template.docsDirName != MkDocsProject.DEFAULT_DOCS_DIR) {
-            append("${MkDocsConfig.KEY_DOCS_DIR}: ${yamlScalar(template.docsDirName)}\n")
+        if (template.docsDirName != MkDocsSiteTemplate.DEFAULT_DOCS_DIR) {
+            append("${MkDocsConfig.KEY_DOCS_DIR}: ${MkDocsConfigWriter.yamlScalar(template.docsDirName)}\n")
         }
-        if (template.siteDirName != MkDocsProject.DEFAULT_SITE_DIR) {
-            append("${MkDocsConfig.KEY_SITE_DIR}: ${yamlScalar(template.siteDirName)}\n")
+        if (template.siteDirName != MkDocsSiteTemplate.DEFAULT_SITE_DIR) {
+            append("${MkDocsConfig.KEY_SITE_DIR}: ${MkDocsConfigWriter.yamlScalar(template.siteDirName)}\n")
         }
     }
 
@@ -179,7 +143,7 @@ class MkDocsSiteCreationService(private val project: Project) {
     private fun StringBuilder.appendOptional(key: String, value: String) {
         val trimmed = value.trim()
         if (trimmed.isEmpty()) return
-        append("$key: ${yamlScalar(trimmed)}\n")
+        append("$key: ${MkDocsConfigWriter.yamlScalar(trimmed)}\n")
     }
 
     /** Builds the content of the start page. */
@@ -194,8 +158,8 @@ class MkDocsSiteCreationService(private val project: Project) {
      * only add noise to the `.iml` file.
      */
     private fun rememberDirectoryNames(template: MkDocsSiteTemplate, site: MkDocsSite) {
-        val assetsDiffers = template.assetsDirName != MkDocsProject.DEFAULT_ASSETS_DIR
-        val stylesheetsDiffers = template.stylesheetsDirName != MkDocsProject.DEFAULT_STYLESHEETS_DIR
+        val assetsDiffers = template.assetsDirName != MkDocsSiteTemplate.DEFAULT_ASSETS_DIR
+        val stylesheetsDiffers = template.stylesheetsDirName != MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR
         if (!assetsDiffers && !stylesheetsDiffers) return
 
         val module = ModuleUtilCore.findModuleForFile(site.root, project) ?: return

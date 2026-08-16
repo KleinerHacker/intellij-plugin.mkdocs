@@ -27,7 +27,7 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import org.jetbrains.annotations.TestOnly
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import javax.swing.JList
 import javax.swing.event.DocumentEvent
@@ -67,19 +67,19 @@ class MkDocsMaterialAssetsPage(
 
     private val logoField = pathField(
         FileChooserDescriptorFactory.singleFile()
-            .withTitle(MkDocsBundle.message("material.page.assets.logo.title")),
+            .withTitle(MkDocsMaterialBundle.message("material.page.assets.logo.title")),
         docsDir,
     )
 
     private val faviconField = pathField(
         FileChooserDescriptorFactory.singleFile()
-            .withTitle(MkDocsBundle.message("material.page.assets.favicon.title")),
+            .withTitle(MkDocsMaterialBundle.message("material.page.assets.favicon.title")),
         docsDir,
     )
 
     private val customDirField = pathField(
         FileChooserDescriptorFactory.singleDir()
-            .withTitle(MkDocsBundle.message("material.page.assets.customDir.title")),
+            .withTitle(MkDocsMaterialBundle.message("material.page.assets.customDir.title")),
         siteRoot,
     )
 
@@ -98,30 +98,30 @@ class MkDocsMaterialAssetsPage(
                 selected: Boolean,
                 hasFocus: Boolean,
             ) {
-                text = value ?: MkDocsBundle.message("material.page.assets.direction.default")
+                text = value ?: MkDocsMaterialBundle.message("material.page.assets.direction.default")
             }
         }
         addActionListener { fireChanged() }
     }
 
     override fun createContent(): DialogPanel = panel {
-        row(MkDocsBundle.message("material.page.assets.logo")) {
+        row(MkDocsMaterialBundle.message("material.page.assets.logo")) {
             cell(logoField).align(AlignX.FILL)
         }
-        row(MkDocsBundle.message("material.page.assets.favicon")) {
+        row(MkDocsMaterialBundle.message("material.page.assets.favicon")) {
             cell(faviconField).align(AlignX.FILL)
         }
-        row(MkDocsBundle.message("material.page.assets.customDir")) {
+        row(MkDocsMaterialBundle.message("material.page.assets.customDir")) {
             cell(customDirField).align(AlignX.FILL)
         }
-        row(MkDocsBundle.message("material.page.assets.language")) {
+        row(MkDocsMaterialBundle.message("material.page.assets.language")) {
             cell(languageField).align(AlignX.FILL)
         }
-        row(MkDocsBundle.message("material.page.assets.direction")) {
+        row(MkDocsMaterialBundle.message("material.page.assets.direction")) {
             cell(directionCombo)
         }
         row {
-            comment(MkDocsBundle.message("material.page.assets.hint"))
+            comment(MkDocsMaterialBundle.message("material.page.assets.hint"))
         }
     }
 

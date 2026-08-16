@@ -46,6 +46,24 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
  */
 object MkDocsMaterialConfig {
 
+    /** The name MkDocs knows the Material theme under. */
+    const val THEME_MATERIAL: String = "material"
+
+    /**
+     * Tells whether the site described by [configFile] is built with the Material theme.
+     *
+     * The one place that decides what "a Material site" means. Everything the theme contributes — the facet,
+     * the refined schema, the completion, the inlay hints — asks here, so none of them can drift apart.
+     *
+     * Must be called inside a read action.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     * @return `true` if the configured theme is [THEME_MATERIAL]
+     */
+    fun isMaterialTheme(project: Project, configFile: VirtualFile): Boolean =
+        MkDocsConfig.isTheme(project, configFile, THEME_MATERIAL)
+
     /** The key of the palette below `theme`. */
     const val KEY_PALETTE: String = "${MkDocsConfig.KEY_THEME}.palette"
 
@@ -236,7 +254,7 @@ object MkDocsMaterialConfig {
      */
     private fun isMedia(mapping: YAMLMapping, expected: String): Boolean =
         scalarOf(mapping, KEY_MEDIA)?.filterNot { it.isWhitespace() }?.lowercase() ==
-            expected.filterNot { it.isWhitespace() }.lowercase()
+                expected.filterNot { it.isWhitespace() }.lowercase()
 
     /**
      * Builds a palette entry out of [mapping].

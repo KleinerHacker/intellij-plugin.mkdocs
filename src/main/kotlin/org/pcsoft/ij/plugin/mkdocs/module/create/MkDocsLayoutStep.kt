@@ -27,7 +27,6 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplateError
@@ -85,8 +84,8 @@ class MkDocsLayoutStep(
         @JvmStatic
         fun siteDirFor(location: String): String {
             val path = runCatching { Path.of(location.trim()) }.getOrNull()
-                ?: return MkDocsProject.DEFAULT_SITE_DIR
-            if (!path.isAbsolute) return MkDocsProject.DEFAULT_SITE_DIR
+                ?: return MkDocsSiteTemplate.DEFAULT_SITE_DIR
+            if (!path.isAbsolute) return MkDocsSiteTemplate.DEFAULT_SITE_DIR
             return MkDocsLayout.detectSiteDir(path)
         }
     }
@@ -98,16 +97,16 @@ class MkDocsLayoutStep(
     var location: String = initialDirectory
 
     /** Name of the directory holding the documentation sources. */
-    var docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR
+    var docsDirName: String = MkDocsSiteTemplate.DEFAULT_DOCS_DIR
 
     /** Name of the directory holding the asset files. */
-    var assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR
+    var assetsDirName: String = MkDocsSiteTemplate.DEFAULT_ASSETS_DIR
 
     /** Name of the directory holding the style sheets. */
-    var stylesheetsDirName: String = MkDocsProject.DEFAULT_STYLESHEETS_DIR
+    var stylesheetsDirName: String = MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR
 
     /** Directory `mkdocs build` writes the rendered site to. */
-    var siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR
+    var siteDirName: String = MkDocsSiteTemplate.DEFAULT_SITE_DIR
 
     /** `true` once the user edited the output directory, which stops it from following the site root. */
     private var siteDirEditedByUser = false
@@ -149,19 +148,19 @@ class MkDocsLayoutStep(
         })
     }
 
-    private val docsDirField = JBTextField(MkDocsProject.DEFAULT_DOCS_DIR).apply {
+    private val docsDirField = JBTextField(MkDocsSiteTemplate.DEFAULT_DOCS_DIR).apply {
         document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) = refreshStatus()
         })
     }
 
-    private val assetsDirField = JBTextField(MkDocsProject.DEFAULT_ASSETS_DIR).apply {
+    private val assetsDirField = JBTextField(MkDocsSiteTemplate.DEFAULT_ASSETS_DIR).apply {
         document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) = refreshStatus()
         })
     }
 
-    private val stylesheetsDirField = JBTextField(MkDocsProject.DEFAULT_STYLESHEETS_DIR).apply {
+    private val stylesheetsDirField = JBTextField(MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR).apply {
         document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) = refreshStatus()
         })

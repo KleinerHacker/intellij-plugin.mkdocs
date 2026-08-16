@@ -15,7 +15,6 @@ package org.pcsoft.ij.plugin.mkdocs.types
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -94,7 +93,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         val file = configFile("docs/mkdocs.yml", "site_name: Handbook\n")
 
         assertNull(readDocsDir(file))
-        assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_DOCS_DIR, resolveDocsDir(file))
     }
 
     /**
@@ -105,7 +104,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         val file = configFile("docs/mkdocs.yml", "site_name: Handbook\ndocs_dir:\n  - one\n  - two\n")
 
         assertNull(readDocsDir(file))
-        assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_DOCS_DIR, resolveDocsDir(file))
     }
 
     /**
@@ -115,7 +114,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         val file = configFile("docs/mkdocs.yml", "site_name: Handbook\ndocs_dir: \"   \"\n")
 
         assertNull(readDocsDir(file))
-        assertEquals(MkDocsProject.DEFAULT_DOCS_DIR, resolveDocsDir(file))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_DOCS_DIR, resolveDocsDir(file))
     }
 
     /**
@@ -137,7 +136,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         val file = configFile("plain/mkdocs.yml", "site_name: Handbook\n")
 
         assertNull(readSiteDir(file))
-        assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, resolveSiteDir(file))
     }
 
     /**
@@ -148,7 +147,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         val file = configFile("seq/mkdocs.yml", "site_name: Handbook\nsite_dir:\n  - one\n  - two\n")
 
         assertNull(readSiteDir(file))
-        assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, resolveSiteDir(file))
     }
 
     /**
@@ -158,7 +157,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         val file = configFile("blank/mkdocs.yml", "site_name: Handbook\nsite_dir: \"   \"\n")
 
         assertNull(readSiteDir(file))
-        assertEquals(MkDocsProject.DEFAULT_SITE_DIR, resolveSiteDir(file))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, resolveSiteDir(file))
     }
 
     /**
@@ -220,13 +219,13 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         runReadActionBlocking { MkDocsConfig.readDocsDir(project, file) }
 
     private fun resolveDocsDir(file: VirtualFile): String =
-        runReadActionBlocking { MkDocsConfig.resolveDocsDir(project, file) }
+        runReadActionBlocking { MkDocsLayout.resolveDocsDir(project, file) }
 
     private fun readSiteDir(file: VirtualFile): String? =
         runReadActionBlocking { MkDocsConfig.readSiteDir(project, file) }
 
     private fun resolveSiteDir(file: VirtualFile): String =
-        runReadActionBlocking { MkDocsConfig.resolveSiteDir(project, file) }
+        runReadActionBlocking { MkDocsLayout.resolveSiteDir(project, file) }
 
     private fun readExtraCss(file: VirtualFile): List<String> =
         runReadActionBlocking { MkDocsConfig.readExtraCss(project, file) }

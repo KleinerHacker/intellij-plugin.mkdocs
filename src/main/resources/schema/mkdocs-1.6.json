@@ -4,11 +4,20 @@
   "definitions": {
     "validationValues": {
       "type": "string",
-      "enum": ["warn", "info", "ignore"]
+      "enum": [
+        "warn",
+        "info",
+        "ignore"
+      ]
     },
     "validationAbsoluteLinkValues": {
       "type": "string",
-      "enum": ["warn", "info", "ignore", "relative_to_docs"]
+      "enum": [
+        "warn",
+        "info",
+        "ignore",
+        "relative_to_docs"
+      ]
     }
   },
   "description": "JSON schema for MkDocs configuration file",
@@ -155,7 +164,10 @@
             "name": {
               "default": "mkdocs",
               "description": "The string name of a known installed theme, or null if using a local custom theme.",
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "locale": {
               "default": "en",
@@ -221,7 +233,9 @@
                 "type": "boolean"
               }
             },
-            "required": ["path"]
+            "required": [
+              "path"
+            ]
           }
         ]
       }
@@ -278,7 +292,9 @@
       "type": "array"
     },
     "plugins": {
-      "default": ["search"],
+      "default": [
+        "search"
+      ],
       "description": "A list of plugins (with optional configuration settings) to use when building the site. See the Plugins documentation for full details.\nhttps://www.mkdocs.org/user-guide/configuration/#plugins",
       "anyOf": [
         {
@@ -294,5 +310,7 @@
       "type": "string"
     }
   },
-  "required": ["site_name"]
+  "required": [
+    "site_name"
+  ]
 }

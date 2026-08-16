@@ -21,8 +21,9 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.LookupElementRenderer
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
+import org.pcsoft.ij.plugin.mkdocs.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 
 /**
  * Completes the icon shorthands of *Material for MkDocs* inside the pages of a site.
@@ -80,8 +81,8 @@ class MkDocsMaterialShorthandCompletionContributor : CompletionContributor() {
                     presentation.itemText = shorthand
                     presentation.typeText = name.substringBefore('/')
                     presentation.icon = index.icon(siteRoot, name)
-                        ?.let { MkDocsIcons.withBadge(it, MkDocsIcons.MaterialOverlay) }
-                        ?: MkDocsIcons.MaterialBadge
+                        ?.let { MkDocsIconLoader.withBadge(it, MkDocsMaterialIcons.Overlay) }
+                        ?: MkDocsMaterialIcons.Badge
                 }
             })
     }

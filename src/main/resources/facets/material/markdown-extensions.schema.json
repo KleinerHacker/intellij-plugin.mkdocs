@@ -7,7 +7,12 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "level", "descriptionKey", "docUrl"],
+    "required": [
+      "id",
+      "level",
+      "descriptionKey",
+      "docUrl"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -20,7 +25,10 @@
       "level": {
         "type": "string",
         "description": "How strongly the extension is tied to the configuration of the site.",
-        "enum": ["REQUIRED_BY_FEATURE", "RECOMMENDED"]
+        "enum": [
+          "REQUIRED_BY_FEATURE",
+          "RECOMMENDED"
+        ]
       },
       "descriptionKey": {
         "type": "string",
@@ -37,7 +45,10 @@
         "items": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["key", "value"],
+          "required": [
+            "key",
+            "value"
+          ],
           "properties": {
             "key": {
               "type": "string",

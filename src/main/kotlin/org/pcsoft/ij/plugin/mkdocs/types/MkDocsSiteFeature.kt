@@ -13,16 +13,22 @@
 package org.pcsoft.ij.plugin.mkdocs.types
 
 import com.intellij.openapi.extensions.ExtensionPointName
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
+import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
 import javax.swing.Icon
 
 /**
  * An optional feature that can be switched on for an MkDocs site.
  *
- * A feature is the extension mechanism behind the planned MkDocs extensions — Angular Material, I18N, Mike:
- * it contributes an entry to the feature step of the site creation wizard and, once selected, writes whatever
- * it needs into the site. Nothing implements this interface yet; the extension point exists so features can
- * be added later without touching the wizard.
+ * A feature is the extension mechanism behind the MkDocs extensions — Angular Material today, I18N and Mike
+ * later: it contributes an entry to the feature step of the site creation wizard and, once selected, writes
+ * whatever it needs into the site. Beyond the wizard it owns everything else that belongs to the feature
+ * alone: the facet mirroring it and the refined JSON schema its sites are edited against.
+ *
+ * This interface is the whole contract between the plugin and a feature. The plugin MUST NOT reference a
+ * feature from Kotlin code — every hand-off runs through the members below, which is what lets a feature
+ * live in its own Gradle project.
  *
  * Implementations are registered in `plugin.xml` under the `org.pcsoft.ij.plugin.mkdocs.siteFeature`
  * extension point.
@@ -102,4 +108,40 @@ interface MkDocsSiteFeature {
      * @param site the site that was just created
      */
     fun apply(project: Project, site: MkDocsSite)
+
+    /**
+     * Brings the facet of this feature in line with [site].
+     *
+     * Called for every detected site whose module already carries the MkDocs facet, which is what makes a
+     * feature detected rather than remembered: an implementation reads the configuration file, attaches its
+     * own facet when the feature is in use and drops it again when it is not. A site the feature has nothing
+     * to do with therefore leaves through the default implementation, which does nothing.
+     *
+     * Runs inside the write action of the detection.
+     *
+     * @param module the module representing the site
+     * @param site the detected site
+     */
+    fun syncFacet(module: Module, site: MkDocsSite) {}
+
+    /**
+     * Drops the facet of this feature from [module].
+     *
+     * Called when the MkDocs facet itself goes away, so a feature facet never outlives the site it belongs
+     * to. Unlike [syncFacet] there is no configuration file left to look at.
+     *
+     * @param module the module the facet is removed from
+     */
+    fun removeFacet(module: Module) {}
+
+    /**
+     * Returns the JSON schema this feature contributes for configuration files, or `null` for none.
+     *
+     * The providers returned here are offered before the generic MkDocs schema, so a file a feature claims is
+     * edited against the refined schema of that feature.
+     *
+     * @param project the project the schema is asked for
+     * @return the provider, or `null` if the feature refines no schema
+     */
+    fun schemaProvider(project: Project): JsonSchemaFileProvider? = null
 }

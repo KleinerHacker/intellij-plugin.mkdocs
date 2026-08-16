@@ -7,7 +7,12 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "hex", "primary", "accent"],
+    "required": [
+      "id",
+      "hex",
+      "primary",
+      "accent"
+    ],
     "properties": {
       "id": {
         "type": "string",

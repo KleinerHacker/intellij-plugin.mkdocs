@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.schema
 
 import com.google.gson.JsonParser
 import junit.framework.TestCase
+import org.pcsoft.ij.plugin.mkdocs.material.schema.MkDocsMaterialSchemaGenerator
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.

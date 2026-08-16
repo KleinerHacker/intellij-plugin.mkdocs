@@ -18,7 +18,7 @@ import com.intellij.facet.ui.FacetEditorTab
 import com.intellij.facet.ui.FacetValidatorsManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.util.xmlb.XmlSerializerUtil
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 
 /**
  * Persistent state of the MkDocs facet.
@@ -63,10 +63,10 @@ class MkDocsFacetConfiguration : FacetConfiguration, PersistentStateComponent<Mk
         var ownerModuleName: String = ""
 
         @JvmField
-        var assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR
+        var assetsDirName: String = MkDocsSiteTemplate.DEFAULT_ASSETS_DIR
 
         @JvmField
-        var stylesheetsDirName: String = MkDocsProject.DEFAULT_STYLESHEETS_DIR
+        var stylesheetsDirName: String = MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR
     }
 
     private var state = State()

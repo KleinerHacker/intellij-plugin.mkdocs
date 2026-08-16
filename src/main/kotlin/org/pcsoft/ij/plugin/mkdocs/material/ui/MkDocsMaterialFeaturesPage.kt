@@ -16,7 +16,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.panel
 import org.jetbrains.annotations.TestOnly
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
@@ -70,12 +70,12 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
         for (group in MkDocsMaterialFeatureGroup.entries) {
             val flags = featureFlags.all.filter { it.group == group }
             if (flags.isEmpty()) continue
-            group(MkDocsBundle.messageOrDefault(group.titleKey, group.name) ?: group.name) {
+            group(MkDocsMaterialBundle.messageOrDefault(group.titleKey, group.name) ?: group.name) {
                 for (flag in flags) {
                     row { cell(checkBoxes.getValue(flag)) }
                     row {
                         comment(
-                            MkDocsBundle.messageOrDefault(flag.descriptionKey, flag.descriptionKey)
+                            MkDocsMaterialBundle.messageOrDefault(flag.descriptionKey, flag.descriptionKey)
                                 ?: flag.descriptionKey
                         )
                     }
@@ -83,7 +83,7 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
             }
         }
         row {
-            comment(MkDocsBundle.message("material.page.features.hint"))
+            comment(MkDocsMaterialBundle.message("material.page.features.hint"))
         }
     }.also { updateAvailability() }
 
@@ -131,8 +131,8 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
             val missing = flag.requires.firstOrNull { !isSelected(it) }
             box.isEnabled = blocker == null && missing == null
             box.toolTipText = when {
-                blocker != null -> MkDocsBundle.message("material.page.features.conflict", blocker.id)
-                missing != null -> MkDocsBundle.message("material.page.features.requires", missing)
+                blocker != null -> MkDocsMaterialBundle.message("material.page.features.conflict", blocker.id)
+                missing != null -> MkDocsMaterialBundle.message("material.page.features.requires", missing)
                 else -> insidersHint(flag)
             }
         }
@@ -140,7 +140,7 @@ class MkDocsMaterialFeaturesPage : MkDocsMaterialPageBase(ID, "material.page.fea
 
     /** The note that [flag] only works with the Insiders edition of the theme, or `null` if it works anywhere. */
     private fun insidersHint(flag: MkDocsMaterialFeatureFlag): String? =
-        if (flag.insiders) MkDocsBundle.message("material.page.features.insiders") else null
+        if (flag.insiders) MkDocsMaterialBundle.message("material.page.features.insiders") else null
 
     /** Tells whether the flag written as [id] is currently ticked. */
     private fun isSelected(id: String): Boolean =

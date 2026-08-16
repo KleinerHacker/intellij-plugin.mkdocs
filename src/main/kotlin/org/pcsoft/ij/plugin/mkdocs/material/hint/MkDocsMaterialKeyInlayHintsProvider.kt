@@ -12,14 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.hint
 
-import com.intellij.codeInsight.hints.ChangeListener
-import com.intellij.codeInsight.hints.FactoryInlayHintsCollector
-import com.intellij.codeInsight.hints.ImmediateConfigurable
-import com.intellij.codeInsight.hints.InlayHintsCollector
-import com.intellij.codeInsight.hints.InlayHintsProvider
-import com.intellij.codeInsight.hints.InlayHintsSink
-import com.intellij.codeInsight.hints.NoSettings
-import com.intellij.codeInsight.hints.SettingsKey
+import com.intellij.codeInsight.hints.*
 import com.intellij.lang.Language
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
@@ -27,11 +20,11 @@ import com.intellij.psi.PsiFile
 import com.intellij.ui.dsl.builder.panel
 import org.jetbrains.yaml.YAMLLanguage
 import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialKeys
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import javax.swing.JComponent
 
 /**
@@ -55,7 +48,7 @@ class MkDocsMaterialKeyInlayHintsProvider : InlayHintsProvider<NoSettings> {
     override val key: SettingsKey<NoSettings> = SettingsKey(SETTINGS_KEY)
 
     override val name: String
-        get() = MkDocsBundle.message("material.hint.origin.name")
+        get() = MkDocsMaterialBundle.message("material.hint.origin.name")
 
     override val previewText: String
         get() = PREVIEW_TEXT
@@ -73,7 +66,7 @@ class MkDocsMaterialKeyInlayHintsProvider : InlayHintsProvider<NoSettings> {
     override fun createConfigurable(settings: NoSettings): ImmediateConfigurable =
         object : ImmediateConfigurable {
             override fun createComponent(listener: ChangeListener): JComponent = panel {
-                row { label(MkDocsBundle.message("material.hint.origin.description")) }
+                row { label(MkDocsMaterialBundle.message("material.hint.origin.description")) }
             }
         }
 
@@ -87,7 +80,7 @@ class MkDocsMaterialKeyInlayHintsProvider : InlayHintsProvider<NoSettings> {
     ): InlayHintsCollector? {
         if (!MkDocsProject.isConfigFile(file.name)) return null
         val virtualFile = file.originalFile.virtualFile ?: return null
-        if (!MkDocsConfig.isMaterialTheme(file.project, virtualFile)) return null
+        if (!MkDocsMaterialConfig.isMaterialTheme(file.project, virtualFile)) return null
         return Collector(editor)
     }
 
@@ -102,11 +95,11 @@ class MkDocsMaterialKeyInlayHintsProvider : InlayHintsProvider<NoSettings> {
             val keyValue = element as? YAMLKeyValue ?: return true
             if (!MkDocsMaterialKeys.isMaterialKey(keyValue)) return true
 
-            // The icon arrives at the size it is painted at, fixed by `MkDocsIcons`, and is placed by hand:
-            // the inset lifts it off the baseline into the middle of the line and keeps it off the key.
+            // The icon arrives at the size it is painted at, fixed by `MkDocsIconLoader`, and is placed by
+            // hand: the inset lifts it off the baseline into the middle of the line and keeps it off the key.
             val presentation = factory.withTooltip(
-                MkDocsBundle.message("material.hint.origin.tooltip"),
-                factory.inset(factory.icon(MkDocsIcons.MaterialInlay), top = 5, right = 1),
+                MkDocsMaterialBundle.message("material.hint.origin.tooltip"),
+                factory.inset(factory.icon(MkDocsMaterialIcons.Inlay), top = 5, right = 1),
             )
             // The mark belongs to the key that follows it, not to whatever precedes it on the line, so it must
             // not move with the text in front of it.

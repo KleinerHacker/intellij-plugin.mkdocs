@@ -18,12 +18,12 @@ import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialSettingsPage
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetEditorTab
 import javax.swing.JComponent
 
 /**
@@ -82,7 +82,7 @@ class MkDocsMaterialSettingsEditorTab(
         val from = shown
         WriteCommandAction.runWriteCommandAction(
             project,
-            MkDocsBundle.message("facet.angularMaterial.command.settings"),
+            MkDocsMaterialBundle.message("facet.angularMaterial.command.settings"),
             null,
             { MkDocsMaterialConfig.write(project, configFile, from, target) },
         )
@@ -96,6 +96,6 @@ class MkDocsMaterialSettingsEditorTab(
     private fun configFile(): VirtualFile? {
         val module = module() ?: return null
         val mkDocsFacet = runReadActionBlocking { MkDocsFacet.getInstance(module) } ?: return null
-        return MkDocsFacetEditorTab.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
+        return MkDocsSiteFiles.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
     }
 }

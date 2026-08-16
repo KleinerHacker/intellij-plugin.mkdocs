@@ -128,7 +128,13 @@ class MkDocsMaterialResourceSchemaTest {
     ) {
         schema.get("\$ref")?.asString?.let { ref ->
             val target = resolve(ref, root)
-            if (target == null) errors += "$path: unresolvable \$ref '$ref'" else check(value, target, root, path, errors)
+            if (target == null) errors += "$path: unresolvable \$ref '$ref'" else check(
+                value,
+                target,
+                root,
+                path,
+                errors
+            )
             return
         }
 

@@ -22,7 +22,7 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.ColorIcon
 import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.TestOnly
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
@@ -64,7 +64,7 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
                 selected: Boolean,
                 hasFocus: Boolean,
             ) {
-                text = value?.let { MkDocsBundle.message(paletteModeKey(it)) }.orEmpty()
+                text = value?.let { MkDocsMaterialBundle.message(paletteModeKey(it)) }.orEmpty()
             }
         }
         addActionListener {
@@ -88,12 +88,13 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
 
     private val darkAccent = colorCombo(data.colors.accents())
 
-    private val fontEnabledBox = JCheckBox(MkDocsBundle.message("material.page.appearance.font.enabled")).apply {
-        addActionListener {
-            updateEnabled()
-            fireChanged()
+    private val fontEnabledBox =
+        JCheckBox(MkDocsMaterialBundle.message("material.page.appearance.font.enabled")).apply {
+            addActionListener {
+                updateEnabled()
+                fireChanged()
+            }
         }
-    }
 
     private val fontTextCombo = fontCombo(data.fonts.textFonts())
 
@@ -108,32 +109,32 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
     override fun createContent(): DialogPanel {
         darkRows.clear()
         return panel {
-            row(MkDocsBundle.message("material.page.appearance.paletteMode")) {
+            row(MkDocsMaterialBundle.message("material.page.appearance.paletteMode")) {
                 cell(paletteModeCombo)
             }
             readOnlyRow = row {
-                comment(MkDocsBundle.message("material.page.appearance.readOnly"))
+                comment(MkDocsMaterialBundle.message("material.page.appearance.readOnly"))
             }
-            group(MkDocsBundle.message("material.page.appearance.light")) {
-                row(MkDocsBundle.message("material.page.appearance.scheme")) { cell(lightScheme) }
-                row(MkDocsBundle.message("material.page.appearance.primary")) { cell(lightPrimary) }
-                row(MkDocsBundle.message("material.page.appearance.accent")) { cell(lightAccent) }
+            group(MkDocsMaterialBundle.message("material.page.appearance.light")) {
+                row(MkDocsMaterialBundle.message("material.page.appearance.scheme")) { cell(lightScheme) }
+                row(MkDocsMaterialBundle.message("material.page.appearance.primary")) { cell(lightPrimary) }
+                row(MkDocsMaterialBundle.message("material.page.appearance.accent")) { cell(lightAccent) }
             }
-            group(MkDocsBundle.message("material.page.appearance.dark")) {
-                darkRows += row(MkDocsBundle.message("material.page.appearance.scheme")) { cell(darkScheme) }
-                darkRows += row(MkDocsBundle.message("material.page.appearance.primary")) { cell(darkPrimary) }
-                darkRows += row(MkDocsBundle.message("material.page.appearance.accent")) { cell(darkAccent) }
+            group(MkDocsMaterialBundle.message("material.page.appearance.dark")) {
+                darkRows += row(MkDocsMaterialBundle.message("material.page.appearance.scheme")) { cell(darkScheme) }
+                darkRows += row(MkDocsMaterialBundle.message("material.page.appearance.primary")) { cell(darkPrimary) }
+                darkRows += row(MkDocsMaterialBundle.message("material.page.appearance.accent")) { cell(darkAccent) }
             }
-            group(MkDocsBundle.message("material.page.appearance.fonts")) {
+            group(MkDocsMaterialBundle.message("material.page.appearance.fonts")) {
                 row { cell(fontEnabledBox) }
-                row(MkDocsBundle.message("material.page.appearance.font.text")) {
+                row(MkDocsMaterialBundle.message("material.page.appearance.font.text")) {
                     cell(fontTextCombo).align(AlignX.FILL)
                 }
-                row(MkDocsBundle.message("material.page.appearance.font.code")) {
+                row(MkDocsMaterialBundle.message("material.page.appearance.font.code")) {
                     cell(fontCodeCombo).align(AlignX.FILL)
                 }
                 row {
-                    comment(MkDocsBundle.message("material.page.appearance.font.hint"))
+                    comment(MkDocsMaterialBundle.message("material.page.appearance.font.hint"))
                 }
             }
         }.also { updateEnabled() }
@@ -231,7 +232,7 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
                     selected: Boolean,
                     hasFocus: Boolean,
                 ) {
-                    text = value?.let { MkDocsBundle.messageOrDefault(it.titleKey, it.id) ?: it.id }.orEmpty()
+                    text = value?.let { MkDocsMaterialBundle.messageOrDefault(it.titleKey, it.id) ?: it.id }.orEmpty()
                 }
             }
             addActionListener { fireChanged() }
@@ -257,7 +258,7 @@ class MkDocsMaterialAppearancePage : MkDocsMaterialPageBase(ID, "material.page.a
                 ) {
                     if (value == null) {
                         icon = null
-                        text = MkDocsBundle.message("material.page.appearance.color.default")
+                        text = MkDocsMaterialBundle.message("material.page.appearance.color.default")
                     } else {
                         icon = ColorIcon(JBUI.scale(12), Color(value.hex))
                         text = value.id

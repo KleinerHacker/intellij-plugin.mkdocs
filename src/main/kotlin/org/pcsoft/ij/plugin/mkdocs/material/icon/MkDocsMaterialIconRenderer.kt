@@ -15,7 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import javax.swing.Icon
 
 /**
@@ -25,7 +25,7 @@ import javax.swing.Icon
  * kept to itself for that reason: the file comes from an installed package, not from this plugin, so it may
  * be anything — an SVG a loader chokes on, a file that vanished between the listing and the read, a set of a
  * newer version using something the platform does not support. None of that may reach the completion popup
- * as an exception, so every failure ends up as [MkDocsIcons.Material] and a line in the log.
+ * as an exception, so every failure ends up as [MkDocsMaterialIcons.Feature] and a line in the log.
  *
  * Results are cached: a completion popup asks for the icon of every visible entry on every keystroke, and
  * the sets hold thousands of files. The cache is bounded and thrown away whenever the index is invalidated.
@@ -52,16 +52,16 @@ object MkDocsMaterialIconRenderer {
      * @param file the SVG file of the icon
      */
     fun render(file: VirtualFile): Icon {
-        if (!file.isValid) return MkDocsIcons.Material
+        if (!file.isValid) return MkDocsMaterialIcons.Feature
         synchronized(cache) { cache[file.url] }?.let { return it }
 
         val icon = try {
-            IconLoader.findIcon(file.toNioPath().toUri().toURL(), true) ?: MkDocsIcons.Material
+            IconLoader.findIcon(file.toNioPath().toUri().toURL(), true) ?: MkDocsMaterialIcons.Feature
         } catch (throwable: Throwable) {
             // Deliberately Throwable: what is read here is a file of a foreign package, and an image loader
             // failing on it must never take the popup that asked for it down with it.
             LOG.debug("Cannot render the icon ${file.url}", throwable)
-            MkDocsIcons.Material
+            MkDocsMaterialIcons.Feature
         }
         synchronized(cache) { cache[file.url] = icon }
         return icon

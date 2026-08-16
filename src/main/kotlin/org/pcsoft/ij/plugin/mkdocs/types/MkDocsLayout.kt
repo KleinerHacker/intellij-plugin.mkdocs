@@ -82,9 +82,35 @@ object MkDocsLayout {
      */
     fun docsDirOf(project: Project, siteRoot: VirtualFile): VirtualFile? {
         val configFile = configFileOf(siteRoot) ?: return null
-        val relative = MkDocsConfig.resolveDocsDir(project, configFile)
+        val relative = resolveDocsDir(project, configFile)
         return VfsUtilCore.findRelativeFile(relative, siteRoot)?.takeIf { it.isDirectory }
     }
+
+    /**
+     * Determines the documentation directory of the site described by [configFile].
+     *
+     * Falls back to [MkDocsSiteTemplate.DEFAULT_DOCS_DIR], which is what MkDocs itself uses when the key is
+     * missing. Reading the key is [MkDocsConfig.readDocsDir]; the fallback lives here rather than there
+     * because knowing what MkDocs assumes is a statement about the layout of a site, not about the file.
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     * @return the documentation directory, relative to the site root, never blank
+     */
+    fun resolveDocsDir(project: Project, configFile: VirtualFile): String =
+        MkDocsConfig.readDocsDir(project, configFile) ?: MkDocsSiteTemplate.DEFAULT_DOCS_DIR
+
+    /**
+     * Determines the build output directory of the site described by [configFile].
+     *
+     * Falls back to [MkDocsSiteTemplate.DEFAULT_SITE_DIR], for the same reason as in [resolveDocsDir].
+     *
+     * @param project the project [configFile] belongs to
+     * @param configFile an MkDocs configuration file
+     * @return the output directory, relative to the site root, never blank
+     */
+    fun resolveSiteDir(project: Project, configFile: VirtualFile): String =
+        MkDocsConfig.readSiteDir(project, configFile) ?: MkDocsSiteTemplate.DEFAULT_SITE_DIR
 
     /**
      * Returns `true` if [directory] is the documentation directory of the site it belongs to.
@@ -123,7 +149,7 @@ object MkDocsLayout {
      */
     fun assetsDirNameOf(module: Module?): String {
         val configured = module?.let { MkDocsFacet.getInstance(it) }?.configuration?.assetsDirName
-        return configured?.takeIf { it.isNotBlank() } ?: MkDocsProject.DEFAULT_ASSETS_DIR
+        return configured?.takeIf { it.isNotBlank() } ?: MkDocsSiteTemplate.DEFAULT_ASSETS_DIR
     }
 
     /**
@@ -150,7 +176,7 @@ object MkDocsLayout {
      */
     fun stylesheetsDirNameOf(module: Module?): String {
         val configured = module?.let { MkDocsFacet.getInstance(it) }?.configuration?.stylesheetsDirName
-        return configured?.takeIf { it.isNotBlank() } ?: MkDocsProject.DEFAULT_STYLESHEETS_DIR
+        return configured?.takeIf { it.isNotBlank() } ?: MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR
     }
 
     /**
@@ -210,6 +236,6 @@ object MkDocsLayout {
             }
             current = current.parent
         }
-        return MkDocsProject.DEFAULT_SITE_DIR
+        return MkDocsSiteTemplate.DEFAULT_SITE_DIR
     }
 }

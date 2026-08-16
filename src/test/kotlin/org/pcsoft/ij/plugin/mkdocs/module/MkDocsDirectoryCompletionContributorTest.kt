@@ -184,7 +184,10 @@ class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
      */
     private fun syncAndKeepFacet() {
         MkDocsModuleService.getInstance(project).sync()
-        assertNotNull("the detection must have put an MkDocs facet on the fixture module", MkDocsFacet.getInstance(myFixture.module))
+        assertNotNull(
+            "the detection must have put an MkDocs facet on the fixture module",
+            MkDocsFacet.getInstance(myFixture.module)
+        )
     }
 
     /**

@@ -7,7 +7,11 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "group", "descriptionKey"],
+    "required": [
+      "id",
+      "group",
+      "descriptionKey"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -16,7 +20,14 @@
       "group": {
         "type": "string",
         "description": "The section of the page this flag changes.",
-        "enum": ["ANNOUNCE", "CONTENT", "HEADER", "NAVIGATION", "SEARCH", "TOC"]
+        "enum": [
+          "ANNOUNCE",
+          "CONTENT",
+          "HEADER",
+          "NAVIGATION",
+          "SEARCH",
+          "TOC"
+        ]
       },
       "descriptionKey": {
         "type": "string",

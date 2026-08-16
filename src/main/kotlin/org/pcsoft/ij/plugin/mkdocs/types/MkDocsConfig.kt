@@ -20,7 +20,6 @@ import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.YAMLScalar
 import org.jetbrains.yaml.psi.YAMLSequence
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 
 /**
  * Reads the few pieces of information the module system needs out of an MkDocs configuration file.
@@ -28,6 +27,9 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
  * Parsing goes through the bundled YAML plugin's PSI instead of a YAML library: the PSI is already built
  * and cached by the IDE, it tolerates the half-written files an editor sees, and it keeps the plugin free
  * of an extra runtime dependency.
+ *
+ * Only what MkDocs itself defines is read here. Which theme a name stands for, and what a theme brings with
+ * it, is the business of the feature offering that theme — see [isTheme].
  *
  * All functions here must be called inside a read action.
  */
@@ -68,9 +70,6 @@ object MkDocsConfig {
 
     /** The MkDocs configuration key holding the name of the theme, below [KEY_THEME]. */
     const val KEY_THEME_NAME: String = "theme.name"
-
-    /** The name MkDocs knows the Material theme under. */
-    const val THEME_MATERIAL: String = "material"
 
     /** The MkDocs configuration key listing the style sheets the built site loads. */
     const val KEY_EXTRA_CSS: String = "extra_css"
@@ -163,19 +162,6 @@ object MkDocsConfig {
         readScalar(project, configFile, KEY_DOCS_DIR)
 
     /**
-     * Determines the documentation directory of the site described by [configFile].
-     *
-     * Falls back to [MkDocsProject.DEFAULT_DOCS_DIR], which is what MkDocs itself uses when the key is
-     * missing.
-     *
-     * @param project the project [configFile] belongs to
-     * @param configFile an MkDocs configuration file
-     * @return the documentation directory, relative to the site root, never blank
-     */
-    fun resolveDocsDir(project: Project, configFile: VirtualFile): String =
-        readDocsDir(project, configFile) ?: MkDocsProject.DEFAULT_DOCS_DIR
-
-    /**
      * Reads `site_dir` from [configFile].
      *
      * The value is returned as written, for the same reason as in [readDocsDir].
@@ -186,19 +172,6 @@ object MkDocsConfig {
      */
     fun readSiteDir(project: Project, configFile: VirtualFile): String? =
         readScalar(project, configFile, KEY_SITE_DIR)
-
-    /**
-     * Determines the build output directory of the site described by [configFile].
-     *
-     * Falls back to [MkDocsProject.DEFAULT_SITE_DIR], which is what MkDocs itself uses when the key is
-     * missing.
-     *
-     * @param project the project [configFile] belongs to
-     * @param configFile an MkDocs configuration file
-     * @return the output directory, relative to the site root, never blank
-     */
-    fun resolveSiteDir(project: Project, configFile: VirtualFile): String =
-        readSiteDir(project, configFile) ?: MkDocsProject.DEFAULT_SITE_DIR
 
     /**
      * Reads `extra_css` from [configFile].
@@ -327,15 +300,18 @@ object MkDocsConfig {
     }
 
     /**
-     * Tells whether the site described by [configFile] is built with the Material theme.
+     * Tells whether the site described by [configFile] is built with the theme registered as [themeName].
      *
      * The comparison ignores case: MkDocs matches the theme by its registered name, and an author writing it
      * differently still gets the same theme.
      *
+     * Which name a feature stands for is the feature's own knowledge — this only answers the question.
+     *
      * @param project the project [configFile] belongs to
      * @param configFile an MkDocs configuration file
-     * @return `true` if the configured theme is [THEME_MATERIAL]
+     * @param themeName the registered name of the theme to test for
+     * @return `true` if the configured theme is [themeName]
      */
-    fun isMaterialTheme(project: Project, configFile: VirtualFile): Boolean =
-        readThemeName(project, configFile)?.equals(THEME_MATERIAL, ignoreCase = true) == true
+    fun isTheme(project: Project, configFile: VirtualFile, themeName: String): Boolean =
+        readThemeName(project, configFile)?.equals(themeName, ignoreCase = true) == true
 }

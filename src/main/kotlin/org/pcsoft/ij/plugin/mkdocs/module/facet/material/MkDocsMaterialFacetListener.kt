@@ -20,12 +20,12 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.MkDocsFacetSync
+import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
+import org.pcsoft.ij.plugin.mkdocs.material.schema.MkDocsMaterialSchemaCache
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetEditorTab
-import org.pcsoft.ij.plugin.mkdocs.schema.MkDocsMaterialSchemaCache
-import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
 
 /**
@@ -36,9 +36,9 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
  * this the next detection run would simply undo what the user did in the dialog.
  *
  * The other direction — an edited configuration file changing the facet — is handled by
- * [org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService]. Both directions meet in the middle: the file is
- * only written when it does not already say what the facet says, so a facet the detection itself created
- * writes nothing.
+ * [MkDocsMaterialSiteFeature.syncFacet], which the detection calls. Both directions meet in the middle: the
+ * file is only written when it does not already say what the facet says, so a facet the detection itself
+ * created writes nothing.
  *
  * Independently of who caused the change, the facet decides which JSON schema the configuration file is
  * validated against, so every appearance and disappearance of it invalidates the cached schema assignment.
@@ -52,17 +52,23 @@ class MkDocsMaterialFacetListener(private val project: Project) : FacetManagerLi
     override fun facetAdded(facet: Facet<*>) {
         invalidateSchema(facet)
         if (!isUserChange(facet)) return
-        applyToConfigFile(facet.module, MkDocsBundle.message("facet.angularMaterial.command.add")) { configFile ->
-            if (MkDocsConfig.isMaterialTheme(project, configFile)) return@applyToConfigFile
-            MkDocsConfigWriter.setThemeName(project, configFile, MkDocsConfig.THEME_MATERIAL)
+        applyToConfigFile(
+            facet.module,
+            MkDocsMaterialBundle.message("facet.angularMaterial.command.add")
+        ) { configFile ->
+            if (MkDocsMaterialConfig.isMaterialTheme(project, configFile)) return@applyToConfigFile
+            MkDocsConfigWriter.setThemeName(project, configFile, MkDocsMaterialConfig.THEME_MATERIAL)
         }
     }
 
     override fun facetRemoved(facet: Facet<*>) {
         invalidateSchema(facet)
         if (!isUserChange(facet)) return
-        applyToConfigFile(facet.module, MkDocsBundle.message("facet.angularMaterial.command.remove")) { configFile ->
-            if (!MkDocsConfig.isMaterialTheme(project, configFile)) return@applyToConfigFile
+        applyToConfigFile(
+            facet.module,
+            MkDocsMaterialBundle.message("facet.angularMaterial.command.remove")
+        ) { configFile ->
+            if (!MkDocsMaterialConfig.isMaterialTheme(project, configFile)) return@applyToConfigFile
             MkDocsConfigWriter.removeTheme(project, configFile)
         }
     }
@@ -89,15 +95,16 @@ class MkDocsMaterialFacetListener(private val project: Project) : FacetManagerLi
      *
      * Three sources are turned away. A facet of another type is none of this listener's business. A facet the
      * detection itself is adding or removing only mirrors the file it was read from — carrying it back would
-     * let a misread file delete the very key it declares. And a project or module on its way out takes its
-     * facets with it, which says nothing about the site the files describe.
+     * let a misread file delete the very key it declares, which is what [MkDocsFacetSync] marks. And a
+     * project or module on its way out takes its facets with it, which says nothing about the site the files
+     * describe.
      *
      * @param facet the facet the platform announced
      */
     private fun isUserChange(facet: Facet<*>): Boolean {
         if (facet !is MkDocsMaterialFacet) return false
         if (project.isDisposed || facet.module.isDisposed) return false
-        if (MkDocsModuleService.getInstance(project).isApplyingFacets) return false
+        if (MkDocsFacetSync.isRunning()) return false
         return true
     }
 
@@ -128,6 +135,6 @@ class MkDocsMaterialFacetListener(private val project: Project) : FacetManagerLi
      */
     private fun configFileOf(module: Module): VirtualFile? {
         val mkDocsFacet = runReadActionBlocking { MkDocsFacet.getInstance(module) } ?: return null
-        return MkDocsFacetEditorTab.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
+        return MkDocsSiteFiles.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
     }
 }

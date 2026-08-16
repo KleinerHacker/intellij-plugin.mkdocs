@@ -15,7 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.module.facet.material
 import com.intellij.util.xmlb.XmlSerializer
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -35,7 +35,7 @@ class MkDocsMaterialFacetConfigurationTest {
     fun `starts with the material theme`() {
         val configuration = MkDocsMaterialFacetConfiguration()
 
-        assertEquals(MkDocsConfig.THEME_MATERIAL, configuration.themeName)
+        assertEquals(MkDocsMaterialConfig.THEME_MATERIAL, configuration.themeName)
     }
 
     /**

@@ -20,7 +20,7 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
 import org.jetbrains.annotations.TestOnly
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialSettings
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtensionLevel
@@ -98,7 +98,7 @@ class MkDocsMaterialExtensionsPage(
             cell(JBScrollPane(table)).align(Align.FILL)
         }.resizableRow()
         row {
-            comment(MkDocsBundle.message("material.page.extensions.hint"))
+            comment(MkDocsMaterialBundle.message("material.page.extensions.hint"))
         }
     }
 
@@ -171,9 +171,9 @@ class MkDocsMaterialExtensionsPage(
         override fun getColumnCount(): Int = 3
 
         override fun getColumnName(column: Int): String = when (column) {
-            COLUMN_ID -> MkDocsBundle.message("material.page.extensions.column.extension")
-            COLUMN_STATUS -> MkDocsBundle.message("material.page.extensions.column.status")
-            else -> MkDocsBundle.message("material.page.extensions.column.enabled")
+            COLUMN_ID -> MkDocsMaterialBundle.message("material.page.extensions.column.extension")
+            COLUMN_STATUS -> MkDocsMaterialBundle.message("material.page.extensions.column.status")
+            else -> MkDocsMaterialBundle.message("material.page.extensions.column.enabled")
         }
 
         override fun getColumnClass(columnIndex: Int): Class<*> =
@@ -186,7 +186,7 @@ class MkDocsMaterialExtensionsPage(
             return when (columnIndex) {
                 COLUMN_ID -> extension.id
                 COLUMN_STATUS -> statusOf(extension).let {
-                    MkDocsBundle.messageOrDefault(it.titleKey, it.name) ?: it.name
+                    MkDocsMaterialBundle.messageOrDefault(it.titleKey, it.name) ?: it.name
                 }
 
                 else -> isEnabled(extension)

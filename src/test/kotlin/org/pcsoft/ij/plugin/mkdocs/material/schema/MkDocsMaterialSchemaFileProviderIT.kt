@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.schema
+package org.pcsoft.ij.plugin.mkdocs.material.schema
 
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager

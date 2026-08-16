@@ -171,12 +171,16 @@
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
 
+    </actions>
+
+    <!-- The actions of the Angular Material feature, which take their texts from the bundle of that feature. -->
+    <actions resource-bundle="messages.MkDocsMaterialBundle">
         <!-- Offered on the root directory of a site using the Material theme. Creating an override means a
              directory, a key in mkdocs.yml and a file at exactly the right path — all three at once, because
              missing one of them produces a site that builds and ignores the override. -->
         <action id="org.pcsoft.ij.plugin.mkdocs.CreateMaterialOverride"
                 class="org.pcsoft.ij.plugin.mkdocs.material.override.MkDocsMaterialCreateOverrideAction"
-                icon="org.pcsoft.ij.plugin.mkdocs.MkDocsIcons.Material">
+                icon="org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons.Feature">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
     </actions>
@@ -197,6 +201,8 @@
         <postStartupActivity implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsStartupActivity"/>
         <!-- … and re-detection after every relevant virtual file system change. -->
         <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsVfsListener"/>
+        <!-- The Angular Material feature watches the installed package its icon sets come from. -->
+        <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialVfsListener"/>
 
         <!-- Shows the site name behind the site root directory in the project view and badges its icon. -->
         <projectViewNodeDecorator implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsProjectViewDecorator"/>
@@ -243,13 +249,14 @@
              a language: the plugin adds no PSI for the templates of the theme. -->
         <defaultLiveTemplates file="/liveTemplates/MkDocsMaterial.xml"/>
 
-        <!-- The settings page of the plugin, holding the icon directory of Material for MkDocs. -->
+        <!-- The settings page of the plugin, holding the icon directory of Material for MkDocs. The id is kept
+             as it was so a link or a search hit pointing at the page keeps working. -->
         <projectConfigurable
                 id="org.pcsoft.ij.plugin.mkdocs.settings"
                 parentId="tools"
-                bundle="messages.MkDocsBundle"
+                bundle="messages.MkDocsMaterialBundle"
                 key="settings.title"
-                instance="org.pcsoft.ij.plugin.mkdocs.settings.MkDocsSettingsConfigurable"/>
+                instance="org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialIconSettingsConfigurable"/>
 
         <!-- Completes the icons of the installed Material for MkDocs. Not part of the schema: which icons
              exist is a property of the installed package, and there are several thousand of them. -->
@@ -291,7 +298,7 @@
              that can be switched off: a site keeping its Markdown plain is not doing anything wrong. -->
         <localInspection language="yaml"
                          shortName="MkDocsMaterialRecommendedExtension"
-                         bundle="messages.MkDocsBundle"
+                         bundle="messages.MkDocsMaterialBundle"
                          key="inspection.material.recommendedExtension"
                          groupBundle="messages.MkDocsBundle"
                          groupKey="inspection.group.mkdocs"

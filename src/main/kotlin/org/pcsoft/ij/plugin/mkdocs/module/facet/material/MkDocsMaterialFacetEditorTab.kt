@@ -14,7 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.module.facet.material
 
 import com.intellij.facet.ui.FacetEditorTab
 import com.intellij.ui.dsl.builder.panel
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import javax.swing.JComponent
 
 /**
@@ -31,14 +31,14 @@ class MkDocsMaterialFacetEditorTab(
     private val configuration: MkDocsMaterialFacetConfiguration,
 ) : FacetEditorTab() {
 
-    override fun getDisplayName(): String = MkDocsBundle.message("facet.angularMaterial.tab.overview")
+    override fun getDisplayName(): String = MkDocsMaterialBundle.message("facet.angularMaterial.tab.overview")
 
     override fun createComponent(): JComponent = panel {
-        row(MkDocsBundle.message("facet.angularMaterial.field.theme")) {
+        row(MkDocsMaterialBundle.message("facet.angularMaterial.field.theme")) {
             label(configuration.themeName)
         }
         row {
-            comment(MkDocsBundle.message("facet.angularMaterial.hint"))
+            comment(MkDocsMaterialBundle.message("facet.angularMaterial.hint"))
         }
     }
 

@@ -175,26 +175,35 @@ class MkDocsConfigWriterNestedTest : BasePlatformTestCase() {
         assertEquals(1, second)
         assertEquals(
             "site_name: Handbook\n" +
-                "extra:\n" +
-                "  social:\n" +
-                "    - icon: fontawesome/brands/github\n" +
-                "      link: 'https://github.com/x'\n" +
-                "    - icon: fontawesome/brands/mastodon\n",
+                    "extra:\n" +
+                    "  social:\n" +
+                    "    - icon: fontawesome/brands/github\n" +
+                    "      link: 'https://github.com/x'\n" +
+                    "    - icon: fontawesome/brands/mastodon\n",
             text(file),
         )
         assertEquals(2, itemCount(file, "extra.social"))
 
-        assertTrue(write { MkDocsConfigWriter.setItemScalar(project, file, "extra.social", 1, "icon", "octicons/mark") })
+        assertTrue(write {
+            MkDocsConfigWriter.setItemScalar(
+                project,
+                file,
+                "extra.social",
+                1,
+                "icon",
+                "octicons/mark"
+            )
+        })
         assertTrue(write { MkDocsConfigWriter.setItemScalar(project, file, "extra.social", 1, "name", "Mastodon") })
 
         assertEquals(
             "site_name: Handbook\n" +
-                "extra:\n" +
-                "  social:\n" +
-                "    - icon: fontawesome/brands/github\n" +
-                "      link: 'https://github.com/x'\n" +
-                "    - icon: octicons/mark\n" +
-                "      name: Mastodon\n",
+                    "extra:\n" +
+                    "  social:\n" +
+                    "    - icon: fontawesome/brands/github\n" +
+                    "      link: 'https://github.com/x'\n" +
+                    "    - icon: octicons/mark\n" +
+                    "      name: Mastodon\n",
             text(file),
         )
         assertEquals(
@@ -235,20 +244,20 @@ class MkDocsConfigWriterNestedTest : BasePlatformTestCase() {
         val file = configFile(
             "comments/mkdocs.yml",
             "site_name: Handbook  # the title\n" +
-                "theme:\n" +
-                "  # how the site looks\n" +
-                "  name: material  # do not change lightly\n" +
-                "  language: en  # the default\n",
+                    "theme:\n" +
+                    "  # how the site looks\n" +
+                    "  name: material  # do not change lightly\n" +
+                    "  language: en  # the default\n",
         )
 
         assertTrue(write { MkDocsConfigWriter.setNestedScalar(project, file, "theme.name", "readthedocs") })
 
         assertEquals(
             "site_name: Handbook  # the title\n" +
-                "theme:\n" +
-                "  # how the site looks\n" +
-                "  name: readthedocs  # do not change lightly\n" +
-                "  language: en  # the default\n",
+                    "theme:\n" +
+                    "  # how the site looks\n" +
+                    "  name: readthedocs  # do not change lightly\n" +
+                    "  language: en  # the default\n",
             text(file),
         )
     }
@@ -307,13 +316,13 @@ class MkDocsConfigWriterNestedTest : BasePlatformTestCase() {
         assertTrue("the batch must not be written through before it is complete", unsavedDuringBatch)
         assertEquals(
             "site_name: Handbook\n" +
-                "theme:\n" +
-                "  name: material\n" +
-                "  language: de\n" +
-                "  palette:\n" +
-                "    toggle: false\n" +
-                "extra_css:\n" +
-                "  - extra.css\n",
+                    "theme:\n" +
+                    "  name: material\n" +
+                    "  language: de\n" +
+                    "  palette:\n" +
+                    "    toggle: false\n" +
+                    "extra_css:\n" +
+                    "  - extra.css\n",
             text(file),
         )
     }

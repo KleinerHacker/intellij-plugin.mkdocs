@@ -17,7 +17,7 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import org.jetbrains.yaml.psi.YAMLFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 
 /**
  * Shows a banner above a Material configuration file whose own features ask for a Markdown extension it does
@@ -42,7 +42,7 @@ class MkDocsMaterialExtensionAnnotator : Annotator {
         for (extension in MkDocsMaterialExtensions.missingRequired(element.project, file)) {
             holder.newAnnotation(
                 HighlightSeverity.ERROR,
-                MkDocsBundle.message("material.extension.missing", extension.id),
+                MkDocsMaterialBundle.message("material.extension.missing", extension.id),
             )
                 .fileLevel()
                 .withFix(MkDocsMaterialAddExtensionFix(extension))

@@ -76,11 +76,11 @@ private fun replace(original: String): String =
 /** The scaffold of `main.html`: the base template extended, with one block opened as an example. */
 private const val MAIN_SCAFFOLD: String =
     "{% extends \"base.html\" %}\n" +
-        "\n" +
-        "{% block extrahead %}\n" +
-        "  {{ super() }}\n" +
-        "  {# Add to the head of every page here. #}\n" +
-        "{% endblock %}\n"
+            "\n" +
+            "{% block extrahead %}\n" +
+            "  {{ super() }}\n" +
+            "  {# Add to the head of every page here. #}\n" +
+            "{% endblock %}\n"
 
 /** The scaffold of `partials/header.html`. */
 private val HEADER_SCAFFOLD: String = replace("partials/header.html")

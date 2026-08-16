@@ -78,7 +78,7 @@ class MkDocsConfigThemeTest : BasePlatformTestCase() {
     fun `test adds the theme to a file without one`() {
         val file = configFile("add/mkdocs.yml", "site_name: Handbook\n")
 
-        setThemeName(file, MkDocsConfig.THEME_MATERIAL)
+        setThemeName(file, THEME_MATERIAL)
 
         assertTrue(isMaterialTheme(file))
         assertTrue("site_name must survive the write", text(file).contains("site_name: Handbook"))
@@ -94,7 +94,7 @@ class MkDocsConfigThemeTest : BasePlatformTestCase() {
             "site_name: Handbook\ntheme:\n  name: readthedocs\n  highlightjs: true\n",
         )
 
-        setThemeName(file, MkDocsConfig.THEME_MATERIAL)
+        setThemeName(file, THEME_MATERIAL)
 
         assertEquals("material", readThemeName(file))
         assertTrue("settings next to the name must survive", text(file).contains("highlightjs: true"))
@@ -107,7 +107,7 @@ class MkDocsConfigThemeTest : BasePlatformTestCase() {
     fun `test turns a scalar theme into a mapping`() {
         val file = configFile("scalar-write/mkdocs.yml", "site_name: Handbook\ntheme: readthedocs\n")
 
-        setThemeName(file, MkDocsConfig.THEME_MATERIAL)
+        setThemeName(file, THEME_MATERIAL)
 
         assertEquals("material", readThemeName(file))
         assertTrue(isMaterialTheme(file))
@@ -118,7 +118,8 @@ class MkDocsConfigThemeTest : BasePlatformTestCase() {
      * it, so MkDocs falls back to its built-in theme, while the rest of the configuration stays untouched.
      */
     fun `test removes the theme key`() {
-        val file = configFile("remove/mkdocs.yml", "site_name: Handbook\ntheme:\n  name: material\nsite_url: https://x.y\n")
+        val file =
+            configFile("remove/mkdocs.yml", "site_name: Handbook\ntheme:\n  name: material\nsite_url: https://x.y\n")
 
         removeTheme(file)
 
@@ -167,7 +168,7 @@ class MkDocsConfigThemeTest : BasePlatformTestCase() {
         runReadActionBlocking { MkDocsConfig.readThemeName(project, file) }
 
     private fun isMaterialTheme(file: VirtualFile): Boolean =
-        runReadActionBlocking { MkDocsConfig.isMaterialTheme(project, file) }
+        runReadActionBlocking { MkDocsConfig.isTheme(project, file, THEME_MATERIAL) }
 
     private fun setThemeName(file: VirtualFile, name: String) =
         WriteCommandAction.runWriteCommandAction(project) {
@@ -181,4 +182,15 @@ class MkDocsConfigThemeTest : BasePlatformTestCase() {
 
     private fun text(file: VirtualFile): String =
         runReadActionBlocking { MkDocsConfig.yamlFileOf(project, file)!!.text }
+
+    private companion object {
+
+        /**
+         * The theme the reading and writing is exercised with.
+         *
+         * Spelled out here rather than taken from the feature that owns the name: what is under test is that
+         * `theme` is read and written in both shapes MkDocs accepts, which holds for any theme.
+         */
+        const val THEME_MATERIAL = "material"
+    }
 }

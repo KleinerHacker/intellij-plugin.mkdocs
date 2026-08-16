@@ -19,7 +19,7 @@ import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import org.jetbrains.annotations.TestOnly
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
@@ -41,17 +41,17 @@ class MkDocsMaterialCreateOverrideDialog(
     private val directory = JBTextField(directoryName)
 
     private val boxes = MkDocsMaterialOverride.entries.associateWith {
-        JCheckBox(MkDocsBundle.message(it.titleKey))
+        JCheckBox(MkDocsMaterialBundle.message(it.titleKey))
     }
 
     init {
-        title = MkDocsBundle.message("material.override.title")
+        title = MkDocsMaterialBundle.message("material.override.title")
         boxes[MkDocsMaterialOverride.MAIN]?.isSelected = true
         init()
     }
 
     override fun createCenterPanel(): JComponent = panel {
-        row(MkDocsBundle.message("material.override.field.directory")) {
+        row(MkDocsMaterialBundle.message("material.override.field.directory")) {
             cell(directory).align(Align.FILL)
         }
         boxes.forEach { (override, box) ->
@@ -61,17 +61,17 @@ class MkDocsMaterialCreateOverrideDialog(
             }
         }
         row {
-            comment(MkDocsBundle.message("material.override.hint"))
+            comment(MkDocsMaterialBundle.message("material.override.hint"))
         }
     }
 
     override fun doValidate(): ValidationInfo? {
         val name = directoryName()
         if (name.isEmpty() || '/' in name || '\\' in name) {
-            return ValidationInfo(MkDocsBundle.message("material.override.error.directory"), directory)
+            return ValidationInfo(MkDocsMaterialBundle.message("material.override.error.directory"), directory)
         }
         if (selectedOverrides().isEmpty()) {
-            return ValidationInfo(MkDocsBundle.message("material.override.error.empty"))
+            return ValidationInfo(MkDocsMaterialBundle.message("material.override.error.empty"))
         }
         return null
     }

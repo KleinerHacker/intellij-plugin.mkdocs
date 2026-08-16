@@ -19,7 +19,6 @@ import com.intellij.psi.PsiDirectory
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import javax.swing.Icon
 
@@ -44,7 +43,7 @@ class MkDocsDirectoryCompletionContributor : CreateDirectoryCompletionContributo
 
         val configFile = MkDocsLayout.configFileOf(virtualFile)
         if (configFile != null) {
-            val docsDir = MkDocsConfig.resolveDocsDir(project, configFile)
+            val docsDir = MkDocsLayout.resolveDocsDir(project, configFile)
             if (virtualFile.findFileByRelativePath(docsDir) != null) return emptyList()
             return listOf(variantOf(docsDir, MkDocsIcons.DocsBadge))
         }

@@ -19,10 +19,11 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementDecorator
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.LookupElementRenderer
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
+import org.pcsoft.ij.plugin.mkdocs.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialKeys
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 
 /**
  * Marks the completion entries of an MkDocs configuration file that come from *Material for MkDocs*.
@@ -49,7 +50,7 @@ class MkDocsMaterialOriginCompletionContributor : CompletionContributor() {
         val file = position.containingFile?.originalFile ?: return
         if (!MkDocsProject.isConfigFile(file.name)) return
         val virtualFile = file.virtualFile ?: return
-        if (!MkDocsConfig.isMaterialTheme(position.project, virtualFile)) return
+        if (!MkDocsMaterialConfig.isMaterialTheme(position.project, virtualFile)) return
 
         result.runRemainingContributors(parameters) { completionResult ->
             val element = completionResult.lookupElement
@@ -82,8 +83,8 @@ class MkDocsMaterialOriginCompletionContributor : CompletionContributor() {
                     decorator.delegate.renderElement(presentation)
                     val own = presentation.icon
                     presentation.icon =
-                        if (own == null) MkDocsIcons.MaterialBadge
-                        else MkDocsIcons.withBadge(own, MkDocsIcons.MaterialOverlay)
+                        if (own == null) MkDocsMaterialIcons.Badge
+                        else MkDocsIconLoader.withBadge(own, MkDocsMaterialIcons.Overlay)
                 }
             }
         )

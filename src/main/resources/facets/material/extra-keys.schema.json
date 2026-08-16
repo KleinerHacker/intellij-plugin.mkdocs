@@ -5,7 +5,9 @@
   "description": "The keys below `extra` the Material for MkDocs theme reads.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["fields"],
+  "required": [
+    "fields"
+  ],
   "properties": {
     "reserved": {
       "type": "array",
@@ -26,7 +28,11 @@
     "field": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "kind", "descriptionKey"],
+      "required": [
+        "name",
+        "kind",
+        "descriptionKey"
+      ],
       "properties": {
         "name": {
           "type": "string",

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.settings
+package org.pcsoft.ij.plugin.mkdocs.material.ui
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.Configurable
@@ -18,7 +18,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
 import javax.swing.JComponent
 
@@ -29,29 +30,32 @@ import javax.swing.JComponent
  * *Material for MkDocs* theme are installed. The search covers the virtual environments a project normally
  * keeps next to its sources, and this field is the answer for every other setup.
  *
+ * The page belongs to the Angular Material feature, which is why it lives here rather than next to the
+ * plugin: it edits nothing the plugin itself reads, and a feature owns its own settings.
+ *
  * Applying throws the icon index away, so a corrected path takes effect in the very next completion popup
  * rather than after a restart.
  *
  * @param project the project the settings belong to
  */
-class MkDocsSettingsConfigurable(private val project: Project) : Configurable {
+class MkDocsMaterialIconSettingsConfigurable(private val project: Project) : Configurable {
 
     private val iconPath = TextFieldWithBrowseButton().apply {
         addBrowseFolderListener(
             project,
             FileChooserDescriptorFactory.createSingleFolderDescriptor()
-                .withTitle(MkDocsBundle.message("settings.iconPath.chooser")),
+                .withTitle(MkDocsMaterialBundle.message("settings.iconPath.chooser")),
         )
     }
 
-    override fun getDisplayName(): String = MkDocsBundle.message("settings.title")
+    override fun getDisplayName(): String = MkDocsMaterialBundle.message("settings.title")
 
     override fun createComponent(): JComponent = panel {
-        row(MkDocsBundle.message("settings.iconPath.label")) {
+        row(MkDocsMaterialBundle.message("settings.iconPath.label")) {
             cell(iconPath).align(Align.FILL)
         }
         row {
-            comment(MkDocsBundle.message("settings.iconPath.comment"))
+            comment(MkDocsMaterialBundle.message("settings.iconPath.comment"))
         }
     }
 
@@ -69,5 +73,5 @@ class MkDocsSettingsConfigurable(private val project: Project) : Configurable {
     /**
      * Returns the settings this page edits.
      */
-    private fun settings(): MkDocsSettings = MkDocsSettings.getInstance(project)
+    private fun settings(): MkDocsMaterialIconSettings = MkDocsMaterialIconSettings.getInstance(project)
 }

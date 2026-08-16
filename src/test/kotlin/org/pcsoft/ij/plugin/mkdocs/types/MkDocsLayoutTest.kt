@@ -118,7 +118,7 @@ class MkDocsLayoutTest : BasePlatformTestCase() {
      * convention is all that is left.
      */
     fun `test falls back to the conventional assets directory`() {
-        assertEquals(MkDocsProject.DEFAULT_ASSETS_DIR, MkDocsLayout.assetsDirNameOf(null))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_ASSETS_DIR, MkDocsLayout.assetsDirNameOf(null))
     }
 
     /**
@@ -126,7 +126,7 @@ class MkDocsLayoutTest : BasePlatformTestCase() {
      * assets directory — MkDocs names the individual files, never the directory.
      */
     fun `test falls back to the conventional stylesheets directory`() {
-        assertEquals(MkDocsProject.DEFAULT_STYLESHEETS_DIR, MkDocsLayout.stylesheetsDirNameOf(null))
+        assertEquals(MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR, MkDocsLayout.stylesheetsDirNameOf(null))
     }
 
     /**
@@ -197,7 +197,7 @@ class MkDocsLayoutTest : BasePlatformTestCase() {
     fun `test falls back to the default output directory`() {
         val plainDir: Path = Files.createTempDirectory("mkdocs-plain")
         try {
-            assertEquals(MkDocsProject.DEFAULT_SITE_DIR, MkDocsLayout.detectSiteDir(plainDir))
+            assertEquals(MkDocsSiteTemplate.DEFAULT_SITE_DIR, MkDocsLayout.detectSiteDir(plainDir))
         } finally {
             plainDir.toFile().deleteRecursively()
         }

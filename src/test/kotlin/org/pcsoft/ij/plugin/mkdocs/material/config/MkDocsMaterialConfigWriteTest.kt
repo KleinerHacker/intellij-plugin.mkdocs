@@ -48,10 +48,10 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
         val file = configFile(
             "features/mkdocs.yml",
             "theme:\n" +
-                "  name: material\n" +
-                "  features:\n" +
-                "    - navigation.tabs\n" +
-                "    - navigation.top  # back to top\n",
+                    "  name: material\n" +
+                    "  features:\n" +
+                    "    - navigation.tabs\n" +
+                    "    - navigation.top  # back to top\n",
         )
         val from = read(file)
 
@@ -59,10 +59,10 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
 
         assertEquals(
             "theme:\n" +
-                "  name: material\n" +
-                "  features:\n" +
-                "    - navigation.top  # back to top\n" +
-                "    - content.code.copy\n",
+                    "  name: material\n" +
+                    "  features:\n" +
+                    "    - navigation.top  # back to top\n" +
+                    "    - content.code.copy\n",
             text(file),
         )
     }
@@ -80,19 +80,19 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
 
         assertEquals(
             "site_name: Handbook\n" +
-                "theme:\n" +
-                "  name: material\n" +
-                "  palette:\n" +
-                "    - media: '(prefers-color-scheme: light)'\n" +
-                "      scheme: default\n" +
-                "      toggle:\n" +
-                "        icon: material/brightness-7\n" +
-                "        name: Switch to dark mode\n" +
-                "    - media: '(prefers-color-scheme: dark)'\n" +
-                "      scheme: slate\n" +
-                "      toggle:\n" +
-                "        icon: material/brightness-4\n" +
-                "        name: Switch to light mode\n",
+                    "theme:\n" +
+                    "  name: material\n" +
+                    "  palette:\n" +
+                    "    - media: '(prefers-color-scheme: light)'\n" +
+                    "      scheme: default\n" +
+                    "      toggle:\n" +
+                    "        icon: material/brightness-7\n" +
+                    "        name: Switch to dark mode\n" +
+                    "    - media: '(prefers-color-scheme: dark)'\n" +
+                    "      scheme: slate\n" +
+                    "      toggle:\n" +
+                    "        icon: material/brightness-4\n" +
+                    "        name: Switch to light mode\n",
             text(file),
         )
         assertEquals(
@@ -108,17 +108,17 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
         val file = configFile(
             "off/mkdocs.yml",
             "theme:\n" +
-                "  name: material\n" +
-                "  palette:\n" +
-                "    - media: '(prefers-color-scheme: light)'\n" +
-                "      scheme: default\n" +
-                "      toggle:\n" +
-                "        icon: material/brightness-7\n" +
-                "    - media: '(prefers-color-scheme: dark)'\n" +
-                "      scheme: slate\n" +
-                "      toggle:\n" +
-                "        icon: material/brightness-4\n" +
-                "  language: en\n",
+                    "  name: material\n" +
+                    "  palette:\n" +
+                    "    - media: '(prefers-color-scheme: light)'\n" +
+                    "      scheme: default\n" +
+                    "      toggle:\n" +
+                    "        icon: material/brightness-7\n" +
+                    "    - media: '(prefers-color-scheme: dark)'\n" +
+                    "      scheme: slate\n" +
+                    "      toggle:\n" +
+                    "        icon: material/brightness-4\n" +
+                    "  language: en\n",
         )
         val from = read(file)
 
@@ -151,16 +151,16 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
         val file = configFile(
             "readonly/mkdocs.yml",
             "theme:\n" +
-                "  name: material\n" +
-                "  palette:\n" +
-                "    - media: '(prefers-color-scheme)'\n" +
-                "      toggle:\n" +
-                "        icon: material/brightness-auto\n" +
-                "    - media: '(prefers-color-scheme: light)'\n" +
-                "      scheme: default\n" +
-                "    - media: '(prefers-color-scheme: dark)'\n" +
-                "      scheme: slate\n" +
-                "  language: en\n",
+                    "  name: material\n" +
+                    "  palette:\n" +
+                    "    - media: '(prefers-color-scheme)'\n" +
+                    "      toggle:\n" +
+                    "        icon: material/brightness-auto\n" +
+                    "    - media: '(prefers-color-scheme: light)'\n" +
+                    "      scheme: default\n" +
+                    "    - media: '(prefers-color-scheme: dark)'\n" +
+                    "      scheme: slate\n" +
+                    "  language: en\n",
         )
         val from = read(file)
         assertFalse(from.editable)
@@ -169,16 +169,16 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
 
         assertEquals(
             "theme:\n" +
-                "  name: material\n" +
-                "  palette:\n" +
-                "    - media: '(prefers-color-scheme)'\n" +
-                "      toggle:\n" +
-                "        icon: material/brightness-auto\n" +
-                "    - media: '(prefers-color-scheme: light)'\n" +
-                "      scheme: default\n" +
-                "    - media: '(prefers-color-scheme: dark)'\n" +
-                "      scheme: slate\n" +
-                "  language: de\n",
+                    "  name: material\n" +
+                    "  palette:\n" +
+                    "    - media: '(prefers-color-scheme)'\n" +
+                    "      toggle:\n" +
+                    "        icon: material/brightness-auto\n" +
+                    "    - media: '(prefers-color-scheme: light)'\n" +
+                    "      scheme: default\n" +
+                    "    - media: '(prefers-color-scheme: dark)'\n" +
+                    "      scheme: slate\n" +
+                    "  language: de\n",
             text(file),
         )
     }
@@ -250,16 +250,16 @@ class MkDocsMaterialConfigWriteTest : BasePlatformTestCase() {
         /** A configuration file carrying comments and keys the Material model does not represent. */
         private const val RICH: String =
             "site_name: Handbook  # the title\n" +
-                "\n" +
-                "# the appearance of the site\n" +
-                "theme:\n" +
-                "  name: material\n" +
-                "  language: en  # interface language\n" +
-                "  features:\n" +
-                "    - navigation.tabs\n" +
-                "markdown_extensions:\n" +
-                "  - admonition\n" +
-                "  - toc:\n" +
-                "      permalink: true\n"
+                    "\n" +
+                    "# the appearance of the site\n" +
+                    "theme:\n" +
+                    "  name: material\n" +
+                    "  language: en  # interface language\n" +
+                    "  features:\n" +
+                    "    - navigation.tabs\n" +
+                    "markdown_extensions:\n" +
+                    "  - admonition\n" +
+                    "  - toc:\n" +
+                    "      permalink: true\n"
     }
 }

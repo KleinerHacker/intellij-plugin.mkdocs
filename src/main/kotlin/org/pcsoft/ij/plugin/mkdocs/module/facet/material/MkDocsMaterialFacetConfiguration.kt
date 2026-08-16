@@ -22,11 +22,12 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.xmlb.XmlSerializerUtil
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialSettingsPages
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetEditorTab
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 
 /**
  * Persistent state of the Angular Material facet.
@@ -43,12 +44,12 @@ class MkDocsMaterialFacetConfiguration :
      * Serialized form of the facet.
      *
      * @property themeName the theme name found in the configuration file, normally
-     *                     [MkDocsConfig.THEME_MATERIAL]. Remembered as written so the tab can show what the
-     *                     site actually declares
+     *                     [MkDocsMaterialConfig.THEME_MATERIAL]. Remembered as written so the tab can show
+     *                     what the site actually declares
      */
     class State {
         @JvmField
-        var themeName: String = MkDocsConfig.THEME_MATERIAL
+        var themeName: String = MkDocsMaterialConfig.THEME_MATERIAL
     }
 
     private var state = State()
@@ -96,7 +97,7 @@ class MkDocsMaterialFacetConfiguration :
         val configFile = configFileOf(editorContext) ?: return null
         val root = configFile.parent ?: return null
         val name = runReadActionBlocking { MkDocsConfig.readDocsDir(editorContext.project, configFile) }
-            ?: MkDocsProject.DEFAULT_DOCS_DIR
+            ?: MkDocsSiteTemplate.DEFAULT_DOCS_DIR
         return VfsUtilCore.findRelativeFile(name, root)?.takeIf { it.isDirectory }
     }
 
@@ -108,6 +109,6 @@ class MkDocsMaterialFacetConfiguration :
     private fun configFileOf(editorContext: FacetEditorContext): VirtualFile? {
         val module: Module = editorContext.module.takeIf { !it.isDisposed } ?: return null
         val mkDocsFacet = runReadActionBlocking { MkDocsFacet.getInstance(module) } ?: return null
-        return MkDocsFacetEditorTab.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
+        return MkDocsSiteFiles.findConfigFile(module, mkDocsFacet.configuration.configFilePath)
     }
 }

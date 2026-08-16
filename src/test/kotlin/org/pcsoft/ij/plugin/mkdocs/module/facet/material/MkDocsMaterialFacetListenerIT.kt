@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.HeavyPlatformTestCase
 import com.intellij.testFramework.PlatformTestUtil
 import com.intellij.testFramework.VfsTestUtil
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
@@ -133,7 +134,7 @@ class MkDocsMaterialFacetListenerIT : HeavyPlatformTestCase() {
     }
 
     private fun isMaterialTheme(configFile: VirtualFile): Boolean =
-        MkDocsConfig.isMaterialTheme(project, configFile)
+        MkDocsMaterialConfig.isMaterialTheme(project, configFile)
 
     private fun text(configFile: VirtualFile): String =
         MkDocsConfig.yamlFileOf(project, configFile)!!.text

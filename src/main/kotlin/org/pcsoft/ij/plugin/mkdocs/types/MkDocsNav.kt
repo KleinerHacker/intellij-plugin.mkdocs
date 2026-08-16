@@ -14,11 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.types
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.jetbrains.yaml.psi.YAMLMapping
-import org.jetbrains.yaml.psi.YAMLScalar
-import org.jetbrains.yaml.psi.YAMLSequence
-import org.jetbrains.yaml.psi.YAMLSequenceItem
+import org.jetbrains.yaml.psi.*
 
 /**
  * Reads the `nav` section of an MkDocs configuration file.

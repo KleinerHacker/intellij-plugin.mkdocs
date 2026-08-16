@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 
@@ -50,7 +50,7 @@ class MkDocsMaterialRecommendedExtensionInspection : LocalInspectionTool() {
         return missing.map { extension ->
             manager.createProblemDescriptor(
                 anchor,
-                MkDocsBundle.message("material.extension.recommended", extension.id),
+                MkDocsMaterialBundle.message("material.extension.recommended", extension.id),
                 MkDocsMaterialAddExtensionFix(extension),
                 ProblemHighlightType.WEAK_WARNING,
                 isOnTheFly,

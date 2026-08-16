@@ -19,13 +19,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import org.jetbrains.yaml.YAMLElementGenerator
-import org.jetbrains.yaml.psi.YAMLFile
-import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.jetbrains.yaml.psi.YAMLMapping
-import org.jetbrains.yaml.psi.YAMLScalar
-import org.jetbrains.yaml.psi.YAMLSequence
-import org.jetbrains.yaml.psi.YAMLValue
-import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSiteCreationService
+import org.jetbrains.yaml.psi.*
 
 /**
  * Writes the configuration keys the IDE side of the plugin has to change back into an MkDocs configuration
@@ -54,6 +48,42 @@ object MkDocsConfigWriter {
     private const val INDENT_SIZE: Int = 2
 
     /**
+     * Values matching this can go into the configuration file as they are.
+     *
+     * Everything else is quoted: a site name carrying a colon, a hash or a leading indicator character
+     * would otherwise turn the generated file into something YAML reads differently, or not at all.
+     */
+    private val PLAIN_SCALAR = Regex("^[A-Za-z0-9][A-Za-z0-9 ._/-]*$")
+
+    /**
+     * Values that are a YAML tag rather than text, and therefore must not be quoted.
+     *
+     * `markdown_extensions` carries them: `pymdownx.emoji` is configured with
+     * `!!python/name:material.extensions.emoji.twemoji`, which MkDocs resolves to a function. Quoting it
+     * would hand the extension the string instead, and the site would fail to build.
+     */
+    private val PYTHON_TAG = Regex("^!![A-Za-z0-9_]+[A-Za-z0-9_./:-]*$")
+
+    /**
+     * Renders [value] as a YAML scalar.
+     *
+     * Single quoting is enough for everything that reaches a configuration file, and inside single quotes
+     * YAML gives no character but the quote itself a meaning — which is escaped by doubling it.
+     *
+     * Lives here rather than next to the site creation, because writing a value is what this object is for
+     * and because a feature writing its own keys needs the same rendering.
+     *
+     * @param value the raw value as the user typed it
+     */
+    @JvmStatic
+    fun yamlScalar(value: String): String =
+        if ((PLAIN_SCALAR.matches(value) || PYTHON_TAG.matches(value)) && !value.endsWith(" ")) {
+            value
+        } else {
+            "'${value.replace("'", "''")}'"
+        }
+
+    /**
      * Sets the theme of the site described by [configFile] to [name].
      *
      * The three shapes a configuration file can be in are all handled: an existing `theme` mapping only has
@@ -65,7 +95,7 @@ object MkDocsConfigWriter {
      *
      * @param project the project [configFile] belongs to
      * @param configFile an MkDocs configuration file
-     * @param name the name of the theme to configure, for example [MkDocsConfig.THEME_MATERIAL]
+     * @param name the name of the theme to configure, for example `material`
      */
     fun setThemeName(project: Project, configFile: VirtualFile, name: String) {
         val yamlFile = MkDocsConfig.yamlFileOf(project, configFile) ?: return
@@ -396,7 +426,7 @@ object MkDocsConfigWriter {
 
     /** Backs [setNestedScalar] without committing the document. */
     internal fun setNestedScalarIn(project: Project, configFile: VirtualFile, path: String, value: String): Boolean =
-        setRawIn(project, configFile, path, MkDocsSiteCreationService.yamlScalar(value))
+        setRawIn(project, configFile, path, yamlScalar(value))
 
     /** Backs [setNestedBoolean] without committing the document. */
     internal fun setNestedBooleanIn(project: Project, configFile: VirtualFile, path: String, value: Boolean): Boolean =
@@ -451,7 +481,7 @@ object MkDocsConfigWriter {
         if (segments.isEmpty()) return false
         val document = syncedDocument(project, configFile) ?: return false
         val yamlFile = MkDocsConfig.yamlFileOf(project, configFile) ?: return false
-        val raw = MkDocsSiteCreationService.yamlScalar(value)
+        val raw = yamlScalar(value)
 
         val keyValue = keyValueAt(yamlFile, segments)
             ?: return insertInto(project, configFile, segments.dropLast(1), listOf("${segments.last()}:", "  - $raw"))
@@ -498,7 +528,7 @@ object MkDocsConfigWriter {
         document.replaceString(
             current.textRange.startOffset,
             current.textRange.endOffset,
-            MkDocsSiteCreationService.yamlScalar(value),
+            yamlScalar(value),
         )
         PsiDocumentManager.getInstance(project).commitDocument(document)
     }
@@ -516,7 +546,7 @@ object MkDocsConfigWriter {
         val yamlFile = MkDocsConfig.yamlFileOf(project, configFile) ?: return -1
         val lines = entries.mapIndexed { position, (key, value) ->
             val prefix = if (position == 0) "- " else "  "
-            "$prefix$key: ${MkDocsSiteCreationService.yamlScalar(value)}"
+            "$prefix$key: ${yamlScalar(value)}"
         }
 
         val keyValue = keyValueAt(yamlFile, segments)
@@ -554,7 +584,7 @@ object MkDocsConfigWriter {
         val yamlFile = MkDocsConfig.yamlFileOf(project, configFile) ?: return false
         val sequence = sequenceAt(yamlFile, splitPath(path)) ?: return false
         val mapping = sequence.items.getOrNull(index)?.value as? YAMLMapping ?: return false
-        val raw = MkDocsSiteCreationService.yamlScalar(value)
+        val raw = yamlScalar(value)
 
         val existing = mapping.keyValues.firstOrNull { it.keyText.trim() == key }
         if (existing != null) {
@@ -628,7 +658,10 @@ object MkDocsConfigWriter {
             // Nothing to put the key into: the file is empty, or it holds nothing but comments. Appending the
             // lines to the document rather than building PSI around them keeps those comments where they are.
             val separator = if (document.textLength == 0 || document.text.endsWith("\n")) "" else "\n"
-            document.insertString(document.textLength, separator + chain(segments, leafLines, 0).joinToString("\n") + "\n")
+            document.insertString(
+                document.textLength,
+                separator + chain(segments, leafLines, 0).joinToString("\n") + "\n"
+            )
             PsiDocumentManager.getInstance(project).commitDocument(document)
             return true
         }
@@ -876,14 +909,14 @@ object MkDocsConfigWriter {
         for ((key, value) in entries) {
             val prefix = if (lines.isEmpty()) "- " else "  "
             when (value) {
-                is String -> lines += "$prefix$key: ${MkDocsSiteCreationService.yamlScalar(value)}"
+                is String -> lines += "$prefix$key: ${yamlScalar(value)}"
 
                 is List<*> -> {
                     val nested = value.filterIsInstance<Pair<*, *>>()
                     if (nested.isEmpty()) continue
                     lines += "$prefix$key:"
                     nested.forEach { (nestedKey, nestedValue) ->
-                        val raw = MkDocsSiteCreationService.yamlScalar(nestedValue.toString())
+                        val raw = yamlScalar(nestedValue.toString())
                         lines += "${" ".repeat(INDENT_SIZE * 2)}$nestedKey: $raw"
                     }
                 }

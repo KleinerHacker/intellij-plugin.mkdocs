@@ -16,7 +16,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.LayeredIcon
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
 import javax.swing.Icon
 
@@ -56,7 +56,7 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
         val layers = (marked as LayeredIcon).allLayers
         assertEquals(2, layers.size)
         assertSame("the drawing of the entry was replaced", plain, layers[0])
-        assertSame(MkDocsIcons.MaterialOverlay, layers[1])
+        assertSame(MkDocsMaterialIcons.Overlay, layers[1])
     }
 
     /**
@@ -98,8 +98,8 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
 
         val icons = iconsOfLookup()
         assertFalse("no entries were offered at all", icons.isEmpty())
-        assertFalse(icons.any { it === MkDocsIcons.MaterialBadge })
-        assertFalse(icons.any { it is LayeredIcon && it.allLayers.last() === MkDocsIcons.MaterialOverlay })
+        assertFalse(icons.any { it === MkDocsMaterialIcons.Badge })
+        assertFalse(icons.any { it is LayeredIcon && it.allLayers.last() === MkDocsMaterialIcons.Overlay })
     }
 
     /**

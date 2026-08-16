@@ -42,29 +42,6 @@ object MkDocsProject {
      */
     const val REQUIREMENTS_FILE_NAME: String = "requirements.txt"
 
-    /** The directory MkDocs reads the documentation sources from when `docs_dir` is not set. */
-    const val DEFAULT_DOCS_DIR: String = "docs"
-
-    /**
-     * The directory the plugin puts asset files into by default.
-     *
-     * MkDocs has no configuration key for this — it is a convention. The directory lives inside the
-     * documentation directory so MkDocs ships its content with the site.
-     */
-    const val DEFAULT_ASSETS_DIR: String = "assets"
-
-    /**
-     * The directory the plugin puts style sheets into by default.
-     *
-     * Like [DEFAULT_ASSETS_DIR] this is a convention rather than an MkDocs key: MkDocs only learns about a
-     * style sheet once `extra_css` names it. The directory lives inside the documentation directory, because
-     * that is the only place MkDocs ships files from.
-     */
-    const val DEFAULT_STYLESHEETS_DIR: String = "stylesheets"
-
-    /** The directory MkDocs builds the site into when `site_dir` is not set. */
-    const val DEFAULT_SITE_DIR: String = "site"
-
     /** Build output directory of a site living in a Maven module. */
     const val MAVEN_SITE_DIR: String = "target/docs"
 
@@ -96,8 +73,8 @@ object MkDocsProject {
      */
     fun isValidDirectoryName(name: String): Boolean =
         name.isNotBlank() &&
-            name.none { it == '/' || it == '\\' } &&
-            name.trim() !in setOf(".", "..")
+                name.none { it == '/' || it == '\\' } &&
+                name.trim() !in setOf(".", "..")
 
     /**
      * Returns `true` if [name] is usable as the build output directory of a site.
@@ -130,7 +107,7 @@ object MkDocsProject {
         entryNames.any { it.lowercase() in GRADLE_MARKERS } -> GRADLE_SITE_DIR
         entryNames.any {
             it.equals(IDEA_MARKER_DIRECTORY, ignoreCase = true) ||
-                it.endsWith(IDEA_MODULE_EXTENSION, ignoreCase = true)
+                    it.endsWith(IDEA_MODULE_EXTENSION, ignoreCase = true)
         } -> IDEA_SITE_DIR
 
         else -> null
@@ -165,7 +142,7 @@ object MkDocsProject {
      */
     fun isPageFile(fileName: String): Boolean =
         fileName.length > PAGE_EXTENSION.length + 1 &&
-            fileName.endsWith(".$PAGE_EXTENSION", ignoreCase = true)
+                fileName.endsWith(".$PAGE_EXTENSION", ignoreCase = true)
 
     /**
      * Returns `true` if [fileName] is a style sheet.
@@ -177,5 +154,17 @@ object MkDocsProject {
      */
     fun isStylesheetFile(fileName: String): Boolean =
         fileName.length > STYLESHEET_EXTENSION.length + 1 &&
-            fileName.endsWith(".$STYLESHEET_EXTENSION", ignoreCase = true)
+                fileName.endsWith(".$STYLESHEET_EXTENSION", ignoreCase = true)
+
+    /**
+     * Directory names never descended into while searching for MkDocs configuration files.
+     *
+     * These are build outputs, dependency caches and VCS metadata — a `mkdocs.yml` inside one of them is an
+     * artefact, not a source site. Every search for a configuration file has to skip the same set, otherwise
+     * one of them would call a site what another one ignores.
+     */
+    val IGNORED_DIRECTORIES: Set<String> = setOf(
+        ".git", ".hg", ".svn", ".idea", ".gradle", ".tox", ".venv", "venv",
+        "node_modules", "build", "out", "target", "dist", "__pycache__", "site",
+    )
 }

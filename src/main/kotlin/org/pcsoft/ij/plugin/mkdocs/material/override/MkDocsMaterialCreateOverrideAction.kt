@@ -22,8 +22,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
@@ -79,7 +79,7 @@ class MkDocsMaterialCreateOverrideAction : AnAction() {
         var opened: VirtualFile? = null
 
         WriteCommandAction.writeCommandAction(project)
-            .withName(MkDocsBundle.message("material.override.command"))
+            .withName(MkDocsMaterialBundle.message("material.override.command"))
             .run<RuntimeException> {
                 val root = VfsUtil.createDirectoryIfMissing(siteRoot, directoryName) ?: return@run
                 for (override in overrides) {
@@ -116,7 +116,13 @@ class MkDocsMaterialCreateOverrideAction : AnAction() {
      * @param configFile the configuration file of the site
      */
     private fun directoryNameOf(project: Project, configFile: VirtualFile): String =
-        runReadActionBlocking { MkDocsConfig.readNestedScalar(project, configFile, MkDocsMaterialConfig.KEY_CUSTOM_DIR) }
+        runReadActionBlocking {
+            MkDocsConfig.readNestedScalar(
+                project,
+                configFile,
+                MkDocsMaterialConfig.KEY_CUSTOM_DIR
+            )
+        }
             ?.takeIf { it.isNotBlank() }
             ?: DEFAULT_DIRECTORY
 
@@ -133,7 +139,12 @@ class MkDocsMaterialCreateOverrideAction : AnAction() {
         val configFile = directory.children
             .firstOrNull { !it.isDirectory && MkDocsProject.isConfigFile(it.name) }
             ?: return null
-        return if (runReadActionBlocking { MkDocsConfig.isMaterialTheme(project, configFile) }) configFile else null
+        return if (runReadActionBlocking {
+                MkDocsMaterialConfig.isMaterialTheme(
+                    project,
+                    configFile
+                )
+            }) configFile else null
     }
 
     private companion object {

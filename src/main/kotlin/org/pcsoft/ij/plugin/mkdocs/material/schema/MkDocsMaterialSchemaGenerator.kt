@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.schema
+package org.pcsoft.ij.plugin.mkdocs.material.schema
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -20,7 +20,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
@@ -122,7 +122,7 @@ class MkDocsMaterialSchemaGenerator {
         val replaced = JsonArray()
         allOf.forEach { branch ->
             val isBaseRef = branch.isJsonObject &&
-                branch.asJsonObject.get("\$ref")?.takeIf { it.isJsonPrimitive }?.asString == BASE_FILE_NAME
+                    branch.asJsonObject.get("\$ref")?.takeIf { it.isJsonPrimitive }?.asString == BASE_FILE_NAME
             replaced.add(if (isBaseRef) base else branch)
         }
         root.add("allOf", replaced)
@@ -188,7 +188,7 @@ class MkDocsMaterialSchemaGenerator {
      * @param flag the feature flag to describe
      */
     private fun describe(flag: MkDocsMaterialFeatureFlag): String =
-        MkDocsBundle.messageOrDefault(flag.descriptionKey, flag.descriptionKey) ?: flag.descriptionKey
+        MkDocsMaterialBundle.messageOrDefault(flag.descriptionKey, flag.descriptionKey) ?: flag.descriptionKey
 
     /**
      * Turns [ids] into a JSON array of strings.

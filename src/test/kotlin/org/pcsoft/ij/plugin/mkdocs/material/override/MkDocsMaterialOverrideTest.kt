@@ -12,10 +12,10 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.override
 
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -83,7 +83,7 @@ class MkDocsMaterialOverrideTest {
     @Test
     fun `every template carries a label`() {
         MkDocsMaterialOverride.entries.forEach {
-            assertTrue("no label for ${it.path}", MkDocsBundle.message(it.titleKey).isNotBlank())
+            assertTrue("no label for ${it.path}", MkDocsMaterialBundle.message(it.titleKey).isNotBlank())
         }
     }
 }

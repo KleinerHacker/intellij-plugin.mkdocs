@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.SimpleTextAttributes
+import org.pcsoft.ij.plugin.mkdocs.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
 import org.pcsoft.ij.plugin.mkdocs.MkDocsTextAttributes
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
@@ -93,7 +94,7 @@ class MkDocsProjectViewDecorator : ProjectViewNodeDecorator {
          */
         @JvmStatic
         fun withBadge(base: Icon, badge: Icon = MkDocsIcons.BadgeOverlay): Icon =
-            MkDocsIcons.withBadge(base, badge)
+            MkDocsIconLoader.withBadge(base, badge)
     }
 
     override fun decorate(node: ProjectViewNode<*>, data: PresentationData) {

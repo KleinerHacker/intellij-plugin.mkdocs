@@ -10,17 +10,17 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.module.facet
+package org.pcsoft.ij.plugin.mkdocs
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
  *
- * Covers the lookup behind the validation of the MkDocs facet editor tab: whether a facet actually has an
- * MkDocs configuration file behind it.
+ * Covers the lookup every caller asking "which configuration file does this module stand for" relies on —
+ * the facet editor tab, the tool window and the optional features alike.
  */
-class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
+class MkDocsSiteFilesTest : BasePlatformTestCase() {
 
     /**
      * Use case: the regular case — the facet was created by the detection and its `configFilePath` points at
@@ -29,7 +29,7 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
     fun `test finds the configured file`() {
         myFixture.addFileToProject("mkdocs.yml", "site_name: My Documentation\n")
 
-        val found = MkDocsFacetEditorTab.findConfigFile(myFixture.module, "mkdocs.yml")
+        val found = MkDocsSiteFiles.findConfigFile(myFixture.module, "mkdocs.yml")
 
         assertNotNull("expected the configured file to be found", found)
         assertEquals("mkdocs.yml", found!!.name)
@@ -44,7 +44,7 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
     fun `test finds a configuration file below the module root`() {
         myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
 
-        val found = MkDocsFacetEditorTab.findConfigFile(myFixture.module, "mkdocs.yml")
+        val found = MkDocsSiteFiles.findConfigFile(myFixture.module, "mkdocs.yml")
 
         assertNotNull("expected a nested configuration file to be found", found)
         assertEquals("mkdocs.yml", found!!.name)
@@ -59,7 +59,7 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
     fun `test falls back to a configuration file in the content root`() {
         myFixture.addFileToProject("mkdocs.yaml", "site_name: Handbook\n")
 
-        val found = MkDocsFacetEditorTab.findConfigFile(myFixture.module, "")
+        val found = MkDocsSiteFiles.findConfigFile(myFixture.module, "")
 
         assertNotNull("expected the fallback search to find the file", found)
         assertEquals("mkdocs.yaml", found!!.name)
@@ -73,7 +73,7 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
     fun `test accepts the other configuration file spelling`() {
         myFixture.addFileToProject("docs/mkdocs.yaml", "site_name: Handbook\n")
 
-        val found = MkDocsFacetEditorTab.findConfigFile(myFixture.module, "mkdocs.yml")
+        val found = MkDocsSiteFiles.findConfigFile(myFixture.module, "mkdocs.yml")
 
         assertNotNull("expected the other spelling to be accepted", found)
         assertEquals("mkdocs.yaml", found!!.name)
@@ -87,7 +87,7 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
         myFixture.addFileToProject("build/mkdocs.yml", "site_name: Artefact\n")
         myFixture.addFileToProject("site/mkdocs.yml", "site_name: Artefact\n")
 
-        assertNull(MkDocsFacetEditorTab.findConfigFile(myFixture.module, "mkdocs.yml"))
+        assertNull(MkDocsSiteFiles.findConfigFile(myFixture.module, "mkdocs.yml"))
     }
 
     /**
@@ -98,8 +98,8 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
     fun `test reports nothing without a configuration file`() {
         myFixture.addFileToProject("readme.md", "# no mkdocs here\n")
 
-        assertNull(MkDocsFacetEditorTab.findConfigFile(myFixture.module, ""))
-        assertNull(MkDocsFacetEditorTab.findConfigFile(myFixture.module, "mkdocs.yml"))
+        assertNull(MkDocsSiteFiles.findConfigFile(myFixture.module, ""))
+        assertNull(MkDocsSiteFiles.findConfigFile(myFixture.module, "mkdocs.yml"))
     }
 
     /**
@@ -109,6 +109,6 @@ class MkDocsFacetEditorTabTest : BasePlatformTestCase() {
     fun `test ignores a directory at the configured path`() {
         myFixture.addFileToProject("mkdocs.yml/placeholder.txt", "")
 
-        assertNull(MkDocsFacetEditorTab.findConfigFile(myFixture.module, "mkdocs.yml"))
+        assertNull(MkDocsSiteFiles.findConfigFile(myFixture.module, "mkdocs.yml"))
     }
 }

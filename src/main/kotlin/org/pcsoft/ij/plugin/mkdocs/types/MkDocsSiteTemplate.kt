@@ -54,10 +54,10 @@ import kotlin.io.path.name
 data class MkDocsSiteTemplate(
     val rootPath: Path,
     val siteName: String,
-    val docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR,
-    val assetsDirName: String = MkDocsProject.DEFAULT_ASSETS_DIR,
-    val stylesheetsDirName: String = MkDocsProject.DEFAULT_STYLESHEETS_DIR,
-    val siteDirName: String = MkDocsProject.DEFAULT_SITE_DIR,
+    val docsDirName: String = DEFAULT_DOCS_DIR,
+    val assetsDirName: String = DEFAULT_ASSETS_DIR,
+    val stylesheetsDirName: String = DEFAULT_STYLESHEETS_DIR,
+    val siteDirName: String = DEFAULT_SITE_DIR,
     val siteAuthor: String = "",
     val siteDescription: String = "",
     val siteUrl: String = "",
@@ -68,6 +68,29 @@ data class MkDocsSiteTemplate(
 ) {
 
     companion object {
+
+        /** The directory MkDocs reads the documentation sources from when `docs_dir` is not set. */
+        const val DEFAULT_DOCS_DIR: String = "docs"
+
+        /**
+         * The directory the plugin puts asset files into by default.
+         *
+         * MkDocs has no configuration key for this — it is a convention. The directory lives inside the
+         * documentation directory so MkDocs ships its content with the site.
+         */
+        const val DEFAULT_ASSETS_DIR: String = "assets"
+
+        /**
+         * The directory the plugin puts style sheets into by default.
+         *
+         * Like [DEFAULT_ASSETS_DIR] this is a convention rather than an MkDocs key: MkDocs only learns about
+         * a style sheet once `extra_css` names it. The directory lives inside the documentation directory,
+         * because that is the only place MkDocs ships files from.
+         */
+        const val DEFAULT_STYLESHEETS_DIR: String = "stylesheets"
+
+        /** The directory MkDocs builds the site into when `site_dir` is not set. */
+        const val DEFAULT_SITE_DIR: String = "site"
 
         /**
          * Returns `true` if [url] can be used as a value of `site_url` or `repo_url`.
@@ -101,6 +124,7 @@ data class MkDocsSiteTemplate(
         !MkDocsProject.isValidDirectoryName(assetsDirName) -> MkDocsSiteTemplateError.INVALID_ASSETS_DIR
         !MkDocsProject.isValidDirectoryName(stylesheetsDirName) ->
             MkDocsSiteTemplateError.INVALID_STYLESHEETS_DIR
+
         !MkDocsProject.isValidSiteDirName(siteDirName) -> MkDocsSiteTemplateError.INVALID_SITE_DIR
         !isUsableUrl(siteUrl) -> MkDocsSiteTemplateError.INVALID_SITE_URL
         !isUsableUrl(repoUrl) -> MkDocsSiteTemplateError.INVALID_REPO_URL

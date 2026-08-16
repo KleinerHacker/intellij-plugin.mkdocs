@@ -226,12 +226,12 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
 
         assertEquals(
             "site_name: Complete\n" +
-                "site_author: Ada Lovelace\n" +
-                "site_description: Everything about the machine.\n" +
-                "site_url: 'https://example.org/docs'\n" +
-                "repo_name: acme/machine\n" +
-                "repo_url: 'https://github.com/acme/machine'\n" +
-                "copyright: '© 2026 Acme'\n",
+                    "site_author: Ada Lovelace\n" +
+                    "site_description: Everything about the machine.\n" +
+                    "site_url: 'https://example.org/docs'\n" +
+                    "repo_name: acme/machine\n" +
+                    "repo_url: 'https://github.com/acme/machine'\n" +
+                    "copyright: '© 2026 Acme'\n",
             VfsUtilCore.loadText(site.configFile),
         )
     }

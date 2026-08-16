@@ -16,8 +16,8 @@ import com.intellij.facet.Facet
 import com.intellij.facet.FacetType
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleType
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.MkDocsIcons
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import javax.swing.Icon
 
 /** String id of the Angular Material facet as it appears in the module's `.iml` file. */
@@ -41,7 +41,7 @@ const val MKDOCS_MATERIAL_FACET_STRING_ID: String = "mkdocs-material"
 class MkDocsMaterialFacetType : FacetType<MkDocsMaterialFacet, MkDocsMaterialFacetConfiguration>(
     MkDocsMaterialFacet.ID,
     MKDOCS_MATERIAL_FACET_STRING_ID,
-    MkDocsBundle.message("facet.angularMaterial.name"),
+    MkDocsMaterialBundle.message("facet.angularMaterial.name"),
 ) {
 
     override fun createDefaultConfiguration(): MkDocsMaterialFacetConfiguration = MkDocsMaterialFacetConfiguration()
@@ -64,5 +64,5 @@ class MkDocsMaterialFacetType : FacetType<MkDocsMaterialFacet, MkDocsMaterialFac
      */
     override fun isSuitableModuleType(moduleType: ModuleType<*>?): Boolean = true
 
-    override fun getIcon(): Icon = MkDocsIcons.Material
+    override fun getIcon(): Icon = MkDocsMaterialIcons.Feature
 }

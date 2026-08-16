@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import org.jetbrains.yaml.psi.YAMLFile
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
 
 /**
@@ -36,16 +36,16 @@ class MkDocsMaterialAddExtensionFix(
     private val extension: MkDocsMarkdownExtension,
 ) : IntentionAction, LocalQuickFix {
 
-    override fun getText(): String = MkDocsBundle.message("material.extension.fix", extension.id)
+    override fun getText(): String = MkDocsMaterialBundle.message("material.extension.fix", extension.id)
 
     override fun getName(): String = text
 
-    override fun getFamilyName(): String = MkDocsBundle.message("material.extension.fix.family")
+    override fun getFamilyName(): String = MkDocsMaterialBundle.message("material.extension.fix.family")
 
     override fun isAvailable(project: Project, editor: Editor?, file: PsiFile?): Boolean {
         val yamlFile = file as? YAMLFile ?: return false
         return extension in MkDocsMaterialExtensions.missingRequired(project, yamlFile) ||
-            extension in MkDocsMaterialExtensions.missingRecommended(project, yamlFile)
+                extension in MkDocsMaterialExtensions.missingRecommended(project, yamlFile)
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {

@@ -22,8 +22,8 @@ import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLScalar
 import org.jetbrains.yaml.psi.YAMLSequenceItem
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 
@@ -47,15 +47,15 @@ class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvid
         builder.append(escape(extension.id))
         builder.append(DocumentationMarkup.DEFINITION_END)
         builder.append(DocumentationMarkup.CONTENT_START)
-        builder.append(escape(MkDocsBundle.message(extension.descriptionKey)))
+        builder.append(escape(MkDocsMaterialBundle.message(extension.descriptionKey)))
         builder.append(DocumentationMarkup.CONTENT_END)
         builder.append(DocumentationMarkup.SECTIONS_START)
         extension.pipPackage?.let {
-            appendSection(builder, MkDocsBundle.message("material.extension.doc.package"), escape(it))
+            appendSection(builder, MkDocsMaterialBundle.message("material.extension.doc.package"), escape(it))
         }
         appendSection(
             builder,
-            MkDocsBundle.message("material.extension.doc.documentation"),
+            MkDocsMaterialBundle.message("material.extension.doc.documentation"),
             "<a href=\"${escape(extension.docUrl)}\">${escape(extension.docUrl)}</a>",
         )
         builder.append(DocumentationMarkup.SECTIONS_END)
@@ -63,7 +63,7 @@ class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvid
     }
 
     override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? =
-        extensionOf(element)?.let { "${it.id} — ${MkDocsBundle.message(it.descriptionKey)}" }
+        extensionOf(element)?.let { "${it.id} — ${MkDocsMaterialBundle.message(it.descriptionKey)}" }
 
     /**
      * Appends one labelled row to the sections table of the popup.

@@ -10,12 +10,12 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.schema
+package org.pcsoft.ij.plugin.mkdocs.material.schema
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.openapi.components.service
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 

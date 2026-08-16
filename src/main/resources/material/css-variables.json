@@ -1,63 +1,320 @@
 [
-  { "name": "--md-primary-fg-color", "group": "PRIMARY", "isColor": true, "descriptionKey": "material.css.md-primary-fg-color" },
-  { "name": "--md-primary-fg-color--light", "group": "PRIMARY", "isColor": true, "descriptionKey": "material.css.md-primary-fg-color--light" },
-  { "name": "--md-primary-fg-color--dark", "group": "PRIMARY", "isColor": true, "descriptionKey": "material.css.md-primary-fg-color--dark" },
-  { "name": "--md-primary-bg-color", "group": "PRIMARY", "isColor": true, "descriptionKey": "material.css.md-primary-bg-color" },
-  { "name": "--md-primary-bg-color--light", "group": "PRIMARY", "isColor": true, "descriptionKey": "material.css.md-primary-bg-color--light" },
-
-  { "name": "--md-accent-fg-color", "group": "ACCENT", "isColor": true, "descriptionKey": "material.css.md-accent-fg-color" },
-  { "name": "--md-accent-fg-color--transparent", "group": "ACCENT", "isColor": true, "descriptionKey": "material.css.md-accent-fg-color--transparent" },
-  { "name": "--md-accent-bg-color", "group": "ACCENT", "isColor": true, "descriptionKey": "material.css.md-accent-bg-color" },
-  { "name": "--md-accent-bg-color--light", "group": "ACCENT", "isColor": true, "descriptionKey": "material.css.md-accent-bg-color--light" },
-
-  { "name": "--md-default-fg-color", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-fg-color" },
-  { "name": "--md-default-fg-color--light", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-fg-color--light" },
-  { "name": "--md-default-fg-color--lighter", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-fg-color--lighter" },
-  { "name": "--md-default-fg-color--lightest", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-fg-color--lightest" },
-  { "name": "--md-default-bg-color", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-bg-color" },
-  { "name": "--md-default-bg-color--light", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-bg-color--light" },
-  { "name": "--md-default-bg-color--lighter", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-bg-color--lighter" },
-  { "name": "--md-default-bg-color--lightest", "group": "DEFAULT", "isColor": true, "descriptionKey": "material.css.md-default-bg-color--lightest" },
-
-  { "name": "--md-code-fg-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-fg-color" },
-  { "name": "--md-code-bg-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-bg-color" },
-  { "name": "--md-code-hl-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-color" },
-  { "name": "--md-code-hl-number-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-number-color" },
-  { "name": "--md-code-hl-special-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-special-color" },
-  { "name": "--md-code-hl-function-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-function-color" },
-  { "name": "--md-code-hl-constant-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-constant-color" },
-  { "name": "--md-code-hl-keyword-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-keyword-color" },
-  { "name": "--md-code-hl-string-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-string-color" },
-  { "name": "--md-code-hl-name-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-name-color" },
-  { "name": "--md-code-hl-operator-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-operator-color" },
-  { "name": "--md-code-hl-punctuation-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-punctuation-color" },
-  { "name": "--md-code-hl-comment-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-comment-color" },
-  { "name": "--md-code-hl-generic-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-generic-color" },
-  { "name": "--md-code-hl-variable-color", "group": "CODE", "isColor": true, "descriptionKey": "material.css.md-code-hl-variable-color" },
-
-  { "name": "--md-typeset-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-color" },
-  { "name": "--md-typeset-a-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-a-color" },
-  { "name": "--md-typeset-mark-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-mark-color" },
-  { "name": "--md-typeset-del-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-del-color" },
-  { "name": "--md-typeset-ins-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-ins-color" },
-  { "name": "--md-typeset-kbd-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-kbd-color" },
-  { "name": "--md-typeset-kbd-accent-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-kbd-accent-color" },
-  { "name": "--md-typeset-kbd-border-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-kbd-border-color" },
-  { "name": "--md-typeset-table-color", "group": "TYPESET", "isColor": true, "descriptionKey": "material.css.md-typeset-table-color" },
-
-  { "name": "--md-admonition-fg-color", "group": "ADMONITION", "isColor": true, "descriptionKey": "material.css.md-admonition-fg-color" },
-  { "name": "--md-admonition-bg-color", "group": "ADMONITION", "isColor": true, "descriptionKey": "material.css.md-admonition-bg-color" },
-
-  { "name": "--md-footer-fg-color", "group": "FOOTER", "isColor": true, "descriptionKey": "material.css.md-footer-fg-color" },
-  { "name": "--md-footer-fg-color--light", "group": "FOOTER", "isColor": true, "descriptionKey": "material.css.md-footer-fg-color--light" },
-  { "name": "--md-footer-fg-color--lighter", "group": "FOOTER", "isColor": true, "descriptionKey": "material.css.md-footer-fg-color--lighter" },
-  { "name": "--md-footer-bg-color", "group": "FOOTER", "isColor": true, "descriptionKey": "material.css.md-footer-bg-color" },
-  { "name": "--md-footer-bg-color--dark", "group": "FOOTER", "isColor": true, "descriptionKey": "material.css.md-footer-bg-color--dark" },
-
-  { "name": "--md-shadow-z1", "group": "SHADOW", "isColor": false, "descriptionKey": "material.css.md-shadow-z1" },
-  { "name": "--md-shadow-z2", "group": "SHADOW", "isColor": false, "descriptionKey": "material.css.md-shadow-z2" },
-  { "name": "--md-shadow-z3", "group": "SHADOW", "isColor": false, "descriptionKey": "material.css.md-shadow-z3" },
-
-  { "name": "--md-text-font", "group": "FONT", "isColor": false, "descriptionKey": "material.css.md-text-font" },
-  { "name": "--md-code-font", "group": "FONT", "isColor": false, "descriptionKey": "material.css.md-code-font" }
+  {
+    "name": "--md-primary-fg-color",
+    "group": "PRIMARY",
+    "isColor": true,
+    "descriptionKey": "material.css.md-primary-fg-color"
+  },
+  {
+    "name": "--md-primary-fg-color--light",
+    "group": "PRIMARY",
+    "isColor": true,
+    "descriptionKey": "material.css.md-primary-fg-color--light"
+  },
+  {
+    "name": "--md-primary-fg-color--dark",
+    "group": "PRIMARY",
+    "isColor": true,
+    "descriptionKey": "material.css.md-primary-fg-color--dark"
+  },
+  {
+    "name": "--md-primary-bg-color",
+    "group": "PRIMARY",
+    "isColor": true,
+    "descriptionKey": "material.css.md-primary-bg-color"
+  },
+  {
+    "name": "--md-primary-bg-color--light",
+    "group": "PRIMARY",
+    "isColor": true,
+    "descriptionKey": "material.css.md-primary-bg-color--light"
+  },
+  {
+    "name": "--md-accent-fg-color",
+    "group": "ACCENT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-accent-fg-color"
+  },
+  {
+    "name": "--md-accent-fg-color--transparent",
+    "group": "ACCENT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-accent-fg-color--transparent"
+  },
+  {
+    "name": "--md-accent-bg-color",
+    "group": "ACCENT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-accent-bg-color"
+  },
+  {
+    "name": "--md-accent-bg-color--light",
+    "group": "ACCENT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-accent-bg-color--light"
+  },
+  {
+    "name": "--md-default-fg-color",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-fg-color"
+  },
+  {
+    "name": "--md-default-fg-color--light",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-fg-color--light"
+  },
+  {
+    "name": "--md-default-fg-color--lighter",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-fg-color--lighter"
+  },
+  {
+    "name": "--md-default-fg-color--lightest",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-fg-color--lightest"
+  },
+  {
+    "name": "--md-default-bg-color",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-bg-color"
+  },
+  {
+    "name": "--md-default-bg-color--light",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-bg-color--light"
+  },
+  {
+    "name": "--md-default-bg-color--lighter",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-bg-color--lighter"
+  },
+  {
+    "name": "--md-default-bg-color--lightest",
+    "group": "DEFAULT",
+    "isColor": true,
+    "descriptionKey": "material.css.md-default-bg-color--lightest"
+  },
+  {
+    "name": "--md-code-fg-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-fg-color"
+  },
+  {
+    "name": "--md-code-bg-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-bg-color"
+  },
+  {
+    "name": "--md-code-hl-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-color"
+  },
+  {
+    "name": "--md-code-hl-number-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-number-color"
+  },
+  {
+    "name": "--md-code-hl-special-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-special-color"
+  },
+  {
+    "name": "--md-code-hl-function-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-function-color"
+  },
+  {
+    "name": "--md-code-hl-constant-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-constant-color"
+  },
+  {
+    "name": "--md-code-hl-keyword-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-keyword-color"
+  },
+  {
+    "name": "--md-code-hl-string-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-string-color"
+  },
+  {
+    "name": "--md-code-hl-name-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-name-color"
+  },
+  {
+    "name": "--md-code-hl-operator-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-operator-color"
+  },
+  {
+    "name": "--md-code-hl-punctuation-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-punctuation-color"
+  },
+  {
+    "name": "--md-code-hl-comment-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-comment-color"
+  },
+  {
+    "name": "--md-code-hl-generic-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-generic-color"
+  },
+  {
+    "name": "--md-code-hl-variable-color",
+    "group": "CODE",
+    "isColor": true,
+    "descriptionKey": "material.css.md-code-hl-variable-color"
+  },
+  {
+    "name": "--md-typeset-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-color"
+  },
+  {
+    "name": "--md-typeset-a-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-a-color"
+  },
+  {
+    "name": "--md-typeset-mark-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-mark-color"
+  },
+  {
+    "name": "--md-typeset-del-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-del-color"
+  },
+  {
+    "name": "--md-typeset-ins-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-ins-color"
+  },
+  {
+    "name": "--md-typeset-kbd-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-kbd-color"
+  },
+  {
+    "name": "--md-typeset-kbd-accent-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-kbd-accent-color"
+  },
+  {
+    "name": "--md-typeset-kbd-border-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-kbd-border-color"
+  },
+  {
+    "name": "--md-typeset-table-color",
+    "group": "TYPESET",
+    "isColor": true,
+    "descriptionKey": "material.css.md-typeset-table-color"
+  },
+  {
+    "name": "--md-admonition-fg-color",
+    "group": "ADMONITION",
+    "isColor": true,
+    "descriptionKey": "material.css.md-admonition-fg-color"
+  },
+  {
+    "name": "--md-admonition-bg-color",
+    "group": "ADMONITION",
+    "isColor": true,
+    "descriptionKey": "material.css.md-admonition-bg-color"
+  },
+  {
+    "name": "--md-footer-fg-color",
+    "group": "FOOTER",
+    "isColor": true,
+    "descriptionKey": "material.css.md-footer-fg-color"
+  },
+  {
+    "name": "--md-footer-fg-color--light",
+    "group": "FOOTER",
+    "isColor": true,
+    "descriptionKey": "material.css.md-footer-fg-color--light"
+  },
+  {
+    "name": "--md-footer-fg-color--lighter",
+    "group": "FOOTER",
+    "isColor": true,
+    "descriptionKey": "material.css.md-footer-fg-color--lighter"
+  },
+  {
+    "name": "--md-footer-bg-color",
+    "group": "FOOTER",
+    "isColor": true,
+    "descriptionKey": "material.css.md-footer-bg-color"
+  },
+  {
+    "name": "--md-footer-bg-color--dark",
+    "group": "FOOTER",
+    "isColor": true,
+    "descriptionKey": "material.css.md-footer-bg-color--dark"
+  },
+  {
+    "name": "--md-shadow-z1",
+    "group": "SHADOW",
+    "isColor": false,
+    "descriptionKey": "material.css.md-shadow-z1"
+  },
+  {
+    "name": "--md-shadow-z2",
+    "group": "SHADOW",
+    "isColor": false,
+    "descriptionKey": "material.css.md-shadow-z2"
+  },
+  {
+    "name": "--md-shadow-z3",
+    "group": "SHADOW",
+    "isColor": false,
+    "descriptionKey": "material.css.md-shadow-z3"
+  },
+  {
+    "name": "--md-text-font",
+    "group": "FONT",
+    "isColor": false,
+    "descriptionKey": "material.css.md-text-font"
+  },
+  {
+    "name": "--md-code-font",
+    "group": "FONT",
+    "isColor": false,
+    "descriptionKey": "material.css.md-code-font"
+  }
 ]

@@ -12,14 +12,10 @@
 
 package org.pcsoft.ij.plugin.mkdocs
 
-import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.LayeredIcon
-import com.intellij.util.IconUtil
 import javax.swing.Icon
-import javax.swing.SwingConstants
 
 /**
- * Central registry of every icon shipped with the plugin.
+ * Central registry of every icon shipped with the plugin itself.
  *
  * Icon files live in the `icons` resource folder and are named `<name>.svg`, with a `_dark` suffix for the
  * dark theme variant. There is exactly one file per motif — the icons are vectors and the platform scales
@@ -27,59 +23,17 @@ import javax.swing.SwingConstants
  * is the case for the `-overlay` variants: at badge size the regular drawing collapses into a blot, so those
  * are drawn as their own, far simpler shapes.
  *
+ * The icons of a feature are none of this registry's business — they belong to the feature and live in a
+ * registry of its own, next to the code that paints them.
+ *
  * Every file is drawn on a 48x48 canvas, which is the size the platform would otherwise render the icon at,
- * so the size a place needs is set here on loading — see [load].
+ * so the size a place needs is set here on loading — see [MkDocsIconLoader.load].
  */
 object MkDocsIcons {
 
     /** The MkDocs logo, used for the MkDocs facet. */
     @JvmField
     val MkDocs: Icon = load("mkdocs.svg", 16)
-
-    /**
-     * The Angular Material motif, for places rendering it on its own.
-     *
-     * The MkDocs shield of the other icons carrying the Material glyph — a circle filled in its lower half.
-     */
-    @JvmField
-    val MaterialBadge: Icon = load("mkdocs-angular-material.svg", 16)
-
-    /**
-     * The Angular Material motif at the size an inlay hint renders it at.
-     *
-     * An inlay sits inside a line of the editor and has to stay below the line height, which the 16 pixels of
-     * [MaterialBadge] already exceed at the default font size.
-     *
-     * The place that made the fixing in [load] necessary: everything the hints API offers for an icon —
-     * `smallScaledIcon`, `ScaleAwarePresentationFactory` — scales a `ScalableIcon` from the size it was
-     * *loaded from*, which is the 48 unit canvas of the file, and hands out the full 48 pixels no matter what
-     * was set on loading.
-     */
-    @JvmField
-    val MaterialInlay: Icon = load("mkdocs-angular-material.svg", 12)
-
-    /**
-     * The Material glyph as overlaid on the MkDocs logo, and nothing else.
-     *
-     * Drawn as its own shape rather than as a shrunk [MaterialBadge]: at badge size the ring of the full
-     * drawing closes into a blot, so the carrier disc takes the ring's place and only the filled lower half
-     * remains as the glyph. The disc is filled in a strong blue with a white glyph and a white outer rim,
-     * against the house colours of the other overlays — those sit on the folder icon of the project view,
-     * while this one sits on the near white body of the MkDocs logo, where a light fill would disappear.
-     */
-    @JvmField
-    val MaterialOverlay: Icon = load("mkdocs-angular-material-overlay.svg", 8)
-
-    /**
-     * Icon of the Angular Material facet: the MkDocs logo badged with the Material glyph.
-     *
-     * Composed rather than drawn, and deliberately so. The facet used to hang below the MkDocs facet in the
-     * Project Structure tree, which said what belongs to what; nested facets are on their way out of the
-     * platform (IDEA-309067), and the flat list says nothing. Sharing the MkDocs logo and adding a badge to
-     * it puts that statement back where the tree used to make it.
-     */
-    @JvmField
-    val Material: Icon = withBadge(MkDocs, MaterialOverlay)
 
     /**
      * Marker of an MkDocs site root, for places rendering it on its own.
@@ -187,53 +141,11 @@ object MkDocsIcons {
     val ConfigFile: Icon = load("mkdocs-file.svg", 16)
 
     /**
-     * Puts [badge] into the lower right corner of [base].
-     *
-     * @param base the icon to decorate
-     * @param badge the marker to overlay, drawn at overlay size
-     * @return a layered icon of the same size as [base]
-     */
-    @JvmStatic
-    fun withBadge(base: Icon, badge: Icon): Icon {
-        val layered = LayeredIcon.layeredIcon(arrayOf(base, badge))
-        layered.setIcon(badge, 1, SwingConstants.SOUTH_EAST)
-        return layered
-    }
-
-    /**
      * Loads the icon [fileName] from the `icons` resource folder and brings it to [size] pixels.
-     *
-     * Every icon file is drawn on a 48x48 canvas, and that canvas is what the platform takes as the size of
-     * the icon — so without the scaling step here every icon would be rendered at 48 pixels. The scaling
-     * happens on the vector, not on a rasterised image: [IconLoader] hands out a `ScalableIcon` for an SVG,
-     * which [IconUtil.scale] re-renders at the requested size rather than resampling it.
-     *
-     * The scaled icon is then fixed at that size and handed out as a plain [Icon]. [IconUtil.scale] returns a
-     * `ScalableIcon`, and a `ScalableIcon` scales from the size it was *loaded from* — the 48 unit canvas —
-     * not from the size it was brought to here. Anything scaling it once more therefore throws that size away
-     * and renders the icon at 48 pixels, which is what the inlay hints API does to every icon it is handed.
-     * A fixed icon has nothing left to scale back up by, so the size set here is the size that is painted.
      *
      * @param fileName name of the SVG below `/icons`, without the `_dark` suffix of the dark variant
      * @param size the edge length in pixels the icon is to be rendered at
      */
-    private fun load(fileName: String, size: Int): Icon {
-        val icon = IconLoader.getIcon("/icons/$fileName", MkDocsIcons::class.java)
-        return FixedSizeIcon(IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth))
-    }
-
-    /**
-     * An [Icon] painting [delegate] and nothing else, deliberately not a `ScalableIcon`.
-     *
-     * @property delegate the icon to paint, already at the size it is to keep
-     */
-    private class FixedSizeIcon(private val delegate: Icon) : Icon {
-
-        override fun paintIcon(component: java.awt.Component?, graphics: java.awt.Graphics?, x: Int, y: Int) =
-            delegate.paintIcon(component, graphics, x, y)
-
-        override fun getIconWidth(): Int = delegate.iconWidth
-
-        override fun getIconHeight(): Int = delegate.iconHeight
-    }
+    private fun load(fileName: String, size: Int): Icon =
+        MkDocsIconLoader.load("/icons/$fileName", size, MkDocsIcons::class.java)
 }

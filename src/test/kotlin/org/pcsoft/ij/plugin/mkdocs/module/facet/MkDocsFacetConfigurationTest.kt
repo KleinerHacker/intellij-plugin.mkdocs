@@ -13,9 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.module.facet
 
 import com.intellij.util.xmlb.XmlSerializer
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 /**

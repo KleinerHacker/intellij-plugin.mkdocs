@@ -20,7 +20,6 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
 
 /**
@@ -104,6 +103,6 @@ object MkDocsMaterialExtensions {
      * @param file the file to read
      */
     private fun settingsOf(project: Project, file: YAMLFile) = file.virtualFile
-        ?.takeIf { MkDocsProject.isConfigFile(file.name) && MkDocsConfig.isMaterialTheme(project, it) }
+        ?.takeIf { MkDocsProject.isConfigFile(file.name) && MkDocsMaterialConfig.isMaterialTheme(project, it) }
         ?.let { MkDocsMaterialConfig.read(project, it) }
 }

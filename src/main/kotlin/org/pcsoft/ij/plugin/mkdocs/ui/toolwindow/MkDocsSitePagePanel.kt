@@ -17,12 +17,7 @@ import com.intellij.ide.BrowserUtil
 import com.intellij.ide.CommonActionsManager
 import com.intellij.ide.DefaultTreeExpander
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionManager
-import com.intellij.openapi.actionSystem.ActionToolbar
-import com.intellij.openapi.actionSystem.ActionUpdateThread
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonShortcuts
-import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.runReadActionBlocking
@@ -41,8 +36,8 @@ import com.intellij.util.ui.update.MergingUpdateQueue
 import com.intellij.util.ui.update.Update
 import org.jetbrains.annotations.TestOnly
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetEditorTab
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNav
@@ -241,7 +236,7 @@ class MkDocsSitePagePanel(
     private fun configFile(): VirtualFile? {
         if (module.isDisposed) return null
         val facet = MkDocsFacet.getInstance(module) ?: return null
-        return MkDocsFacetEditorTab.findConfigFile(module, facet.configuration.configFilePath)
+        return MkDocsSiteFiles.findConfigFile(module, facet.configuration.configFilePath)
     }
 
     /**

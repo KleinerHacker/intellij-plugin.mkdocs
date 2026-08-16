@@ -16,7 +16,7 @@ import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.settings.MkDocsSettings
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 import java.nio.file.Files
 
 /**
@@ -29,7 +29,7 @@ class MkDocsMaterialIconLocatorTest : BasePlatformTestCase() {
 
     override fun tearDown() {
         try {
-            MkDocsSettings.getInstance(project).iconPath = ""
+            MkDocsMaterialIconSettings.getInstance(project).iconPath = ""
         } finally {
             super.tearDown()
         }
@@ -79,7 +79,7 @@ class MkDocsMaterialIconLocatorTest : BasePlatformTestCase() {
         Files.writeString(directory.resolve("material/check.svg"), "<svg/>")
         val elsewhere = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory)
         assertNotNull(elsewhere)
-        MkDocsSettings.getInstance(project).iconPath = elsewhere!!.path
+        MkDocsMaterialIconSettings.getInstance(project).iconPath = elsewhere!!.path
 
         assertEquals(elsewhere, locate(root))
     }
@@ -90,7 +90,7 @@ class MkDocsMaterialIconLocatorTest : BasePlatformTestCase() {
      */
     fun `test falls back to the search for a configured path that is gone`() {
         val root = siteWith(".venv/Lib/site-packages/material/templates/.icons/material/check.svg")
-        MkDocsSettings.getInstance(project).iconPath = "/does/not/exist"
+        MkDocsMaterialIconSettings.getInstance(project).iconPath = "/does/not/exist"
 
         assertNotNull(locate(root))
     }

@@ -33,13 +33,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileVisitor
 import com.intellij.util.ui.update.MergingUpdateQueue
 import com.intellij.util.ui.update.Update
+import org.pcsoft.ij.plugin.mkdocs.MkDocsFacetSync
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetConfiguration
-import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacet
-import org.pcsoft.ij.plugin.mkdocs.module.facet.material.MkDocsMaterialFacetConfiguration
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteFeature
 
 /**
  * Keeps the IDE's module model in sync with the MkDocs sites found in the project.
@@ -49,6 +49,10 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSite
  * is created whenever that module cannot represent the site — because the directory belongs to no module at
  * all, or because the module already represents a different site. The configuration file always wins — a
  * facet is created, updated or dropped to match what is on disk.
+ *
+ * Which optional features a site uses is none of this service's business. It only tells the registered
+ * [MkDocsSiteFeature] extensions that a site was detected or lost; each of them decides what that means for
+ * a facet of its own.
  *
  * @param project the project this service works on
  */
@@ -64,57 +68,12 @@ class MkDocsModuleService(private val project: Project) {
         private const val SYNC_TASK_ID = "mkdocs.module.sync"
 
         /**
-         * Directory names never descended into while searching for MkDocs configuration files.
-         *
-         * These are build outputs, dependency caches and VCS metadata — a `mkdocs.yml` inside one of them is
-         * an artefact, not a source site.
-         */
-        val IGNORED_DIRECTORIES: Set<String> = setOf(
-            ".git", ".hg", ".svn", ".idea", ".gradle", ".tox", ".venv", "venv",
-            "node_modules", "build", "out", "target", "dist", "__pycache__", "site",
-        )
-
-        /**
          * Returns the service instance for [project].
          *
          * @param project the project whose service is requested
          */
         @JvmStatic
         fun getInstance(project: Project): MkDocsModuleService = project.service()
-    }
-
-    /** Nesting depth of the facet changes this service is applying right now, see [isApplyingFacets]. */
-    private val facetUpdateDepth = ThreadLocal.withInitial { 0 }
-
-    /**
-     * Tells whether the facet change currently being announced comes from this service.
-     *
-     * A facet the detection adds or removes says nothing new: it was derived from the configuration file in
-     * the first place. Writing it back would be worse than pointless, because the two decisions are taken at
-     * different moments — the detection may read a file the IDE has not parsed yet, decide the site is not a
-     * Material site and drop the facet, and a listener acting on that removal would then take a `theme` out
-     * of a file that plainly declares one. Only a change made in the Project Structure dialog carries new
-     * information, and only that one may reach the file.
-     *
-     * Read from inside a facet event, which the platform fires while the model is committed — on the same
-     * thread that made the change, which is why the flag is per thread.
-     */
-    val isApplyingFacets: Boolean
-        get() = facetUpdateDepth.get() > 0
-
-    /**
-     * Runs [change] with [isApplyingFacets] set, so the facet events it causes are recognised as this
-     * service's own work.
-     *
-     * @param change the facet model change to run
-     */
-    private fun <T> applyingFacets(change: () -> T): T {
-        facetUpdateDepth.set(facetUpdateDepth.get() + 1)
-        try {
-            return change()
-        } finally {
-            facetUpdateDepth.set(facetUpdateDepth.get() - 1)
-        }
     }
 
     /**
@@ -132,7 +91,7 @@ class MkDocsModuleService(private val project: Project) {
         if (project.isDisposed) return
         val sites = runReadActionBlocking { if (project.isDisposed) emptyList() else findSites() }
         WriteAction.runAndWait<RuntimeException> {
-            if (!project.isDisposed) applyingFacets { apply(sites) }
+            if (!project.isDisposed) MkDocsFacetSync.running { apply(sites) }
         }
         if (project.isDisposed) return
         project.messageBus.syncPublisher(MkDocsSitesListener.TOPIC).sitesChanged()
@@ -170,7 +129,7 @@ class MkDocsModuleService(private val project: Project) {
     /**
      * Searches the project for MkDocs configuration files.
      *
-     * The search starts at the project directory and at every content root, skipping [IGNORED_DIRECTORIES].
+     * The search starts at the project directory and at every content root, skipping [MkDocsProject.IGNORED_DIRECTORIES].
      * A directory containing both `mkdocs.yml` and `mkdocs.yaml` yields a single site — MkDocs itself would
      * only ever load one of them, and the `.yml` spelling is preferred so the choice does not depend on the
      * order in which the file system hands out the children.
@@ -185,7 +144,7 @@ class MkDocsModuleService(private val project: Project) {
             VfsUtilCore.visitChildrenRecursively(searchRoot, object : VirtualFileVisitor<Any?>() {
                 override fun visitFile(file: VirtualFile): Boolean {
                     if (file.isDirectory) {
-                        return file == searchRoot || file.name !in IGNORED_DIRECTORIES
+                        return file == searchRoot || file.name !in MkDocsProject.IGNORED_DIRECTORIES
                     }
                     if (!MkDocsProject.isConfigFile(file.name)) return true
                     val siteRoot = file.parent ?: return true
@@ -371,7 +330,7 @@ class MkDocsModuleService(private val project: Project) {
                 configuration.configFilePath = configFilePath
                 facetManager.facetConfigurationChanged(existing)
             }
-            updateMaterialFacet(module, site)
+            syncFeatureFacets(module, site)
             return
         }
 
@@ -386,56 +345,36 @@ class MkDocsModuleService(private val project: Project) {
         val model = facetManager.createModifiableModel()
         model.addFacet(facet)
         model.commit()
-        updateMaterialFacet(module, site)
+        syncFeatureFacets(module, site)
     }
 
     /**
-     * Adds the Angular Material facet to [module] or drops it again, following the theme of the site.
+     * Lets every registered site feature bring its own facet in line with [site].
      *
-     * The facet mirrors `theme.name` of the configuration file, which is what makes the feature detected
-     * rather than remembered: a site that switches its theme by hand gains or loses the facet with the next
-     * detection run.
+     * A feature facet mirrors the configuration file, which is what makes a feature detected rather than
+     * remembered: a site that switches the feature on or off by hand gains or loses the facet with the next
+     * detection run. What "in use" means is the feature's own business — this service only says which site
+     * was found on which module.
      *
-     * Called only for a module that already carries the MkDocs facet. The Material facet is not a sub facet
-     * of it — the platform has deprecated those — so the pairing is this method's job, together with
-     * [dropFacet], which takes the Material facet away again with the MkDocs facet.
+     * Called only for a module that already carries the MkDocs facet. A feature facet is not a sub facet of
+     * it — the platform has deprecated those — so the pairing is done here, together with [dropFacet], which
+     * takes the feature facets away again with the MkDocs facet.
      *
      * @param module the module representing the site
      * @param site the detected site
      */
-    private fun updateMaterialFacet(module: Module, site: MkDocsSite) {
-        val isMaterial = MkDocsConfig.isMaterialTheme(project, site.configFile)
-        val existing = MkDocsMaterialFacet.getInstance(module)
-
-        if (!isMaterial) {
-            if (existing == null) return
-            val model = FacetManager.getInstance(module).createModifiableModel()
-            model.removeFacet(existing)
-            model.commit()
-            return
+    private fun syncFeatureFacets(module: Module, site: MkDocsSite) {
+        for (feature in MkDocsSiteFeature.EP_NAME.extensionList) {
+            feature.syncFacet(module, site)
         }
-
-        val themeName = MkDocsConfig.readThemeName(project, site.configFile) ?: MkDocsConfig.THEME_MATERIAL
-        if (existing != null) {
-            if (existing.configuration.themeName == themeName) return
-            existing.configuration.themeName = themeName
-            FacetManager.getInstance(module).facetConfigurationChanged(existing)
-            return
-        }
-
-        val facetType = MkDocsMaterialFacet.facetType
-        val configuration = MkDocsMaterialFacetConfiguration().apply { this.themeName = themeName }
-        val facet = facetType.createFacet(module, facetType.defaultFacetName, configuration, null)
-        val model = FacetManager.getInstance(module).createModifiableModel()
-        model.addFacet(facet)
-        model.commit()
     }
 
     /**
      * Drops the MkDocs facet from [module] once its configuration file is gone.
      *
      * A module this service created itself is disposed entirely instead — it exists for no other reason — and
-     * its site root is handed back to the module it was taken from.
+     * its site root is handed back to the module it was taken from. Everywhere else the feature facets go
+     * first, so none of them outlives the site it belongs to.
      */
     private fun dropFacet(module: Module) {
         val facet = MkDocsFacet.getInstance(module) ?: return
@@ -444,8 +383,10 @@ class MkDocsModuleService(private val project: Project) {
             ModuleManager.getInstance(project).disposeModule(module)
             return
         }
+        for (feature in MkDocsSiteFeature.EP_NAME.extensionList) {
+            feature.removeFacet(module)
+        }
         val model = FacetManager.getInstance(module).createModifiableModel()
-        MkDocsMaterialFacet.getInstance(module)?.let { model.removeFacet(it) }
         model.removeFacet(facet)
         model.commit()
     }

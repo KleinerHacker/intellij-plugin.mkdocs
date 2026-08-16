@@ -105,17 +105,19 @@ class MkDocsMaterialIconIndex(private val project: Project) {
     private fun build(siteRoot: VirtualFile): Snapshot {
         val root = MkDocsMaterialIconLocator.locate(project, siteRoot) ?: return Snapshot.EMPTY
         val names = mutableListOf<String>()
-        VfsUtilCore.visitChildrenRecursively(root, object : VirtualFileVisitor<Any>(VirtualFileVisitor.limit(MAX_DEPTH)) {
-            override fun visitFile(file: VirtualFile): Boolean {
-                if (!file.isDirectory && file.extension.equals(EXTENSION, ignoreCase = true)) {
-                    val relative = VfsUtilCore.getRelativePath(file, root, '/')
-                    if (relative != null) {
-                        names += relative.removeSuffix(".${file.extension}")
+        VfsUtilCore.visitChildrenRecursively(
+            root,
+            object : VirtualFileVisitor<Any>(VirtualFileVisitor.limit(MAX_DEPTH)) {
+                override fun visitFile(file: VirtualFile): Boolean {
+                    if (!file.isDirectory && file.extension.equals(EXTENSION, ignoreCase = true)) {
+                        val relative = VfsUtilCore.getRelativePath(file, root, '/')
+                        if (relative != null) {
+                            names += relative.removeSuffix(".${file.extension}")
+                        }
                     }
+                    return true
                 }
-                return true
-            }
-        })
+            })
         return Snapshot(root, names.sorted())
     }
 

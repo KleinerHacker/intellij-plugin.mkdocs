@@ -12,26 +12,21 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module.facet
 
-import com.intellij.facet.ui.FacetEditorContext
-import com.intellij.facet.ui.FacetEditorTab
-import com.intellij.facet.ui.FacetEditorValidator
-import com.intellij.facet.ui.FacetValidatorsManager
-import com.intellij.facet.ui.ValidationResult
+import com.intellij.facet.ui.*
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileVisitor
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
+import org.pcsoft.ij.plugin.mkdocs.MkDocsSiteFiles
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsDirectoryLayout
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsDirectoryService
-import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 import javax.swing.JComponent
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -58,55 +53,6 @@ class MkDocsFacetEditorTab(
     private val editorContext: FacetEditorContext,
     private val validatorsManager: FacetValidatorsManager,
 ) : FacetEditorTab() {
-
-    companion object {
-
-        /**
-         * Locates the MkDocs configuration file backing a facet.
-         *
-         * The content roots of [module] are searched recursively, because the site root is not necessarily
-         * the module root — a site commonly lives in a `docs/` subdirectory of an otherwise unrelated module.
-         * [configFilePath] is stored relative to the *site* root and therefore usually holds nothing but the
-         * bare file name; it is used to prefer the configured spelling, and any MkDocs configuration file
-         * counts if that spelling is not found. The directories skipped are the same ones the detection skips
-         * ([MkDocsModuleService.IGNORED_DIRECTORIES]), so a configuration file inside a build output does not
-         * make an empty facet look valid.
-         *
-         * @param module the module carrying the facet
-         * @param configFilePath the configured path, relative to the site root, possibly empty
-         * @return the configuration file, or `null` if the module has no MkDocs site
-         */
-        @JvmStatic
-        fun findConfigFile(module: Module, configFilePath: String): VirtualFile? {
-            if (module.isDisposed) return null
-            val preferredName = configFilePath.substringAfterLast('/').substringAfterLast('\\')
-            return runReadActionBlocking {
-                if (module.isDisposed) return@runReadActionBlocking null
-                var fallback: VirtualFile? = null
-                for (root in ModuleRootManager.getInstance(module).contentRoots) {
-                    if (!root.isValid || !root.isDirectory) continue
-                    var preferred: VirtualFile? = null
-                    VfsUtilCore.visitChildrenRecursively(root, object : VirtualFileVisitor<Any?>() {
-                        override fun visitFile(file: VirtualFile): Boolean {
-                            if (preferred != null) return false
-                            if (file.isDirectory) {
-                                return file == root || file.name !in MkDocsModuleService.IGNORED_DIRECTORIES
-                            }
-                            if (!MkDocsProject.isConfigFile(file.name)) return true
-                            if (preferredName.isNotEmpty() && file.name.equals(preferredName, ignoreCase = true)) {
-                                preferred = file
-                            } else if (fallback == null) {
-                                fallback = file
-                            }
-                            return true
-                        }
-                    })
-                    preferred?.let { return@runReadActionBlocking it }
-                }
-                fallback
-            }
-        }
-    }
 
     /** The name of the site, held by `site_name`. */
     private val siteNameField = JBTextField()
@@ -238,8 +184,8 @@ class MkDocsFacetEditorTab(
 
     /** The layout shown for a facet without a site behind it. */
     private fun emptyLayout(): MkDocsDirectoryLayout = MkDocsDirectoryLayout(
-        docsDirName = MkDocsProject.DEFAULT_DOCS_DIR,
-        siteDirName = MkDocsProject.DEFAULT_SITE_DIR,
+        docsDirName = MkDocsSiteTemplate.DEFAULT_DOCS_DIR,
+        siteDirName = MkDocsSiteTemplate.DEFAULT_SITE_DIR,
         assetsDirName = configuration.assetsDirName,
         stylesheetsDirName = configuration.stylesheetsDirName,
     )
@@ -248,7 +194,8 @@ class MkDocsFacetEditorTab(
     private fun module(): Module? = editorContext.module.takeIf { !it.isDisposed }
 
     /** The configuration file of the site, or `null` if the module holds none. */
-    private fun configFile(): VirtualFile? = module()?.let { findConfigFile(it, configuration.configFilePath) }
+    private fun configFile(): VirtualFile? =
+        module()?.let { MkDocsSiteFiles.findConfigFile(it, configuration.configFilePath) }
 
     /**
      * Reports everything that would keep the entered layout from being applied.

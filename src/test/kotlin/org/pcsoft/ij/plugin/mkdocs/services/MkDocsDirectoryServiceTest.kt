@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.services
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -55,7 +55,10 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
 
         val root = configFile.parent
         assertNull("the old directory must be gone", root.findChild("docs"))
-        assertNotNull("the renamed directory must hold the start page", root.findChild("documentation")?.findChild("index.md"))
+        assertNotNull(
+            "the renamed directory must hold the start page",
+            root.findChild("documentation")?.findChild("index.md")
+        )
         assertEquals("documentation", readDocsDir(configFile))
     }
 
@@ -68,7 +71,7 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
 
         applyLayout(
             configFile,
-            current(docsDirName = "documentation").copy(docsDirName = MkDocsProject.DEFAULT_DOCS_DIR),
+            current(docsDirName = "documentation").copy(docsDirName = MkDocsSiteTemplate.DEFAULT_DOCS_DIR),
         )
 
         assertNotNull(configFile.parent.findChild("docs"))
@@ -146,7 +149,7 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
      */
     private fun site(
         configText: String = "site_name: Handbook\n",
-        docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR,
+        docsDirName: String = MkDocsSiteTemplate.DEFAULT_DOCS_DIR,
     ): VirtualFile {
         val configFile = myFixture.addFileToProject("site/mkdocs.yml", configText).virtualFile
         myFixture.addFileToProject("site/$docsDirName/index.md", "# Handbook\n")
@@ -156,12 +159,12 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
     }
 
     /** The layout such a site starts out with. */
-    private fun current(docsDirName: String = MkDocsProject.DEFAULT_DOCS_DIR): MkDocsDirectoryLayout =
+    private fun current(docsDirName: String = MkDocsSiteTemplate.DEFAULT_DOCS_DIR): MkDocsDirectoryLayout =
         MkDocsDirectoryLayout(
             docsDirName = docsDirName,
-            siteDirName = MkDocsProject.DEFAULT_SITE_DIR,
-            assetsDirName = MkDocsProject.DEFAULT_ASSETS_DIR,
-            stylesheetsDirName = MkDocsProject.DEFAULT_STYLESHEETS_DIR,
+            siteDirName = MkDocsSiteTemplate.DEFAULT_SITE_DIR,
+            assetsDirName = MkDocsSiteTemplate.DEFAULT_ASSETS_DIR,
+            stylesheetsDirName = MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR,
         )
 
     private fun applyLayout(configFile: VirtualFile, target: MkDocsDirectoryLayout) {

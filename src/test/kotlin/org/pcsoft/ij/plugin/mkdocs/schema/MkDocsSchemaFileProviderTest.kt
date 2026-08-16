@@ -12,8 +12,8 @@
 
 package org.pcsoft.ij.plugin.mkdocs.schema
 
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.testFramework.VfsTestUtil
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.

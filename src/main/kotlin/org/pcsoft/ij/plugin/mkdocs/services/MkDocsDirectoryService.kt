@@ -27,6 +27,7 @@ import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfigWriter
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsLayout
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 
 /**
  * The technical directories of a site, as the facet editor shows them.
@@ -83,8 +84,8 @@ class MkDocsDirectoryService(private val project: Project) {
      */
     fun currentLayout(module: Module?, configFile: VirtualFile): MkDocsDirectoryLayout = runReadActionBlocking {
         MkDocsDirectoryLayout(
-            docsDirName = MkDocsConfig.resolveDocsDir(project, configFile),
-            siteDirName = MkDocsConfig.resolveSiteDir(project, configFile),
+            docsDirName = MkDocsLayout.resolveDocsDir(project, configFile),
+            siteDirName = MkDocsLayout.resolveSiteDir(project, configFile),
             assetsDirName = MkDocsLayout.assetsDirNameOf(module),
             stylesheetsDirName = MkDocsLayout.stylesheetsDirNameOf(module),
         )
@@ -130,8 +131,8 @@ class MkDocsDirectoryService(private val project: Project) {
             }
         }
 
-        writeKey(configFile, MkDocsConfig.KEY_DOCS_DIR, target.docsDirName, MkDocsProject.DEFAULT_DOCS_DIR)
-        writeKey(configFile, MkDocsConfig.KEY_SITE_DIR, target.siteDirName, MkDocsProject.DEFAULT_SITE_DIR)
+        writeKey(configFile, MkDocsConfig.KEY_DOCS_DIR, target.docsDirName, MkDocsSiteTemplate.DEFAULT_DOCS_DIR)
+        writeKey(configFile, MkDocsConfig.KEY_SITE_DIR, target.siteDirName, MkDocsSiteTemplate.DEFAULT_SITE_DIR)
 
         if (module != null) {
             MkDocsModuleService.getInstance(project).scheduleSync()

@@ -16,12 +16,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsPageTitleService
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNav
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNavLink
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNavNode
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNavPage
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNavSection
-import org.pcsoft.ij.plugin.mkdocs.types.MkDocsPageTitle
+import org.pcsoft.ij.plugin.mkdocs.types.*
 import javax.swing.tree.DefaultMutableTreeNode
 
 /**

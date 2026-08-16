@@ -13,7 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.material.ui
 
 import com.intellij.openapi.ui.DialogPanel
-import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import javax.swing.JComponent
 
 /**
@@ -34,7 +34,7 @@ abstract class MkDocsMaterialPageBase(
 ) : MkDocsMaterialSettingsPage {
 
     override val title: String
-        get() = MkDocsBundle.messageOrDefault(titleKey, titleKey) ?: titleKey
+        get() = MkDocsMaterialBundle.messageOrDefault(titleKey, titleKey) ?: titleKey
 
     override var onChanged: () -> Unit = {}
 

@@ -89,7 +89,11 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
             ?: position.parentOfType<YAMLKeyValue>()
             ?: return false
         if (keyValue.keyText.trim() != KEY_ICON) return false
-        return path(keyValue).let { it.startsWith(PATH_THEME_ICON) || it.endsWith(PATH_TOGGLE) || it.endsWith(PATH_SOCIAL) }
+        return path(keyValue).let {
+            it.startsWith(PATH_THEME_ICON) || it.endsWith(PATH_TOGGLE) || it.endsWith(
+                PATH_SOCIAL
+            )
+        }
     }
 
     /**

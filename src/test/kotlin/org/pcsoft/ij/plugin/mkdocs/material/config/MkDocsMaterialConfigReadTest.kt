@@ -57,11 +57,11 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
             configFile(
                 "single/mkdocs.yml",
                 "theme:\n" +
-                    "  name: material\n" +
-                    "  palette:\n" +
-                    "    scheme: slate\n" +
-                    "    primary: deep-purple\n" +
-                    "    accent: lime\n",
+                        "  name: material\n" +
+                        "  palette:\n" +
+                        "    scheme: slate\n" +
+                        "    primary: deep-purple\n" +
+                        "    accent: lime\n",
             ),
         )
 
@@ -82,21 +82,21 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
             configFile(
                 "toggle/mkdocs.yml",
                 "theme:\n" +
-                    "  name: material\n" +
-                    "  palette:\n" +
-                    "    - media: '(prefers-color-scheme: light)'\n" +
-                    "      scheme: default\n" +
-                    "      primary: indigo\n" +
-                    "      accent: pink\n" +
-                    "      toggle:\n" +
-                    "        icon: material/brightness-7\n" +
-                    "        name: Switch to dark mode\n" +
-                    "    - media: '(prefers-color-scheme: dark)'\n" +
-                    "      scheme: slate\n" +
-                    "      primary: blue\n" +
-                    "      toggle:\n" +
-                    "        icon: material/brightness-4\n" +
-                    "        name: Switch to light mode\n",
+                        "  name: material\n" +
+                        "  palette:\n" +
+                        "    - media: '(prefers-color-scheme: light)'\n" +
+                        "      scheme: default\n" +
+                        "      primary: indigo\n" +
+                        "      accent: pink\n" +
+                        "      toggle:\n" +
+                        "        icon: material/brightness-7\n" +
+                        "        name: Switch to dark mode\n" +
+                        "    - media: '(prefers-color-scheme: dark)'\n" +
+                        "      scheme: slate\n" +
+                        "      primary: blue\n" +
+                        "      toggle:\n" +
+                        "        icon: material/brightness-4\n" +
+                        "        name: Switch to light mode\n",
             ),
         )
 
@@ -123,15 +123,15 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
             configFile(
                 "three/mkdocs.yml",
                 "theme:\n" +
-                    "  name: material\n" +
-                    "  palette:\n" +
-                    "    - media: '(prefers-color-scheme)'\n" +
-                    "      toggle:\n" +
-                    "        icon: material/brightness-auto\n" +
-                    "    - media: '(prefers-color-scheme: light)'\n" +
-                    "      scheme: default\n" +
-                    "    - media: '(prefers-color-scheme: dark)'\n" +
-                    "      scheme: slate\n",
+                        "  name: material\n" +
+                        "  palette:\n" +
+                        "    - media: '(prefers-color-scheme)'\n" +
+                        "      toggle:\n" +
+                        "        icon: material/brightness-auto\n" +
+                        "    - media: '(prefers-color-scheme: light)'\n" +
+                        "      scheme: default\n" +
+                        "    - media: '(prefers-color-scheme: dark)'\n" +
+                        "      scheme: slate\n",
             ),
         )
 
@@ -179,11 +179,11 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
             configFile(
                 "features/mkdocs.yml",
                 "theme:\n" +
-                    "  name: material\n" +
-                    "  features:\n" +
-                    "    - navigation.tabs\n" +
-                    "    - content.code.copy\n" +
-                    "    - navigation.crystal.ball\n",
+                        "  name: material\n" +
+                        "  features:\n" +
+                        "    - navigation.tabs\n" +
+                        "    - content.code.copy\n" +
+                        "    - navigation.crystal.ball\n",
             ),
         )
 
@@ -202,11 +202,11 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
             configFile(
                 "extensions/mkdocs.yml",
                 "markdown_extensions:\n" +
-                    "  - admonition\n" +
-                    "  - pymdownx.highlight:\n" +
-                    "      anchor_linenums: true\n" +
-                    "  - toc:\n" +
-                    "      permalink: true\n",
+                        "  - admonition\n" +
+                        "  - pymdownx.highlight:\n" +
+                        "      anchor_linenums: true\n" +
+                        "  - toc:\n" +
+                        "      permalink: true\n",
             ),
         )
 
@@ -221,12 +221,12 @@ class MkDocsMaterialConfigReadTest : BasePlatformTestCase() {
             configFile(
                 "assets/mkdocs.yml",
                 "theme:\n" +
-                    "  name: material\n" +
-                    "  language: de\n" +
-                    "  direction: rtl\n" +
-                    "  logo: assets/logo.png\n" +
-                    "  favicon: assets/favicon.png\n" +
-                    "  custom_dir: overrides\n",
+                        "  name: material\n" +
+                        "  language: de\n" +
+                        "  direction: rtl\n" +
+                        "  logo: assets/logo.png\n" +
+                        "  favicon: assets/favicon.png\n" +
+                        "  custom_dir: overrides\n",
             ),
         )
 

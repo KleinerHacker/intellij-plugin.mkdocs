@@ -15,8 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.services
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsConfig
+import org.pcsoft.ij.plugin.mkdocs.types.MkDocsSiteTemplate
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.
@@ -95,10 +95,10 @@ class MkDocsDirectoryRenameIT : BasePlatformTestCase() {
 
     /** The layout such a site starts out with. */
     private fun current(): MkDocsDirectoryLayout = MkDocsDirectoryLayout(
-        docsDirName = MkDocsProject.DEFAULT_DOCS_DIR,
-        siteDirName = MkDocsProject.DEFAULT_SITE_DIR,
-        assetsDirName = MkDocsProject.DEFAULT_ASSETS_DIR,
-        stylesheetsDirName = MkDocsProject.DEFAULT_STYLESHEETS_DIR,
+        docsDirName = MkDocsSiteTemplate.DEFAULT_DOCS_DIR,
+        siteDirName = MkDocsSiteTemplate.DEFAULT_SITE_DIR,
+        assetsDirName = MkDocsSiteTemplate.DEFAULT_ASSETS_DIR,
+        stylesheetsDirName = MkDocsSiteTemplate.DEFAULT_STYLESHEETS_DIR,
     )
 
     private fun applyLayout(configFile: VirtualFile, target: MkDocsDirectoryLayout) {

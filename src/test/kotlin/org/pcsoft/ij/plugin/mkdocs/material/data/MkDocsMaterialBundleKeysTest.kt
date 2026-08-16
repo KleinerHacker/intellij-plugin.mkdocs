@@ -14,18 +14,19 @@ package org.pcsoft.ij.plugin.mkdocs.material.data
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.ResourceBundle
+import java.util.*
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
  *
  * The guard that a missing message is found here and not by a user: every key any Material data constant
- * refers to has to exist in `messages/MkDocsBundle.properties`. The bundle is read through [ResourceBundle]
- * rather than through `MkDocsBundle`, because the data model deliberately runs without the IDE platform.
+ * refers to has to exist in `messages/MkDocsMaterialBundle.properties`. The bundle is read through
+ * [ResourceBundle] rather than through `MkDocsMaterialBundle`, because the data model deliberately runs
+ * without the IDE platform.
  */
 class MkDocsMaterialBundleKeysTest {
 
-    private val bundle: ResourceBundle = ResourceBundle.getBundle("messages.MkDocsBundle")
+    private val bundle: ResourceBundle = ResourceBundle.getBundle("messages.MkDocsMaterialBundle")
 
     private val data = MkDocsMaterialDataService()
 
