@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.utils
 
 import com.intellij.openapi.util.IconLoader
+import com.intellij.openapi.util.ScalableIcon
 import com.intellij.ui.LayeredIcon
 import com.intellij.util.IconUtil
 import javax.swing.Icon
@@ -75,11 +76,11 @@ object MkDocsIconLoader {
     }
 
     /**
-     * An [Icon] painting [delegate] and nothing else, deliberately not a `ScalableIcon`.
+     * A [ScalableIcon] painting [delegate] and keeping the scaled size as its baseline.
      *
      * @property delegate the icon to paint, already at the size it is to keep
      */
-    private class FixedSizeIcon(private val delegate: Icon) : Icon {
+    private class FixedSizeIcon(private val delegate: Icon) : ScalableIcon {
 
         override fun paintIcon(component: java.awt.Component?, graphics: java.awt.Graphics?, x: Int, y: Int) =
             delegate.paintIcon(component, graphics, x, y)
@@ -87,5 +88,12 @@ object MkDocsIconLoader {
         override fun getIconWidth(): Int = delegate.iconWidth
 
         override fun getIconHeight(): Int = delegate.iconHeight
+
+        override fun scale(scaleFactor: Float): Icon {
+            if (scaleFactor == 1f) return this
+            return FixedSizeIcon(IconUtil.scale(delegate, null, scaleFactor))
+        }
+
+        override fun getScale(): Float = 1.0f
     }
 }
