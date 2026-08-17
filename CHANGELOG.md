@@ -177,8 +177,7 @@
   step warns when the target directory is not empty and refuses a directory that already holds an MkDocs
   configuration file. *Next* stays disabled until the location, the site name and both directory names are
   usable.
-- The second wizard step offers the optional features of a site. No feature ships yet — the `siteFeature`
-  extension point exists so the planned MkDocs extensions can be plugged in later.
+- The second wizard step offers the optional features of a site. No feature ships yet.
 - The documentation directory and the assets directory of a site now carry their own badge in the project
   view, so the three directories of a site are distinguishable at a glance.
 - A module containing more than one MkDocs site no longer silently drops all but the first one: every further
