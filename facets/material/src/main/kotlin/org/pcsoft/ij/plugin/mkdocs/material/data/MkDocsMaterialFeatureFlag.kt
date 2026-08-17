@@ -30,6 +30,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.data
  * @property group the section of the page this flag changes
  * @property descriptionKey the bundle key of the one line description shown in QuickDoc, completion and the
  *   settings page
+ * @property docUrl the address of the section of the *Material for MkDocs* documentation describing the flag
  * @property insiders `true` if the flag only has an effect in an *Insiders* build of the theme
  * @property requires the [id]s of the flags that have to be enabled as well for this flag to do anything
  * @property conflictsWith the [id]s of the flags this one cannot be combined with, as declared
@@ -39,6 +40,7 @@ data class MkDocsMaterialFeatureFlag(
     val id: String,
     val group: MkDocsMaterialFeatureGroup,
     val descriptionKey: String,
+    val docUrl: String = "",
     val insiders: Boolean = false,
     val requires: Set<String> = emptySet(),
     val conflictsWith: Set<String> = emptySet(),

@@ -88,6 +88,14 @@
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialExtensionDocumentationProvider"/>
 
+        <!-- The same for the entries of theme.features. Registered first on purpose: the JSON schema of the
+             key answers Ctrl+Q as well, with the one line describing the *shape* of the list ("A feature flag
+             of Material for MkDocs"), and the platform takes the first provider that answers at all. -->
+        <lang.documentationProvider
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialFeatureDocumentationProvider"/>
+
         <!-- The Jinja constructs an override file of the theme is written with. Text expansions rather than
              a language: the plugin adds no PSI for the templates of the theme. -->
         <defaultLiveTemplates file="/material/liveTemplates/MkDocsMaterial.xml"/>

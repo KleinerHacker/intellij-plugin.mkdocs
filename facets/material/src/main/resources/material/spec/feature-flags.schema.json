@@ -10,7 +10,8 @@
     "required": [
       "id",
       "group",
-      "descriptionKey"
+      "descriptionKey",
+      "docUrl"
     ],
     "properties": {
       "id": {
@@ -32,6 +33,11 @@
       "descriptionKey": {
         "type": "string",
         "description": "The bundle key of the one line description shown in QuickDoc, completion and the settings page."
+      },
+      "docUrl": {
+        "type": "string",
+        "format": "uri",
+        "description": "The address of the section of the Material for MkDocs documentation describing this flag, linked from QuickDoc."
       },
       "insiders": {
         "type": "boolean",

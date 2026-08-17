@@ -8,6 +8,9 @@
 #
 # `conflictsWith` is declared on one side of a pair only — the symmetric closure is computed when this file is
 # read, so a caller never has to know which side declared the pair.
+#
+# `docUrl` points at the section of the *Material for MkDocs* documentation that describes the flag, and is
+# what QuickDoc links to below the description.
 
 # --- announce ------------------------------------------------------------------------------------------
 
@@ -15,6 +18,7 @@
 - id: announce.dismiss
   group: ANNOUNCE
   descriptionKey: material.feature.announce.dismiss
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-header/#mark-as-read
 
 # --- content -------------------------------------------------------------------------------------------
 
@@ -22,11 +26,13 @@
 - id: content.action.edit
   group: CONTENT
   descriptionKey: material.feature.content.action.edit
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/#code-actions
 
 # A button showing the raw source of the page in the repository.
 - id: content.action.view
   group: CONTENT
   descriptionKey: material.feature.content.action.view
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/#code-actions
 
 # Numbered annotations attached to lines of a code block.
 #
@@ -36,6 +42,7 @@
 - id: content.code.annotate
   group: CONTENT
   descriptionKey: material.feature.content.code.annotate
+  docUrl: https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#adding-annotations
   requiredExtensions:
     - pymdownx.superfences
 
@@ -43,6 +50,7 @@
 - id: content.code.copy
   group: CONTENT
   descriptionKey: material.feature.content.code.copy
+  docUrl: https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#code-copy-button
   requiredExtensions:
     - pymdownx.highlight
 
@@ -50,6 +58,7 @@
 - id: content.code.select
   group: CONTENT
   descriptionKey: material.feature.content.code.select
+  docUrl: https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#code-selection-button
   requiredExtensions:
     - pymdownx.highlight
 
@@ -57,6 +66,7 @@
 - id: content.footnote.tooltips
   group: CONTENT
   descriptionKey: material.feature.content.footnote.tooltips
+  docUrl: https://squidfunk.github.io/mkdocs-material/reference/tooltips/#improved-tooltips
   requiredExtensions:
     - footnotes
 
@@ -64,6 +74,7 @@
 - id: content.tabs.link
   group: CONTENT
   descriptionKey: material.feature.content.tabs.link
+  docUrl: https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#linked-content-tabs
   requiredExtensions:
     - pymdownx.tabbed
     - pymdownx.superfences
@@ -75,6 +86,7 @@
 - id: content.tooltips
   group: CONTENT
   descriptionKey: material.feature.content.tooltips
+  docUrl: https://squidfunk.github.io/mkdocs-material/reference/tooltips/#improved-tooltips
 
 # --- header --------------------------------------------------------------------------------------------
 
@@ -82,6 +94,7 @@
 - id: header.autohide
   group: HEADER
   descriptionKey: material.feature.header.autohide
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-header/#automatic-hiding
 
 # --- navigation ----------------------------------------------------------------------------------------
 
@@ -89,6 +102,7 @@
 - id: navigation.expand
   group: NAVIGATION
   descriptionKey: material.feature.navigation.expand
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-expansion
   conflictsWith:
     - navigation.prune
 
@@ -96,11 +110,13 @@
 - id: navigation.footer
   group: NAVIGATION
   descriptionKey: material.feature.navigation.footer
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#navigation
 
 # A section may carry a page of its own instead of a plain label.
 - id: navigation.indexes
   group: NAVIGATION
   descriptionKey: material.feature.navigation.indexes
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#section-index-pages
   conflictsWith:
     - toc.integrate
 
@@ -108,11 +124,13 @@
 - id: navigation.instant
   group: NAVIGATION
   descriptionKey: material.feature.navigation.instant
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#instant-loading
 
 # A link target is fetched as soon as the pointer touches it.
 - id: navigation.instant.prefetch
   group: NAVIGATION
   descriptionKey: material.feature.navigation.instant.prefetch
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#instant-prefetching
   insiders: true
   requires:
     - navigation.instant
@@ -121,6 +139,7 @@
 - id: navigation.instant.progress
   group: NAVIGATION
   descriptionKey: material.feature.navigation.instant.progress
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#progress-indicator
   requires:
     - navigation.instant
 
@@ -128,26 +147,31 @@
 - id: navigation.path
   group: NAVIGATION
   descriptionKey: material.feature.navigation.path
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-path
 
 # Only the navigation around the current page is rendered.
 - id: navigation.prune
   group: NAVIGATION
   descriptionKey: material.feature.navigation.prune
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-pruning
 
 # Top level entries are rendered as groups instead of collapsible items.
 - id: navigation.sections
   group: NAVIGATION
   descriptionKey: material.feature.navigation.sections
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-sections
 
 # The top level of the navigation becomes a tab bar below the header.
 - id: navigation.tabs
   group: NAVIGATION
   descriptionKey: material.feature.navigation.tabs
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-tabs
 
 # The tab bar stays visible while scrolling.
 - id: navigation.tabs.sticky
   group: NAVIGATION
   descriptionKey: material.feature.navigation.tabs.sticky
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#sticky-navigation-tabs
   insiders: true
   requires:
     - navigation.tabs
@@ -156,11 +180,13 @@
 - id: navigation.top
   group: NAVIGATION
   descriptionKey: material.feature.navigation.top
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#back-to-top-button
 
 # The address bar follows the section the reader is currently in.
 - id: navigation.tracking
   group: NAVIGATION
   descriptionKey: material.feature.navigation.tracking
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#anchor-tracking
 
 # --- search --------------------------------------------------------------------------------------------
 
@@ -168,16 +194,19 @@
 - id: search.highlight
   group: SEARCH
   descriptionKey: material.feature.search.highlight
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/#search-highlighting
 
 # A button copying a deep link to the current search.
 - id: search.share
   group: SEARCH
   descriptionKey: material.feature.search.share
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/#search-sharing
 
 # The search field completes the word being typed.
 - id: search.suggest
   group: SEARCH
   descriptionKey: material.feature.search.suggest
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/#search-suggestions
 
 # --- toc -----------------------------------------------------------------------------------------------
 
@@ -185,10 +214,12 @@
 - id: toc.follow
   group: TOC
   descriptionKey: material.feature.toc.follow
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#anchor-following
 
 # The table of contents is folded into the navigation sidebar.
 - id: toc.integrate
   group: TOC
   descriptionKey: material.feature.toc.integrate
+  docUrl: https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-integration
   conflictsWith:
     - toc.follow

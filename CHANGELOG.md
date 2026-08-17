@@ -53,6 +53,9 @@
   in *Settings → Editor → Inspections*: a site keeping its Markdown plain is not doing anything wrong.
 - **Quick documentation** on an entry of `markdown_extensions` now explains what the extension does and links
   to its own documentation, instead of saying nothing.
+- **Quick documentation** on an entry of `theme.features` now explains what the flag does: its one line
+  description, the section of the page it changes, the flags it needs or clashes with, the Markdown
+  extensions it forces, whether it needs an *Insiders* build, and a link into the documentation of the theme.
 - `markdown_extensions` now **completes** the extensions the theme builds upon, each with its one line
   description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
   extension outside that list stays valid, so a site may keep on using one of its own.
