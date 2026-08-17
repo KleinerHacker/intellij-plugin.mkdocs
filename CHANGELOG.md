@@ -53,6 +53,9 @@
   in *Settings → Editor → Inspections*: a site keeping its Markdown plain is not doing anything wrong.
 - **Quick documentation** on an entry of `markdown_extensions` now explains what the extension does and links
   to its own documentation, instead of saying nothing.
+- `markdown_extensions` now **completes** the extensions the theme builds upon, each with its one line
+  description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
+  extension outside that list stays valid, so a site may keep on using one of its own.
 - `theme.custom_dir` and the entries of `extra_javascript` — in both the plain and the mapping form MkDocs 1.6
   accepts — are now **path values** like every other: navigation, completion, renaming, the gutter icon and the
   path check apply to them. The override directory is resolved next to `mkdocs.yml`, a script below `docs_dir`.

@@ -42,6 +42,13 @@
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconCompletionContributor"/>
 
+        <!-- Completes the Markdown extensions the theme builds upon, under `markdown_extensions`. Not part of
+             the refined schema: the key carries two shapes and the base schema constrains it already, and the
+             values reached no popup through that — see the class for the measurement. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialExtensionCompletionContributor"/>
+
         <!-- Puts the mark of the Material theme on the completion entries that come from it. Runs first and
              lets the other contributors — the JSON schema above all — produce their entries through it, which
              is the only place all of them pass through. -->

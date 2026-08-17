@@ -37,7 +37,11 @@ name: documentation
 
 * A change file MUST be present
 * It MUST be updated with the applied changes after a change
-    * The changes MUST be visible to the user, otherwise they MUST NOT go into the changelog
+    * ONLY changes an END USER of the plugin can see or notice in the IDE belong there
+    * FORBIDDEN entries: tests of any kind and their coverage, refactorings, renamings, moved code,
+      build and CI changes, changes to the rules under `.claude`, changes to the documentation itself
+    * If a change produces no such entry, the changelog MUST stay untouched - an entry MUST NOT be invented
+      to have written one
 * The prescribed format MUST be kept
     * New entries MUST go under `[UNRELEASED]`
 

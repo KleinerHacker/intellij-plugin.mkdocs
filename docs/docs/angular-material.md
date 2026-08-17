@@ -120,6 +120,10 @@ Everything the theme merely builds on — call-outs, key caps, highlighted code 
 **weak warning**, and that inspection can be switched off entirely under *Settings → Editor → Inspections →
 MkDocs*. Keeping the Markdown of a site plain is a decision, not a defect.
 
+Completion under `markdown_extensions` offers the extensions the theme builds upon, each with its one line
+description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
+extension outside that list is left alone: a site is free to install one of its own.
+
 Pressing ++ctrl+q++ on an entry of `markdown_extensions` explains what the extension does and links to its
 own documentation.
 

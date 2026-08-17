@@ -28,3 +28,5 @@ name: IntelliJ Plugin UI
   * Examples: `mkdocs.yml`, `site_name`, `docs_dir`, `theme.custom_dir`, `pymdownx.*`, `--md-*`,
     product names such as MkDocs, Material for MkDocs, Angular Material, Mike
 * Adding another language MUST be confirmed with the user first
+* Every facet carries a bundle of its own - `MkDocs<FacetName>Bundle.properties` - and these rules apply to
+  it unchanged; where it lives and how it is declared is ruled by `facets.md`

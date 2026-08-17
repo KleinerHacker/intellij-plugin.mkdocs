@@ -88,11 +88,10 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
         val keyValue = position.parentOfType<YAMLScalar>()?.parent as? YAMLKeyValue
             ?: position.parentOfType<YAMLKeyValue>()
             ?: return false
-        if (keyValue.keyText.trim() != KEY_ICON) return false
+        // Decided on the whole path, never on the name of the nearest key: below `theme.icon` the key is the
+        // element the icon is put on — `repo`, `edit`, `menu` — and only the two other paths end in `icon`.
         return path(keyValue).let {
-            it.startsWith(PATH_THEME_ICON) || it.endsWith(PATH_TOGGLE) || it.endsWith(
-                PATH_SOCIAL
-            )
+            it.startsWith(PATH_THEME_ICON) || it.endsWith(PATH_TOGGLE) || it.endsWith(PATH_SOCIAL)
         }
     }
 
@@ -117,9 +116,6 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
     }
 
     private companion object {
-
-        /** The key naming an icon. */
-        const val KEY_ICON = "icon"
 
         /** The path of the icons of the theme itself. */
         const val PATH_THEME_ICON = "theme.icon."

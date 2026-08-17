@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "MkDocs configuration refined for Material for MkDocs",
-  "description": "The MkDocs configuration schema, refined with the theme and extra keys the Material for MkDocs theme reads. The base schema is pulled in through a relative reference to the vendored copy next to this file; a remote reference would silently drop the whole base branch, because a bundled schema resolves references against its own file only.",
+  "description": "The MkDocs configuration schema, refined with the theme and extra keys the Material for MkDocs theme reads. The base schema is pulled in through a relative reference to the vendored copy next to this file; a remote reference would silently drop the whole base branch, because a bundled schema resolves references against its own file only. Both refined keys wrap their definition in an `anyOf` rather than naming it with a bare `$ref`: the base schema describes `theme` and `extra` as well, and the platform merges the two branches of the `allOf` per key - measured, a bare `$ref` is merged away and the popup below `extra` stays empty, while a branch of an `anyOf` is walked on its own and keeps its keys.",
   "allOf": [
     {
       "$ref": "mkdocs-1.6.json"
@@ -20,7 +20,11 @@
           ]
         },
         "extra": {
-          "$ref": "#/definitions/materialExtra"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/materialExtra"
+            }
+          ]
         }
       }
     }

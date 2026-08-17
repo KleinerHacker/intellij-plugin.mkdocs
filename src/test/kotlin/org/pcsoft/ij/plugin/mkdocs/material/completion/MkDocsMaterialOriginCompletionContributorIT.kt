@@ -14,10 +14,14 @@ package org.pcsoft.ij.plugin.mkdocs.material.completion
 
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
+import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.LayeredIcon
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
+import org.pcsoft.ij.plugin.mkdocs.material.schema.MkDocsMaterialSchemaCache
+import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import javax.swing.Icon
 
 /**
@@ -30,12 +34,16 @@ import javax.swing.Icon
  * offers something at a key of the theme without an installed IDE schema behind it. What the mark is put on is
  * decided by `MkDocsMaterialKeys`, which is covered on its own.
  *
- * Every assertion compares against the very same completion on a site that is not on the Material theme,
- * rather than against a fixed icon. What an entry draws depends on whether the platform can render the SVG of
- * the installed package at all — and a comparison of the two runs says what the mark did to the entry no
- * matter how that turns out.
+ * Every assertion of the icon entries compares against the very same completion on a site that is not on the
+ * Material theme, rather than against a fixed icon. What an entry draws depends on whether the platform can
+ * render the SVG of the installed package at all — and a comparison of the two runs says what the mark did to
+ * the entry no matter how that turns out. The entries carrying no drawing of their own are compared against the
+ * badge itself, which is what they are given in place of an icon.
  */
 class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
+
+    /** The theme description the marked entries are built from. */
+    private val data get() = service<MkDocsMaterialDataService>()
 
     override fun setUp() {
         super.setUp()
@@ -78,6 +86,45 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
         completeIn(socialIconSite(THEME_MATERIAL), name = "other.yml")
 
         assertTrue(iconsOfLookup().isEmpty())
+    }
+
+    /**
+     * Use case: completing a Markdown extension below `markdown_extensions`. The key is one MkDocs itself reads
+     * and the entries come from the contributor of this plugin, so the identifier is what says where they come
+     * from — and an entry carrying no drawing of its own gets the mark as its icon.
+     */
+    fun `test marks the markdown extensions of the theme`() {
+        val site = """
+            site_name: Handbook
+            theme:
+              name: material
+            markdown_extensions:
+              - <caret>
+        """.trimIndent()
+
+        completeIn(site)
+
+        assertSame(MkDocsMaterialIcons.Badge, iconOf(EXTENSION_SUPERFENCES))
+    }
+
+    /**
+     * Use case: completing a feature flag below `theme.features`. The entries come out of the refined JSON
+     * schema rather than out of a contributor of this plugin, and the mark has to reach them as well — the
+     * decorator wraps whatever the remaining contributors produce, the schema included.
+     */
+    fun `test marks the feature flags of the theme`() {
+        val site = """
+            site_name: Handbook
+            theme:
+              name: material
+              features:
+                - <caret>
+        """.trimIndent()
+
+        completeIn(site, detect = true)
+
+        val flag = data.featureFlags.all.first().id
+        assertSame(MkDocsMaterialIcons.Badge, iconOf(flag))
     }
 
     /**
@@ -130,12 +177,25 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
     }
 
     /**
+     * Returns the icon the entry offering [lookupString] renders with, of the completion run last.
+     *
+     * @param lookupString what the entry inserts
+     */
+    private fun iconOf(lookupString: String): Icon? {
+        val element = (myFixture.lookupElements ?: emptyArray<LookupElement>())
+            .firstOrNull { it.lookupString == lookupString }
+        assertNotNull("the popup must offer $lookupString", element)
+        return LookupElementPresentation.renderElement(element!!).icon
+    }
+
+    /**
      * Runs completion in a file holding [text].
      *
      * @param text the content of the file, with the caret marked
      * @param name the file name to write it under
+     * @param detect whether the site is detected first, which the entries coming from the schema need
      */
-    private fun completeIn(text: String, name: String = "mkdocs.yml") {
+    private fun completeIn(text: String, name: String = "mkdocs.yml", detect: Boolean = false) {
         // A test comparing two runs completes twice, and the installation is written for the first of them.
         if (myFixture.findFileInTempDir(ICON_FILE) == null) {
             myFixture.addFileToProject(
@@ -144,6 +204,10 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
             )
         }
         myFixture.configureByText(name, text + "\n")
+        if (detect) {
+            MkDocsModuleService.getInstance(project).sync()
+            MkDocsMaterialSchemaCache.invalidate(project)
+        }
         myFixture.completeBasic()
     }
 
@@ -162,6 +226,9 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
 
         /** A theme it does not apply to. */
         const val THEME_OTHER = "readthedocs"
+
+        /** An extension of the theme that reaches the popup through the contributor of this plugin. */
+        const val EXTENSION_SUPERFENCES = "pymdownx.superfences"
 
         /** The one icon of the installed theme the completion offers. */
         const val ICON_FILE = ".venv/Lib/site-packages/material/templates/.icons/material/check.svg"
