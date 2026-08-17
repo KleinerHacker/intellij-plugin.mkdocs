@@ -20,14 +20,14 @@ name: development
 * The implementation tasks MUST be explained in short bullet points with no more than 20 words per bullet and a maximum of 10 bullets per task
     * A bullet describes WHAT is done, NOT WHY
 * Before leaving plan mode the plan MUST be checked against ALL rules above
-* The plan MUST be written into the local `.claude/plans` directory, together with a status file
+* The plan MUST be written into the local `.claude/plans/implementation` directory, together with a status file
     * Naming scheme:
         * Plan: `<Name>.md`
         * Status: `<Name>-status.md`
     * The status MUST ALWAYS be kept up to date
 * When restarting an existing plan after an interruption, plan mode MUST be entered
     * The remaining items are laid out again according to the prescribed scheme
-* After plan is finished cleanup `.claude\plans` folder
+* After plan is finished cleanup `.claude/plans/implementation` folder
 
 ## Implementation
 
