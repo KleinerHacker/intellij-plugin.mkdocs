@@ -25,6 +25,49 @@ enum class MkDocsMarkdownExtensionLevel {
 }
 
 /**
+ * The kind of value an option of a Markdown extension takes.
+ */
+enum class MkDocsMarkdownExtensionOptionKind {
+
+    /** `true` or `false`. */
+    BOOLEAN,
+
+    /** Free text. */
+    STRING,
+
+    /** A whole number. */
+    INTEGER,
+
+    /** One of the values listed in [MkDocsMarkdownExtensionOption.values]. */
+    ENUM,
+
+    /** A reference to a Python callable, written as a `!!python/name:` tag. */
+    PYTHON_REFERENCE
+}
+
+/**
+ * One option a Markdown extension accepts below its own entry, such as `permalink` below `- toc:`.
+ *
+ * The list of options is not written in code: it is read from `material/spec/markdown-extensions.yaml` by
+ * [MkDocsMaterialDataService], the same way the extensions themselves are.
+ *
+ * @property key the name of the option, as written below the entry of the extension
+ * @property kind the kind of value the option takes
+ * @property descriptionKey the bundle key of the one line description shown in completion and in QuickDoc
+ * @property values the values the option accepts, empty unless [kind] is [MkDocsMarkdownExtensionOptionKind.ENUM]
+ * @property defaultValue the value the extension falls back to, or `null` if it has none worth showing
+ * @property recommendedValue the value the quick fix writes for this option, or `null` if it leaves it out
+ */
+data class MkDocsMarkdownExtensionOption(
+    val key: String,
+    val kind: MkDocsMarkdownExtensionOptionKind,
+    val descriptionKey: String,
+    val values: List<String> = emptyList(),
+    val defaultValue: String? = null,
+    val recommendedValue: String? = null
+)
+
+/**
  * A Markdown extension the *Material for MkDocs* theme builds upon, as listed under `markdown_extensions`.
  *
  * The theme renders a plain site without any of them, so **no extension is required unconditionally**. An
@@ -40,7 +83,7 @@ enum class MkDocsMarkdownExtensionLevel {
  * @property level whether the extension can be forced by a feature at all, or is merely recommended
  * @property descriptionKey the bundle key of the one line description shown in QuickDoc and in the settings page
  * @property docUrl the address of the documentation of the extension, offered as a link in QuickDoc
- * @property defaultOptions the options the quick fix writes below the extension when it adds it
+ * @property options the options the extension accepts below its entry, in the order of the resource
  * @property iconShorthand `true` for the extension the icon and emoji shorthands of the theme need
  */
 data class MkDocsMarkdownExtension(
@@ -49,6 +92,23 @@ data class MkDocsMarkdownExtension(
     val level: MkDocsMarkdownExtensionLevel,
     val descriptionKey: String,
     val docUrl: String,
-    val defaultOptions: List<Pair<String, String>> = emptyList(),
+    val options: List<MkDocsMarkdownExtensionOption> = emptyList(),
     val iconShorthand: Boolean = false
-)
+) {
+
+    /**
+     * The options the quick fix writes below the extension when it adds it, in the order it writes them.
+     *
+     * Derived from [options] rather than kept next to them: an option and the value recommended for it are one
+     * fact, and describing it twice is what lets the two drift apart.
+     */
+    val recommendedOptions: List<Pair<String, String>>
+        get() = options.mapNotNull { option -> option.recommendedValue?.let { option.key to it } }
+
+    /**
+     * Returns the option named [key], or `null` if the extension does not know it.
+     *
+     * @param key the name of the option, as written below the entry of the extension
+     */
+    fun optionByKey(key: String): MkDocsMarkdownExtensionOption? = options.firstOrNull { it.key == key }
+}

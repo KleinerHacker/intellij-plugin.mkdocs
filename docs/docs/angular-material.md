@@ -124,8 +124,13 @@ Completion under `markdown_extensions` offers the extensions the theme builds up
 description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
 extension outside that list is left alone: a site is free to install one of its own.
 
+One level deeper — `permalink` below `- toc:` — the **options** of that extension are completed, each with the
+kind of value it takes and what it does. Where the value is a flag or a fixed set of choices, that value is
+offered as well. No schema describes this level, which is why it stayed empty before.
+
 Pressing ++ctrl+q++ on an entry of `markdown_extensions` explains what the extension does and links to its
-own documentation.
+own documentation. On an option below such an entry it explains what the option does, what it takes, which
+values it accepts, what the extension falls back to without it and what the theme recommends for it.
 
 ## Icons
 

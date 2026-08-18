@@ -84,6 +84,9 @@ Tracks what the plugin supports compared to
 | Settings pages on the facet and in the wizard                                          | ✅      |
 | Required and recommended `markdown_extensions` reported with a fix                     | ✅      |
 | Quick documentation for an entry of `markdown_extensions`                              | ✅      |
+| Completion of the options below an entry of `markdown_extensions`, and of their values | ✅      |
+| Quick documentation for such an option                                                 | ✅      |
+| Quick documentation inside the completion popup of `markdown_extensions`               | ✅      |
 | `theme.custom_dir` and `extra_javascript` as path references                           | ✅      |
 | Intention creating the target of a path                                                | ✅      |
 | Icon completion from the installed `mkdocs-material` package                           | ✅      |

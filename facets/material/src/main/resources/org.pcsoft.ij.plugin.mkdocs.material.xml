@@ -49,6 +49,12 @@
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialExtensionCompletionContributor"/>
 
+        <!-- Completes the options an extension accepts below its own entry, and the values of those options.
+             Neither the base schema nor the refined one describes them, so that level stayed empty. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialExtensionOptionCompletionContributor"/>
+
         <!-- Puts the mark of the Material theme on the completion entries that come from it. Runs first and
              lets the other contributors — the JSON schema above all — produce their entries through it, which
              is the only place all of them pass through. -->
@@ -95,6 +101,12 @@
                 language="yaml"
                 order="first"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialFeatureDocumentationProvider"/>
+
+        <!-- Quick documentation on an entry of the completion popup. A separate extension point of its own:
+             the popup no longer asks the documentation provider of the language, and without this it shows
+             the bare name of the element behind the entry. -->
+        <platform.backend.documentation.lookupElementTargetProvider
+                implementation="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialLookupDocumentationTargetProvider"/>
 
         <!-- The Jinja constructs an override file of the theme is written with. Text expansions rather than
              a language: the plugin adds no PSI for the templates of the theme. -->

@@ -59,6 +59,15 @@
 - `markdown_extensions` now **completes** the extensions the theme builds upon, each with its one line
   description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
   extension outside that list stays valid, so a site may keep on using one of its own.
+- The **options of a Markdown extension** are now completed one level below its entry — `permalink` and
+  `toc_depth` under `- toc:`, and the same for every other extension the theme builds upon. Each entry names
+  the kind of value it takes and what it does, and the value itself is offered where it is a flag or a fixed
+  set of choices. That level was empty before: no schema describes it.
+- **Quick documentation** on such an option now explains what it does, what it takes, which values it accepts,
+  what the extension falls back to without it and what *Material for MkDocs* recommends for it.
+- ++ctrl+q++ inside the **completion popup** now answers as well, for an extension and for an option alike. The
+  descriptions are no longer written behind the offered names: a popup of two dozen entries, each carrying a
+  sentence, was unreadable, and the sentence is one key away.
 - `theme.custom_dir` and the entries of `extra_javascript` — in both the plain and the mapping form MkDocs 1.6
   accepts — are now **path values** like every other: navigation, completion, renaming, the gutter icon and the
   path check apply to them. The override directory is resolved next to `mkdocs.yml`, a script below `docs_dir`.

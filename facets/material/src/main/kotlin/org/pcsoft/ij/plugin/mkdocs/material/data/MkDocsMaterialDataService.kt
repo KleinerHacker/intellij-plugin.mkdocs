@@ -59,7 +59,16 @@ class MkDocsMaterialDataService {
                 level = entry.level,
                 descriptionKey = entry.descriptionKey,
                 docUrl = entry.docUrl,
-                defaultOptions = entry.defaultOptions.map { it.key to it.value },
+                options = entry.options.map {
+                    MkDocsMarkdownExtensionOption(
+                        key = it.key,
+                        kind = it.kind,
+                        descriptionKey = it.descriptionKey,
+                        values = it.values,
+                        defaultValue = it.defaultValue,
+                        recommendedValue = it.recommendedValue
+                    )
+                },
                 iconShorthand = entry.iconShorthand
             )
         }
@@ -181,11 +190,18 @@ private class ExtensionEntry(
     val level: MkDocsMarkdownExtensionLevel,
     val descriptionKey: String,
     val docUrl: String,
-    val defaultOptions: List<OptionEntry> = emptyList(),
+    val options: List<OptionEntry> = emptyList(),
     val iconShorthand: Boolean = false
 )
 
-private class OptionEntry(val key: String, val value: String)
+private class OptionEntry(
+    val key: String,
+    val kind: MkDocsMarkdownExtensionOptionKind,
+    val descriptionKey: String,
+    val values: List<String> = emptyList(),
+    val defaultValue: String? = null,
+    val recommendedValue: String? = null
+)
 
 private class FeatureFlagEntry(
     val id: String,

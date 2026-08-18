@@ -16,7 +16,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.jetbrains.yaml.YAMLLanguage
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.schema.MkDocsMaterialSchemaCache
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
@@ -225,11 +225,10 @@ class MkDocsMaterialExtensionCompletionIT : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: the same entry read for its description. What an extension does is the question an author
-     * actually has in front of a list of dotted identifiers, so the one line description of the bundle is
-     * shown behind the name.
+     * Use case: the same entry read for what it does *not* show. A popup of two dozen entries, each carrying a
+     * sentence, is read by nobody — the description belongs into quick documentation, which is one key away.
      */
-    fun `test shows the description of an extension as its tail`() {
+    fun `test shows no description behind the name of an extension`() {
         complete(
             """
             site_name: Handbook
@@ -240,10 +239,33 @@ class MkDocsMaterialExtensionCompletionIT : BasePlatformTestCase() {
             """
         )
 
-        val admonition = data.extensions.all.first { it.id == EXTENSION_ADMONITION }
-        val description = MkDocsMaterialBundle.messageOrDefault(admonition.descriptionKey, admonition.id)
-        assertNotNull("the bundle must describe the extension", description)
-        assertEquals("  $description", presentationOf(EXTENSION_ADMONITION).tailText)
+        assertNull(presentationOf(EXTENSION_ADMONITION).tailText)
+    }
+
+    /**
+     * Use case: *Ctrl+Q* inside the popup. The platform asks the offered entry for the element behind it before
+     * it asks anyone for documentation, so an entry made of a bare string leaves that key without an answer.
+     */
+    fun `test carries the element its documentation is generated for`() {
+        complete(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+            markdown_extensions:
+              - <caret>
+            """
+        )
+
+        val element = (myFixture.lookupElements ?: emptyArray<LookupElement>())
+            .firstOrNull { it.lookupString == EXTENSION_ADMONITION }
+        assertNotNull("the popup must offer $EXTENSION_ADMONITION", element)
+        val target = element!!.psiElement
+        assertNotNull("the entry must carry an element to document", target)
+
+        // The language of that element decides which providers are asked at all: measured, an element without
+        // one reaches no provider of the facet, and the popup shows the bare name of the element instead.
+        assertEquals(YAMLLanguage.INSTANCE, target!!.language)
     }
 
     /**

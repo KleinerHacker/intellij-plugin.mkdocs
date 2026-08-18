@@ -22,10 +22,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
+import org.pcsoft.ij.plugin.mkdocs.material.inspection.ExtensionDocElement
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 
 /**
@@ -60,29 +60,26 @@ class MkDocsMaterialExtensionCompletionContributor : CompletionContributor() {
         if (!MkDocsMaterialConfig.isMaterialTheme(position.project, configFile)) return
         if (!namesAnExtension(position)) return
 
-        result.addAllElements(service<MkDocsMaterialDataService>().extensions.all.map(::element))
+        result.addAllElements(service<MkDocsMaterialDataService>().extensions.all.map { element(it, position) })
     }
 
     /**
      * Returns the lookup element offering [extension].
      *
      * The package it comes from is shown as the type of the entry, so an extension asking for an installation
-     * of its own can be told from one Python Markdown already ships, and the one line description as the tail.
+     * of its own can be told from one Python Markdown already ships.
+     *
+     * The description is deliberately not shown as the tail: a popup of two dozen entries, each carrying a
+     * sentence, is read by nobody. It is one *Ctrl+Q* away, which is where a sentence belongs — and that key
+     * only answers because the entry carries the element the documentation is generated for, instead of the
+     * bare string the popup would otherwise be made of.
      *
      * @param extension the extension to offer
+     * @param context the element completion was invoked at, which the documentation element hangs on
      */
-    private fun element(extension: MkDocsMarkdownExtension): LookupElement =
-        LookupElementBuilder.create(extension.id)
+    private fun element(extension: MkDocsMarkdownExtension, context: PsiElement): LookupElement =
+        LookupElementBuilder.create(ExtensionDocElement(context, extension), extension.id)
             .withTypeText(extension.pipPackage ?: PYTHON_MARKDOWN, true)
-            .withTailText("  " + describe(extension), true)
-
-    /**
-     * Returns the one line description of [extension], or its identifier if the bundle has no text for it.
-     *
-     * @param extension the extension to describe
-     */
-    private fun describe(extension: MkDocsMarkdownExtension): String =
-        MkDocsMaterialBundle.messageOrDefault(extension.descriptionKey, extension.id) ?: extension.id
 
     /**
      * Returns `true` if [position] sits where an extension is named.

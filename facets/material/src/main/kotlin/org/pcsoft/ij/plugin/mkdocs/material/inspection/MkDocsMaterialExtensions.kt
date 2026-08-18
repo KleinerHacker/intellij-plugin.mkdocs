@@ -73,7 +73,7 @@ object MkDocsMaterialExtensions {
     /**
      * Writes [extension] into the `markdown_extensions` of [configFile].
      *
-     * An extension carrying default options is written as a mapping with those options below it, everything
+     * An extension carrying recommended options is written as a mapping with those options below it, everything
      * else as a plain scalar entry: `pymdownx.tabbed` without `alternate_style` renders the old tab style, so
      * adding the identifier alone would produce a site that looks broken rather than one that works.
      *
@@ -85,12 +85,13 @@ object MkDocsMaterialExtensions {
      */
     fun add(project: Project, configFile: VirtualFile, extension: MkDocsMarkdownExtension) {
         MkDocsConfigWriter.edit(project, configFile) {
-            if (extension.defaultOptions.isEmpty()) {
+            val recommended = extension.recommendedOptions
+            if (recommended.isEmpty()) {
                 addScalarItem(MkDocsMaterialConfig.KEY_MARKDOWN_EXTENSIONS, extension.id)
             } else {
                 addMappingTreeItem(
                     MkDocsMaterialConfig.KEY_MARKDOWN_EXTENSIONS,
-                    listOf(extension.id to extension.defaultOptions),
+                    listOf(extension.id to recommended),
                 )
             }
         }

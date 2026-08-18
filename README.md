@@ -47,7 +47,9 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 - **Markdown extensions of a Material site** — an extension the configuration forces, because a flag under
   `theme.features` does not render without it, is reported above `mkdocs.yml` as an error, with a fix adding
   it together with the options it needs. Everything the theme merely builds on is a weak warning that can be
-  switched off. Quick documentation explains every entry of `markdown_extensions`.
+  switched off. The options below an entry — `permalink` under `- toc:` — are completed as well, values
+  included. Quick documentation explains every entry of `markdown_extensions` and every option below it, in
+  the file as well as inside the completion popup.
 - **Icons of the installed theme** — the icons of `mkdocs-material` are completed in `mkdocs.yml`
   (`theme.icon.*`, the toggle of a palette, `extra.social`) and in the pages as the shorthands
   `:material-check:`, each showing its drawing. They are read from the installed package, which is looked for

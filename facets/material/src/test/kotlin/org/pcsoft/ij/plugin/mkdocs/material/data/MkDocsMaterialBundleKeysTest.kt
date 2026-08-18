@@ -68,6 +68,17 @@ class MkDocsMaterialBundleKeysTest {
     }
 
     /**
+     * Use case: the options of an extension are offered with their description as the tail of the completion
+     * entry and explained in QuickDoc — an option added to the resource without a text would show its key twice.
+     */
+    @Test
+    fun `extension option descriptions resolve`() {
+        data.extensions.all.forEach { extension ->
+            extension.options.forEach { assertResolves(it.descriptionKey) }
+        }
+    }
+
+    /**
      * Use case: the CSS variables are grouped in QuickDoc and in completion, and each carries its own
      * documentation.
      */

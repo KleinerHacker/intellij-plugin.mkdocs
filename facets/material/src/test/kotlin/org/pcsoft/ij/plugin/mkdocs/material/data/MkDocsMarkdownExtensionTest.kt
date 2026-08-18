@@ -73,19 +73,73 @@ class MkDocsMarkdownExtensionTest {
     }
 
     /**
-     * Use case: the default options the quick fix writes come from the resource as key and value pairs; an
-     * entry with a blank key would produce a configuration file the site cannot load.
+     * Use case: the options feed the completion popup and QuickDoc; an entry with a blank name or without a
+     * description would arrive there as an empty line.
      */
     @Test
-    fun `default options carry a key and a value`() {
+    fun `every option carries a key and a description`() {
         extensions.all.forEach { extension ->
-            extension.defaultOptions.forEach { (key, value) ->
+            extension.options.forEach { option ->
+                assertTrue(extension.id, option.key.isNotBlank())
+                assertTrue(extension.id, option.descriptionKey.isNotBlank())
+            }
+        }
+    }
+
+    /**
+     * Use case: an option is looked up by its name, both by the completion and by QuickDoc, so the same name
+     * must not appear twice below one extension.
+     */
+    @Test
+    fun `option names are unique per extension`() {
+        extensions.all.forEach { extension ->
+            val names = extension.options.map { it.key }
+            assertEquals(extension.id, names.size, names.toSet().size)
+        }
+    }
+
+    /**
+     * Use case: a choice is completed with the values of the resource, so an option of that kind has to list
+     * them — and an option of any other kind must not, because nothing would offer them.
+     */
+    @Test
+    fun `only a choice lists its values`() {
+        extensions.all.forEach { extension ->
+            extension.options.forEach { option ->
+                if (option.kind == MkDocsMarkdownExtensionOptionKind.ENUM) {
+                    assertTrue("${extension.id}.${option.key}", option.values.isNotEmpty())
+                } else {
+                    assertTrue("${extension.id}.${option.key}", option.values.isEmpty())
+                }
+            }
+        }
+    }
+
+    /**
+     * Use case: the quick fix writes the recommended options below the extension it adds; every one of them
+     * has to carry a value, and `toc` is the entry the recommendation is about — `permalink` without it.
+     */
+    @Test
+    fun `recommended options carry a key and a value`() {
+        extensions.all.forEach { extension ->
+            extension.recommendedOptions.forEach { (key, value) ->
                 assertTrue(extension.id, key.isNotBlank())
                 assertTrue(extension.id, value.isNotBlank())
             }
         }
         val toc = extensions.byId("toc")
-        assertEquals(listOf("permalink" to "true"), toc?.defaultOptions)
+        assertEquals(listOf("permalink" to "true"), toc?.recommendedOptions)
+    }
+
+    /**
+     * Use case: QuickDoc and the completion both ask for a single option by its name; an unknown name has to
+     * be answered with `null` rather than with the first entry of the list.
+     */
+    @Test
+    fun `an option is found by its name`() {
+        val toc = extensions.byId("toc")
+        assertEquals("permalink", toc?.optionByKey("permalink")?.key)
+        assertNull(toc?.optionByKey("not-an-option"))
     }
 
     /**

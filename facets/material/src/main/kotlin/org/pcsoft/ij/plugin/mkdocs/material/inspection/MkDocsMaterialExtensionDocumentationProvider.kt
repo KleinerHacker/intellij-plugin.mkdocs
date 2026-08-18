@@ -17,6 +17,7 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.components.service
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
 import com.intellij.psi.util.parentOfType
 import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLKeyValue
@@ -31,17 +32,47 @@ import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
  * Explains a Markdown extension listed under `markdown_extensions` in the quick documentation popup.
  *
  * The JSON schema of MkDocs describes the *shape* of that list, not what any single entry does — pressing
- * *Ctrl+Q* on `pymdownx.superfences` otherwise says nothing at all. What is offered here is the one line the
- * settings page shows for the same extension plus a link to its own documentation, because the question an
- * author has in front of that list is whether they need the entry, not how to spell it.
+ * *Ctrl+Q* on `pymdownx.superfences` otherwise says nothing at all, and on `permalink` below `- toc:` even
+ * less, because no schema describes that level in the first place. What is offered here is the one line the
+ * settings page shows for the same extension plus a link to its own documentation, and for an option what it
+ * does, what it takes, and what the extension falls back to without it.
  *
  * Only entries of `markdown_extensions` are answered, and only extensions this plugin knows: anything else is
- * left to whoever else has something to say about it.
+ * left to whoever else has something to say about it. An option is looked for first — it sits *inside* the
+ * entry of its extension, so both questions would otherwise be answered with the extension.
  */
 class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvider() {
 
+    override fun getDocumentationElementForLookupItem(
+        psiManager: PsiManager?,
+        obj: Any?,
+        element: PsiElement?,
+    ): PsiElement? {
+        val name = obj as? String ?: return null
+        val context = element ?: return null
+        val file = context.containingFile as? YAMLFile ?: return null
+        if (!MkDocsProject.isConfigFile(file.name)) return null
+
+        // The caret can sit in the value of the extension itself — the first option below `- toc:`, which YAML
+        // has no key for yet — or in a pair of its own next to an option already written.
+        if (!underMarkdownExtensions(context)) return null
+        val extension = service<MkDocsMaterialDataService>().extensions.byId(name) ?: return null
+        return ExtensionDocElement(context, extension)
+    }
+
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+        (element as? ExtensionDocElement)?.let { return generateExtensionDoc(it.extension) }
+
         val extension = extensionOf(element) ?: extensionOf(originalElement) ?: return null
+        return generateExtensionDoc(extension)
+    }
+
+    /**
+     * Returns the popup explaining [extension].
+     *
+     * @param extension the extension to explain
+     */
+    private fun generateExtensionDoc(extension: MkDocsMarkdownExtension): String {
         val builder = StringBuilder()
         builder.append(DocumentationMarkup.DEFINITION_START)
         builder.append(escape(extension.id))
@@ -62,9 +93,50 @@ class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvid
         return builder.toString()
     }
 
-    override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? =
-        extensionOf(element)?.let { "${it.id} — ${MkDocsMaterialBundle.message(it.descriptionKey)}" }
+    /**
+     * Returns the extension [pair] names, or `null` if it names something else.
+     *
+     * The pair has to sit directly below `markdown_extensions`, which is the nearest enclosing pair in both
+     * shapes an entry can have: a sequence item is no pair of its own and is stepped over.
+     *
+     * @param pair the key value pair to read
+     */
+    private fun extensionOfPair(pair: YAMLKeyValue): MkDocsMarkdownExtension? {
+        val above = pair.parentOfType<YAMLKeyValue>() ?: return null
+        if (above.keyText.trim() != KEY_MARKDOWN_EXTENSIONS) return null
+        return service<MkDocsMaterialDataService>().extensions.byId(pair.keyText.trim())
+    }
 
+    /**
+     * Returns `true` if [element] sits anywhere below `markdown_extensions`.
+     *
+     * Asked while the popup is open, where the entry being offered is not in the file yet: the chain of pairs
+     * above the caret is all there is to decide on, and the exact shape of the entry is still being typed.
+     *
+     * @param element the element completion was invoked at
+     */
+    private fun underMarkdownExtensions(element: PsiElement): Boolean {
+        var pair = element.parentOfType<YAMLKeyValue>()
+        while (pair != null) {
+            if (pair.keyText.trim() == KEY_MARKDOWN_EXTENSIONS) return true
+            pair = pair.parentOfType<YAMLKeyValue>()
+        }
+        return false
+    }
+
+    override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? {
+        return extensionOf(element)?.let { "${it.id} — ${MkDocsMaterialBundle.message(it.descriptionKey)}" }
+    }
+
+    /**
+     * Returns the popup explaining [option] of [extension].
+     *
+     * The extension is named in the definition as well as in a row of its own: the option alone says nothing
+     * about where it belongs, and the same name is an option of more than one extension.
+     *
+     * @param extension the extension the option belongs to
+     * @param option the option to explain
+     */
     /**
      * Appends one labelled row to the sections table of the popup.
      *

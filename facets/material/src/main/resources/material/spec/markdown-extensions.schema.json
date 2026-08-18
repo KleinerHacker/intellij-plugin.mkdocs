@@ -39,24 +39,51 @@
         "description": "The address of the documentation of the extension, offered as a link in QuickDoc.",
         "format": "uri"
       },
-      "defaultOptions": {
+      "options": {
         "type": "array",
-        "description": "The options the quick fix writes below the extension when it adds it, in order.",
+        "description": "The options the extension accepts below its entry, offered in completion and explained in QuickDoc.",
         "items": {
           "type": "object",
           "additionalProperties": false,
           "required": [
             "key",
-            "value"
+            "kind",
+            "descriptionKey"
           ],
           "properties": {
             "key": {
               "type": "string",
-              "description": "The name of the option."
+              "description": "The name of the option, as written below the entry of the extension."
             },
-            "value": {
+            "kind": {
               "type": "string",
-              "description": "The value written for the option, verbatim."
+              "description": "The kind of value the option takes.",
+              "enum": [
+                "BOOLEAN",
+                "STRING",
+                "INTEGER",
+                "ENUM",
+                "PYTHON_REFERENCE"
+              ]
+            },
+            "descriptionKey": {
+              "type": "string",
+              "description": "The bundle key of the one line description shown in completion and in QuickDoc."
+            },
+            "values": {
+              "type": "array",
+              "description": "The values the option accepts, offered in completion. Only for kind ENUM.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "defaultValue": {
+              "type": "string",
+              "description": "The value the extension itself falls back to, shown in QuickDoc. Verbatim, as written in YAML."
+            },
+            "recommendedValue": {
+              "type": "string",
+              "description": "The value the quick fix writes for this option when it adds the extension, verbatim. Absent if the fix leaves the option out."
             }
           }
         }
