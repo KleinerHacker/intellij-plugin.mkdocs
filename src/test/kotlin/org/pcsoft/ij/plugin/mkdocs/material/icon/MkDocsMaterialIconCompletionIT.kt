@@ -132,6 +132,56 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the two mappings below `theme.icon` whose keys the author invents — one icon per admonition
+     * type and one per tag. The key says nothing there, so only the path can decide.
+     */
+    fun `test offers the installed icons for an admonition and for a tag`() {
+        val admonition = complete(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+              icon:
+                admonition:
+                  note: <caret>
+            """
+        )
+        assertContainsElements(admonition, ICON_NAMES)
+
+        val tag = complete(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+              icon:
+                tag:
+                  html: <caret>
+            """
+        )
+        assertContainsElements(tag, ICON_NAMES)
+    }
+
+    /**
+     * Use case: the icon of a rating of the feedback widget, the deepest icon key of the configuration file.
+     */
+    fun `test offers the installed icons for a feedback rating`() {
+        val offered = complete(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+            extra:
+              analytics:
+                feedback:
+                  ratings:
+                    - icon: <caret>
+            """
+        )
+
+        assertContainsElements(offered, ICON_NAMES)
+    }
+
+    /**
      * Use case: another key of the very same `theme` block. `theme.name` names the theme rather than an icon, and
      * an icon name written there produces a site that does not build.
      */

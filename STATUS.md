@@ -92,6 +92,8 @@ Tracks what the plugin supports compared to
 | Icon completion from the installed `mkdocs-material` package                           | ✅      |
 | Icon shorthands `:material-…:` completed in the pages                                  | ✅      |
 | Icon directory override in the settings                                                | ✅      |
+| Inlay hint showing the drawing of an icon named in `mkdocs.yml`                        | ✅      |
+| Inlay hint showing the drawing of an icon shorthand in a page                          | ✅      |
 | `--md-*` CSS variables completed in style sheets                                       | ✅      |
 | Inlay hint marking the keys the theme alone reads                                      | ✅      |
 | Completion entries of the theme marked with its icon                                   | ✅      |

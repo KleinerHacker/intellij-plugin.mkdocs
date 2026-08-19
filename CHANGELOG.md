@@ -6,6 +6,19 @@
 
 ### Added
 
+- The **installation of Material for MkDocs is now found on its own** in far more setups: the virtual
+  environments are looked for from the site root up to the root of the project, so a site in `docs/` next to
+  a `.venv` in the project root is found as well.
+- The settings moved into a page of their own: *Tools → MkDocs* is now the node the features hang under, and
+  the icon directory sits below it under **Material**. That page also states which installation was found,
+  which is the answer to an empty icon completion.
+- The **drawing of an icon** is now shown in the editor: in `mkdocs.yml` in front of every value naming one,
+  and in the pages of a site in front of every shorthand such as `:material-weather-sunny:`. A name the
+  installed theme does not offer stays without a drawing. Both hints can be switched off separately under
+  *Settings → Editor → Inlay Hints*.
+- The **icon names are now completed at every place** `mkdocs.yml` names an icon: next to the keys below
+  `theme.icon`, the palette toggle and `extra.social`, the mappings `theme.icon.admonition` and
+  `theme.icon.tag` and the `icon` of a rating of `extra.analytics.feedback` are offered as well.
 - A site rendered with the **Material theme** now carries the *MkDocs Angular Material* facet, next to the
   MkDocs facet and visible in *Project Structure → Facets*. It wears the MkDocs logo with the Material glyph
   badged into its corner, so it reads as part of MkDocs in a list that shows facets flat. It appears as soon

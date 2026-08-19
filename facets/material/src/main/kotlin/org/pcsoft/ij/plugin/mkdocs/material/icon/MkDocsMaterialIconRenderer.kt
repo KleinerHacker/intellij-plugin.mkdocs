@@ -15,6 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.VirtualFile
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import javax.swing.Icon
 
@@ -29,6 +30,8 @@ import javax.swing.Icon
  *
  * Results are cached: a completion popup asks for the icon of every visible entry on every keystroke, and
  * the sets hold thousands of files. The cache is bounded and thrown away whenever the index is invalidated.
+ * It is keyed by file *and* size, because the same drawing is handed to a popup at 16 pixels and to an inlay
+ * hint at 12.
  */
 object MkDocsMaterialIconRenderer {
 
@@ -37,7 +40,10 @@ object MkDocsMaterialIconRenderer {
     /** How many rendered icons are kept before the oldest ones are dropped. */
     private const val CACHE_LIMIT = 500
 
-    /** The rendered icons, keyed by the URL of the file they were loaded from. */
+    /** The size a place asking for no particular one gets: the size of a list entry and of a popup. */
+    const val DEFAULT_SIZE: Int = 16
+
+    /** The rendered icons, keyed by the URL of the file they were loaded from and the size they carry. */
     private val cache = object : LinkedHashMap<String, Icon>(64, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Icon>?): Boolean =
             size > CACHE_LIMIT
@@ -49,21 +55,30 @@ object MkDocsMaterialIconRenderer {
      * Never throws and never returns `null`: an icon that cannot be loaded is shown as the Material icon of
      * the plugin, which says *this is an icon of the theme* without claiming to be the icon itself.
      *
+     * The icon leaves at a fixed size, the same way every icon of the plugin does: an inlay hint scales what
+     * it is handed back up to the canvas of the drawing, and the sets of the theme are drawn on canvases of
+     * their own — 24 units for the Material set, 16 for the Octicons.
+     *
      * @param file the SVG file of the icon
+     * @param size the edge length in pixels the icon is to be rendered at
      */
-    fun render(file: VirtualFile): Icon {
+    @JvmOverloads
+    fun render(file: VirtualFile, size: Int = DEFAULT_SIZE): Icon {
         if (!file.isValid) return MkDocsMaterialIcons.Feature
-        synchronized(cache) { cache[file.url] }?.let { return it }
+        val key = "${file.url}@$size"
+        synchronized(cache) { cache[key] }?.let { return it }
 
         val icon = try {
-            IconLoader.findIcon(file.toNioPath().toUri().toURL(), true) ?: MkDocsMaterialIcons.Feature
+            IconLoader.findIcon(file.toNioPath().toUri().toURL(), true)
+                ?.let { MkDocsIconLoader.fixSize(it, size) }
+                ?: MkDocsMaterialIcons.Feature
         } catch (throwable: Throwable) {
             // Deliberately Throwable: what is read here is a file of a foreign package, and an image loader
             // failing on it must never take the popup that asked for it down with it.
             LOG.debug("Cannot render the icon ${file.url}", throwable)
             MkDocsMaterialIcons.Feature
         }
-        synchronized(cache) { cache[file.url] = icon }
+        synchronized(cache) { cache[key] = icon }
         return icon
     }
 

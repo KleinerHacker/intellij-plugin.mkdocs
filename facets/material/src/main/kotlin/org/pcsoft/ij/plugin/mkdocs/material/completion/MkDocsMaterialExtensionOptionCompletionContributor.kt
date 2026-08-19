@@ -28,6 +28,7 @@ import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtensionOption
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtensionOptionKind
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
+import org.pcsoft.ij.plugin.mkdocs.material.inspection.OptionDocElement
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 
 /**
@@ -92,7 +93,7 @@ class MkDocsMaterialExtensionOptionCompletionContributor : CompletionContributor
         option: MkDocsMarkdownExtensionOption,
         context: PsiElement,
     ): LookupElement =
-        LookupElementBuilder.create(option.key)
+        LookupElementBuilder.create(OptionDocElement(context, extension, option), option.key)
             .withTypeText(option.kind.name.lowercase(), true)
             .withInsertHandler { context, _ -> insertSeparator(context, option) }
 

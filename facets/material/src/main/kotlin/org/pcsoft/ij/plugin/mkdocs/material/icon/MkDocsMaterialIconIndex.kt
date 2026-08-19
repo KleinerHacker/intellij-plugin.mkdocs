@@ -71,10 +71,15 @@ class MkDocsMaterialIconIndex(private val project: Project) {
      *
      * @param siteRoot the directory holding `mkdocs.yml`
      * @param name the name of the icon, as the theme addresses it
+     * @param size the edge length in pixels the icon is to be rendered at
      * @return the icon, or `null` if the site does not offer it
      */
-    fun icon(siteRoot: VirtualFile?, name: String): Icon? =
-        find(siteRoot, name)?.let { MkDocsMaterialIconRenderer.render(it) }
+    @JvmOverloads
+    fun icon(
+        siteRoot: VirtualFile?,
+        name: String,
+        size: Int = MkDocsMaterialIconRenderer.DEFAULT_SIZE,
+    ): Icon? = find(siteRoot, name)?.let { MkDocsMaterialIconRenderer.render(it, size) }
 
     /**
      * Throws away everything the index remembers, so the next question walks the directories again.

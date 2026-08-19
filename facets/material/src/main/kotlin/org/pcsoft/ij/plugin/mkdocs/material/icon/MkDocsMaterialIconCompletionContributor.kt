@@ -19,10 +19,6 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.LookupElementRenderer
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.parentOfType
-import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.jetbrains.yaml.psi.YAMLScalar
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex.Companion.getInstance
 
@@ -34,10 +30,7 @@ import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex.Compani
  * into a schema built at start up. So the completion asks the [MkDocsMaterialIconIndex] instead, which reads
  * them from the package itself.
  *
- * Offered at the three places the configuration file names an icon:
- * * `theme.icon.*` — the icons of the repository link, of the edit button and of the navigation;
- * * `theme.palette[].toggle.icon` — the icon on the button switching between light and dark;
- * * `extra.social[].icon` — the icons of the links in the footer.
+ * Offered at every place the configuration file names an icon, which [MkDocsMaterialIconKeys] decides.
  *
  * The drawing itself is shown next to each entry, through a renderer rather than through a fixed icon on the
  * element: the popup then loads only what it actually paints, instead of every one of those thousands.
@@ -48,7 +41,7 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
         val position = parameters.position
         val file = position.containingFile?.originalFile ?: return
         if (!MkDocsProject.isConfigFile(file.name)) return
-        if (!isIconValue(position)) return
+        if (!MkDocsMaterialIconKeys.isIconValue(position)) return
 
         val siteRoot = file.virtualFile?.parent ?: return
         val index = getInstance(position.project)
@@ -78,55 +71,4 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
                 presentation.icon = index.icon(siteRoot, name)
             }
         })
-
-    /**
-     * Returns `true` if [position] sits in a value that names an icon of the theme.
-     *
-     * @param position the element completion was invoked at
-     */
-    private fun isIconValue(position: PsiElement): Boolean {
-        val keyValue = position.parentOfType<YAMLScalar>()?.parent as? YAMLKeyValue
-            ?: position.parentOfType<YAMLKeyValue>()
-            ?: return false
-        // Decided on the whole path, never on the name of the nearest key: below `theme.icon` the key is the
-        // element the icon is put on — `repo`, `edit`, `menu` — and only the two other paths end in `icon`.
-        return path(keyValue).let {
-            it.startsWith(PATH_THEME_ICON) || it.endsWith(PATH_TOGGLE) || it.endsWith(PATH_SOCIAL)
-        }
-    }
-
-    /**
-     * Returns the dotted path of [keyValue], as far up as the top level key.
-     *
-     * The sequences on the way contribute nothing to the path — `extra.social` is what an entry of that
-     * sequence is *in*, and the index of the entry says nothing about what the key means.
-     *
-     * @param keyValue the pair to describe
-     */
-    private fun path(keyValue: YAMLKeyValue): String {
-        val segments = mutableListOf<String>()
-        var current: YAMLKeyValue? = keyValue
-        var steps = 0
-        while (current != null && steps < MAX_ANCESTORS) {
-            segments += current.keyText.trim()
-            current = current.parentOfType<YAMLKeyValue>()
-            steps++
-        }
-        return segments.reversed().joinToString(".")
-    }
-
-    private companion object {
-
-        /** The path of the icons of the theme itself. */
-        const val PATH_THEME_ICON = "theme.icon."
-
-        /** The tail of the path of the icon on the palette toggle. */
-        const val PATH_TOGGLE = "palette.toggle.icon"
-
-        /** The tail of the path of the icon of a social link. */
-        const val PATH_SOCIAL = "extra.social.icon"
-
-        /** How many levels the walk upwards climbs; the deepest of the three paths needs four. */
-        const val MAX_ANCESTORS = 8
-    }
 }

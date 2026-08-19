@@ -96,8 +96,11 @@
                 other path, and an intention creates the target a path points at.</li>
             <li><b>Material icons</b> &ndash; the icons of the installed <code>mkdocs-material</code> are completed
                 in <code>mkdocs.yml</code> and as the shorthands <code>:material-check:</code> in the pages, each
-                showing its drawing. The installation is found in the virtual environments next to the site, or
-                named under <i>Tools &rarr; MkDocs</i>.</li>
+                showing its drawing, and every place <code>mkdocs.yml</code> names an icon is covered. An icon
+                already written shows its drawing in the editor as well, in front of the name and in front of
+                the shorthand. The installation is found in the virtual environments next to the site, or
+                named under <i>Tools &rarr; MkDocs &rarr; Material</i>, which also states which installation was
+                found.</li>
             <li><b>Material style sheets</b> &ndash; the custom properties of the theme (<code>--md-…</code>) are
                 completed inside CSS files.</li>
             <li><b>Material origin</b> &ndash; the keys a site owes to the Material theme are marked as such:
@@ -186,6 +189,15 @@
              represented by this facet. Optional MkDocs features are meant to be added later as facets
              declaring "mkdocs" as their underlying facet type. -->
         <facetType implementation="org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetType"/>
+
+        <!-- The MkDocs page below Tools. It edits nothing itself: it is the node the settings of the features
+             hang under, each registering against its id. -->
+        <projectConfigurable
+                id="org.pcsoft.ij.plugin.mkdocs.settings"
+                parentId="tools"
+                bundle="messages.MkDocsBundle"
+                key="settings.title"
+                instance="org.pcsoft.ij.plugin.mkdocs.settings.MkDocsSettingsConfigurable"/>
 
         <!-- Initial detection when a project is opened … -->
         <postStartupActivity implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsStartupActivity"/>

@@ -19,7 +19,6 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.LookupElementRenderer
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
@@ -48,7 +47,7 @@ class MkDocsMaterialShorthandCompletionContributor : CompletionContributor() {
         if (!MkDocsProject.isPageFile(virtualFile.name)) return
 
         val project = parameters.position.project
-        val siteRoot = siteRootOf(project, virtualFile) ?: return
+        val siteRoot = MkDocsMaterialShorthands.siteRootOf(project, virtualFile) ?: return
         val index = MkDocsMaterialIconIndex.getInstance(project)
         val names = index.names(siteRoot)
         if (names.isEmpty()) return
@@ -75,7 +74,7 @@ class MkDocsMaterialShorthandCompletionContributor : CompletionContributor() {
         siteRoot: VirtualFile,
         name: String,
     ): LookupElement {
-        val shorthand = ":${name.replace('/', '-')}:"
+        val shorthand = MkDocsMaterialShorthands.shorthandOf(name)
         return LookupElementBuilder.create(shorthand)
             .withRenderer(object : LookupElementRenderer<LookupElement>() {
                 override fun renderElement(element: LookupElement, presentation: LookupElementPresentation) {
@@ -108,26 +107,4 @@ class MkDocsMaterialShorthandCompletionContributor : CompletionContributor() {
      */
     private fun isShorthandCharacter(character: Char): Boolean =
         character.isLetterOrDigit() || character == '-' || character == '_'
-
-    /**
-     * Returns the root of the site [file] is a page of, or `null` if it is a page of none.
-     *
-     * @param project the project [file] belongs to
-     * @param file the Markdown file completion was invoked in
-     */
-    private fun siteRootOf(project: Project, file: VirtualFile): VirtualFile? {
-        val projectRoot = project.basePath
-        return generateSequence(file.parent) { it.parent }
-            .take(MAX_ANCESTORS)
-            .takeWhile { projectRoot == null || it.path.length >= projectRoot.length }
-            .firstOrNull { directory ->
-                directory.children.any { !it.isDirectory && MkDocsProject.isConfigFile(it.name) }
-            }
-    }
-
-    private companion object {
-
-        /** How far the walk upwards climbs before it gives up looking for a configuration file. */
-        const val MAX_ANCESTORS = 16
-    }
 }

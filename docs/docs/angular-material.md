@@ -135,14 +135,21 @@ values it accepts, what the extension falls back to without it and what the them
 ## Icons
 
 The icons the theme offers are the SVG files of the installed `mkdocs-material` package, so they are read
-from the installation rather than carried as a list. They are completed in three places of `mkdocs.yml` —
-`theme.icon.*`, the `toggle.icon` of a palette and the `icon` of an entry of `extra.social` — and in the
-pages of the site as the shorthands `:material-check:`, `:fontawesome-brands-github:` and their like. Each
-entry shows the drawing next to the name.
+from the installation rather than carried as a list. They are completed at every place `mkdocs.yml` names an icon —
+every key below `theme.icon`, the mappings `theme.icon.admonition` and `theme.icon.tag` included, the
+`toggle.icon` of a palette, the `icon` of an entry of `extra.social` and the `icon` of a rating of
+`extra.analytics.feedback` — and in the pages of the site as the shorthands `:material-check:`,
+`:fontawesome-brands-github:` and their like. Each entry shows the drawing next to the name.
 
-The installation is looked for next to the site, in `.venv`, `venv`, `env` and `.virtualenv`, in the Windows
-and the POSIX layout alike. For every other setup — a system wide interpreter, a container mount — the
-directory can be named under *Tools → MkDocs*; see [Settings](settings.md).
+An icon already written is shown as well: the drawing sits in front of the name in `mkdocs.yml` and in front
+of the shorthand on a page, so a file full of names such as `material/weather-sunny` can be read at a glance.
+A name the installed theme does not offer stays without a drawing, which is what makes a typo visible. Both
+hints can be switched off separately under *Settings → Editor → Inlay Hints*.
+
+The installation is looked for in `.venv`, `venv`, `env` and `.virtualenv`, in the Windows and the POSIX
+layout alike, from the site root up to the root of the project. For every other setup — a system wide
+interpreter, a container mount — the directory can be named under *Tools → MkDocs → Material*, which also
+states which installation was found; see [Settings](settings.md).
 
 !!! note
 

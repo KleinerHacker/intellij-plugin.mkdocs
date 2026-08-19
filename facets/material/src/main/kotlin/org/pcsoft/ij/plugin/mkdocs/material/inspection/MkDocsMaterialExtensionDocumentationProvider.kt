@@ -26,6 +26,7 @@ import org.jetbrains.yaml.psi.YAMLSequenceItem
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtensionOption
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 
 /**
@@ -56,15 +57,61 @@ class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvid
         // The caret can sit in the value of the extension itself — the first option below `- toc:`, which YAML
         // has no key for yet — or in a pair of its own next to an option already written.
         if (!underMarkdownExtensions(context)) return null
+
+        // An option is looked for first: it sits *inside* the entry of its extension, so an entry offered
+        // there would otherwise be answered with whatever extension is written above it.
+        val enclosing = context.parentOfType<YAMLKeyValue>()
+        val extensionOfOption = enclosing?.let { extensionOfPair(it) ?: extensionOfPair(it.parentOfType<YAMLKeyValue>() ?: it) }
+        extensionOfOption?.optionByKey(name)?.let { return OptionDocElement(context, extensionOfOption, it) }
+
         val extension = service<MkDocsMaterialDataService>().extensions.byId(name) ?: return null
         return ExtensionDocElement(context, extension)
     }
 
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
         (element as? ExtensionDocElement)?.let { return generateExtensionDoc(it.extension) }
+        (element as? OptionDocElement)?.let { return generateOptionDoc(it.extension, it.option) }
+
+        // The option level is answered first, and answered exclusively: an element sitting below the entry of
+        // an extension asks about the option it is written in, and falling back to the extension there would
+        // explain something the author is not looking at — a name that is no option of it included.
+        optionOf(element)?.let { return generateOptionDoc(it.first, it.second) }
+        optionOf(originalElement)?.let { return generateOptionDoc(it.first, it.second) }
+        if (optionContextOf(element) != null || optionContextOf(originalElement) != null) return null
 
         val extension = extensionOf(element) ?: extensionOf(originalElement) ?: return null
         return generateExtensionDoc(extension)
+    }
+
+    /**
+     * Returns the extension an option written at [element] would belong to, or `null` if [element] sits at no
+     * such place.
+     *
+     * The pair [element] sits in is the option; the pair above it names the extension. Both shapes of an entry
+     * lead to the same place — the sequence item of `- toc:` is no pair of its own and is stepped over.
+     *
+     * @param element the element the popup was requested on
+     */
+    private fun optionContextOf(element: PsiElement?): Pair<MkDocsMarkdownExtension, String>? {
+        if (element == null) return null
+        val file = element.containingFile as? YAMLFile ?: return null
+        if (!MkDocsProject.isConfigFile(file.name)) return null
+
+        val pair = element as? YAMLKeyValue ?: element.parentOfType<YAMLKeyValue>() ?: return null
+        val above = pair.parentOfType<YAMLKeyValue>() ?: return null
+        val extension = extensionOfPair(above) ?: return null
+        return extension to pair.keyText.trim()
+    }
+
+    /**
+     * Returns the option [element] sits in together with its extension, or `null` if it sits in none.
+     *
+     * @param element the element the popup was requested on
+     */
+    private fun optionOf(element: PsiElement?): Pair<MkDocsMarkdownExtension, MkDocsMarkdownExtensionOption>? {
+        val (extension, key) = optionContextOf(element) ?: return null
+        val option = extension.optionByKey(key) ?: return null
+        return extension to option
     }
 
     /**
@@ -137,6 +184,49 @@ class MkDocsMaterialExtensionDocumentationProvider : AbstractDocumentationProvid
      * @param extension the extension the option belongs to
      * @param option the option to explain
      */
+    private fun generateOptionDoc(
+        extension: MkDocsMarkdownExtension,
+        option: MkDocsMarkdownExtensionOption,
+    ): String {
+        val builder = StringBuilder()
+        builder.append(DocumentationMarkup.DEFINITION_START)
+        builder.append(escape("${extension.id}.${option.key}"))
+        builder.append(DocumentationMarkup.DEFINITION_END)
+        builder.append(DocumentationMarkup.CONTENT_START)
+        builder.append(escape(MkDocsMaterialBundle.message(option.descriptionKey)))
+        builder.append(DocumentationMarkup.CONTENT_END)
+        builder.append(DocumentationMarkup.SECTIONS_START)
+        appendSection(
+            builder,
+            MkDocsMaterialBundle.message("material.extension.doc.option.extension"),
+            escape(extension.id),
+        )
+        appendSection(
+            builder,
+            MkDocsMaterialBundle.message("material.extension.doc.option.type"),
+            escape(option.kind.name.lowercase()),
+        )
+        if (option.values.isNotEmpty()) {
+            appendSection(
+                builder,
+                MkDocsMaterialBundle.message("material.extension.doc.option.values"),
+                escape(option.values.joinToString(", ")),
+            )
+        }
+        option.defaultValue?.let {
+            appendSection(builder, MkDocsMaterialBundle.message("material.extension.doc.option.default"), escape(it))
+        }
+        option.recommendedValue?.let {
+            appendSection(
+                builder,
+                MkDocsMaterialBundle.message("material.extension.doc.option.recommended"),
+                escape(it),
+            )
+        }
+        builder.append(DocumentationMarkup.SECTIONS_END)
+        return builder.toString()
+    }
+
     /**
      * Appends one labelled row to the sections table of the popup.
      *

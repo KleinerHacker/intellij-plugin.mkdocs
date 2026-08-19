@@ -28,5 +28,11 @@
         <completion.contributor
                 language="Markdown"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.markdown.MkDocsMaterialShorthandCompletionContributor"/>
+
+        <!-- The drawing of an icon in front of every shorthand naming one, inside the pages of a detected
+             site. The same index the completion above is built on answers what a shorthand draws. -->
+        <codeInsight.inlayProvider
+                language="Markdown"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.markdown.MkDocsMaterialShorthandInlayHintsProvider"/>
     </extensions>
 </idea-plugin>

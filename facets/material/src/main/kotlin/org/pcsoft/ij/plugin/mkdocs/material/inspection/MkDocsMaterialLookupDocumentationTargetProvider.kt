@@ -36,10 +36,10 @@ internal class MkDocsMaterialLookupDocumentationTargetProvider : LookupElementDo
 
     override fun documentationTarget(psiFile: PsiFile, element: LookupElement, offset: Int): DocumentationTarget? {
         val target = element.psiElement ?: return null
-        if (target !is ExtensionDocElement) return null
+        if (target !is ExtensionDocElement && target !is OptionDocElement) return null
 
         val html = MkDocsMaterialExtensionDocumentationProvider().generateDoc(target, target) ?: return null
-        val name = target.name
+        val name = (target as? ExtensionDocElement)?.name ?: (target as OptionDocElement).name
         return MkDocsMaterialDocTarget(name, html)
     }
 }

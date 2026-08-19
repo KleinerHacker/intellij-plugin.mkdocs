@@ -96,6 +96,30 @@ class MkDocsMaterialIconLocatorTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the layout this repository itself uses — the site lies in a directory of its own while the
+     * environment it is built with lies next to the sources, one level above it. Asking the site root alone
+     * found nothing there, which is the state an author sees as an empty completion popup.
+     */
+    fun `test finds the sets above the site root`() {
+        myFixture.addFileToProject(".venv/Lib/site-packages/material/templates/.icons/material/check.svg", "<svg/>")
+        val root = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: Handbook\n").virtualFile.parent
+
+        assertNotNull(locate(root))
+    }
+
+    /**
+     * Use case: the settings page, which is opened on no site at all. It states what the plugin would find on
+     * its own, so the search has to work without a site root being handed to it.
+     */
+    fun `test finds the sets of the project without a site root`() {
+        myFixture.addFileToProject(".venv/Lib/site-packages/material/templates/.icons/material/check.svg", "<svg/>")
+
+        val found = runReadActionBlocking { MkDocsMaterialIconLocator.detectInProject(project) }
+
+        assertNotNull(found)
+    }
+
+    /**
      * Use case: a fresh checkout whose environment has not been created yet. Nothing is found, and that is a
      * normal state rather than a fault — everything built on the index has to cope with it.
      */

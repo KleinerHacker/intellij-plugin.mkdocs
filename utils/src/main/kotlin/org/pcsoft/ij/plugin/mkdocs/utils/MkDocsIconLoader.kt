@@ -62,6 +62,22 @@ object MkDocsIconLoader {
     }
 
     /**
+     * Brings [icon] to [size] pixels and fixes it there.
+     *
+     * The counterpart of [load] for an icon that is already loaded — the drawings of an installed
+     * *Material for MkDocs* come out of the user's environment, not off the class path, and still have to
+     * leave at the size of the place painting them.
+     *
+     * @param icon the icon to resize
+     * @param size the edge length in pixels the icon is to be rendered at
+     */
+    @JvmStatic
+    fun fixSize(icon: Icon, size: Int): Icon {
+        if (icon.iconWidth <= 0) return icon
+        return FixedSizeIcon(IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth))
+    }
+
+    /**
      * Puts [badge] into the lower right corner of [base].
      *
      * @param base the icon to decorate

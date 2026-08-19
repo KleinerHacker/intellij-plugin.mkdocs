@@ -27,13 +27,13 @@
         <!-- The feature watches the installed package its icon sets come from. -->
         <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialVfsListener"/>
 
-        <!-- The settings page holding the icon directory of Material for MkDocs. The id is kept as it was so a
-             link or a search hit pointing at the page keeps working. -->
+        <!-- The settings of the feature, as a page of its own below the MkDocs page of the plugin. The parent
+             id is the only thing the two share: the plugin knows nothing about this page. -->
         <projectConfigurable
-                id="org.pcsoft.ij.plugin.mkdocs.settings"
-                parentId="tools"
+                id="org.pcsoft.ij.plugin.mkdocs.settings.material"
+                parentId="org.pcsoft.ij.plugin.mkdocs.settings"
                 bundle="messages.MkDocsMaterialBundle"
-                key="settings.title"
+                key="settings.material.title"
                 instance="org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialIconSettingsConfigurable"/>
 
         <!-- Completes the icons of the installed Material for MkDocs. Not part of the schema: which icons
@@ -69,6 +69,12 @@
         <codeInsight.inlayProvider
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialKeyInlayHintsProvider"/>
+
+        <!-- The drawing of an icon in front of every value naming one. The name alone says nothing about
+             what it draws, and the sets of an installed theme hold thousands of them. -->
+        <codeInsight.inlayProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialIconInlayHintsProvider"/>
 
         <!-- Banner above a Material configuration file whose own features ask for a Markdown extension it
              does not list. An error, and only for extensions that are actually forced: the site renders

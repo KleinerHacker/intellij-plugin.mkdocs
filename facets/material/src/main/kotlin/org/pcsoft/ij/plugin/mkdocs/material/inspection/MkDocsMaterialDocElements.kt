@@ -17,6 +17,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.FakePsiElement
 import org.jetbrains.yaml.YAMLLanguage
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtension
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMarkdownExtensionOption
 
 /**
  * The element the quick documentation of a completion entry offering an extension is generated for.
@@ -37,6 +38,34 @@ internal class ExtensionDocElement(
     override fun getParent(): PsiElement = context
 
     override fun getName(): String = extension.id
+
+    override fun getLanguage(): Language = YAMLLanguage.INSTANCE
+}
+
+/**
+ * The element the quick documentation of a completion entry offering an option of an extension is generated
+ * for.
+ *
+ * The counterpart of [ExtensionDocElement] one level deeper, and there for the same reason: an entry of the
+ * popup is a plain string, and without an element behind it *Ctrl+Q* stays empty on exactly the level no
+ * schema describes.
+ *
+ * The extension is carried along with the option: the same option name belongs to more than one extension,
+ * and the documentation says which one it is being read for.
+ *
+ * @property context an element of the file the popup was opened in, which the platform reads the project from
+ * @property extension the extension the offered option belongs to
+ * @property option the option the entry offers
+ */
+internal class OptionDocElement(
+    private val context: PsiElement,
+    val extension: MkDocsMarkdownExtension,
+    val option: MkDocsMarkdownExtensionOption,
+) : FakePsiElement() {
+
+    override fun getParent(): PsiElement = context
+
+    override fun getName(): String = "${extension.id}.${option.key}"
 
     override fun getLanguage(): Language = YAMLLanguage.INSTANCE
 }
