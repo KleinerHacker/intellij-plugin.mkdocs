@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
@@ -25,6 +26,6 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 class MkDocsStartupActivity : ProjectActivity {
 
     override suspend fun execute(project: Project) {
-        MkDocsModuleService.getInstance(project).scheduleSync()
+        project.service<MkDocsModuleService>().scheduleSync()
     }
 }

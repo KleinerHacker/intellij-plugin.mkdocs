@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationFixture
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.

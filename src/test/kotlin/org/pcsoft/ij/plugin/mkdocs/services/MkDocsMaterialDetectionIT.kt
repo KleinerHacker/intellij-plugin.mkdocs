@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.vfs.VfsUtil
@@ -35,7 +36,7 @@ import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 class MkDocsMaterialDetectionIT : HeavyPlatformTestCase() {
 
     private val service: MkDocsModuleService
-        get() = MkDocsModuleService.getInstance(project)
+        get() = project.service<MkDocsModuleService>()
 
     /**
      * Use case: a site declaring the Material theme is checked out. The detection creates the MkDocs module

@@ -21,14 +21,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
-import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
-import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
-import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature
 import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplateError
+import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfigWriter
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 
 /**
  * Creates the file structure of a new MkDocs site.
@@ -41,17 +40,6 @@ import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfigWriter
  */
 @Service(Service.Level.PROJECT)
 class MkDocsSiteCreationService(private val project: Project) {
-
-    companion object {
-
-        /**
-         * Returns the service instance for [project].
-         *
-         * @param project the project whose service is requested
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsSiteCreationService = project.service()
-    }
 
     /**
      * Creates the site described by [template].
@@ -75,7 +63,7 @@ class MkDocsSiteCreationService(private val project: Project) {
             .withName(MkDocsBundle.message("create.site.command"))
             .compute<MkDocsSite, RuntimeException> { write(template) }
 
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         rememberDirectoryNames(template, site)
 
         WriteCommandAction.runWriteCommandAction(project) {

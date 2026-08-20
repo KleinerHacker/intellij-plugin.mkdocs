@@ -40,6 +40,18 @@ object MkDocsIconLoader {
     val Logo: Icon = load("/icons/mkdocs.svg", 16, MkDocsIconLoader::class.java)
 
     /**
+     * A folder, at the 16 pixels of a list entry, for anything standing for a level rather than for a thing.
+     *
+     * Shared for the same reason the logo is: a feature completing its values one level at a time has to be
+     * able to say *this entry holds more* without reaching into the plugin for the drawing. Kept in the blue
+     * of the other icons, so a level of this plugin is not mistaken for a directory of the project.
+     *
+     * A feature marking such a level as its own badges this icon, exactly as it badges the logo.
+     */
+    @JvmField
+    val Folder: Icon = load("/icons/mkdocs-folder.svg", 16, MkDocsIconLoader::class.java)
+
+    /**
      * Loads the icon [path] from the class path and brings it to [size] pixels.
      *
      * The scaling happens on the vector, not on a rasterised image: [IconLoader] hands out a `ScalableIcon`

@@ -129,6 +129,24 @@
 - The user interface is now **localised** into the three languages JetBrains ships a language pack for:
   Simplified Chinese, Japanese and Korean. The IDE picks the texts up on its own once the matching language
   pack is installed; without one everything stays English as before.
+- An icon name the installed theme does not offer is now **marked in the editor**. In `mkdocs.yml` the two
+  cases are told apart: an icon set that is not installed is marked on the set, a wrong name below a set that
+  is installed on the name. Until then a site simply rendered nothing there, without saying so.
+- The same on the **pages of a site**: `:material-…:` and its like are marked when the set is installed and
+  the icon is not. Shorthands of any other kind are left alone — `:smile:` and the emoji of `pymdownx.emoji`
+  are written exactly the same way.
+
+### Fixed
+
+- The **icon completion no longer stalls on every keystroke**. The sets of the theme hold several thousand
+  icons, and each of them was loaded from its file whenever the popup measured itself — which took seconds per
+  letter. A drawing is now read only when it is actually shown, and what has been read is kept for as long as
+  the installation stands.
+- The popup no longer offers thousands of entries at once. It is walked **one level at a time** — the icon
+  sets first, then what lies below the chosen one, and the icons at the bottom — in `mkdocs.yml` and on the
+  `:material-…:` shorthands of a page alike. Taking a set opens the next level on its own. A level that is
+  still very long, as the flat `material` set is, shows its first 100 matching entries and says so at its
+  foot; typing another letter brings the rest back in.
 
 ## [0.2.0]
 

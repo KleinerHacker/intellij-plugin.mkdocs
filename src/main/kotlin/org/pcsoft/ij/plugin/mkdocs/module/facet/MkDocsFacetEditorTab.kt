@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.module.facet
 
 import com.intellij.facet.ui.*
 import com.intellij.openapi.application.runReadActionBlocking
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
@@ -131,7 +132,7 @@ class MkDocsFacetEditorTab(
     override fun reset() {
         val configFile = configFile()
         shownLayout = configFile
-            ?.let { MkDocsDirectoryService.getInstance(editorContext.project).currentLayout(module(), it) }
+            ?.let { editorContext.project.service<MkDocsDirectoryService>().currentLayout(module(), it) }
             ?: emptyLayout()
         shownSiteName = configFile
             ?.let { runReadActionBlocking { MkDocsConfig.resolveSiteName(editorContext.project, it) } }
@@ -152,7 +153,7 @@ class MkDocsFacetEditorTab(
      */
     override fun apply() {
         val configFile = configFile() ?: return
-        val service = MkDocsDirectoryService.getInstance(editorContext.project)
+        val service = editorContext.project.service<MkDocsDirectoryService>()
 
         val siteName = enteredSiteName()
         if (siteName != shownSiteName) {

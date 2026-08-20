@@ -12,11 +12,13 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.icon
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ui.UIUtil
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationCache
 import java.awt.image.BufferedImage
 import java.io.File
 
@@ -31,7 +33,7 @@ class MkDocsMaterialIconRendererTest : BasePlatformTestCase() {
 
     override fun tearDown() {
         try {
-            MkDocsMaterialIconRenderer.invalidate()
+            service<MkDocsMaterialInstallationCache>().invalidate()
         } finally {
             super.tearDown()
         }

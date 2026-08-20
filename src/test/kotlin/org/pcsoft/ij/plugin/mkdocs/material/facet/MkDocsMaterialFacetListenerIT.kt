@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.facet
 
 import com.intellij.facet.FacetManager
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -123,7 +124,7 @@ class MkDocsMaterialFacetListenerIT : HeavyPlatformTestCase() {
      */
     private fun createSite(text: String): VirtualFile {
         val configFile = VfsTestUtil.createFile(getOrCreateProjectBaseDir(), "handbook/mkdocs.yml", text)
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         return configFile
     }
 

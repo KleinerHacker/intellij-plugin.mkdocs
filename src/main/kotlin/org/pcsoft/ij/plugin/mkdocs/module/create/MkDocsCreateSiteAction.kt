@@ -16,6 +16,7 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.ui.Messages
@@ -43,7 +44,7 @@ class MkDocsCreateSiteAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-        val service = MkDocsSiteCreationService.getInstance(project)
+        val service = project.service<MkDocsSiteCreationService>()
         val directory = service.targetDirectoryOf(e.getData(CommonDataKeys.VIRTUAL_FILE))
             ?: project.guessProjectDir()
             ?: return
@@ -72,5 +73,5 @@ class MkDocsCreateSiteAction : AnAction() {
 
     /** The directory a site would be created in for [file], exposed for tests. */
     internal fun targetDirectory(project: Project, file: VirtualFile?): VirtualFile? =
-        MkDocsSiteCreationService.getInstance(project).targetDirectoryOf(file) ?: project.guessProjectDir()
+        project.service<MkDocsSiteCreationService>().targetDirectoryOf(file) ?: project.guessProjectDir()
 }

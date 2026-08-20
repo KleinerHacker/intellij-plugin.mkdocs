@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiRecursiveElementVisitor
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.yaml.YAMLLanguage
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallationFixture
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationFixture
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.

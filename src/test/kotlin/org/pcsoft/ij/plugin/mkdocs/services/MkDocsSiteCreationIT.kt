@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.services
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtilCore
@@ -37,7 +38,7 @@ import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteTemplate
 class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
 
     private val service: MkDocsSiteCreationService
-        get() = MkDocsSiteCreationService.getInstance(project)
+        get() = project.service<MkDocsSiteCreationService>()
 
     /**
      * Use case: the user creates a site in a directory that belongs to no module — the ordinary case in a
@@ -108,7 +109,7 @@ class MkDocsSiteCreationIT : HeavyPlatformTestCase() {
         assertEquals("demo", facet!!.configuration.siteName)
         assertEquals("mkdocs.yml", facet.configuration.configFilePath)
         assertFalse("the module already existed, it must not be owned", facet.configuration.ownsModule)
-        assertEquals(listOf(module), MkDocsModuleService.getInstance(project).getMkDocsModules())
+        assertEquals(listOf(module), project.service<MkDocsModuleService>().getMkDocsModules())
     }
 
     /**

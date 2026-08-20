@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.module
 
 import com.intellij.facet.FacetManager
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
@@ -183,7 +184,7 @@ class MkDocsDirectoryCompletionContributorTest : BasePlatformTestCase() {
      * requires — the light fixture project has a single module shared by every test.
      */
     private fun syncAndKeepFacet() {
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         assertNotNull(
             "the detection must have put an MkDocs facet on the fixture module",
             MkDocsFacet.getInstance(myFixture.module)

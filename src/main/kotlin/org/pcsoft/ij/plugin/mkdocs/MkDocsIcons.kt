@@ -130,9 +130,13 @@ object MkDocsIcons {
      *
      * A folder, because a section groups entries without being a page of its own — but drawn in the blue of
      * the other MkDocs icons, so a section of a site is not mistaken for a directory of the project.
+     *
+     * The second icon of the plugin that does not live here: the same drawing stands for a level in the
+     * completion popups of the features, which cannot reach into the plugin for it, so the file and the
+     * loaded icon sit in [MkDocsIconLoader].
      */
     @JvmField
-    val NavSection: Icon = load("mkdocs-section.svg", 16)
+    val NavSection: Icon = MkDocsIconLoader.Folder
 
     /**
      * Icon of the `requirements.txt` next to the configuration file of a site.

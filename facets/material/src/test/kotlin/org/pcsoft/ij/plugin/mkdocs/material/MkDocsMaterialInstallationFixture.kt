@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.material.icon
+package org.pcsoft.ij.plugin.mkdocs.material
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -18,6 +18,8 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconLocator
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 import java.io.File
 
@@ -99,8 +101,8 @@ internal object MkDocsMaterialInstallationFixture {
      */
     fun point(project: Project, path: String) {
         service<MkDocsPipService>().overrideLocation(MkDocsMaterialIconLocator.DISTRIBUTION, "")
-        MkDocsMaterialIconSettings.getInstance(project).iconPath = path
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        project.service<MkDocsMaterialIconSettings>().iconPath = path
+        project.service<MkDocsMaterialIconIndex>().invalidate()
     }
 
     /**

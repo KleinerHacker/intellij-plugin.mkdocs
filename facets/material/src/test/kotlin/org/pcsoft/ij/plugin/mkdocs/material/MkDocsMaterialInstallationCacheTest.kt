@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.material.icon
+package org.pcsoft.ij.plugin.mkdocs.material
 
 import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -128,6 +128,68 @@ class MkDocsMaterialInstallationCacheTest : BasePlatformTestCase() {
 
         assertEquals(listOf("material/check"), cache().dataOf(LOCATION) { error("read") }.iconNames)
         assertEquals(listOf("material/close"), cache().dataOf(OTHER_LOCATION) { error("read") }.iconNames)
+    }
+
+    /**
+     * Use case: the file behind an icon name, asked for whenever a popup or an inlay hint paints the drawing.
+     * The name is resolved below the sets once; every repaint after that is answered out of the cache.
+     */
+    fun `test resolves the file of an icon only once`() {
+        val file = myFixture.addFileToProject("icons/material/check.svg", "<svg/>").virtualFile
+        val root = file.parent.parent
+        var resolves = 0
+
+        cache().fileOf(root, "material/check") { resolves++; file }
+        cache().fileOf(root, "material/check") { resolves++; file }
+
+        assertEquals(1, resolves)
+    }
+
+    /**
+     * Use case: a name the installation does not carry. Nothing is remembered for it — a theme installed while
+     * the project is open would otherwise stay invisible behind an answer that was only ever a miss.
+     */
+    fun `test does not remember a name it could not resolve`() {
+        val root = myFixture.addFileToProject("icons/material/check.svg", "<svg/>").virtualFile.parent.parent
+        var resolves = 0
+
+        cache().fileOf(root, "material/gone") { resolves++; null }
+        cache().fileOf(root, "material/gone") { resolves++; null }
+
+        assertEquals(2, resolves)
+    }
+
+    /**
+     * Use case: the same drawing painted again, which every repaint of a popup does. It is built once, and
+     * the size is part of what tells two of them apart — a popup asks for 16 pixels, an inlay hint for 12.
+     */
+    fun `test builds an icon once per size`() {
+        val file = myFixture.addFileToProject("icons/material/check.svg", "<svg/>").virtualFile
+        var renders = 0
+
+        cache().iconOf(file, 16) { renders++; MkDocsMaterialIcons.Feature }
+        cache().iconOf(file, 16) { renders++; MkDocsMaterialIcons.Feature }
+        cache().iconOf(file, 12) { renders++; MkDocsMaterialIcons.Feature }
+
+        assertEquals(2, renders)
+    }
+
+    /**
+     * Use case: the installation was re-read. Everything that followed from the old one goes with it — the
+     * file behind a name and the drawing alike, because the same name can now be another file.
+     */
+    fun `test drops the files and the icons as well`() {
+        val file = myFixture.addFileToProject("icons/material/check.svg", "<svg/>").virtualFile
+        val root = file.parent.parent
+        var reads = 0
+        cache().fileOf(root, "material/check") { reads++; file }
+        cache().iconOf(file, 16) { reads++; MkDocsMaterialIcons.Feature }
+
+        cache().invalidate()
+
+        cache().fileOf(root, "material/check") { reads++; file }
+        cache().iconOf(file, 16) { reads++; MkDocsMaterialIcons.Feature }
+        assertEquals(4, reads)
     }
 
     /**

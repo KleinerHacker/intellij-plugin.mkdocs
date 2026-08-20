@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.application.runReadActionBlocking
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
@@ -111,7 +112,7 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
     fun `test renames the site`() {
         val configFile = site()
 
-        MkDocsDirectoryService.getInstance(project).renameSite(configFile, "Field Manual")
+        project.service<MkDocsDirectoryService>().renameSite(configFile, "Field Manual")
 
         assertEquals("Field Manual", runReadActionBlocking { MkDocsConfig.readSiteName(project, configFile) })
     }
@@ -123,7 +124,7 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
     fun `test writes the site name into a file without one`() {
         val configFile = site("# just a comment\n")
 
-        MkDocsDirectoryService.getInstance(project).renameSite(configFile, "Field Manual")
+        project.service<MkDocsDirectoryService>().renameSite(configFile, "Field Manual")
 
         assertEquals("Field Manual", runReadActionBlocking { MkDocsConfig.readSiteName(project, configFile) })
         assertTrue("the comment must survive", text(configFile).contains("# just a comment"))
@@ -136,7 +137,7 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
     fun `test ignores an empty site name`() {
         val configFile = site()
 
-        MkDocsDirectoryService.getInstance(project).renameSite(configFile, "   ")
+        project.service<MkDocsDirectoryService>().renameSite(configFile, "   ")
 
         assertEquals("Handbook", runReadActionBlocking { MkDocsConfig.readSiteName(project, configFile) })
     }
@@ -168,7 +169,7 @@ class MkDocsDirectoryServiceTest : BasePlatformTestCase() {
         )
 
     private fun applyLayout(configFile: VirtualFile, target: MkDocsDirectoryLayout) {
-        val service = MkDocsDirectoryService.getInstance(project)
+        val service = project.service<MkDocsDirectoryService>()
         service.applyLayout(myFixture.module, configFile, service.currentLayout(myFixture.module, configFile), target)
     }
 

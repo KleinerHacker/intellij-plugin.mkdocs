@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.module.create
 
 import com.intellij.icons.AllIcons
 import com.intellij.ide.wizard.CommitStepException
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.vfs.VirtualFile
@@ -53,10 +54,10 @@ class MkDocsRepositoryStep(project: Project, directory: VirtualFile?) : MkDocsVa
     var repoUrl: String = ""
 
     /** The address of the repository the site is created in, or `null` if there is none. */
-    private val detectedUrl: String? = MkDocsScmService.getInstance(project).repositoryUrl(directory)
+    private val detectedUrl: String? = project.service<MkDocsScmService>().repositoryUrl(directory)
 
     /** The name of that repository, or `null` if there is none. */
-    private val detectedName: String? = MkDocsScmService.getInstance(project).repositoryName(directory)
+    private val detectedName: String? = project.service<MkDocsScmService>().repositoryName(directory)
 
     /** `true` once the user edited the name, which stops it from following the address. */
     private var nameEditedByUser = false

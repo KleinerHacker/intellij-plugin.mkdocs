@@ -94,6 +94,12 @@
         <annotator language="yaml"
                    implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialInstallationAnnotator"/>
 
+        <!-- Marks a name that the installed sets do not hold. Told apart by where it goes wrong: an unknown
+             set is marked on the set, an unknown icon below a known set on the name. Silent while nothing
+             can be read, which the annotator above states once for the whole file. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialIconAnnotator"/>
+
         <!-- The counterpart of that annotator for everything the theme merely builds on. A weak warning
              that can be switched off: a site keeping its Markdown plain is not doing anything wrong. -->
         <localInspection language="yaml"

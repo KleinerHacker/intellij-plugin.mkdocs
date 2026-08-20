@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.ui.toolwindow
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
@@ -31,7 +32,7 @@ import javax.swing.tree.DefaultMutableTreeNode
 class MkDocsSitePageToolWindowIT : HeavyPlatformTestCase() {
 
     private val service: MkDocsModuleService
-        get() = MkDocsModuleService.getInstance(project)
+        get() = project.service<MkDocsModuleService>()
 
     /**
      * Use case: a project without any MkDocs site. The tool window has nothing to show and must stay out of

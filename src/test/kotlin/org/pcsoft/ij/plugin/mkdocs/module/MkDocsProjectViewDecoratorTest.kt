@@ -19,6 +19,7 @@ import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -44,7 +45,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
      */
     fun `test decorates the site root with site name and badge`() {
         val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
@@ -59,7 +60,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
      */
     fun `test keeps the directory name in front of the site name`() {
         val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon().apply { presentableText = "docs" }
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
@@ -74,7 +75,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     fun `test leaves a directory without configuration untouched`() {
         val file = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
         val other = myFixture.addFileToProject("assets/logo.txt", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         assertNotNull(file)
 
         val data = presentationWithFolderIcon()
@@ -90,7 +91,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
      */
     fun `test leaves file nodes untouched`() {
         val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf<PsiFile>(configFile), data)
@@ -119,7 +120,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
      */
     fun `test does not decorate for a blank site name`() {
         val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         MkDocsFacet.getInstance(myFixture.module)!!.configuration.siteName = "  "
 
         val data = presentationWithFolderIcon()
@@ -134,7 +135,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
      */
     fun `test adds the site name even without a node icon`() {
         val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = PresentationData()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
@@ -149,7 +150,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
      */
     fun `test renders the site name with the plugin text attribute`() {
         val configFile = myFixture.addFileToProject("docs/mkdocs.yml", "site_name: My Documentation\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.virtualFile.parent), data)
@@ -167,7 +168,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     fun `test badges the documentation directory`() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val page = myFixture.addFileToProject("handbook/docs/index.md", "# Home\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(page.virtualFile.parent), data)
@@ -184,7 +185,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: Handbook\ndocs_dir: sources\n")
         val page = myFixture.addFileToProject("handbook/sources/index.md", "# Home\n")
         val unrelated = myFixture.addFileToProject("handbook/docs/index.md", "# Home\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val badged = presentationWithFolderIcon()
         decorator.decorate(nodeOf(page.virtualFile.parent), badged)
@@ -202,7 +203,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     fun `test badges the assets directory`() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val asset = myFixture.addFileToProject("handbook/docs/assets/logo.txt", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         // The light fixture module is shared between tests and keeps whatever a previous test wrote into the
         // facet, so the default this test is about has to be stated explicitly.
         MkDocsFacet.getInstance(myFixture.module)!!.configuration.assetsDirName = "assets"
@@ -221,7 +222,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val asset = myFixture.addFileToProject("handbook/docs/media/logo.txt", "")
         val conventional = myFixture.addFileToProject("handbook/docs/assets/logo.txt", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         MkDocsFacet.getInstance(myFixture.module)!!.configuration.assetsDirName = "media"
 
         val badged = presentationWithFolderIcon()
@@ -240,7 +241,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     fun `test badges the stylesheets directory`() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val stylesheet = myFixture.addFileToProject("handbook/docs/stylesheets/extra.css", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         // The light fixture module is shared between tests and keeps whatever a previous test wrote into the
         // facet, so the default this test is about has to be stated explicitly.
         MkDocsFacet.getInstance(myFixture.module)!!.configuration.stylesheetsDirName = "stylesheets"
@@ -259,7 +260,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val styled = myFixture.addFileToProject("handbook/docs/css/extra.css", "")
         val conventional = myFixture.addFileToProject("handbook/docs/stylesheets/extra.css", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         MkDocsFacet.getInstance(myFixture.module)!!.configuration.stylesheetsDirName = "css"
 
         val badged = presentationWithFolderIcon()
@@ -278,7 +279,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     fun `test leaves a directory named stylesheets elsewhere untouched`() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val stray = myFixture.addFileToProject("handbook/docs/guide/stylesheets/extra.css", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(stray.virtualFile.parent), data)
@@ -293,7 +294,7 @@ class MkDocsProjectViewDecoratorTest : BasePlatformTestCase() {
     fun `test leaves a directory named assets elsewhere untouched`() {
         myFixture.addFileToProject("handbook/mkdocs.yml", "site_name: My Documentation\n")
         val stray = myFixture.addFileToProject("handbook/docs/guide/assets/logo.txt", "")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(stray.virtualFile.parent), data)

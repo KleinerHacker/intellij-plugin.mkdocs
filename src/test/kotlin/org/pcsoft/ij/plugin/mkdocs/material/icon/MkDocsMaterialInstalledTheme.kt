@@ -99,8 +99,8 @@ internal object MkDocsMaterialInstalledTheme {
      */
     fun point(project: Project, path: String) {
         service<MkDocsPipService>().overrideLocation(MkDocsMaterialIconLocator.DISTRIBUTION, "")
-        MkDocsMaterialIconSettings.getInstance(project).iconPath = path
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        project.service<MkDocsMaterialIconSettings>().iconPath = path
+        project.service<MkDocsMaterialIconIndex>().invalidate()
     }
 
     /**

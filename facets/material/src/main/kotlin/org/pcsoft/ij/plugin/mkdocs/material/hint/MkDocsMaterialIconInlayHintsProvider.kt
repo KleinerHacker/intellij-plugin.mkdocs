@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.hint
 
 import com.intellij.codeInsight.hints.*
 import com.intellij.lang.Language
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -98,13 +99,14 @@ class MkDocsMaterialIconInlayHintsProvider : InlayHintsProvider<NoSettings> {
         private val siteRoot: VirtualFile,
     ) : FactoryInlayHintsCollector(editor) {
 
+        @Suppress("SameReturnValue")
         override fun collect(element: PsiElement, editor: Editor, sink: InlayHintsSink): Boolean {
             val scalar = element as? YAMLScalar ?: return true
             if (!MkDocsMaterialIconKeys.isIconValue(scalar)) return true
 
             val name = scalar.textValue.trim()
             if (name.isEmpty()) return true
-            val icon = MkDocsMaterialIconIndex.getInstance(element.project).icon(siteRoot, name, ICON_SIZE)
+            val icon = element.project.service<MkDocsMaterialIconIndex>().icon(siteRoot, name, ICON_SIZE)
                 ?: return true
 
             // The icon arrives at the size it is painted at, fixed by `MkDocsIconLoader`, and is placed by

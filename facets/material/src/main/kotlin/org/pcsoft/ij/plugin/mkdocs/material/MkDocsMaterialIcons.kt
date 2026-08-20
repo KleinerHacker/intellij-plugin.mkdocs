@@ -72,6 +72,17 @@ object MkDocsMaterialIcons {
     val Feature: Icon = MkDocsIconLoader.withBadge(MkDocsIconLoader.Logo, Overlay)
 
     /**
+     * Icon of an icon set in the completion popups: the shared folder badged with the Material glyph.
+     *
+     * A set holds icons rather than being one, so it carries the drawing that stands for a level everywhere
+     * in this plugin. The badge stays on it for the same reason it sits on the icons themselves: a popup of a
+     * Markdown page mixes the entries of this feature with everything else the IDE offers, and the mark is
+     * what says which of them are the theme's.
+     */
+    @JvmField
+    val Group: Icon = MkDocsIconLoader.withBadge(MkDocsIconLoader.Folder, Overlay)
+
+    /**
      * Loads the icon [fileName] from the `material/icons` resource folder and brings it to [size] pixels.
      *
      * @param fileName name of the SVG below `/material/icons`, without the `_dark` suffix of the dark variant

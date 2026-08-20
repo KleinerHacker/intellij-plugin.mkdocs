@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
@@ -30,7 +31,7 @@ import org.pcsoft.ij.plugin.mkdocs.api.MkDocsSite
 class MkDocsModuleServiceTest : BasePlatformTestCase() {
 
     private val service: MkDocsModuleService
-        get() = MkDocsModuleService.getInstance(project)
+        get() = project.service<MkDocsModuleService>()
 
     /**
      * Use case: a project containing an `mkdocs.yml`. The directory above it must be recognised as an MkDocs

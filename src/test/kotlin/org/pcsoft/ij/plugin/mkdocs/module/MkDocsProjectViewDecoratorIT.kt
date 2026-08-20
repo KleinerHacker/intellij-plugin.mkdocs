@@ -17,6 +17,7 @@ import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.testFramework.HeavyPlatformTestCase
@@ -42,7 +43,7 @@ class MkDocsProjectViewDecoratorIT : HeavyPlatformTestCase() {
      */
     fun `test shows site name and badge after detection created the module`() {
         val configFile = createConfig("handbook/mkdocs.yml", "site_name: Handbook\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(configFile.parent), data)
@@ -58,7 +59,7 @@ class MkDocsProjectViewDecoratorIT : HeavyPlatformTestCase() {
     fun `test decorates every site with its own name`() {
         val guide = createConfig("guide/mkdocs.yml", "site_name: Guide\n")
         val reference = createConfig("reference/mkdocs.yaml", "site_name: Reference\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val guideData = presentationWithFolderIcon()
         decorator.decorate(nodeOf(guide.parent), guideData)
@@ -76,10 +77,10 @@ class MkDocsProjectViewDecoratorIT : HeavyPlatformTestCase() {
     fun `test drops the decoration when the site disappears`() {
         val configFile = createConfig("handbook/mkdocs.yml", "site_name: Handbook\n")
         val siteRoot = configFile.parent
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         VfsTestUtil.deleteFile(configFile)
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val data = presentationWithFolderIcon()
         decorator.decorate(nodeOf(siteRoot), data)

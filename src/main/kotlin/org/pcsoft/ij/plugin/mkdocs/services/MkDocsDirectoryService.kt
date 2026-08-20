@@ -62,17 +62,6 @@ data class MkDocsDirectoryLayout(
 @Service(Service.Level.PROJECT)
 class MkDocsDirectoryService(private val project: Project) {
 
-    companion object {
-
-        /**
-         * Returns the service instance for [project].
-         *
-         * @param project the project whose service is requested
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsDirectoryService = project.service()
-    }
-
     /**
      * Returns the layout the site described by [configFile] currently has.
      *
@@ -135,7 +124,7 @@ class MkDocsDirectoryService(private val project: Project) {
         writeKey(configFile, MkDocsConfig.KEY_SITE_DIR, target.siteDirName, MkDocsSiteTemplate.DEFAULT_SITE_DIR)
 
         if (module != null) {
-            MkDocsModuleService.getInstance(project).scheduleSync()
+            project.service<MkDocsModuleService>().scheduleSync()
         }
     }
 
@@ -164,7 +153,7 @@ class MkDocsDirectoryService(private val project: Project) {
             .run<RuntimeException> {
                 MkDocsConfigWriter.setScalarKey(project, configFile, MkDocsConfig.KEY_SITE_NAME, trimmed)
             }
-        MkDocsModuleService.getInstance(project).scheduleSync()
+        project.service<MkDocsModuleService>().scheduleSync()
     }
 
     /**

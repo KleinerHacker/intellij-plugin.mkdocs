@@ -20,10 +20,9 @@ import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconLocator
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallation
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallationCache
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallation
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationCache
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 import org.pcsoft.ij.plugin.mkdocs.utils.ui.MkDocsInstallationComboBox
 import javax.swing.JComponent
@@ -94,7 +93,6 @@ class MkDocsMaterialIconSettingsConfigurable(private val project: Project) : Con
         settings().iconPath = iconPath.path
         service<MkDocsPipService>().invalidate()
         service<MkDocsMaterialInstallationCache>().invalidate()
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
     }
 
     override fun reset() {
@@ -130,5 +128,5 @@ class MkDocsMaterialIconSettingsConfigurable(private val project: Project) : Con
     /**
      * Returns the settings this page edits.
      */
-    private fun settings(): MkDocsMaterialIconSettings = MkDocsMaterialIconSettings.getInstance(project)
+    private fun settings(): MkDocsMaterialIconSettings = project.service<MkDocsMaterialIconSettings>()
 }

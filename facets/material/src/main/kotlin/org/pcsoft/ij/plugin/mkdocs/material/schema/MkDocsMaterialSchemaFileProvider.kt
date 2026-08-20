@@ -43,14 +43,6 @@ class MkDocsMaterialSchemaCache(private val project: Project) {
     companion object {
 
         /**
-         * Returns the cache of [project].
-         *
-         * @param project the project to look the cache up for
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsMaterialSchemaCache = project.service()
-
-        /**
          * Drops the cached answers of [project] and makes the IDE ask for the schema again.
          *
          * The convenient entry point for the callers that change the answer — a project on its way out is
@@ -61,7 +53,7 @@ class MkDocsMaterialSchemaCache(private val project: Project) {
         @JvmStatic
         fun invalidate(project: Project) {
             if (project.isDisposed) return
-            getInstance(project).invalidate()
+            project.service<MkDocsMaterialSchemaCache>().invalidate()
         }
     }
 
@@ -112,12 +104,12 @@ class MkDocsMaterialSchemaFileProvider(private val project: Project) : JsonSchem
     override fun isAvailable(file: VirtualFile): Boolean {
         if (project.isDisposed) return false
         if (!MkDocsProject.isConfigFile(file.name)) return false
-        return MkDocsMaterialSchemaCache.getInstance(project).get(file) { candidate -> isMaterialSite(candidate) }
+        return project.service<MkDocsMaterialSchemaCache>().get(file) { candidate -> isMaterialSite(candidate) }
     }
 
     override fun getName(): String = MkDocsMaterialBundle.message("schema.material.name")
 
-    override fun getSchemaFile(): VirtualFile = MkDocsMaterialSchemaGenerator.getInstance().schemaFile
+    override fun getSchemaFile(): VirtualFile = service<MkDocsMaterialSchemaGenerator>().schemaFile
 
     override fun getSchemaType(): SchemaType = SchemaType.embeddedSchema
 

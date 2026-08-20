@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.ui.toolwindow
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowManager
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
@@ -43,7 +44,7 @@ class MkDocsSitePageAvailabilityListener(private val project: Project) : MkDocsS
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(MkDocsSitePageToolWindowFactory.ID)
             ?: return
 
-        val available = MkDocsModuleService.getInstance(project).getMkDocsModules().isNotEmpty()
+        val available = project.service<MkDocsModuleService>().getMkDocsModules().isNotEmpty()
         toolWindow.setAvailable(available)
         if (!available) return
 

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.material.icon
+package org.pcsoft.ij.plugin.mkdocs.material
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

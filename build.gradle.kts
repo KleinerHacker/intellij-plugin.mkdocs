@@ -46,7 +46,7 @@ intellijPlatform {
         changeNotes = provider { "" }
     }
 
-    // Authoritative IDE matrix for `verifyPlugin` (see .claude/rules/plugin-verification.md). The version is
+    // Authoritative IDE matrix for `verifyPlugin` (see .claude/rules/plugin.md). The version is
     // always read from the catalog so the verified IDEs can never drift away from the platform the plugin is
     // compiled against — bumping `idea` in libs.versions.toml bumps all of them at once.
     pluginVerification {

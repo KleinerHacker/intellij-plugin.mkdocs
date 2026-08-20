@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module.facet
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.module.ModuleTypeManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -50,7 +51,7 @@ class MkDocsFacetTypeTest : BasePlatformTestCase() {
     fun `test is still created by the detection`() {
         myFixture.addFileToProject("mkdocs.yml", "site_name: My Documentation\n")
 
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val facet = MkDocsFacet.getInstance(myFixture.module)
         assertNotNull("detection must create the facet regardless of the UI restriction", facet)

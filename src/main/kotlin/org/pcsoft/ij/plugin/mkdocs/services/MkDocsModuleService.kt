@@ -17,7 +17,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
@@ -66,14 +65,6 @@ class MkDocsModuleService(private val project: Project) {
 
         /** Identity of the merged sync task inside the update queue. */
         private const val SYNC_TASK_ID = "mkdocs.module.sync"
-
-        /**
-         * Returns the service instance for [project].
-         *
-         * @param project the project whose service is requested
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsModuleService = project.service()
     }
 
     /**

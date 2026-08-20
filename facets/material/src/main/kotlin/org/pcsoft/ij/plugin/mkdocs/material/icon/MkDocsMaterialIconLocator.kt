@@ -21,6 +21,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallation
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationCache
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsInstallationLocator
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
@@ -38,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap
  * 2. the installation `pip show mkdocs-material` reports, through [MkDocsInstallationLocator].
  *
  * The installation rather than the icon directory, because that is the directory that can be *checked*:
- * [MkDocsMaterialInstallation] reads the metadata pip wrote next to the package, and a directory failing that
+ * [org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallation] reads the metadata pip wrote next to the package, and a directory failing that
  * check is refused on the settings page instead of turning into an empty completion popup.
  *
  * Nothing else is searched. Walking the checkout for directories that look like a virtual environment was
@@ -105,7 +107,6 @@ object MkDocsMaterialIconLocator {
     fun reload(project: Project) {
         service<MkDocsPipService>().invalidate()
         service<MkDocsMaterialInstallationCache>().invalidate()
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
         analyse(project)
     }
 
@@ -161,7 +162,9 @@ object MkDocsMaterialIconLocator {
             override fun onFinished() {
                 analysing.remove(project.locationHash)
                 if (project.isDisposed) return
-                MkDocsMaterialIconIndex.getInstance(project).invalidate()
+                // Nothing is thrown away here: what this task read is what the caches are to hold, and
+                // dropping it would send the next question — which sits under a read action — back to the
+                // file. Only the editors are told to ask again.
                 DaemonCodeAnalyzer.getInstance(project).restart(RESTART_REASON)
             }
         }
@@ -199,7 +202,7 @@ object MkDocsMaterialIconLocator {
      * @param project the project whose settings are read
      */
     private fun configured(project: Project): String? {
-        val path = MkDocsMaterialIconSettings.getInstance(project).iconPath.trim()
+        val path = project.service<MkDocsMaterialIconSettings>().iconPath.trim()
         if (path.isEmpty()) return null
         return path.takeIf { MkDocsMaterialInstallation.problemOf(it) == null }
     }

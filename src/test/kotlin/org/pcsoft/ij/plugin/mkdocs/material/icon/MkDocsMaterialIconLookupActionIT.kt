@@ -15,6 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.codeInsight.lookup.LookupElementAction
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.codeInsight.lookup.LookupManager
+import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.Consumer
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
@@ -52,10 +53,22 @@ class MkDocsMaterialIconLookupActionIT : BasePlatformTestCase() {
      * Use case: the user standing on an icon of the popup, wondering why the one they just installed is not in
      * the list. The footer menu of the popup carries the way to read the installation again.
      */
-    fun `test offers reading the installation again on an icon entry`() {
+    fun `test offers reading the installation again on a set entry`() {
         completeIcons()
-        val element = myFixture.lookupElements?.firstOrNull { it.lookupString in ICON_NAMES }
-            ?: error("the popup offered none of the installed icons")
+        val element = myFixture.lookupElements?.firstOrNull { it.lookupString in SETS }
+            ?: error("the popup offered none of the installed sets")
+
+        assertSize(1, actionsFor(element))
+    }
+
+    /**
+     * Use case: the same wondering, one level further down. The walk through the sets ends on the icons, and the
+     * list of a set is where a freshly installed icon is missed just as much as in the list of the sets.
+     */
+    fun `test offers reading the installation again on an icon entry`() {
+        completeIcons(SET_MATERIAL)
+        val element = myFixture.lookupElements?.firstOrNull { it.lookupString == ICON_SEGMENT }
+            ?: error("the popup offered none of the icons of the set")
 
         assertSize(1, actionsFor(element))
     }
@@ -69,8 +82,8 @@ class MkDocsMaterialIconLookupActionIT : BasePlatformTestCase() {
 
         val offered = myFixture.lookupElementStrings.orEmpty()
 
-        assertContainsElements(offered, ICON_NAMES)
-        assertEmpty(offered.filterNot { it in ICON_NAMES })
+        assertContainsElements(offered, SETS)
+        assertEmpty(offered.filterNot { it in SETS })
     }
 
     /**
@@ -99,8 +112,10 @@ class MkDocsMaterialIconLookupActionIT : BasePlatformTestCase() {
 
     /**
      * Opens the completion popup on the icon of the link to the repository.
+     *
+     * @param written what already stands in the value, which decides the level the popup offers
      */
-    private fun completeIcons() {
+    private fun completeIcons(written: String = "") {
         myFixture.configureByText(
             "mkdocs.yml",
             """
@@ -108,10 +123,10 @@ class MkDocsMaterialIconLookupActionIT : BasePlatformTestCase() {
             theme:
               name: material
               icon:
-                repo: <caret>
+                repo: $written<caret>
             """.trimIndent() + "\n",
         )
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         myFixture.completeBasic()
     }
 
@@ -119,5 +134,14 @@ class MkDocsMaterialIconLookupActionIT : BasePlatformTestCase() {
 
         /** The icons the installation of this test ships. */
         val ICON_NAMES = listOf("fontawesome/brands/github", "material/check", "material/pencil")
+
+        /** The `material` set, as an entry of the top level writes it. */
+        const val SET_MATERIAL = "material/"
+
+        /** An icon below that set, as the level of the set writes it. */
+        const val ICON_SEGMENT = "check"
+
+        /** The sets of the installation, which the top level of the popup offers. */
+        val SETS = listOf("fontawesome/", SET_MATERIAL)
     }
 }

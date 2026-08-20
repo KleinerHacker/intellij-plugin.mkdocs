@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.application.runReadActionBlocking
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
@@ -102,7 +103,7 @@ class MkDocsDirectoryRenameIT : BasePlatformTestCase() {
     )
 
     private fun applyLayout(configFile: VirtualFile, target: MkDocsDirectoryLayout) {
-        val service = MkDocsDirectoryService.getInstance(project)
+        val service = project.service<MkDocsDirectoryService>()
         service.applyLayout(myFixture.module, configFile, service.currentLayout(myFixture.module, configFile), target)
     }
 

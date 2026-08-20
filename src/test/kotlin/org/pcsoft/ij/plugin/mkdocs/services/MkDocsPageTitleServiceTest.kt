@@ -15,6 +15,7 @@ package org.pcsoft.ij.plugin.mkdocs.services
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.application.runReadActionBlocking
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
@@ -114,7 +115,7 @@ class MkDocsPageTitleServiceTest : BasePlatformTestCase() {
     /**
      * Returns the service under test.
      */
-    private fun service(): MkDocsPageTitleService = MkDocsPageTitleService.getInstance(project)
+    private fun service(): MkDocsPageTitleService = project.service<MkDocsPageTitleService>()
 
     /**
      * Creates a file in the temporary directory of the fixture and returns it.

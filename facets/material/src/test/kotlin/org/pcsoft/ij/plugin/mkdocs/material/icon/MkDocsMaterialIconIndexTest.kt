@@ -13,8 +13,10 @@
 package org.pcsoft.ij.plugin.mkdocs.material.icon
 
 import com.intellij.openapi.application.runReadActionBlocking
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationFixture
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -123,5 +125,5 @@ class MkDocsMaterialIconIndexTest : BasePlatformTestCase() {
     /**
      * Returns the index of the test project.
      */
-    private fun index(): MkDocsMaterialIconIndex = MkDocsMaterialIconIndex.getInstance(project)
+    private fun index(): MkDocsMaterialIconIndex = project.service<MkDocsMaterialIconIndex>()
 }

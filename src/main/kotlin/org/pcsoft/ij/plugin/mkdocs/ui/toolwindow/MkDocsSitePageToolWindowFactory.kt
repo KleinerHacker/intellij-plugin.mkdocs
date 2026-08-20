@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.ui.toolwindow
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -34,7 +35,7 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 class MkDocsSitePageToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun shouldBeAvailable(project: Project): Boolean =
-        MkDocsModuleService.getInstance(project).getMkDocsModules().isNotEmpty()
+        project.service<MkDocsModuleService>().getMkDocsModules().isNotEmpty()
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         syncContents(project, toolWindow)
@@ -62,7 +63,7 @@ class MkDocsSitePageToolWindowFactory : ToolWindowFactory, DumbAware {
         fun syncContents(project: Project, toolWindow: ToolWindow) {
             if (project.isDisposed) return
             val manager = toolWindow.contentManager
-            val modules = MkDocsModuleService.getInstance(project).getMkDocsModules()
+            val modules = project.service<MkDocsModuleService>().getMkDocsModules()
                 .filterNot { it.isDisposed }
             val titles = modules.groupingBy { siteNameOf(it) }.eachCount()
 

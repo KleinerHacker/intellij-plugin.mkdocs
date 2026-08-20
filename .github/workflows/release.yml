@@ -197,7 +197,7 @@ jobs:
 
   # Run the JetBrains Plugin Verifier against the full IDE matrix declared in build.gradle.kts
   # (IntelliJ IDEA, Rider, CLion, GoLand). A release must never publish a plugin that fails verification
-  # on one of the supported products. See .claude/rules/plugin-verification.md.
+  # on one of the supported products. See .claude/rules/plugin.md.
   verify-plugin:
     runs-on: ubuntu-latest
     # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.

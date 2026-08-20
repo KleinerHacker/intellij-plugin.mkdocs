@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.icon
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.VirtualFile
@@ -19,6 +20,7 @@ import com.intellij.util.ui.ImageUtil
 import com.intellij.util.ui.UIUtil
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationCache
 import java.awt.Component
 import java.awt.Graphics
 import java.awt.image.BufferedImage
@@ -34,34 +36,31 @@ import javax.swing.Icon
  * newer version using something the platform does not support. None of that may reach the completion popup
  * as an exception, so every failure ends up as [MkDocsMaterialIcons.Feature] and a line in the log.
  *
- * Results are cached: a completion popup asks for the icon of every visible entry on every keystroke, and
- * the sets hold thousands of files. The cache is bounded and thrown away whenever the index is invalidated.
- * It is keyed by file *and* size, because the same drawing is handed to a popup at 16 pixels and to an inlay
- * hint at 12.
+ * Nothing is read from disk here until the drawing is actually painted. The completion popup renders *every*
+ * matching entry, not only the visible ones — that is how it measures its own width — so a set of several
+ * thousand icons would otherwise be loaded from scratch on every keystroke. What leaves this object is a
+ * handle that knows its size and loads its file on the first paint, which is the few entries the user sees.
+ *
+ * The handles are kept by [org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationCache], keyed by file *and* size, because the same
+ * drawing is handed to a popup at 16 pixels and to an inlay hint at 12. They live there rather than here,
+ * next to everything else that follows from an installation and dies with it — this object holds no state of
+ * its own.
  */
 object MkDocsMaterialIconRenderer {
 
     private val LOG = logger<MkDocsMaterialIconRenderer>()
 
-    /** How many rendered icons are kept before the oldest ones are dropped. */
-    private const val CACHE_LIMIT = 500
-
     /** The size a place asking for no particular one gets: the size of a list entry and of a popup. */
     const val DEFAULT_SIZE: Int = 16
-
-    /** The rendered icons, keyed by the URL of the file they were loaded from and the size they carry. */
-    private val cache = object : LinkedHashMap<String, Icon>(64, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Icon>?): Boolean =
-            size > CACHE_LIMIT
-    }
 
     /**
      * Returns [file] as an icon.
      *
-     * Never throws and never returns `null`: an icon that cannot be loaded is shown as the Material icon of
-     * the plugin, which says *this is an icon of the theme* without claiming to be the icon itself.
+     * Returns at once and reads nothing: the file behind the icon is opened on the first paint, and only
+     * then. Never throws and never returns `null` — an icon that cannot be loaded is painted as the Material
+     * icon of the plugin, which says *this is an icon of the theme* without claiming to be the icon itself.
      *
-     * The icon leaves at a fixed size, the same way every icon of the plugin does: an inlay hint scales what
+     * The icon carries a fixed size, the same way every icon of the plugin does: an inlay hint scales what
      * it is handed back up to the canvas of the drawing, and the sets of the theme are drawn on canvases of
      * their own — 24 units for the Material set, 16 for the Octicons.
      *
@@ -71,10 +70,18 @@ object MkDocsMaterialIconRenderer {
     @JvmOverloads
     fun render(file: VirtualFile, size: Int = DEFAULT_SIZE): Icon {
         if (!file.isValid) return MkDocsMaterialIcons.Feature
-        val key = "${file.url}@$size"
-        synchronized(cache) { cache[key] }?.let { return it }
+        return service<MkDocsMaterialInstallationCache>().iconOf(file, size) { DeferredIcon(file, size) }
+    }
 
-        val icon = try {
+    /**
+     * Reads the SVG file [file] and hands it back at [size] pixels.
+     *
+     * @param file the SVG file of the icon
+     * @param size the edge length in pixels the icon is to be rendered at
+     */
+    private fun load(file: VirtualFile, size: Int): Icon {
+        if (!file.isValid) return MkDocsMaterialIcons.Feature
+        return try {
             IconLoader.findIcon(file.toNioPath().toUri().toURL(), true)
                 ?.let { MkDocsIconLoader.fixSize(ForegroundIcon(it), size) }
                 ?: MkDocsMaterialIcons.Feature
@@ -84,8 +91,29 @@ object MkDocsMaterialIconRenderer {
             LOG.debug("Cannot render the icon ${file.url}", throwable)
             MkDocsMaterialIcons.Feature
         }
-        synchronized(cache) { cache[key] = icon }
-        return icon
+    }
+
+    /**
+     * An icon that stands for an SVG file and opens it on the first paint.
+     *
+     * Its size is known without the file, which is what lets a completion popup measure a set of several
+     * thousand entries without touching the disk for any of them.
+     *
+     * @property file the SVG file of the icon
+     * @property size the edge length in pixels the icon is painted at
+     */
+    private class DeferredIcon(private val file: VirtualFile, private val size: Int) : Icon {
+
+        /** The loaded drawing, read on the first paint. */
+        private val loaded: Icon by lazy(LazyThreadSafetyMode.PUBLICATION) { load(file, size) }
+
+        override fun paintIcon(component: Component?, graphics: Graphics, x: Int, y: Int) {
+            loaded.paintIcon(component, graphics, x, y)
+        }
+
+        override fun getIconWidth(): Int = size
+
+        override fun getIconHeight(): Int = size
     }
 
     /**
@@ -139,14 +167,4 @@ object MkDocsMaterialIconRenderer {
 
     /** The bits of a pixel holding its colour. */
     private const val RGB = 0x00FFFFFF
-
-    /**
-     * Throws away every rendered icon.
-     *
-     * Called from [MkDocsMaterialIconIndex.invalidate]: an installation that changed can hold a different
-     * drawing under a name that was already rendered once.
-     */
-    fun invalidate() {
-        synchronized(cache) { cache.clear() }
-    }
 }

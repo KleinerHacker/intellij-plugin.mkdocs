@@ -31,7 +31,7 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
     /** The theme description the generator splices into the schema. */
     private val data get() = service<MkDocsMaterialDataService>()
 
-    private val generator: MkDocsMaterialSchemaGenerator get() = MkDocsMaterialSchemaGenerator.getInstance()
+    private val generator: MkDocsMaterialSchemaGenerator get() = service<MkDocsMaterialSchemaGenerator>()
 
     private val schema: JsonObject get() = generator.generate()
 

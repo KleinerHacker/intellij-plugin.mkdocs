@@ -313,7 +313,7 @@ class MkDocsMaterialSchemaValueCompletionIT : BasePlatformTestCase() {
      */
     private fun complete(text: String): List<String> {
         myFixture.configureByText("mkdocs.yml", text.trimIndent() + "\n")
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         MkDocsMaterialSchemaCache.invalidate(project)
 
         myFixture.completeBasic()

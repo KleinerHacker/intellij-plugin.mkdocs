@@ -202,7 +202,7 @@ jobs:
 
   # Run the JetBrains Plugin Verifier against the full IDE matrix declared in build.gradle.kts
   # (IntelliJ IDEA, Rider, CLion, GoLand). The matrix is version-catalog driven, so this job automatically
-  # follows a platform bump. See .claude/rules/plugin-verification.md.
+  # follows a platform bump. See .claude/rules/plugin.md.
   verify-plugin:
     runs-on: ubuntu-latest
     # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.

@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.schema
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
@@ -119,7 +120,7 @@ class MkDocsMaterialSchemaFileProviderIT : HeavyPlatformTestCase() {
      */
     private fun createSite(fileName: String, text: String): VirtualFile {
         val configFile = VfsTestUtil.createFile(getOrCreateProjectBaseDir(), "handbook/$fileName", text)
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
         PlatformTestUtil.dispatchAllInvocationEventsInIdeEventQueue()
         return configFile
     }

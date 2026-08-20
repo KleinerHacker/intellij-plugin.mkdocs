@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module.create
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogPanel
@@ -45,7 +46,7 @@ class MkDocsCopyrightStep(project: Project) : MkDocsValidatingStep {
     /** Value written to `copyright`. */
     var copyright: String = ""
 
-    private val service = MkDocsCopyrightService.getInstance(project)
+    private val service = project.service<MkDocsCopyrightService>()
 
     /** Every notice configured in the IDE, empty when the Copyright plugin is absent. */
     private val profiles: List<MkDocsCopyrightProfile> = service.profiles()

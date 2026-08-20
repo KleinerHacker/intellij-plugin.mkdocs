@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.ui.toolwindow
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
@@ -126,7 +127,7 @@ class MkDocsSitePagePanelTest : BasePlatformTestCase() {
      */
     private fun panelFor(configText: String): MkDocsSitePagePanel {
         myFixture.addFileToProject("mkdocs.yml", configText)
-        MkDocsModuleService.getInstance(project).sync()
+        project.service<MkDocsModuleService>().sync()
 
         val panel = MkDocsSitePagePanel(project, myFixture.module)
         Disposer.register(testRootDisposable, panel)

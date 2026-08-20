@@ -13,9 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.containers.ContainerUtil
@@ -107,13 +105,5 @@ class MkDocsPageTitleService {
          * Reading it would cost more than the title is worth.
          */
         const val MAX_FILE_LENGTH: Long = 1_000_000
-
-        /**
-         * Returns the service of [project].
-         *
-         * @param project the project the pages belong to
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsPageTitleService = project.service()
     }
 }

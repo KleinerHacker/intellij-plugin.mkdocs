@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.module
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.AsyncFileListener
 import com.intellij.openapi.vfs.VirtualFile
@@ -50,7 +51,7 @@ class MkDocsVfsListener : AsyncFileListener {
                     if (project.isDisposed) continue
                     if (sitesAffected) {
                         // The scan reports itself once it is through, so no separate page notification.
-                        MkDocsModuleService.getInstance(project).scheduleSync()
+                        project.service<MkDocsModuleService>().scheduleSync()
                     } else {
                         project.messageBus.syncPublisher(MkDocsSitesListener.TOPIC).pagesChanged()
                     }

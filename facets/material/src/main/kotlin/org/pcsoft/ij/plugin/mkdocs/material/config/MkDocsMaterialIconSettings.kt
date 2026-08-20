@@ -106,7 +106,7 @@ class MkDocsMaterialIconSettings(private val project: Project) :
     /**
      * Returns the settings every feature shares.
      */
-    private fun shared(): MkDocsInstallationSettings = project.service()
+    private fun shared(): MkDocsInstallationSettings = project.service<MkDocsInstallationSettings>()
 
     companion object {
 
@@ -115,13 +115,5 @@ class MkDocsMaterialIconSettings(private val project: Project) :
 
         /** The key this feature keeps its installation directory under. */
         const val INSTALLATION_KEY: String = "material"
-
-        /**
-         * Returns the settings of [project].
-         *
-         * @param project the project whose settings are requested
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsMaterialIconSettings = project.service()
     }
 }

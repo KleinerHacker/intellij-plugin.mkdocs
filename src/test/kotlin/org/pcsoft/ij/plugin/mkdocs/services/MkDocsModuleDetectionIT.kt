@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.services
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -30,7 +31,7 @@ import org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacet
 class MkDocsModuleDetectionIT : HeavyPlatformTestCase() {
 
     private val service: MkDocsModuleService
-        get() = MkDocsModuleService.getInstance(project)
+        get() = project.service<MkDocsModuleService>()
 
     /**
      * Use case: a plain documentation folder is checked out into a project without any build system. There is

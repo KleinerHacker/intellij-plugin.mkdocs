@@ -208,7 +208,7 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
     private fun completeIn(text: String, name: String = "mkdocs.yml", detect: Boolean = false) {
         myFixture.configureByText(name, text + "\n")
         if (detect) {
-            MkDocsModuleService.getInstance(project).sync()
+            project.service<MkDocsModuleService>().sync()
             MkDocsMaterialSchemaCache.invalidate(project)
         }
         myFixture.completeBasic()

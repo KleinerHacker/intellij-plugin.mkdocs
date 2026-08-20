@@ -13,7 +13,6 @@
 package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProfile
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProvider
@@ -31,14 +30,6 @@ import java.time.Year
 class MkDocsCopyrightService(private val project: Project) {
 
     companion object {
-
-        /**
-         * Returns the service instance for [project].
-         *
-         * @param project the project whose service is requested
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsCopyrightService = project.service()
 
         /**
          * Returns the notice used when the IDE has none configured.

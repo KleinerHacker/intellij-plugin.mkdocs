@@ -14,6 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.markdown
 
 import com.intellij.codeInsight.hints.*
 import com.intellij.lang.Language
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -115,7 +116,7 @@ class MkDocsMaterialShorthandInlayHintsProvider : InlayHintsProvider<NoSettings>
             // put a link, an emphasis or a code span in between.
             if (element !is PsiFile) return true
 
-            val index = MkDocsMaterialIconIndex.getInstance(element.project)
+            val index = element.project.service<MkDocsMaterialIconIndex>()
             val names = index.names(siteRoot)
             if (names.isEmpty()) return false
 

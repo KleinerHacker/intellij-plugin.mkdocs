@@ -13,7 +13,6 @@
 package org.pcsoft.ij.plugin.mkdocs.services
 
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.types.MkDocsScmProvider
@@ -30,17 +29,6 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsScmUrl
  */
 @Service(Service.Level.PROJECT)
 class MkDocsScmService(private val project: Project) {
-
-    companion object {
-
-        /**
-         * Returns the service instance for [project].
-         *
-         * @param project the project whose service is requested
-         */
-        @JvmStatic
-        fun getInstance(project: Project): MkDocsScmService = project.service()
-    }
 
     /**
      * Returns the web address of the repository [directory] lives in, ready for `repo_url`.

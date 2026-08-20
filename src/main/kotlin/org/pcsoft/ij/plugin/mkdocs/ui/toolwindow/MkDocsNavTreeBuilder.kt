@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.ui.toolwindow
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.pcsoft.ij.plugin.mkdocs.MkDocsBundle
@@ -99,7 +100,7 @@ object MkDocsNavTreeBuilder {
         is MkDocsNavPage -> {
             val file = docsDir?.let { MkDocsNav.resolve(it, node) }
             val label = node.title
-                ?: file?.let { MkDocsPageTitleService.getInstance(project).titleOf(it) }
+                ?: file?.let { project.service<MkDocsPageTitleService>().titleOf(it) }
                 ?: MkDocsPageTitle.fallback(node.path)
             DefaultMutableTreeNode(
                 MkDocsNavTreeNode(MkDocsNavTreeNodeKind.PAGE, label, hintOf(node.path), node.path, file, null),

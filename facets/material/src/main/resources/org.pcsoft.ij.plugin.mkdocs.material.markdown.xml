@@ -34,5 +34,10 @@
         <codeInsight.inlayProvider
                 language="Markdown"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.markdown.MkDocsMaterialShorthandInlayHintsProvider"/>
+        <!-- Marks a shorthand naming an icon of a known set that the installation does not hold. Only those:
+             the syntax is shared with the emoji shorthands of pymdownx.emoji, and a name starting with no
+             known set is one of those far more often than it is a misspelt icon. -->
+        <annotator language="Markdown"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.markdown.MkDocsMaterialShorthandAnnotator"/>
     </extensions>
 </idea-plugin>

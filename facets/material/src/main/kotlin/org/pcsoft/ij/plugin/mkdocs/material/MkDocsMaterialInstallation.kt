@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations.
  */
 
-package org.pcsoft.ij.plugin.mkdocs.material.icon
+package org.pcsoft.ij.plugin.mkdocs.material
 
 import com.intellij.openapi.components.service
 import java.io.File
@@ -34,7 +34,7 @@ import java.io.File
  * some thousand lines long; reading it per completion popup, per highlighting pass and per keystroke on the
  * settings page is what this arrangement is here to prevent.
  *
- * Read through [java.io.File] rather than through the VFS: the directory lies outside the project, a
+ * Read through [File] rather than through the VFS: the directory lies outside the project, a
  * settings page asks about it while the user is typing, and a synchronous VFS refresh is not something
  * either place can afford.
  */

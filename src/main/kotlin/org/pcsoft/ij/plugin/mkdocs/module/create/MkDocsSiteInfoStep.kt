@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.module.create
 
 import com.intellij.ide.wizard.CommitStepException
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.vfs.VirtualFile
@@ -77,7 +78,7 @@ class MkDocsSiteInfoStep(project: Project, directory: VirtualFile?) : MkDocsVali
         })
     }
 
-    private val authorField = JBTextField(MkDocsScmService.getInstance(project).userName(directory).orEmpty())
+    private val authorField = JBTextField(project.service<MkDocsScmService>().userName(directory).orEmpty())
 
     private val descriptionField = JBTextArea(3, 0).apply {
         lineWrap = true

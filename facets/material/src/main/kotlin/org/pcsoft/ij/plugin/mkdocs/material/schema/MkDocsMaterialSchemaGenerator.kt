@@ -62,10 +62,6 @@ class MkDocsMaterialSchemaGenerator {
 
         /** The name the generated schema is shown under, for example in the status bar widget. */
         const val SCHEMA_FILE_NAME: String = "mkdocs-material.schema.json"
-
-        /** The application wide instance. */
-        @JvmStatic
-        fun getInstance(): MkDocsMaterialSchemaGenerator = service()
     }
 
     /**

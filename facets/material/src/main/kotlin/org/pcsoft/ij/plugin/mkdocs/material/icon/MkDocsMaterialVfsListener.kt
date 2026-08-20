@@ -13,9 +13,9 @@
 package org.pcsoft.ij.plugin.mkdocs.material.icon
 
 import com.intellij.openapi.components.service
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.AsyncFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationCache
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 
 /**
@@ -45,10 +45,8 @@ class MkDocsMaterialVfsListener : AsyncFileListener {
         if (events.none { isDistributionPath(it.path) }) return null
         // Where the package lies is what pip answered once; an installation or a removal makes that stale.
         service<MkDocsPipService>().invalidate()
+        // One cache holds everything that follows from an installation, so this is the whole of it.
         service<MkDocsMaterialInstallationCache>().invalidate()
-        for (project in ProjectManager.getInstance().openProjects) {
-            if (!project.isDisposed) MkDocsMaterialIconIndex.getInstance(project).invalidate()
-        }
         return null
     }
 
