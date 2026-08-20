@@ -10,6 +10,7 @@
     "required": [
       "id",
       "hex",
+      "descriptionKey",
       "primary",
       "accent"
     ],
@@ -23,6 +24,10 @@
         "type": "string",
         "description": "A representative shade of the colour, used for the swatch shown next to the name.",
         "pattern": "^#[0-9A-Fa-f]{6}$"
+      },
+      "descriptionKey": {
+        "type": "string",
+        "description": "The bundle key of the one line description shown in QuickDoc and behind the offered value."
       },
       "primary": {
         "type": "boolean",

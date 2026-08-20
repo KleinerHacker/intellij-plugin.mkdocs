@@ -6,6 +6,45 @@
 
 ### Added
 
+- The **colours and schemes of `theme.palette` now say what they are**: every value of `scheme`, `primary` and
+  `accent` carries a one line description, in the completion popup and under *Ctrl+Q* — on an offered value as
+  well as on one already written into the file, where the popup also names the role it plays and the shade the
+  swatch stands for.
+- A **colour is now shown as a square of its shade** in the completion popup, badged with the mark of the
+  theme. `custom` keeps the plain mark: that colour is defined by the site itself through the `--md-*`
+  properties, so no square could show what it will look like.
+- The **media query of a palette is now completed**: `theme.palette.media` offers
+  `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)`, each with a
+  line saying when its palette applies. The value is written into the file in quotes, which is what keeps the
+  colon inside the query from ending the line.
+- A **query outside those three is now reported**: the theme is built around them, and a value outside leaves
+  the colour scheme toggle with nothing to act on — the palette is then either always active or never. A
+  warning, switchable off under *Settings → Editor → Inspections → MkDocs*, and without a quick fix, because
+  which query was meant is not something the file says.
+
+- The **path completion of `mkdocs.yml` now offers only what the key accepts**: `extra_css` lists `*.css`,
+  `extra_javascript` lists `*.js` and `*.mjs`, and `theme.logo` and `theme.favicon` list image files such as
+  `*.png`, `*.jpg`, `*.svg` or `*.ico`. Directories stay in the list, so a file in a sub directory is still
+  reachable.
+- A value **naming a file of the wrong type is now reported**: a page behind `extra_css`, a style sheet behind
+  `theme.logo`. The file exists, so nothing marked it before, while the built site loaded a page as a style
+  sheet. It is an inspection of its own — *Settings → Editor → Inspections → MkDocs* — and a value without an
+  extension, such as the icon name `material/library`, stays untouched.
+
+- **`mkdocs.yml` now says in the gutter what comes from Material for MkDocs**: the icon of the theme stands
+  next to every key the theme brings along — `theme.features`, `theme.palette`, `theme.font`, `theme.icon`,
+  `theme.direction` and its keys below `extra` — next to everything written below such a key, and next to a
+  value that carries the theme in itself, such as a feature flag or a Markdown extension the theme describes.
+  A line can carry several marks, so `markdown_extensions` stays plain while the extension below it is marked.
+  Hovering a mark says whether it stands for the key or for the value. The marks can be switched off under
+  *Settings → Editor → General → Gutter Icons*.
+
+- The **shorthand of an icon** is now written behind every value of `mkdocs.yml` naming one:
+  `edit: material/pencil` shows `:material-pencil:`, which is the spelling a page uses for the same icon. A
+  name the installed theme does not offer stays without one. The hint can be switched off under
+  *Settings → Editor → Inlay Hints*. The **icon completion states the same shorthand** behind every icon it
+  offers, so it can be read off before the name is even taken.
+
 - The installed Material for MkDocs is now **read again on request**: a *Reload installation* button on the
   settings page, an action of the same name in *Find Action*, and an entry in the menu at the foot of the icon
   completion popup. All three do the same thing, which is what picks up a theme installed next to a running
@@ -135,6 +174,12 @@
 - The same on the **pages of a site**: `:material-…:` and its like are marked when the set is installed and
   the icon is not. Shorthands of any other kind are left alone — `:smile:` and the emoji of `pymdownx.emoji`
   are written exactly the same way.
+
+### Removed
+
+- The inlay hint putting the icon of *Material for MkDocs* in front of every key only that theme reads is
+  gone. The same statement is still made where it is asked for: the completion entries of the theme carry its
+  icon.
 
 ### Fixed
 

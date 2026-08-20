@@ -206,6 +206,97 @@ class MkDocsPathReferenceContributorTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: completion inside an `extra_css` entry. MkDocs loads the value as a style sheet, so only a
+     * `*.css` file may be offered — a page or a script lying next to it would produce a site that cannot be
+     * built.
+     */
+    fun `test offers only style sheets for extra css`() {
+        site()
+        myFixture.addFileToProject("docs/css/extra.css", "")
+        myFixture.addFileToProject("docs/css/theme.css", "")
+        myFixture.addFileToProject("docs/css/extra.js", "")
+        myFixture.addFileToProject("docs/css/readme.md", "")
+        myFixture.configureByText("mkdocs.yml", "extra_css:\n  - css/<caret>\n")
+
+        myFixture.completeBasic()
+        val offered = myFixture.lookupElementStrings ?: emptyList()
+
+        assertContainsElements(offered, "extra.css", "theme.css")
+        assertDoesntContain(offered, "extra.js", "readme.md")
+    }
+
+    /**
+     * Use case: completion inside an `extra_javascript` entry, the counterpart of `extra_css`. Only a script
+     * belongs there, in both extensions a browser loads as one.
+     */
+    fun `test offers only scripts for extra javascript`() {
+        site()
+        myFixture.addFileToProject("docs/js/extra.js", "")
+        myFixture.addFileToProject("docs/js/module.mjs", "")
+        myFixture.addFileToProject("docs/js/extra.css", "")
+        myFixture.configureByText("mkdocs.yml", "extra_javascript:\n  - js/<caret>\n")
+
+        myFixture.completeBasic()
+        val offered = myFixture.lookupElementStrings ?: emptyList()
+
+        assertContainsElements(offered, "extra.js", "module.mjs")
+        assertDoesntContain(offered, "extra.css")
+    }
+
+    /**
+     * Use case: completion inside `theme.logo`. The header of the site renders an image, so only an image
+     * file may be offered — and every format a browser draws has to be among them, not just the two most
+     * common ones.
+     */
+    fun `test offers only images for the theme logo`() {
+        site()
+        myFixture.addFileToProject("docs/img/logo.png", "")
+        myFixture.addFileToProject("docs/img/logo.svg", "")
+        myFixture.addFileToProject("docs/img/logo.md", "")
+        myFixture.configureByText("mkdocs.yml", "theme:\n  name: material\n  logo: img/<caret>\n")
+
+        myFixture.completeBasic()
+        val offered = myFixture.lookupElementStrings ?: emptyList()
+
+        assertContainsElements(offered, "logo.png", "logo.svg")
+        assertDoesntContain(offered, "logo.md")
+    }
+
+    /**
+     * Use case: completion inside `theme.favicon`, which the browser renders exactly like the logo and
+     * therefore accepts the same files.
+     */
+    fun `test offers only images for the theme favicon`() {
+        site()
+        myFixture.addFileToProject("docs/img/favicon.ico", "")
+        myFixture.addFileToProject("docs/img/favicon.png", "")
+        myFixture.addFileToProject("docs/img/favicon.css", "")
+        myFixture.configureByText("mkdocs.yml", "theme:\n  name: material\n  favicon: img/<caret>\n")
+
+        myFixture.completeBasic()
+        val offered = myFixture.lookupElementStrings ?: emptyList()
+
+        assertContainsElements(offered, "favicon.ico", "favicon.png")
+        assertDoesntContain(offered, "favicon.css")
+    }
+
+    /**
+     * Use case: walking to the file through a sub directory while a filtered key is being written. The
+     * directory carries no extension of its own and would fall out of every filter, which would leave the
+     * user unable to reach the style sheet at all.
+     */
+    fun `test still offers directories for a filtered key`() {
+        site()
+        myFixture.addFileToProject("docs/css/extra.css", "")
+        myFixture.addFileToProject("docs/img/logo.png", "")
+        myFixture.configureByText("mkdocs.yml", "extra_css:\n  - <caret>\n")
+
+        myFixture.completeBasic()
+
+        assertContainsElements(myFixture.lookupElementStrings ?: emptyList(), "css", "img")
+    }
+
+    /**
      * Use case: a site writing its build output to an absolute place. `site_dir` names where the build writes
      * and not a part of the site, so the platform has to read the value as the absolute path it is instead of
      * hunting for it below the site root — and nothing may be reported over it.

@@ -46,7 +46,14 @@
                 <code>nav</code>, <code>theme.logo</code>, <code>theme.favicon</code>, <code>docs_dir</code>
                 and <code>site_dir</code> point at the file or directory they name: Ctrl+click follows the
                 path, completion offers what is there, renaming rewrites the entry, and a path leading
-                nowhere is reported &mdash; except <code>site_dir</code>, which names the build output.</li>
+                nowhere is reported &mdash; except <code>site_dir</code>, which names the build output.
+                Completion offers only what the key accepts: <code>*.css</code> below <code>extra_css</code>,
+                <code>*.js</code> and <code>*.mjs</code> below <code>extra_javascript</code>, image files
+                behind <code>theme.logo</code> and <code>theme.favicon</code>.</li>
+            <li><b>File type check</b> &ndash; a path naming a file of a type its key cannot use &mdash; a page
+                behind <code>extra_css</code>, a style sheet behind <code>theme.logo</code> &mdash; is reported
+                by an inspection of its own. A value carrying no extension, such as the icon name
+                <code>material/library</code>, is left alone.</li>
             <li><b>Gutter icons</b> &ndash; every one of those paths carries an icon opening the target with
                 one click, a file with the icon it carries elsewhere in the IDE, <code>docs_dir</code> and
                 <code>site_dir</code> with the badge of their directory.</li>
@@ -86,6 +93,17 @@
                 <code>theme.custom_dir</code>, and <code>social</code>, <code>analytics</code>, <code>consent</code>,
                 <code>generator</code> and <code>status</code> below <code>extra</code>. It stands in front of the
                 MkDocs schema instead of replacing it and is bundled with the plugin, so it works offline.</li>
+            <li><b>Palette values</b> &ndash; every value of <code>theme.palette.scheme</code>,
+                <code>theme.palette.primary</code> and <code>theme.palette.accent</code> carries a one line
+                description, shown in the completion popup and under <i>Ctrl+Q</i> &ndash; on an offered value
+                as well as on one already written, where the popup also names the role it plays and the shade
+                of its swatch. A colour is drawn in the popup as a square of that shade, badged with the mark
+                of the theme; <code>custom</code> keeps the plain mark, being defined by the site itself.</li>
+            <li><b>Palette media query</b> &ndash; <code>theme.palette.media</code> completes the three queries
+                the theme is built around &ndash; <code>(prefers-color-scheme: light)</code>,
+                <code>(prefers-color-scheme: dark)</code> and <code>(prefers-color-scheme)</code> &ndash; each
+                with a line saying when its palette applies, and writes the value into the file in quotes. A
+                query outside them is reported as a warning that can be switched off.</li>
             <li><b>Markdown extensions</b> &ndash; an extension the configuration forces, because a feature flag
                 does not render without it, is reported above <code>mkdocs.yml</code> as an error, with a fix
                 adding it together with the options it needs. Everything the theme merely builds on is a weak
@@ -105,12 +123,13 @@
                 leading to that page.</li>
             <li><b>Material style sheets</b> &ndash; the custom properties of the theme (<code>--md-…</code>) are
                 completed inside CSS files.</li>
-            <li><b>Material origin</b> &ndash; the keys a site owes to the Material theme are marked as such:
-                an icon in front of <code>theme.features</code>, <code>theme.palette</code>,
-                <code>theme.font</code>, <code>theme.icon</code>, <code>theme.direction</code> and the theme's
-                keys below <code>extra</code>, and the same icon on the completion entries coming from the
-                theme, in <code>mkdocs.yml</code>, in the pages and in the style sheets. What MkDocs itself
-                reads stays unmarked.</li>
+            <li><b>Material origin</b> &ndash; the completion entries a site owes to the Material theme carry
+                its icon, in <code>mkdocs.yml</code>, in the pages and in the style sheets. What MkDocs itself
+                reads stays unmarked. In a written <code>mkdocs.yml</code> the gutter carries the same mark,
+                next to every key of the theme and next to a value that stands for it on its own.</li>
+            <li><b>Icon shorthands in <code>mkdocs.yml</code></b> &ndash; an icon named in the configuration
+                file shows behind its name the shorthand a page writes it with,
+                <code>material/pencil</code> as <code>:material-pencil:</code>.</li>
             <li><b>Template overrides</b> &ndash; the context menu of a site root creates the override directory,
                 the selected templates with a working Jinja scaffold, and <code>theme.custom_dir</code> pointing at
                 them, in one undoable step. Live templates for the Jinja blocks come with it.</li>
@@ -238,6 +257,19 @@
              value breaking only on another operating system is reported as a warning, not as an error. -->
         <annotator language="yaml"
                    implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathAnnotator"/>
+
+        <!-- Reports a path value naming a file of a type its key cannot use: a page behind extra_css, a style
+             sheet behind theme.logo. An inspection rather than an annotator, so a project doing something
+             unusual can switch it off without losing the character check of the same value. -->
+        <localInspection language="yaml"
+                         shortName="MkDocsPathFileType"
+                         bundle="messages.MkDocsBundle"
+                         key="inspection.pathFileType.displayName"
+                         groupBundle="messages.MkDocsBundle"
+                         groupKey="inspection.group.mkdocs"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="org.pcsoft.ij.plugin.mkdocs.inspection.MkDocsPathFileTypeInspection"/>
 
         <!-- One tab per detected site, each showing the navigation written under "nav" in mkdocs.yml.
              Reading the navigation needs no index, so the tool window is available while the IDE is still

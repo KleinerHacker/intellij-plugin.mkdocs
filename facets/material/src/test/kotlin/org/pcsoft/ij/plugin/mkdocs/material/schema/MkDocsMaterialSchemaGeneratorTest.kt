@@ -97,6 +97,28 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the reader completes a colour and wants to know what it paints. A name such as `deep-purple`
+     * says nothing on its own, so every offered colour has to carry a description — in both palette forms,
+     * for both roles.
+     */
+    fun `test describes every palette colour`() {
+        listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->
+            assertDescribed(name, "primary", data.colors.primaries().map { it.id })
+            assertDescribed(name, "accent", data.colors.accents().map { it.id })
+        }
+    }
+
+    /**
+     * Use case: the same for the ground the palette is painted on. `default` and `slate` say nothing about
+     * which of them is the dark one, which is exactly the question the description answers.
+     */
+    fun `test describes every palette scheme`() {
+        listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->
+            assertDescribed(name, "scheme", MkDocsMaterialScheme.entries.map { it.id })
+        }
+    }
+
+    /**
      * Use case: `extra.version` belongs to *mike* and `extra.alternate` to the I18N support. Neither feature
      * is implemented yet, and constraining the keys here would make the schema report them as wrong the
      * moment somebody writes them by hand.
@@ -158,5 +180,28 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
         assertEquals("$name.primary", data.colors.primaries().map { it.id }, primary)
         assertEquals("$name.accent", data.colors.accents().map { it.id }, accent)
         assertEquals("$name.scheme", MkDocsMaterialScheme.entries.map { it.id }, scheme)
+    }
+
+    /**
+     * Asserts that every value the palette definition [name] offers below [key] carries a description.
+     *
+     * @param name the name of the palette definition inside the generated schema
+     * @param key the property of that definition
+     * @param ids the identifiers that have to be described
+     */
+    private fun assertDescribed(name: String, key: String, ids: List<String>) {
+        val described = definitions.getAsJsonObject(name)
+            .getAsJsonObject("properties")
+            .getAsJsonObject(key)
+            .getAsJsonArray("oneOf")
+            .map { it.asJsonObject }
+            .associate { it.get("const").asString to it.get("description").asString }
+
+        ids.forEach { id ->
+            val description = described[id]
+            assertNotNull("$name.$key must describe '$id'", description)
+            assertTrue("the description of '$id' must not be blank", description!!.isNotBlank())
+            assertFalse("the description of '$id' must not be the bare bundle key", description.startsWith("material."))
+        }
     }
 }

@@ -75,6 +75,34 @@ the other would be an arbitrary difference. The colour names are the ones the th
 primary and accent get their own sets — the accent set is the shorter one, the theme having no accent for the
 neutral colours.
 
+Every colour and both schemes **explain themselves**. A name says nothing about what it paints, so each value
+carries a one line description that reaches the completion popup and *Ctrl+Q* alike — on the offered value and
+on one already written into the file, where the popup shows the role it plays (primary or accent colour,
+ground of the palette) and the shade the swatch stands for.
+
+In the popup a colour is drawn as a **square of its shade**, badged with the mark of the theme like every
+other entry it contributes. The `custom` placeholder deliberately keeps the plain mark: that colour is defined
+by the site itself through the `--md-*` custom properties of its own style sheet, so any square painted for it
+would show a shade that appears nowhere in the built site.
+
+The `media` of a palette is where the schema stops: its value is an ordinary CSS media query, handed to the
+`media` attribute of the style sheet the theme renders, so anything a browser accepts is legal there. Three of
+them are what the theme is built around, and those three are **completed**:
+
+| Query | When the palette applies |
+|-------|--------------------------|
+| `(prefers-color-scheme: light)` | the system is set to a light appearance |
+| `(prefers-color-scheme: dark)` | the system is set to a dark appearance |
+| `(prefers-color-scheme)` | the palette of the system preference itself, in a three palette setup |
+
+The value arrives in the file **in quotes**, because `(prefers-color-scheme: light)` carries a colon followed
+by a space and YAML would read the rest of the line as a mapping.
+
+A query outside those three is reported as a **warning** — never as an error, and the inspection can be
+switched off under *Settings → Editor → Inspections → MkDocs*. Nothing about such a file is broken; what it
+loses is the colour scheme toggle, which has nothing to act on and leaves the palette either always active or
+never. There is deliberately no quick fix: which of the three was meant is not something the file says.
+
 The refinement is bound to the facet. A site on another theme keeps the plain MkDocs schema and is offered
 nothing the theme rendering it would not read; take the theme out of `mkdocs.yml` and the refinement goes with
 it. Where it does apply it does not replace the MkDocs schema but stands in front of it — both are in force,
@@ -139,12 +167,18 @@ from the installation rather than carried as a list. They are completed at every
 every key below `theme.icon`, the mappings `theme.icon.admonition` and `theme.icon.tag` included, the
 `toggle.icon` of a palette, the `icon` of an entry of `extra.social` and the `icon` of a rating of
 `extra.analytics.feedback` — and in the pages of the site as the shorthands `:material-check:`,
-`:fontawesome-brands-github:` and their like. Each entry shows the drawing next to the name.
+`:fontawesome-brands-github:` and their like. Each entry shows the drawing next to the name, and an entry that
+is an icon rather than a set states its shorthand at the right edge of the row.
 
 An icon already written is shown as well: the drawing sits in front of the name in `mkdocs.yml` and in front
 of the shorthand on a page, so a file full of names such as `material/weather-sunny` can be read at a glance.
-A name the installed theme does not offer stays without a drawing, which is what makes a typo visible. Both
-hints can be switched off separately under *Settings → Editor → Inlay Hints*.
+A name the installed theme does not offer stays without a drawing, which is what makes a typo visible.
+
+The two spellings of one icon are shown together as well: behind a name in `mkdocs.yml` stands the shorthand
+a page writes the same icon with — `material/pencil` as `:material-pencil:` — so the spelling of the pages is
+read off instead of being derived by hand. It follows the same rule as the drawing: a name the installation
+does not offer gets nothing. Every one of these hints can be switched off separately under
+*Settings → Editor → Inlay Hints*.
 
 Where the theme is installed is asked of pip: the plugin runs `pip show mkdocs-material` and reads the
 `Location` it reports, then takes the icon names out of the `RECORD` that installation wrote. For every setup
@@ -174,18 +208,31 @@ A configuration file of a Material site mixes two vocabularies. Some keys are re
 theme; others exist only because this theme renders the site, and would be silently ignored the moment the
 theme changes. Nothing in the file says which is which.
 
-The plugin says it. An icon sits in front of every key the theme alone reads — `theme.features`,
-`theme.palette`, `theme.font`, `theme.icon`, `theme.direction` and the theme's own keys below `extra` — and
-its tooltip states that MkDocs itself does not read the key. The hint is an inlay hint like any other and can
-be switched off under *Settings → Editor → Inlay Hints*.
+The plugin says it in the completion popup: every entry the theme alone reads — `theme.features`,
+`theme.palette`, `theme.font`, `theme.icon`, `theme.direction` and the theme's own keys below `extra` —
+carries the icon of the theme.
 
 What MkDocs reads stays unmarked, on purpose: `theme.name` names the theme, `theme.logo`, `theme.favicon` and
 `theme.custom_dir` are part of the theme contract of MkDocs, and `markdown_extensions` is a top level key of
 MkDocs. The theme uses all of them, but it does not own them.
 
-The same icon appears on the completion entries that come from the theme — in `mkdocs.yml`, on the icon
+The mark appears everywhere the theme contributes an entry — in `mkdocs.yml`, on the icon
 shorthands in the pages and on the custom properties in the style sheets. An entry that already shows a
 drawing of its own, such as an icon name, keeps the drawing and carries the mark as a small badge on it.
+
+### In the file itself
+
+The completion answers the question while a key is being typed. In a file that is already written, the same
+answer is given in the gutter: the icon of the theme stands next to every key the theme brings along, next to
+everything written below such a key, and next to every value that carries the theme in itself — a feature flag
+of `theme.features`, a Markdown extension the theme describes. Hovering a mark says whether it stands for the
+key or for the value, and the marks can be switched off under
+*Settings → Editor → General → Gutter Icons → Material for MkDocs settings in mkdocs.yml*.
+
+A line can carry more than one mark, and that is the point of drawing them in the gutter rather than into the
+text: `markdown_extensions` is a key of MkDocs holding values of the theme, so the key stays plain while the
+value below it is marked. Where a key already carries the mark, the value next to it stays plain —
+`primary: indigo` names a colour, and that the setting is the theme's is said once, by the key.
 
 ## Template overrides
 

@@ -61,6 +61,26 @@
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialExtensionOptionCompletionContributor"/>
 
+        <!-- Completes the media queries a palette is chosen by. The schema describes the key as a plain
+             string, and has to: every valid CSS media query is legal there. The three the theme is built
+             around are what an author is looking for, and they are easy to mistype. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialPaletteMediaCompletionContributor"/>
+
+        <!-- The counterpart of that completion. A warning that can be switched off, because a query of the
+             author's own is legal — but one outside the three leaves the colour scheme toggle with nothing
+             to act on, and that is invisible in the file. No quick fix: which query was meant is a guess. -->
+        <localInspection language="yaml"
+                         shortName="MkDocsMaterialPaletteMedia"
+                         bundle="messages.MkDocsMaterialBundle"
+                         key="inspection.material.paletteMedia"
+                         groupBundle="messages.MkDocsBundle"
+                         groupKey="inspection.group.mkdocs"
+                         level="WARNING"
+                         enabledByDefault="true"
+                         implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialPaletteMediaInspection"/>
+
         <!-- Puts the mark of the Material theme on the completion entries that come from it. Runs first and
              lets the other contributors — the JSON schema above all — produce their entries through it, which
              is the only place all of them pass through. -->
@@ -69,18 +89,25 @@
                 order="first"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialOriginCompletionContributor"/>
 
-        <!-- The same statement in the editor: an icon in front of every key of a configuration file that the
-             Material theme alone reads. Built on the imperative hints API because the mark is an icon, which
-             the declarative one cannot render. -->
+        <!-- The shorthand of an icon behind every value naming one: a page writes `material/pencil` as
+             `:material-pencil:`, and that translation is otherwise done by hand. -->
         <codeInsight.inlayProvider
                 language="yaml"
-                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialKeyInlayHintsProvider"/>
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialIconKeyInlayHintsProvider"/>
 
         <!-- The drawing of an icon in front of every value naming one. The name alone says nothing about
              what it draws, and the sets of an installed theme hold thousands of them. -->
         <codeInsight.inlayProvider
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialIconInlayHintsProvider"/>
+
+        <!-- The mark of the Material theme in the gutter, next to every key and every value of mkdocs.yml the
+             theme brings along. Says which settings stop working on a change of theme, without touching the
+             text of the file. Several marks per line are intended: a key of MkDocs can carry a value of the
+             theme. -->
+        <codeInsight.lineMarkerProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialOriginLineMarkerProvider"/>
 
         <!-- Banner above a Material configuration file whose own features ask for a Markdown extension it
              does not list. An error, and only for extensions that are actually forced: the site renders
@@ -125,6 +152,15 @@
                 language="yaml"
                 order="first"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialFeatureDocumentationProvider"/>
+
+        <!-- The same for the values of theme.palette. The generated schema carries the description on the
+             value it offers, which answers inside the popup — but a colour already written into the file has
+             nobody to explain it, and `deep-purple` says nothing about what it paints. Registered first for
+             the same reason the provider above is: the schema answers with the description of the key. -->
+        <lang.documentationProvider
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialPaletteDocumentationProvider"/>
 
         <!-- Quick documentation on an entry of the completion popup. A separate extension point of its own:
              the popup no longer asks the documentation provider of the language, and without this it shows

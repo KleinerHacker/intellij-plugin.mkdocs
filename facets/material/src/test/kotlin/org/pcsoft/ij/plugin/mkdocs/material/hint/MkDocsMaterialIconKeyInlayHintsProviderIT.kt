@@ -24,69 +24,116 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiRecursiveElementVisitor
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.yaml.YAMLLanguage
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialInstallationFixture
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconTree
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.
  *
- * Covers the icon the editor puts in front of the keys a configuration file owes to *Material for MkDocs*:
- * which files get it at all, and which keys of such a file carry it.
+ * Covers the shorthand the editor writes behind an icon name in `mkdocs.yml`: which files get it, which
+ * values of such a file carry it, and that it sits behind the name instead of in front of it.
  */
 @Suppress("UnstableApiUsage")
-class MkDocsMaterialKeyInlayHintsProviderIT : BasePlatformTestCase() {
+class MkDocsMaterialIconKeyInlayHintsProviderIT : BasePlatformTestCase() {
 
-    private val provider = MkDocsMaterialKeyInlayHintsProvider()
+    private val provider = MkDocsMaterialIconKeyInlayHintsProvider()
 
-    /**
-     * Use case: the configuration file of a Material site. Every key the theme alone reads carries the mark,
-     * and it sits in front of the key rather than somewhere on the line.
-     */
-    fun `test marks every key of the theme`() {
-        val text = """
-            site_name: Handbook
-            theme:
-              name: material
-              features:
-                - navigation.tabs
-              palette:
-                primary: indigo
-            extra:
-              generator: false
-        """.trimIndent()
+    override fun setUp() {
+        super.setUp()
+        // The light fixture hands every test of a class the same project, and with it the same index. What one
+        // test found would otherwise answer for the next. Where the theme lies is asked of pip, so it is
+        // installed here rather than written into the project.
+        MkDocsMaterialInstallationFixture.install(project, ICON_NAMES.map { "$it.svg" })
+    }
 
-        val marked = markedKeysOf(text)
-
-        assertEquals(setOf("features:", "palette:", "generator:"), marked)
+    override fun tearDown() {
+        try {
+            MkDocsMaterialInstallationFixture.uninstall(project)
+        } finally {
+            super.tearDown()
+        }
     }
 
     /**
-     * Use case: the keys of MkDocs itself in the same file. Marking them would tell the author that a change
-     * of theme takes them away, which is exactly wrong.
+     * Use case: the icons of the theme itself. Every value naming one carries its shorthand, and the hint sits
+     * behind the name rather than in front of it.
      */
-    fun `test leaves the keys of MkDocs unmarked`() {
-        val marked = markedKeysOf(
+    fun `test writes the shorthand behind every icon of the theme`() {
+        val hinted = hintedValuesOf(
             """
             site_name: Handbook
-            docs_dir: docs
             theme:
               name: material
-              logo: assets/logo.png
-              custom_dir: overrides
-            markdown_extensions:
-              - admonition
+              icon:
+                repo: $ICON_NESTED
+                edit: $ICON_CHECK
             """.trimIndent()
         )
 
-        assertTrue(marked.isEmpty())
+        assertEquals(setOf(ICON_NESTED, ICON_CHECK), hinted)
     }
 
     /**
-     * Use case: a site on another theme. None of these keys belongs to Material there, so the hint has to
-     * stay away from the file entirely instead of judging its keys one by one.
+     * Use case: the icon of a social link and the icon of a rating of the feedback widget, the two places
+     * below `extra` naming an icon.
+     */
+    fun `test writes the shorthand below extra as well`() {
+        val hinted = hintedValuesOf(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+            extra:
+              social:
+                - icon: $ICON_NESTED
+                  link: https://example.org
+              analytics:
+                feedback:
+                  ratings:
+                    - icon: $ICON_CHECK
+                      name: Helpful
+            """.trimIndent()
+        )
+
+        assertEquals(setOf(ICON_NESTED, ICON_CHECK), hinted)
+    }
+
+    /**
+     * Use case: a value that is not an icon, and a name the installed theme does not offer. Neither may get a
+     * shorthand — the first names no icon at all, the second names one that does not resolve.
+     */
+    fun `test writes nothing for a value naming no installed icon`() {
+        val hinted = hintedValuesOf(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+              logo: $ICON_CHECK
+              icon:
+                repo: material/does-not-exist
+            """.trimIndent()
+        )
+
+        assertTrue(hinted.isEmpty())
+    }
+
+    /**
+     * Use case: the text of the hint itself. It is the spelling a page uses for the very same icon, which is
+     * what makes the hint worth reading at all.
+     */
+    fun `test writes the shorthand a page uses for the same icon`() {
+        assertEquals(":fontawesome-brands-github:", MkDocsMaterialIconTree.shorthandOf(ICON_NESTED))
+        assertEquals(":material-check:", MkDocsMaterialIconTree.shorthandOf(ICON_CHECK))
+    }
+
+    /**
+     * Use case: a site on another theme. It has no icons of this theme, so the hint stays away from the file
+     * entirely instead of judging its values one by one.
      */
     fun `test collects nothing for a site that is not on the Material theme`() {
         val file = myFixture.configureByText(
             "mkdocs.yml",
-            "site_name: Handbook\ntheme:\n  name: readthedocs\n  features:\n    - navigation.tabs\n"
+            "site_name: Handbook\ntheme:\n  name: readthedocs\n  icon:\n    repo: $ICON_CHECK\n"
         )
 
         assertNull(collectorFor(file))
@@ -99,7 +146,7 @@ class MkDocsMaterialKeyInlayHintsProviderIT : BasePlatformTestCase() {
     fun `test collects nothing for a YAML file that is not a configuration file`() {
         val file = myFixture.configureByText(
             "other.yml",
-            "site_name: Handbook\ntheme:\n  name: material\n  features:\n    - navigation.tabs\n"
+            "site_name: Handbook\ntheme:\n  name: material\n  icon:\n    repo: $ICON_CHECK\n"
         )
 
         assertNull(collectorFor(file))
@@ -115,11 +162,13 @@ class MkDocsMaterialKeyInlayHintsProviderIT : BasePlatformTestCase() {
     }
 
     /**
-     * Returns the text the marks of [text] sit in front of.
+     * Returns the values the shorthands of [text] sit behind.
+     *
+     * The theme is installed by the set-up of the class.
      *
      * @param text the content of the configuration file
      */
-    private fun markedKeysOf(text: String): Set<String> {
+    private fun hintedValuesOf(text: String): Set<String> {
         val file = myFixture.configureByText("mkdocs.yml", text + "\n")
         val sink = RecordingSink()
         val collector = collectorFor(file, sink)
@@ -130,9 +179,9 @@ class MkDocsMaterialKeyInlayHintsProviderIT : BasePlatformTestCase() {
                 super.visitElement(element)
             }
         })
-        // The mark sits at the start of the key, so the text behind it says which key it belongs to.
+        // The shorthand sits at the end of the value, so the text in front of it says which name it belongs to.
         return sink.offsets
-            .map { file.text.substring(it).substringBefore('\n').trim().substringBefore(' ') }
+            .map { file.text.substring(0, it).substringAfterLast('\n').substringAfterLast(' ').trim() }
             .toSet()
     }
 
@@ -150,7 +199,7 @@ class MkDocsMaterialKeyInlayHintsProviderIT : BasePlatformTestCase() {
      */
     private class RecordingSink : InlayHintsSink {
 
-        /** The offsets of the marks, in the order they were reported. */
+        /** The offsets of the shorthands, in the order they were reported. */
         val offsets: MutableList<Int> = mutableListOf()
 
         override fun addInlineElement(
@@ -184,5 +233,17 @@ class MkDocsMaterialKeyInlayHintsProviderIT : BasePlatformTestCase() {
             presentation: RootInlayPresentation<*>,
             constraints: BlockConstraints?,
         ) = Unit
+    }
+
+    private companion object {
+
+        /** An icon of a nested set, which the configuration file names with every level in front of it. */
+        const val ICON_NESTED = "fontawesome/brands/github"
+
+        /** An icon of the flat `material` set. */
+        const val ICON_CHECK = "material/check"
+
+        /** The icons of the installed theme the tests are written against. */
+        val ICON_NAMES = listOf(ICON_CHECK, ICON_NESTED)
     }
 }

@@ -12,7 +12,10 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material
 
+import com.intellij.util.ui.ColorIcon
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
+import java.awt.Color
+import java.util.concurrent.ConcurrentHashMap
 import javax.swing.Icon
 
 /**
@@ -81,6 +84,30 @@ object MkDocsMaterialIcons {
      */
     @JvmField
     val Group: Icon = MkDocsIconLoader.withBadge(MkDocsIconLoader.Folder, Overlay)
+
+    /**
+     * The swatch of a palette colour, badged with the Material glyph.
+     *
+     * A colour of `theme.palette` is offered by its name — `deep-purple`, `blue-grey` — and a name says
+     * nothing about what it paints. The square is that answer, and the badge keeps saying what every other
+     * entry of the popup says: this value belongs to the theme.
+     *
+     * Composed once per shade and held here, never inside a renderer: the popup renders *every* matching entry
+     * to measure its own width, and composing an icon per rendered row is what the icon rules forbid. The set
+     * of shades is closed and small — the colours the theme accepts — so the map cannot grow without bound.
+     *
+     * @param hex the shade to paint, as `0xRRGGBB`
+     */
+    @Suppress("UseJBColor")
+    fun color(hex: Int): Icon = SWATCHES.computeIfAbsent(hex) {
+        MkDocsIconLoader.withBadge(ColorIcon(SWATCH_SIZE, Color(it), true), Overlay)
+    }
+
+    /** The edge length of a swatch, which is the size every list and popup of the IDE renders an icon at. */
+    private const val SWATCH_SIZE: Int = 16
+
+    /** The composed swatches, by the shade they are painted in. */
+    private val SWATCHES: MutableMap<Int, Icon> = ConcurrentHashMap()
 
     /**
      * Loads the icon [fileName] from the `material/icons` resource folder and brings it to [size] pixels.

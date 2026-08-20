@@ -19,14 +19,16 @@ enum class MkDocsMaterialScheme(
     /** The identifier as it appears in `theme.palette.scheme`. */
     val id: String,
     /** The bundle key of the label shown for this scheme. */
-    val titleKey: String
+    val titleKey: String,
+    /** The bundle key of the one line description shown in QuickDoc and behind the offered value. */
+    val descriptionKey: String
 ) {
 
     /** `default` — the light scheme, which is what the theme uses when the key is absent. */
-    DEFAULT("default", "material.scheme.default"),
+    DEFAULT("default", "material.scheme.default", "material.scheme.default.description"),
 
     /** `slate` — the dark scheme. */
-    SLATE("slate", "material.scheme.slate");
+    SLATE("slate", "material.scheme.slate", "material.scheme.slate.description");
 
     companion object {
 

@@ -238,6 +238,51 @@ class MkDocsPathKindTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the file types `extra_css` and `extra_javascript` accept. MkDocs loads the one as a style
+     * sheet and the other as a script, so a file of the wrong type has no business in either list.
+     */
+    fun `test accepts only the file type of the asset keys`() {
+        assertTrue(MkDocsPathKind.EXTRA_CSS.accepts("extra.css"))
+        assertFalse(MkDocsPathKind.EXTRA_CSS.accepts("extra.js"))
+        assertFalse(MkDocsPathKind.EXTRA_CSS.accepts("extra"))
+        assertTrue(MkDocsPathKind.EXTRA_JAVASCRIPT.accepts("extra.js"))
+        assertTrue(MkDocsPathKind.EXTRA_JAVASCRIPT.accepts("module.mjs"))
+        assertFalse(MkDocsPathKind.EXTRA_JAVASCRIPT.accepts("extra.css"))
+    }
+
+    /**
+     * Use case: the file types `theme.logo` and `theme.favicon` accept. Both are rendered by the browser as
+     * an image, so every format it draws qualifies — and nothing else does.
+     */
+    fun `test accepts only images for the theme images`() {
+        for (name in listOf("logo.png", "logo.jpg", "logo.jp2", "logo.bmp", "logo.tif", "logo.gif", "logo.svg")) {
+            assertTrue(name, MkDocsPathKind.LOGO.accepts(name))
+            assertTrue(name, MkDocsPathKind.FAVICON.accepts(name))
+        }
+        assertFalse(MkDocsPathKind.LOGO.accepts("logo.md"))
+        assertFalse(MkDocsPathKind.FAVICON.accepts("favicon.css"))
+    }
+
+    /**
+     * Use case: an image written with an upper case extension, as a camera or an export dialogue produces it.
+     * The file type is the same, so the case of the extension must not decide whether it is offered.
+     */
+    fun `test accepts an extension written in upper case`() {
+        assertTrue(MkDocsPathKind.LOGO.accepts("LOGO.PNG"))
+        assertTrue(MkDocsPathKind.EXTRA_CSS.accepts("Extra.CSS"))
+    }
+
+    /**
+     * Use case: a navigation entry. MkDocs renders Markdown but copies everything else of the documentation
+     * directory next to it, so `nav` names no type of its own and accepts whatever lies there.
+     */
+    fun `test accepts every file where no type is prescribed`() {
+        assertTrue(MkDocsPathKind.NAV.accepts("index.md"))
+        assertTrue(MkDocsPathKind.NAV.accepts("handbook.pdf"))
+        assertTrue(MkDocsPathKind.NAV.accepts("LICENSE"))
+    }
+
+    /**
      * Returns the kind of the first scalar of [text] whose value is [value].
      *
      * @param text the content of the configuration file

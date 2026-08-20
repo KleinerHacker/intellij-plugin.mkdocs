@@ -103,6 +103,16 @@ object MkDocsMaterialConfig {
     /** The media query marking the dark entry of a two entry palette. */
     const val MEDIA_DARK: String = "(prefers-color-scheme: dark)"
 
+    /**
+     * The media query marking the entry a three palette setup follows the system preference with.
+     *
+     * Written by the theme's own documentation for the palette that carries neither a light nor a dark
+     * appearance of its own. [readPalette] does not represent such a setup — the settings page shows it
+     * read-only — but the value is a valid one all the same, and everything judging what stands in the file
+     * has to know it.
+     */
+    const val MEDIA_SYSTEM: String = "(prefers-color-scheme)"
+
     /** The icon the theme's own documentation puts on the toggle of the light palette. */
     const val TOGGLE_ICON_LIGHT: String = "material/brightness-7"
 

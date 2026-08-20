@@ -124,8 +124,16 @@ class MkDocsPathReferenceSet(
 
     override fun computeDefaultContexts(): Collection<PsiFileSystemItem> = listOf(baseDirectory)
 
-    override fun getReferenceCompletionFilter(): Condition<PsiFileSystemItem> =
-        if (kind.directory) Condition { it.isDirectory } else super.getReferenceCompletionFilter()
+    /**
+     * A directory always stays in the list — it is how the user walks to the file — while a file has to be
+     * one the key accepts: `extra_css` takes a style sheet, `theme.logo` and `theme.favicon` take an image.
+     * A kind naming no extensions keeps the platform default and offers everything.
+     */
+    override fun getReferenceCompletionFilter(): Condition<PsiFileSystemItem> = when {
+        kind.directory -> Condition { it.isDirectory }
+        kind.fileExtensions.isEmpty() -> super.getReferenceCompletionFilter()
+        else -> Condition { it.isDirectory || kind.accepts(it.name) }
+    }
 
     override fun createFileReference(range: TextRange, index: Int, text: String?): FileReference =
         MkDocsPathReference(this, range, index, text, baseDirectory)

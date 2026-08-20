@@ -46,10 +46,12 @@ object MkDocsMaterialShorthands {
     /**
      * Returns the shorthand of the icon [name].
      *
+     * Handed on to [MkDocsMaterialIconTree.shorthandOf]: the configuration file writes the same string, and
+     * that file is read by the base module of the facet, which cannot reach into this optional one.
+     *
      * @param name the name of the icon, as the theme addresses it, for example `material/check`
      */
-    fun shorthandOf(name: String): String =
-        "$SHORTHAND_MARK${name.replace(MkDocsMaterialIconTree.SEPARATOR, SEGMENT_MARK)}$SHORTHAND_MARK"
+    fun shorthandOf(name: String): String = MkDocsMaterialIconTree.shorthandOf(name)
 
     /**
      * Returns the name of the icon [shorthand] stands for, or `null` if [names] holds none.

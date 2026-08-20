@@ -141,7 +141,7 @@
         },
         "media": {
           "type": "string",
-          "description": "A media query deciding when this palette applies, for example `(prefers-color-scheme: dark)`."
+          "description": "A media query deciding when this palette applies. The theme is built around `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)` for the palette of the system preference."
         },
         "toggle": {
           "$ref": "#/definitions/materialPaletteToggle"
@@ -166,7 +166,7 @@
         },
         "media": {
           "type": "string",
-          "description": "A media query deciding when this palette is chosen automatically."
+          "description": "A media query deciding when this palette is chosen automatically. The theme is built around `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)` for the palette of the system preference."
         },
         "toggle": {
           "$ref": "#/definitions/materialPaletteToggle"

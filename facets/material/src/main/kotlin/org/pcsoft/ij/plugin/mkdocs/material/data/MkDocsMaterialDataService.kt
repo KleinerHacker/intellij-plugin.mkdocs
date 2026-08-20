@@ -127,7 +127,14 @@ class MkDocsMaterialDataService {
                 thisLogger().warn("Colour '${entry.id}' in $RESOURCE_COLORS carries a malformed hex value '${entry.hex}'")
                 return@mapNotNull null
             }
-            MkDocsMaterialColor(entry.id, hex, entry.primary, entry.accent, entry.custom)
+            MkDocsMaterialColor(
+                entry.id,
+                hex,
+                entry.descriptionKey,
+                entry.primary,
+                entry.accent,
+                entry.custom,
+            )
         }
         MkDocsMaterialColors(entries)
     }
@@ -243,6 +250,7 @@ private class CssVariableEntry(
 private class ColorEntry(
     val id: String,
     val hex: String,
+    val descriptionKey: String,
     val primary: Boolean,
     val accent: Boolean,
     val custom: Boolean = false

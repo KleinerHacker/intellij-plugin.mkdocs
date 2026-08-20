@@ -25,19 +25,22 @@ import org.pcsoft.ij.plugin.mkdocs.types.MkDocsNav
  *
  * MkDocs does not resolve all of them against the same directory: `docs_dir` and `site_dir` are read relative
  * to the configuration file, everything else relative to `docs_dir`. Nor do they all mean the same kind of
- * target — two of them name a directory, the rest name a file. Collecting the differences here keeps the
- * three features built on top of them — the references, the gutter icons and the path check — from each
- * carrying their own idea of what a path in `mkdocs.yml` is.
+ * target — two of them name a directory, the rest name a file, and of those files not every one accepts every
+ * type. Collecting the differences here keeps the three features built on top of them — the references, the
+ * gutter icons and the path check — from each carrying their own idea of what a path in `mkdocs.yml` is.
  *
  * @property directory `true` if the value names a directory, `false` if it names a file
  * @property soft `true` if a target that does not exist is none of the plugin's business
  * @property relativeToDocsDir `true` if the value is resolved against `docs_dir`, `false` if against the site
  *           root
+ * @property fileExtensions the lower case extensions a file has to carry to be offered in the completion of
+ *           this kind, or an empty set if every file qualifies
  */
 enum class MkDocsPathKind(
     val directory: Boolean,
     val soft: Boolean,
     val relativeToDocsDir: Boolean,
+    val fileExtensions: Set<String> = emptySet(),
 ) {
 
     /** The `docs_dir` key, naming the directory the documentation sources are read from. */
@@ -59,13 +62,13 @@ enum class MkDocsPathKind(
     SITE_DIR(directory = true, soft = true, relativeToDocsDir = false),
 
     /** The `logo` key below `theme`, naming the image shown in the header of every page. */
-    LOGO(directory = false, soft = false, relativeToDocsDir = true),
+    LOGO(directory = false, soft = false, relativeToDocsDir = true, fileExtensions = IMAGE_EXTENSIONS),
 
     /** The `favicon` key below `theme`, naming the icon the browser shows for the site. */
-    FAVICON(directory = false, soft = false, relativeToDocsDir = true),
+    FAVICON(directory = false, soft = false, relativeToDocsDir = true, fileExtensions = IMAGE_EXTENSIONS),
 
     /** An entry of the `extra_css` sequence, naming a style sheet the built site loads. */
-    EXTRA_CSS(directory = false, soft = false, relativeToDocsDir = true),
+    EXTRA_CSS(directory = false, soft = false, relativeToDocsDir = true, fileExtensions = setOf("css")),
 
     /**
      * An entry of the `extra_javascript` sequence, naming a script the built site loads.
@@ -74,7 +77,12 @@ enum class MkDocsPathKind(
      * `- path: extra.js` carrying `type` and `defer` next to it. Both name the same thing, and both are
      * resolved against `docs_dir` exactly like a style sheet is.
      */
-    EXTRA_JAVASCRIPT(directory = false, soft = false, relativeToDocsDir = true),
+    EXTRA_JAVASCRIPT(
+        directory = false,
+        soft = false,
+        relativeToDocsDir = true,
+        fileExtensions = setOf("js", "mjs"),
+    ),
 
     /**
      * The `custom_dir` key below `theme`, naming the directory the theme's own templates are overridden from.
@@ -86,6 +94,20 @@ enum class MkDocsPathKind(
 
     /** The target of a `nav` entry, naming a page of the site, at any nesting depth of the navigation. */
     NAV(directory = false, soft = false, relativeToDocsDir = true);
+
+    /**
+     * Returns `true` if a file named [fileName] may be offered in the completion of this kind.
+     *
+     * A kind that names no extensions accepts every file — `nav` is the case: MkDocs renders Markdown, but it
+     * copies anything else of the documentation directory next to it, and an entry may point at either.
+     *
+     * @param fileName the name of the file, with its extension
+     */
+    fun accepts(fileName: String): Boolean {
+        if (fileExtensions.isEmpty()) return true
+        val extension = fileName.substringAfterLast('.', "")
+        return extension.isNotEmpty() && extension.lowercase() in fileExtensions
+    }
 
     /**
      * Returns the directory the value of this kind is resolved against, or `null` if it cannot be determined.
@@ -253,3 +275,14 @@ enum class MkDocsPathKind(
         }
     }
 }
+
+/**
+ * The extensions of the image formats a browser renders, and therefore the files `theme.logo` and
+ * `theme.favicon` may point at.
+ *
+ * Kept next to the enum rather than inside its companion: an entry of an enum is created before the companion
+ * exists, so a set read by a constructor argument cannot live there.
+ */
+private val IMAGE_EXTENSIONS = setOf(
+    "png", "jpg", "jpeg", "jp2", "gif", "bmp", "tif", "tiff", "svg", "webp", "ico", "avif",
+)

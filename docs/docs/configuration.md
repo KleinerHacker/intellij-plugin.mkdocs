@@ -51,10 +51,20 @@ it.
 
 That is what MkDocs itself resolves them against, so what the IDE follows is what the build reads. Being a
 reference brings everything the platform ties to one: **Ctrl+click** and *Go to declaration* open the target,
-completion offers what actually lies there — directories only where a directory is expected — **renaming** the
+completion offers what actually lies there — directories only where a directory is expected, and of the files
+only those the key accepts: `*.css` below `extra_css`, `*.js` and `*.mjs` below `extra_javascript`, and image
+files such as `*.png`, `*.jpg`, `*.svg` or `*.ico` behind `theme.logo` and `theme.favicon`. A directory is
+always offered, so a file lying in a sub directory stays reachable. **Renaming** the
 file rewrites the entry, and *Find usages* on a page lists the `nav` entry pointing at it. The rewritten entry
 stays relative to the directory MkDocs reads it against, so renaming the stylesheets directory leaves the
 `extra_css` entries pointing at their style sheets rather than at a path relative to the site root.
+
+A value naming a file of a type its key cannot use — a page behind `extra_css`, a style sheet behind
+`theme.logo` — is reported by the inspection *Path naming a file of the wrong type*, found under
+*Settings → Editor → Inspections → MkDocs*. It is a check of its own rather than part of the path check below,
+so a project generating an asset into a file without the usual extension can switch it off and keep everything
+else. A value carrying no extension at all is never reported: behind `theme.logo` and `theme.favicon` the
+Material theme accepts the name of one of its own icons, such as `material/library`, which is no path.
 
 A path leading nowhere is reported in the text. `site_dir` is the one exception: it names the output of the
 build, which is not expected to exist before the site has been built once.

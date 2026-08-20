@@ -28,6 +28,8 @@ package org.pcsoft.ij.plugin.mkdocs.material.data
  *
  * @property id the identifier as it appears in the configuration file, for example `deep-purple`
  * @property hex a representative RGB shade of the colour, as `0xRRGGBB`
+ * @property descriptionKey the bundle key of the one line description shown in QuickDoc and behind the offered
+ *   value
  * @property primary `true` if the colour is accepted for `theme.palette.primary`
  * @property accent `true` if the colour is accepted for `theme.palette.accent`
  * @property custom `true` for the `custom` placeholder, whose colour the site defines through `--md-*` variables
@@ -35,6 +37,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.data
 data class MkDocsMaterialColor(
     val id: String,
     val hex: Int,
+    val descriptionKey: String,
     val primary: Boolean,
     val accent: Boolean,
     val custom: Boolean = false

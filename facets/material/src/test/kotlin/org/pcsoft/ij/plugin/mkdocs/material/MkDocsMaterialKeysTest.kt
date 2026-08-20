@@ -17,18 +17,19 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.yaml.psi.YAMLKeyValue
+import org.jetbrains.yaml.psi.YAMLScalar
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
  *
- * Covers the decision which keys of a configuration file belong to *Material for MkDocs* and which to MkDocs
- * itself. Both the inlay hint and the completion mark ask here, so a wrong answer shows up twice.
+ * Covers the decision which keys and values of a configuration file belong to *Material for MkDocs* and which
+ * to MkDocs itself. Both the gutter marker and the completion mark ask here, so a wrong answer shows up twice.
  */
 class MkDocsMaterialKeysTest : BasePlatformTestCase() {
 
     /**
-     * Use case: the five keys below `theme` the theme alone reads. These are what the hint has to mark — a
-     * site changing its theme loses every one of them.
+     * Use case: the five keys below `theme` the theme alone reads, together with the keys below them. These
+     * are what the marker has to mark — a site changing its theme loses every one of them.
      */
     fun `test recognises the keys of the theme below theme`() {
         val marked = markedKeysOf(
@@ -46,7 +47,10 @@ class MkDocsMaterialKeysTest : BasePlatformTestCase() {
             """.trimIndent()
         )
 
-        assertEquals(setOf("features", "palette", "font", "icon", "direction"), marked)
+        assertEquals(
+            setOf("features", "palette", "primary", "font", "text", "icon", "repo", "direction"),
+            marked,
+        )
     }
 
     /**
@@ -100,6 +104,7 @@ class MkDocsMaterialKeysTest : BasePlatformTestCase() {
         assertTrue(marked.contains("generator"))
         assertTrue(marked.contains("social"))
         assertFalse(marked.contains("version"))
+        assertFalse(marked.contains("provider"))
     }
 
     /**
@@ -121,10 +126,10 @@ class MkDocsMaterialKeysTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: what lies below a marked key. The mark belongs to the key that would disappear with the
-     * theme; putting it on every level below as well would cover half the file with icons.
+     * Use case: what lies below a marked key. It belongs to the theme for the same reason the key above it
+     * does — a site changing its theme loses the whole block, not only the line it starts on.
      */
-    fun `test marks the key of the theme but nothing below it`() {
+    fun `test marks what lies below a key of the theme`() {
         val marked = markedKeysOf(
             """
             extra:
@@ -134,7 +139,7 @@ class MkDocsMaterialKeysTest : BasePlatformTestCase() {
             """.trimIndent()
         )
 
-        assertEquals(setOf("social"), marked)
+        assertEquals(setOf("social", "icon", "link"), marked)
     }
 
     /**
@@ -147,6 +152,48 @@ class MkDocsMaterialKeysTest : BasePlatformTestCase() {
         assertTrue(MkDocsMaterialKeys.isMaterialId("pymdownx.superfences"))
         assertFalse(MkDocsMaterialKeys.isMaterialId("site_name"))
         assertFalse(MkDocsMaterialKeys.isMaterialId("blue"))
+    }
+
+    /**
+     * Use case: the values that carry the theme in themselves. A feature flag and a Markdown extension of the
+     * theme stand below keys of MkDocs, and the value is the whole of what the theme contributes there.
+     */
+    fun `test recognises the values that stand for the theme on their own`() {
+        val marked = markedValuesOf(
+            """
+            markdown_extensions:
+              - pymdownx.superfences
+              - abbr
+            theme:
+              name: material
+              features:
+                - navigation.tabs
+            """.trimIndent()
+        )
+
+        assertTrue(marked.contains("pymdownx.superfences"))
+        assertTrue(marked.contains("navigation.tabs"))
+        assertFalse("an extension the theme does not describe was marked", marked.contains("abbr"))
+        assertFalse("the name of the theme was marked", marked.contains("material"))
+    }
+
+    /**
+     * Use case: a value below a key the theme already carries the mark on. `indigo` is a colour and nothing
+     * else — what belongs to the theme is the setting, and that is said by the key above it.
+     */
+    fun `test leaves a value alone whose key already says where it comes from`() {
+        val marked = markedValuesOf(
+            """
+            theme:
+              name: material
+              palette:
+                primary: indigo
+              font:
+                text: Roboto
+            """.trimIndent()
+        )
+
+        assertTrue(marked.isEmpty())
     }
 
     /**
@@ -222,6 +269,26 @@ class MkDocsMaterialKeysTest : BasePlatformTestCase() {
                 val keyValue = element as? YAMLKeyValue
                 if (keyValue != null && MkDocsMaterialKeys.isMaterialKey(keyValue)) {
                     marked += keyValue.keyText.trim()
+                }
+                super.visitElement(element)
+            }
+        })
+        return marked
+    }
+
+    /**
+     * Returns the values of [text] the theme is credited with on their own.
+     *
+     * @param text the content of a configuration file
+     */
+    private fun markedValuesOf(text: String): Set<String> {
+        val file = myFixture.configureByText("mkdocs.yml", text + "\n")
+        val marked = mutableSetOf<String>()
+        file.accept(object : PsiRecursiveElementVisitor() {
+            override fun visitElement(element: PsiElement) {
+                val scalar = element as? YAMLScalar
+                if (scalar != null && MkDocsMaterialKeys.isMaterialValue(scalar)) {
+                    marked += scalar.textValue.trim()
                 }
                 super.visitElement(element)
             }

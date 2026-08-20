@@ -89,6 +89,27 @@ class MkDocsMaterialBundleKeysTest {
     }
 
     /**
+     * Use case: every colour of the palette explains itself, in completion and in QuickDoc. A name such as
+     * `deep-purple` says nothing about what it paints, so a colour without a description would reach the popup
+     * as a bare identifier — and `custom` is the one that needs the sentence most, being no colour at all.
+     */
+    @Test
+    fun `palette colour descriptions resolve`() {
+        data.colors.all.forEach { assertResolves(it.descriptionKey) }
+    }
+
+    /**
+     * Use case: the two schemes are offered next to the colours and are described the same way.
+     */
+    @Test
+    fun `palette scheme descriptions resolve`() {
+        MkDocsMaterialScheme.entries.forEach {
+            assertResolves(it.titleKey)
+            assertResolves(it.descriptionKey)
+        }
+    }
+
+    /**
      * Use case: the `extra` keys are described in the generated schema, down to the nested ones — a missing
      * description on a deeply nested key is exactly what a hand written check would overlook.
      */

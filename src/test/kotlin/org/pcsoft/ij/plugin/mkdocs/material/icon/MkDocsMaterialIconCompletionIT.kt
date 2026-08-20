@@ -230,7 +230,8 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
 
     /**
      * Use case: what the entries look like. A set carries the mark of the theme and says that it is one; an icon
-     * carries its own drawing and nothing else, because its level already names the set it belongs to.
+     * carries its own drawing and, at the right edge of the row, the shorthand a page writes the same icon
+     * with. A set says instead that it is a set — there is no shorthand a page could write for it.
      */
     fun `test paints a set as a set and an icon as its drawing`() {
         complete(
@@ -248,6 +249,7 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
         assertEquals(SET_MATERIAL, setPresentation.itemText)
         assertNotNull(setPresentation.icon)
         assertNotNull(setPresentation.typeText)
+        assertNull(setPresentation.tailText)
 
         complete(
             """
@@ -263,7 +265,11 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
         icon.renderElement(iconPresentation)
         assertEquals("check", iconPresentation.itemText)
         assertNotNull(iconPresentation.icon)
-        assertNull(iconPresentation.typeText)
+        // The whole path in the shorthand spelling, not the segment the entry inserts. It sits in the type
+        // text, which is the column the popup aligns to its right edge.
+        assertEquals(":material-check:", iconPresentation.typeText)
+        assertTrue(iconPresentation.isTypeGrayed)
+        assertNull(iconPresentation.tailText)
     }
 
     /**

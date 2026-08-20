@@ -77,6 +77,8 @@ Tracks what the plugin supports compared to
 | Theme description kept as bundled YAML under `material/spec`, each with a JSON schema | ✅      |
 | `theme.features` — all 28 flags, each with a description                               | ✅      |
 | `theme.palette` — single mapping and toggle sequence, colours and schemes              | ✅      |
+| `theme.palette.media` — the three `prefers-color-scheme` queries completed and checked | ✅      |
+| `theme.palette` — colours and schemes described, colours drawn as their own swatch      | ✅      |
 | `theme.font`, `theme.language`, `theme.icon`, `theme.direction`                        | ✅      |
 | `theme.logo`, `theme.favicon`, `theme.custom_dir`                                      | ✅      |
 | `extra.social`, `extra.analytics`, `extra.consent`, `extra.generator`, `extra.status`  | ✅      |
@@ -87,6 +89,7 @@ Tracks what the plugin supports compared to
 | Completion of the options below an entry of `markdown_extensions`, and of their values | ✅      |
 | Quick documentation for such an option                                                 | ✅      |
 | Quick documentation inside the completion popup of `markdown_extensions`               | ✅      |
+| Gutter marks on the keys and values of `mkdocs.yml` the theme brings along             | ✅      |
 | `theme.custom_dir` and `extra_javascript` as path references                           | ✅      |
 | Intention creating the target of a path                                                | ✅      |
 | Icon completion from the installed `mkdocs-material` package                           | ✅      |
@@ -95,7 +98,7 @@ Tracks what the plugin supports compared to
 | Inlay hint showing the drawing of an icon named in `mkdocs.yml`                        | ✅      |
 | Inlay hint showing the drawing of an icon shorthand in a page                          | ✅      |
 | `--md-*` CSS variables completed in style sheets                                       | ✅      |
-| Inlay hint marking the keys the theme alone reads                                      | ✅      |
+| Inlay hint showing the shorthand of an icon named in `mkdocs.yml`                      | ✅      |
 | Completion entries of the theme marked with its icon                                   | ✅      |
 | Markdown front matter                                                                  | ⬜      |
 | Theme override scaffolding, with live templates for the Jinja blocks                   | ✅      |

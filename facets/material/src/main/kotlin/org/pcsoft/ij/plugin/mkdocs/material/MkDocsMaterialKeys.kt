@@ -16,6 +16,7 @@ import com.intellij.openapi.components.service
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import org.jetbrains.yaml.psi.YAMLKeyValue
+import org.jetbrains.yaml.psi.YAMLScalar
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialExtraKeys
@@ -26,9 +27,9 @@ import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsConfig
  * *Material for MkDocs*.
  *
  * Both places marking the origin of a setting ask here: the completion, which puts the theme's icon next to an
- * entry, and the inlay hint, which puts it in front of the key in the editor. Neither may decide on its own
- * what belongs to the theme — a key marked in one place and left plain in the other would say that the two
- * mean different things.
+ * entry, and the gutter marker, which puts it next to the line the key or the value stands on. Neither may
+ * decide on its own what belongs to the theme — a key marked in one place and left plain in the other would
+ * say that the two mean different things.
  *
  * Only the keys MkDocs itself does not read are listed. `theme.name` names the theme and is read by MkDocs;
  * `theme.logo`, `theme.favicon` and `theme.custom_dir` are part of the theme contract of MkDocs and work with
@@ -58,16 +59,43 @@ object MkDocsMaterialKeys {
     private const val MAX_ANCESTORS: Int = 8
 
     /**
-     * Returns `true` if [keyValue] is one of the keys the theme brings along.
+     * Returns `true` if [keyValue] is one of the keys the theme brings along, or lies below one.
      *
      * Judged on the whole path, not on the name: `features` means the feature flags of the theme below
      * `theme`, and means nothing at all below a key of some plugin.
+     *
+     * What lies below such a key counts as well — `theme.palette.primary` exists for the same reason
+     * `theme.palette` does, and a line carrying it would otherwise be the only one of the block left unmarked.
      *
      * The caller must hold a read action.
      *
      * @param keyValue the pair to judge
      */
-    fun isMaterialKey(keyValue: YAMLKeyValue): Boolean = isMaterialPath(pathOf(keyValue))
+    fun isMaterialKey(keyValue: YAMLKeyValue): Boolean {
+        val path = pathOf(keyValue)
+        return isMaterialPath(path) || isBelowMaterialPath(path)
+    }
+
+    /**
+     * Returns `true` if [scalar] is a value that stands for the theme on its own.
+     *
+     * Only the values that carry the theme in themselves: the identifier of a feature flag, the identifier of
+     * a Markdown extension the theme brings along. Those appear below keys of MkDocs — `markdown_extensions`
+     * is none of the theme's — and the value is the whole of what the theme contributes there.
+     *
+     * A value below a key of the theme is deliberately NOT one of them. `indigo` below `theme.palette.primary`
+     * is a colour and nothing else; that the setting is the theme's is said by the key, and saying it twice on
+     * one line states nothing the reader did not already have.
+     *
+     * The caller must hold a read action.
+     *
+     * @param scalar the value to judge
+     */
+    fun isMaterialValue(scalar: YAMLScalar): Boolean {
+        val enclosing = scalar.parentOfType<YAMLKeyValue>()
+        if (enclosing != null && enclosing.key === scalar) return false
+        return isMaterialId(scalar.textValue.trim())
+    }
 
     /**
      * Returns `true` if the dotted [path] addresses one of the keys the theme brings along.
@@ -91,6 +119,7 @@ object MkDocsMaterialKeys {
      * @param name the identifier a completion entry inserts
      */
     fun isMaterialId(name: String): Boolean {
+        if (name.isEmpty()) return false
         val data = service<MkDocsMaterialDataService>()
         return data.featureFlags.byId(name) != null || data.extensions.byId(name) != null
     }
@@ -112,8 +141,8 @@ object MkDocsMaterialKeys {
         val path = pathOf(enclosing)
 
         // Everything below a key of the theme is the theme's as well — `theme.palette.primary` exists for the
-        // same reason `theme.palette` does. The hint marks the key alone, the completion cannot: the entry
-        // sits at the deepest level, and that is where the popup opens.
+        // same reason `theme.palette` does. The completion cannot tell key from value here: the entry sits at
+        // the deepest level, and that is where the popup opens.
         if (isMaterialPath(path) || isBelowMaterialPath(path)) return true
 
         // A key being typed carries the dummy identifier of the completion. Depending on what is already

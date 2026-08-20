@@ -33,6 +33,26 @@ object MkDocsMaterialIconTree {
     /** What separates the segments of an icon name. */
     const val SEPARATOR: Char = '/'
 
+    /** What opens and closes a shorthand. */
+    private const val SHORTHAND_MARK = ':'
+
+    /** What separates the segments of a name inside a shorthand. */
+    private const val SEGMENT_MARK = '-'
+
+    /**
+     * Returns the shorthand of the icon [name], for example `:material-check:` for `material/check`.
+     *
+     * The step in this direction is the unambiguous one and therefore lives here, in the base module of the
+     * facet: both the configuration file, whose hint writes the shorthand behind an icon name, and a page,
+     * whose completion offers it, name the very same string. The way back cannot be walked on the name alone
+     * and is resolved against the installed names by
+     * [org.pcsoft.ij.plugin.mkdocs.material.markdown.MkDocsMaterialShorthands].
+     *
+     * @param name the name of the icon, as the theme addresses it, for example `material/check`
+     */
+    fun shorthandOf(name: String): String =
+        "$SHORTHAND_MARK${name.replace(SEPARATOR, SEGMENT_MARK)}$SHORTHAND_MARK"
+
     /**
      * One entry of a level: either a group holding further entries, or an icon.
      *

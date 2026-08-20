@@ -24,6 +24,8 @@ import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialKeys
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialConfig
+import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialPaletteKeys
+import javax.swing.Icon
 
 /**
  * Marks the completion entries of an MkDocs configuration file that come from *Material for MkDocs*.
@@ -52,15 +54,36 @@ class MkDocsMaterialOriginCompletionContributor : CompletionContributor() {
         val virtualFile = file.virtualFile ?: return
         if (!MkDocsMaterialConfig.isMaterialTheme(position.project, virtualFile)) return
 
+        val role = MkDocsMaterialPaletteKeys.roleOf(position)
         result.runRemainingContributors(parameters) { completionResult ->
             val element = completionResult.lookupElement
             val decorated = if (MkDocsMaterialKeys.isMaterialLookup(position, element.lookupString)) {
-                decorate(element)
+                decorate(element, swatchOf(role, element.lookupString))
             } else {
                 element
             }
             result.passResult(completionResult.withLookupElement(decorated))
         }
+    }
+
+    /**
+     * Returns the swatch the entry [lookupString] is to be marked with, or `null` for the plain mark.
+     *
+     * A colour of `theme.palette` is offered by its name alone, and a name paints nothing an author can see —
+     * `deep-purple` and `indigo` are told apart in the documentation of the theme, not in the popup. The
+     * square is that answer, and it carries the badge of the theme like every other entry.
+     *
+     * The `custom` placeholder is deliberately left with the plain mark: the site defines that colour itself,
+     * through the `--md-*` custom properties of its own style sheet, so any square painted here would show a
+     * shade that appears nowhere in the built site.
+     *
+     * @param role what the value at the caret stands for, or `null` if it is no value of a palette
+     * @param lookupString what the entry inserts
+     */
+    private fun swatchOf(role: MkDocsMaterialPaletteKeys.Role?, lookupString: String): Icon? {
+        val color = MkDocsMaterialPaletteKeys.colorOf(role, lookupString) ?: return null
+        if (color.custom) return null
+        return MkDocsMaterialIcons.color(color.hex)
     }
 
     /**
@@ -71,8 +94,9 @@ class MkDocsMaterialOriginCompletionContributor : CompletionContributor() {
      * element first, so an entry drawing its own icon is badged instead of overwritten.
      *
      * @param element the entry another contributor produced
+     * @param swatch the icon standing for the value itself, already badged, or `null` for the plain mark
      */
-    private fun decorate(element: LookupElement): LookupElement =
+    private fun decorate(element: LookupElement, swatch: Icon?): LookupElement =
         LookupElementDecorator.withRenderer(
             element,
             object : LookupElementRenderer<LookupElementDecorator<LookupElement>>() {
@@ -82,9 +106,11 @@ class MkDocsMaterialOriginCompletionContributor : CompletionContributor() {
                 ) {
                     decorator.delegate.renderElement(presentation)
                     val own = presentation.icon
-                    presentation.icon =
-                        if (own == null) MkDocsMaterialIcons.Badge
-                        else MkDocsIconLoader.withBadge(own, MkDocsMaterialIcons.Overlay)
+                    presentation.icon = when {
+                        swatch != null -> swatch
+                        own == null -> MkDocsMaterialIcons.Badge
+                        else -> MkDocsIconLoader.withBadge(own, MkDocsMaterialIcons.Overlay)
+                    }
                 }
             }
         )

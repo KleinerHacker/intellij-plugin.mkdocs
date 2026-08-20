@@ -1,0 +1,26 @@
+<html>
+<body>
+Reports a path in an MkDocs configuration file naming a file of a type the key cannot use.
+<p>
+    Some keys do something specific with the file they point at: <code>extra_css</code> loads it as a style
+    sheet, <code>extra_javascript</code> as a script, and <code>theme.logo</code> and
+    <code>theme.favicon</code> render it as an image. A file of another type exists just as well, so the path
+    resolves and nothing else marks it &mdash; while the built site loads a page as a style sheet.
+</p>
+<p><b>Example:</b></p>
+<pre><code>
+extra_css:
+  - stylesheets/extra.md
+</code></pre>
+<p>The value has to name a style sheet instead:</p>
+<pre><code>
+extra_css:
+  - stylesheets/extra.css
+</code></pre>
+<p>
+    A value carrying no extension at all is not reported: below <code>theme.logo</code> and
+    <code>theme.favicon</code> the Material theme accepts the name of one of its own icons, such as
+    <code>material/library</code>, which is not a path.
+</p>
+</body>
+</html>

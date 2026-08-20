@@ -179,6 +179,14 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
                 return
             }
             presentation.icon = index.icon(siteRoot, path)
+            // The shorthand a page writes the same icon with. It is the second spelling of the entry in front
+            // of the user, and deriving it by hand is what this takes away.
+            //
+            // Carried as the type text, not as the tail text: the popup writes the tail directly behind the
+            // name, while the type text is the column it aligns to its right edge. Grayed, because it is not
+            // what is inserted here.
+            presentation.setTypeText(MkDocsMaterialIconTree.shorthandOf(path), null)
+            presentation.isTypeGrayed = true
         }
     }
 

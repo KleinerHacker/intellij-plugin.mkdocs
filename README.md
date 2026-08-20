@@ -44,6 +44,15 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   in front of the MkDocs schema rather than replacing it, applies only where the facet is, and leaves
   `extra.version` and `extra.alternate` open for the planned Mike and I18N features. The MkDocs schema it
   builds on is bundled, so it works offline.
+- **Values of `theme.palette`** — `scheme`, `primary` and `accent` describe every value they accept, in the
+  completion popup and under *Ctrl+Q*, on an offered value as well as on one already written into the file. A
+  colour is drawn in the popup as a square of its shade, badged with the mark of the theme; `custom` keeps the
+  plain mark, since the site defines that colour itself through the `--md-*` properties.
+- **Media query of a palette** — `theme.palette.media` completes the three queries the theme is built around,
+  `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)`, each with a
+  line saying when its palette applies, and writes the value quoted so the colon inside it cannot end the
+  line. A query outside them is reported as a warning that can be switched off — nothing is broken, but the
+  colour scheme toggle has nothing to act on.
 - **Markdown extensions of a Material site** — an extension the configuration forces, because a flag under
   `theme.features` does not render without it, is reported above `mkdocs.yml` as an error, with a fix adding
   it together with the options it needs. Everything the theme merely builds on is a weak warning that can be
@@ -55,11 +64,14 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   `:material-check:`, each showing its drawing. They are read from the installed package, which is looked for
   in the virtual environments next to the site or named under *Tools → MkDocs*. The custom properties of the
   theme (`--md-…`) are completed inside CSS files.
-- **Origin of a Material key** — the keys a site owes to the theme rather than to MkDocs carry an icon in
-  front of them in the editor: `theme.features`, `theme.palette`, `theme.font`, `theme.icon`,
-  `theme.direction` and the theme's own keys below `extra`. The same icon marks the completion entries that
-  come from the theme, in `mkdocs.yml`, in the pages and in the style sheets. What MkDocs itself reads stays
-  unmarked, and the hint can be switched off under *Settings → Editor → Inlay Hints*.
+- **Origin of a Material key** — the completion entries that come from the theme rather than from MkDocs carry
+  its icon, in `mkdocs.yml`, in the pages and in the style sheets. What MkDocs itself reads stays unmarked.
+  In a written `mkdocs.yml` the same answer stands in the gutter, next to every key of the theme and next to a
+  value that carries the theme in itself. The marks can be switched off under
+  *Settings → Editor → General → Gutter Icons*.
+- **Shorthand of an icon** — an icon named in `mkdocs.yml` shows behind its name the shorthand a page writes
+  it with, `material/pencil` as `:material-pencil:`, so the spelling of the pages does not have to be derived
+  by hand. The hint can be switched off under *Settings → Editor → Inlay Hints*.
 - **Template overrides** — the context menu of a site root creates the override directory, the selected
   templates with a working Jinja scaffold, and `theme.custom_dir` pointing at them, in one undoable step.
   Live templates for the Jinja blocks come with it.

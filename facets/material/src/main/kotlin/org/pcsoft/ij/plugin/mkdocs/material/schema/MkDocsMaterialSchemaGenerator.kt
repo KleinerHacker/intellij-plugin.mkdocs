@@ -163,16 +163,42 @@ class MkDocsMaterialSchemaGenerator {
      */
     private fun spliceColours(definitions: JsonObject) {
         val colors = service<MkDocsMaterialDataService>().colors
-        val primaries = idsOf(colors.primaries().map { it.id })
-        val accents = idsOf(colors.accents().map { it.id })
-        val schemes = idsOf(MkDocsMaterialScheme.entries.map { it.id })
+        val primaries = colors.primaries().map { it.id to it.descriptionKey }
+        val accents = colors.accents().map { it.id to it.descriptionKey }
+        val schemes = MkDocsMaterialScheme.entries.map { it.id to it.descriptionKey }
 
         listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->
             val properties = definitions.getAsJsonObject(name)?.getAsJsonObject("properties") ?: return@forEach
-            properties.getAsJsonObject("primary")?.add("enum", primaries.deepCopy())
-            properties.getAsJsonObject("accent")?.add("enum", accents.deepCopy())
-            properties.getAsJsonObject("scheme")?.add("enum", schemes.deepCopy())
+            describe(properties.getAsJsonObject("primary"), primaries)
+            describe(properties.getAsJsonObject("accent"), accents)
+            describe(properties.getAsJsonObject("scheme"), schemes)
         }
+    }
+
+    /**
+     * Writes [values] into [property] as the set it accepts.
+     *
+     * Each value contributes twice, exactly the way a feature flag does: once to the `enum`, which is what
+     * completion offers and what validation checks, and once to a `oneOf` branch carrying its description,
+     * which is what QuickDoc shows next to the offered value. A plain `enum` cannot carry a description per
+     * value.
+     *
+     * @param property the property of the schema to fill, or `null` if the refinement does not describe it
+     * @param values the identifier of each value together with the bundle key of its description
+     */
+    private fun describe(property: JsonObject?, values: List<Pair<String, String>>) {
+        if (property == null) return
+        val ids = JsonArray()
+        val described = JsonArray()
+        values.forEach { (id, descriptionKey) ->
+            ids.add(id)
+            described.add(JsonObject().apply {
+                addProperty("const", id)
+                addProperty("description", message(descriptionKey))
+            })
+        }
+        property.add("enum", ids)
+        property.add("oneOf", described)
     }
 
     /**
@@ -183,15 +209,18 @@ class MkDocsMaterialSchemaGenerator {
      *
      * @param flag the feature flag to describe
      */
-    private fun describe(flag: MkDocsMaterialFeatureFlag): String =
-        MkDocsMaterialBundle.messageOrDefault(flag.descriptionKey, flag.descriptionKey) ?: flag.descriptionKey
+    private fun describe(flag: MkDocsMaterialFeatureFlag): String = message(flag.descriptionKey)
 
     /**
-     * Turns [ids] into a JSON array of strings.
+     * The text [key] stands for, read from the message bundle.
      *
-     * @param ids the identifiers as they are written in the configuration file
+     * Falls back to the key itself: a description is what completion and QuickDoc show, and a key that has not
+     * been translated yet must not leave the entry blank.
+     *
+     * @param key the bundle key of the description
      */
-    private fun idsOf(ids: List<String>): JsonArray = JsonArray().apply { ids.forEach { add(it) } }
+    private fun message(key: String): String =
+        MkDocsMaterialBundle.messageOrDefault(key, key) ?: key
 
     /**
      * Reads a bundled JSON resource.
