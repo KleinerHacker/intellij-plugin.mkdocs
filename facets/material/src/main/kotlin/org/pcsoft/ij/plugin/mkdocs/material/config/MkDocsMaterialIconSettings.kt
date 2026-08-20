@@ -14,9 +14,7 @@ package org.pcsoft.ij.plugin.mkdocs.material.config
 
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
-import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.OptionTag
-import com.intellij.util.xmlb.annotations.Transient
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsInstallationSettings
 
 /**
@@ -39,17 +37,27 @@ import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsInstallationSettings
 @Service(Service.Level.PROJECT)
 @State(name = "MkDocsSettings", storages = [Storage("mkdocs.xml")])
 class MkDocsMaterialIconSettings(private val project: Project) :
-    PersistentStateComponent<MkDocsMaterialIconSettings> {
+    PersistentStateComponent<MkDocsMaterialIconSettings.State> {
 
     /**
-     * The path of the older layout, kept only so it can be migrated.
+     * The serialised part of these settings.
      *
-     * Public and mutable because the serialisation of the platform writes it back this way; it is not to be
-     * read by anything but the migration below. It keeps the name of the older layout in the file, so a
-     * project written by an older version of the plugin is still read.
+     * A class of its own because the platform instantiates the state through its no argument constructor; the
+     * service itself carries the project and cannot be created that way.
      */
-    @get:OptionTag("iconPath")
-    var legacyIconPath: String = ""
+    class State {
+
+        /**
+         * The path of the older layout, kept only so it can be migrated.
+         *
+         * It keeps the name of the older layout in the file, so a project written by an older version of the
+         * plugin is still read.
+         */
+        @get:OptionTag("iconPath")
+        var legacyIconPath: String = ""
+    }
+
+    private var state: State = State()
 
     /**
      * The installation directory of the theme, or an empty string to ask pip.
@@ -58,21 +66,20 @@ class MkDocsMaterialIconSettings(private val project: Project) :
      * `*.dist-info` beside it. That directory rather than the icon sets below it, because it is the one that
      * carries the metadata a chosen path can be checked against.
      */
-    @get:Transient
     var iconPath: String
         get() {
             migrate()
             return shared().pathOf(INSTALLATION_KEY)
         }
         set(value) {
-            legacyIconPath = ""
+            state.legacyIconPath = ""
             shared().setPath(INSTALLATION_KEY, value)
         }
 
-    override fun getState(): MkDocsMaterialIconSettings = this
+    override fun getState(): State = state
 
-    override fun loadState(state: MkDocsMaterialIconSettings) {
-        XmlSerializerUtil.copyBean(state, this)
+    override fun loadState(state: State) {
+        this.state = state
     }
 
     /**
@@ -85,9 +92,9 @@ class MkDocsMaterialIconSettings(private val project: Project) :
      * path still ending in `material/templates/.icons` is cut back to the installation it belongs to.
      */
     private fun migrate() {
-        val legacy = legacyIconPath.trim()
+        val legacy = state.legacyIconPath.trim()
         if (legacy.isNotEmpty()) {
-            legacyIconPath = ""
+            state.legacyIconPath = ""
             if (shared().pathOf(INSTALLATION_KEY).isEmpty()) shared().setPath(INSTALLATION_KEY, legacy)
         }
         val shared = shared().pathOf(INSTALLATION_KEY).trim().replace('\\', '/').removeSuffix("/")

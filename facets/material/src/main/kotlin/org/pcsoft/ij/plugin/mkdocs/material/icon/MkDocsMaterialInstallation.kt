@@ -12,6 +12,7 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.icon
 
+import com.intellij.openapi.components.service
 import java.io.File
 
 /**
@@ -27,6 +28,11 @@ import java.io.File
  * find the same files most of the time, but the list of an installation is the one the installation itself
  * wrote: a file left behind by an uninstalled version is not part of it, and a directory that only looks
  * like the icon sets holds no `RECORD` at all.
+ *
+ * The whole installation is read in ONE pass, in [read], and the answer is remembered by
+ * [MkDocsMaterialInstallationCache]. `RECORD` of this distribution holds one line per icon and is therefore
+ * some thousand lines long; reading it per completion popup, per highlighting pass and per keystroke on the
+ * settings page is what this arrangement is here to prevent.
  *
  * Read through [java.io.File] rather than through the VFS: the directory lies outside the project, a
  * settings page asks about it while the user is typing, and a synchronous VFS refresh is not something
@@ -58,18 +64,11 @@ object MkDocsMaterialInstallation {
     /**
      * Returns what is wrong with the installation directory [location], or `null` if nothing is.
      *
+     * Answered from [MkDocsMaterialInstallationCache], so asking again costs nothing.
+     *
      * @param location the directory pip reports as its `Location`, holding both the package and its metadata
      */
-    fun problemOf(location: String): Problem? {
-        val directory = File(location.trim())
-        if (location.isBlank() || !directory.isDirectory) return Problem.NO_DIRECTORY
-        val distInfo = distInfoOf(directory) ?: return Problem.NO_DIST_INFO
-        val metadata = File(distInfo, METADATA)
-        if (!metadata.isFile || !namesTheDistribution(metadata)) return Problem.WRONG_NAME
-        val record = File(distInfo, RECORD)
-        if (!record.isFile || !isReadableRecord(record)) return Problem.NO_RECORD
-        return null
-    }
+    fun problemOf(location: String): Problem? = service<MkDocsMaterialInstallationCache>().dataOf(location, ::read).problem
 
     /**
      * Returns the names of the icons the installation at [location] brought along, sorted.
@@ -77,26 +76,58 @@ object MkDocsMaterialInstallation {
      * The names are the ones the theme addresses an icon by — `material/check`,
      * `fontawesome/brands/github` — which is the path below the icon sets without its extension.
      *
-     * @param location the directory pip reports as its `Location`
-     */
-    fun iconNames(location: String): List<String> {
-        val record = recordOf(location) ?: return emptyList()
-        return record.readLines()
-            .map { it.substringBefore(',').trim().replace('\\', '/') }
-            .filter { it.startsWith(ICONS_PREFIX) && it.endsWith(EXTENSION, ignoreCase = true) }
-            .map { it.removePrefix(ICONS_PREFIX).dropLast(EXTENSION.length) }
-            .sorted()
-    }
-
-    /**
-     * Returns the `RECORD` of the installation at [location], or `null` if there is none to read.
+     * Answered from [MkDocsMaterialInstallationCache], so asking again costs nothing.
      *
      * @param location the directory pip reports as its `Location`
      */
-    private fun recordOf(location: String): File? {
-        if (problemOf(location) != null) return null
-        return distInfoOf(File(location.trim()))?.let { File(it, RECORD) }
+    fun iconNames(location: String): List<String> =
+        service<MkDocsMaterialInstallationCache>().dataOf(location, ::read).iconNames
+
+    /**
+     * Reads the installation directory [location], metadata and file listing in one pass.
+     *
+     * The only place that touches the disk. Everything else asks the cache, which is what calls this — a
+     * caller reaching past it pays for the whole `RECORD` again.
+     *
+     * `internal` for the tests of this feature, which check the reading itself: they run without a platform
+     * application, and the cache in front of this is a service that needs one.
+     *
+     * @param location the directory pip reports as its `Location`
+     * @return what was found, which is either a [Problem] or the icons of the installation
+     */
+    internal fun read(location: String): DataSet {
+        val trimmed = location.trim()
+        val directory = File(trimmed)
+        if (trimmed.isEmpty() || !directory.isDirectory) return DataSet.of(Problem.NO_DIRECTORY)
+        val distInfo = distInfoOf(directory) ?: return DataSet.of(Problem.NO_DIST_INFO)
+
+        val metadata = File(distInfo, METADATA)
+        val metadataText = readText(metadata)
+        if (metadataText?.lineSequence()?.any { it.trim().equals(NAME_LINE, ignoreCase = true) } != true) {
+            return DataSet.of(Problem.WRONG_NAME)
+        }
+
+        val recordText = readText(File(distInfo, RECORD)) ?: return DataSet.of(Problem.NO_RECORD)
+        val lines = recordText.lines()
+        // The listing pip writes is comma separated; a file holding no such line is not one, whatever else it
+        // may be. Checked on the lines already read, rather than by reading the file a second time.
+        if (lines.none { it.contains(',') && it.substringBefore(',').isNotBlank() }) {
+            return DataSet.of(Problem.NO_RECORD)
+        }
+        return DataSet(null, iconNamesOf(lines))
     }
+
+    /**
+     * Returns the icon names among the lines of a `RECORD`.
+     *
+     * @param lines the lines of the file listing of an installation
+     */
+    private fun iconNamesOf(lines: List<String>): List<String> = lines.asSequence()
+        .map { it.substringBefore(',').trim().replace('\\', '/') }
+        .filter { it.startsWith(ICONS_PREFIX) && it.endsWith(EXTENSION, ignoreCase = true) }
+        .map { it.removePrefix(ICONS_PREFIX).dropLast(EXTENSION.length) }
+        .sorted()
+        .toList()
 
     /**
      * Returns the `*.dist-info` directory of this distribution below [directory], or `null` if there is none.
@@ -105,27 +136,6 @@ object MkDocsMaterialInstallation {
      */
     private fun distInfoOf(directory: File): File? = directory.listFiles()
         ?.firstOrNull { it.isDirectory && it.name.startsWith(DIST_INFO_PREFIX) && it.name.endsWith(DIST_INFO_SUFFIX) }
-
-    /**
-     * Returns whether [metadata] names this distribution.
-     *
-     * @param metadata the `METADATA` file of the `*.dist-info` directory
-     */
-    private fun namesTheDistribution(metadata: File): Boolean =
-        readText(metadata)?.lineSequence()?.any { it.trim().equals(NAME_LINE, ignoreCase = true) } == true
-
-    /**
-     * Returns whether [record] reads as the text pip writes: lines of comma separated fields.
-     *
-     * A file that cannot be decoded, or one holding no such line, is not the listing of an installation — and
-     * accepting it would mean offering no icons without ever saying why.
-     *
-     * @param record the `RECORD` file of the `*.dist-info` directory
-     */
-    private fun isReadableRecord(record: File): Boolean {
-        val text = readText(record) ?: return false
-        return text.lineSequence().any { it.contains(',') && it.substringBefore(',').isNotBlank() }
-    }
 
     /**
      * Returns the text of [file], or `null` if it cannot be read as text at all.
@@ -141,6 +151,25 @@ object MkDocsMaterialInstallation {
 
     /** The character a decoder writes for bytes that are not text. */
     private const val REPLACEMENT = '�'
+
+    /**
+     * What one look at an installation directory brought back.
+     *
+     * @property problem what is wrong with the directory, `null` if nothing is
+     * @property iconNames the names of the icons below it, empty whenever [problem] says anything
+     */
+    data class DataSet(val problem: Problem?, val iconNames: List<String>) {
+
+        companion object {
+
+            /**
+             * Returns the reading of a directory that turned out to be no installation.
+             *
+             * @param problem what is wrong with it
+             */
+            fun of(problem: Problem): DataSet = DataSet(problem, emptyList())
+        }
+    }
 
     /**
      * What can be wrong with a directory a user chose as the installation.

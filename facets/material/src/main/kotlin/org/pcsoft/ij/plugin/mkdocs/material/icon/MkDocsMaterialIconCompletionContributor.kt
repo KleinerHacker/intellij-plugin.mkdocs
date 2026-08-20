@@ -19,6 +19,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.codeInsight.lookup.LookupElementRenderer
+import com.intellij.openapi.util.Key
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsProject
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex.Companion.getInstance
 
@@ -71,4 +72,17 @@ class MkDocsMaterialIconCompletionContributor : CompletionContributor() {
                 presentation.icon = index.icon(siteRoot, name)
             }
         })
+        .apply { putUserData(ICON_ELEMENT, true) }
+
+    companion object {
+
+        /**
+         * What marks a lookup element as one of this completion.
+         *
+         * The footer menu of the popup is shared by everything the IDE completes, so
+         * [MkDocsMaterialIconLookupActionProvider] has to be able to tell whether the entry in front of the
+         * user is an icon of the theme.
+         */
+        val ICON_ELEMENT: Key<Boolean> = Key.create("mkdocs.material.icon.element")
+    }
 }

@@ -42,6 +42,12 @@
                 language="yaml"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconCompletionContributor"/>
 
+        <!-- Puts the re-reading of the installation into the footer menu of the completion popup, where a
+             stale list of icon names shows itself. Not as an entry of the list: that list belongs to the
+             icons, and an entry inserting no name would be a name that is none. -->
+        <lookup.actionProvider
+                implementation="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconLookupActionProvider"/>
+
         <!-- Completes the Markdown extensions the theme builds upon, under `markdown_extensions`. Not part of
              the refined schema: the key carries two shapes and the base schema constrains it already, and the
              values reached no popup through that — see the class for the measurement. -->
@@ -148,5 +154,13 @@
                 icon="org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons.Feature">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
+
+        <!-- Reads the installation again on request. Nothing re-checks it on its own — it does not change
+             while the IDE runs — so this is how a package installed next to a running IDE is picked up. In no
+             menu on purpose: it belongs to the moment an icon list looks stale, and that moment is reached
+             through Find Action, through the settings page and through the footer of the completion popup. -->
+        <action id="org.pcsoft.ij.plugin.mkdocs.ReloadMaterialInstallation"
+                class="org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialReloadAction"
+                icon="org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons.Feature"/>
     </actions>
 </idea-plugin>

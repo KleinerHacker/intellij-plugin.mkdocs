@@ -92,7 +92,11 @@ class MkDocsMaterialKeyInlayHintsProvider : InlayHintsProvider<NoSettings> {
     private class Collector(editor: Editor) : FactoryInlayHintsCollector(editor) {
 
         override fun collect(element: PsiElement, editor: Editor, sink: InlayHintsSink): Boolean {
-            val keyValue = element as? YAMLKeyValue ?: return true
+            // Anchored on the key element itself, not on the `YAMLKeyValue` around it: the pass hands the
+            // collector the elements it walks, and the mark has to be produced on one that is certainly among
+            // them. The icon hint next to this one is built the same way, on the value element.
+            val keyValue = element.parent as? YAMLKeyValue ?: return true
+            if (element !== keyValue.key) return true
             if (!MkDocsMaterialKeys.isMaterialKey(keyValue)) return true
 
             // The icon arrives at the size it is painted at, fixed by `MkDocsIconLoader`, and is placed by

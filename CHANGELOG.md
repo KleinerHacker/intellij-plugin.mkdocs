@@ -6,6 +6,13 @@
 
 ### Added
 
+- The installed Material for MkDocs is now **read again on request**: a *Reload installation* button on the
+  settings page, an action of the same name in *Find Action*, and an entry in the menu at the foot of the icon
+  completion popup. All three do the same thing, which is what picks up a theme installed next to a running
+  IDE — until then nothing re-reads an installation, because it does not change by itself.
+- Looking the installation up now **says that it is happening**: the search for the package and the reading of
+  its file list run as a background task named *Analysing Material for MkDocs*, with its progress in the status
+  bar, instead of the IDE being quiet until the icons appear.
 - The **installation of Material for MkDocs is now found through pip**: the plugin asks
   `pip show mkdocs-material` where the package lies, so every interpreter pip answers for is found — a
   virtual environment, a user installation, a system wide one — instead of directories being guessed.

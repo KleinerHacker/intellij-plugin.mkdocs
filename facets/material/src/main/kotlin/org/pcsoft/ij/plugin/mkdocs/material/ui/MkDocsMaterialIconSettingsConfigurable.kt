@@ -23,6 +23,7 @@ import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconLocator
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallation
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallationCache
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 import org.pcsoft.ij.plugin.mkdocs.utils.ui.MkDocsInstallationComboBox
 import javax.swing.JComponent
@@ -74,6 +75,15 @@ class MkDocsMaterialIconSettingsConfigurable(private val project: Project) : Con
             row {
                 comment(MkDocsMaterialBundle.message("settings.iconPath.comment"))
             }
+            // Nothing re-checks an installation on its own — it does not change while the IDE runs. This is
+            // the way to say that it changed after all, and it works without anything on the page being
+            // modified, which is why it is a button of its own rather than part of applying.
+            row {
+                button(MkDocsMaterialBundle.message("material.reload.button")) {
+                    MkDocsMaterialIconLocator.reload(project)
+                    iconPath.reloadCandidates()
+                }
+            }
         }
     }
 
@@ -83,6 +93,7 @@ class MkDocsMaterialIconSettingsConfigurable(private val project: Project) : Con
         iconPath.errorText?.let { throw ConfigurationException(it) }
         settings().iconPath = iconPath.path
         service<MkDocsPipService>().invalidate()
+        service<MkDocsMaterialInstallationCache>().invalidate()
         MkDocsMaterialIconIndex.getInstance(project).invalidate()
     }
 

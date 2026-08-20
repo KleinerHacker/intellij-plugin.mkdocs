@@ -15,12 +15,16 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsInstallationLocator
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Finds the installed *Material for MkDocs*, and the icon sets inside it.
@@ -43,7 +47,7 @@ import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
  *
  * May be called from anywhere. Almost every caller — a completion popup, an inlay hint, an annotator — runs
  * under a read action, where the platform forbids waiting for a process, so pip is not asked there but told
- * to answer later; see [warmUp].
+ * to answer later; see [analyse].
  */
 object MkDocsMaterialIconLocator {
 
@@ -55,6 +59,9 @@ object MkDocsMaterialIconLocator {
 
     /** Why the highlighting is restarted, for the log of the daemon. */
     private const val RESTART_REASON = "the location of mkdocs-material became known"
+
+    /** The projects an analysis is running for, so a second one is not started next to it. */
+    private val analysing = ConcurrentHashMap.newKeySet<String>()
 
     /**
      * Returns the installation directory of the theme, or `null` if there is none.
@@ -86,6 +93,84 @@ object MkDocsMaterialIconLocator {
     fun detect(): VirtualFile? = MkDocsInstallationLocator.detect(DISTRIBUTION, ICONS_INSIDE_PACKAGE)
 
     /**
+     * Reads the installation again from scratch, whatever is remembered about it.
+     *
+     * What the *Reload installation* button of the settings page, the action of the same name and the entry
+     * in the completion popup all do. An installation does not change by itself, so nothing re-checks it on
+     * its own — this is the way to say that it did change after all: a package installed next to a running
+     * IDE, an environment rebuilt, a directory replaced.
+     *
+     * @param project the project whose editors are refreshed once the answer is there
+     */
+    fun reload(project: Project) {
+        service<MkDocsPipService>().invalidate()
+        service<MkDocsMaterialInstallationCache>().invalidate()
+        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        analyse(project)
+    }
+
+    /**
+     * Asks pip where the theme is installed and reads what it found, unless that is already known.
+     *
+     * Returns at once, because the caller is usually in a place where waiting for a process is forbidden.
+     * What comes back later has to reach the editor on its own, since nobody is going to ask again: the icon
+     * index throws its empty answer away and the highlighting of the project is restarted, which is what
+     * turns the banner of a missing installation off again once it was simply not asked for yet.
+     *
+     * Nothing is started while an answer is known or while the same question is in flight, so calling this
+     * out of a highlighting pass — which runs again and again — costs nothing.
+     *
+     * @param project the project whose editors are refreshed once the answer is there
+     */
+    private fun warmUp(project: Project) {
+        if (service<MkDocsPipService>().isKnown(DISTRIBUTION)) return
+        analyse(project)
+    }
+
+    /**
+     * Looks the installation up and reads it, visibly, in the background.
+     *
+     * A task rather than a bare thread: what happens here takes as long as a process and a file of some
+     * thousand lines take, and a user watching an empty completion popup is owed the statement that the
+     * question is being worked on. The progress sits in the status bar of the IDE, under the title of the
+     * feature.
+     *
+     * @param project the project whose editors are refreshed once the answer is there
+     */
+    fun analyse(project: Project) {
+        if (project.isDisposed || !analysing.add(project.locationHash)) return
+        val task = object : Task.Backgroundable(
+            project,
+            MkDocsMaterialBundle.message("material.analysis.title"),
+            true,
+        ) {
+            override fun run(indicator: ProgressIndicator) {
+                indicator.isIndeterminate = true
+                indicator.text = MkDocsMaterialBundle.message("material.analysis.pip")
+                // Started off the EDT and outside a read action, which is the whole point of this task: here
+                // pip may be asked and the file listing may be read.
+                val location = configured(project) ?: service<MkDocsPipService>().location(DISTRIBUTION)
+                indicator.checkCanceled()
+                if (location != null) {
+                    indicator.text = MkDocsMaterialBundle.message("material.analysis.record")
+                    val names = MkDocsMaterialInstallation.iconNames(location)
+                    indicator.text = MkDocsMaterialBundle.message("material.analysis.icons", names.size)
+                }
+            }
+
+            override fun onFinished() {
+                analysing.remove(project.locationHash)
+                if (project.isDisposed) return
+                MkDocsMaterialIconIndex.getInstance(project).invalidate()
+                DaemonCodeAnalyzer.getInstance(project).restart(RESTART_REASON)
+            }
+        }
+        // Queued from the EDT: a task is scheduled there, and the callers of this sit under a read action on
+        // whatever thread the daemon gave them.
+        ApplicationManager.getApplication().invokeLater({ if (!project.isDisposed) task.queue() }, project.disposed)
+    }
+
+    /**
      * Returns the icon sets below the installation directory [location], or `null` if there are none.
      *
      * @param location the directory pip reports as its `Location`
@@ -102,30 +187,6 @@ object MkDocsMaterialIconLocator {
             fileSystem.refreshAndFindFileByPath(path)
         }
         return file?.takeIf { it.isValid && it.isDirectory }
-    }
-
-    /**
-     * Asks pip where the theme is installed, unless that is already known.
-     *
-     * Returns at once, because the caller is usually in a place where waiting for a process is forbidden.
-     * What comes back later has to reach the editor on its own, since nobody is going to ask again: the icon
-     * index throws its empty answer away and the highlighting of the project is restarted, which is what
-     * turns the banner of a missing installation off again once it was simply not asked for yet.
-     *
-     * Nothing is started while an answer is known or while the same question is in flight, so calling this
-     * out of a highlighting pass — which runs again and again — costs nothing.
-     *
-     * @param project the project whose editors are refreshed once the answer is there
-     */
-    private fun warmUp(project: Project) {
-        service<MkDocsPipService>().prefetch(DISTRIBUTION) {
-            if (project.isDisposed) return@prefetch
-            MkDocsMaterialIconIndex.getInstance(project).invalidate()
-            ApplicationManager.getApplication().invokeLater(
-                { if (!project.isDisposed) DaemonCodeAnalyzer.getInstance(project).restart(RESTART_REASON) },
-                project.disposed,
-            )
-        }
     }
 
     /**

@@ -19,43 +19,58 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 
 /**
- * Throws the icon index away whenever an installed Python package changes.
+ * Throws away what is remembered about the installed theme whenever that installation is written to.
  *
  * The icons the theme offers are the SVG files of the installed `mkdocs-material`, so an installation, an
- * upgrade or a removal of it makes everything the index remembers stale. Building the index again costs one
- * directory listing, and only once something asks for an icon, so the index is dropped rather than repaired.
+ * upgrade or a removal of it makes everything stale that was read out of it.
+ *
+ * An addition, never the guarantee. The VFS reports what it watches, and what it watches are the content and
+ * library roots of the open projects; a `site-packages` outside of them is watched only where it happens to be
+ * a root of a configured interpreter. So a user who installed the theme next to a running IDE reaches for the
+ * *Reload installation* action, and this listener is what saves them the trip where the directory is watched
+ * after all.
+ *
+ * The paths of this distribution rather than any `site-packages`: everything read out of an installation is
+ * dropped here, and dropping it because some unrelated package was written is what makes the reading happen
+ * again and again.
  *
  * A listener of its own rather than a branch inside the MkDocs one: what the feature watches is the feature's
  * business, and the plugin must not know that an icon index exists.
  *
- * Registered in `plugin.xml` under `vfs.asyncListener`.
+ * Registered in the module descriptor of the feature under `vfs.asyncListener`.
  */
 class MkDocsMaterialVfsListener : AsyncFileListener {
 
     override fun prepareChange(events: List<VFileEvent>): AsyncFileListener.ChangeApplier? {
-        if (events.none(::isInstalledPackage)) return null
+        if (events.none { isDistributionPath(it.path) }) return null
         // Where the package lies is what pip answered once; an installation or a removal makes that stale.
         service<MkDocsPipService>().invalidate()
+        service<MkDocsMaterialInstallationCache>().invalidate()
         for (project in ProjectManager.getInstance().openProjects) {
             if (!project.isDisposed) MkDocsMaterialIconIndex.getInstance(project).invalidate()
         }
         return null
     }
 
-    /**
-     * Decides whether [event] concerns an installed Python package.
-     *
-     * Deciding on the path alone keeps this cheap: an installation, an upgrade or a removal of
-     * `mkdocs-material` writes below `site-packages`, and nothing else this feature cares about does.
-     *
-     * @param event a single pending VFS event
-     * @return `true` for anything below a `site-packages` directory
-     */
-    private fun isInstalledPackage(event: VFileEvent): Boolean = event.path.contains(SITE_PACKAGES)
+    companion object {
 
-    private companion object {
+        /** The `*.dist-info` directory pip writes next to this distribution. */
+        private const val DIST_INFO = "mkdocs_material-"
 
-        /** The path fragment every installed Python package carries. */
-        const val SITE_PACKAGES = "site-packages"
+        /** The path of the icon sets inside the installed package. */
+        private const val ICONS_INSIDE_PACKAGE = "material/templates/.icons"
+
+        /**
+         * Returns whether [path] belongs to an installation of this distribution.
+         *
+         * Deciding on the path alone keeps this cheap, and it is decided on the two paths only this
+         * distribution has: the `*.dist-info` pip writes for it, and the icon sets inside the package.
+         *
+         * @param path the path of a single pending VFS event
+         */
+        fun isDistributionPath(path: String): Boolean {
+            val normalised = path.replace('\\', '/')
+            return normalised.contains(DIST_INFO) || normalised.contains(ICONS_INSIDE_PACKAGE)
+        }
     }
 }

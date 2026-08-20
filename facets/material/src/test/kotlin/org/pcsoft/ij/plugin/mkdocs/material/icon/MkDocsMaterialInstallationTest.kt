@@ -25,6 +25,11 @@ import java.nio.file.Files
  * Covers what makes a directory an installation of the theme and what is read out of it. Both are answers a
  * user acts on: the settings page refuses a path on the first, and every icon offered anywhere comes from the
  * second.
+ *
+ * Driven through `MkDocsMaterialInstallation.read`, the reading itself, rather than through `problemOf` and
+ * `iconNames`, which answer from `MkDocsMaterialInstallationCache`. The cache is a service and needs a
+ * platform application; this test has none, and what it covers is the reading anyway. What the cache adds is
+ * covered by `MkDocsMaterialInstallationCacheTest`.
  */
 class MkDocsMaterialInstallationTest {
 
@@ -36,7 +41,7 @@ class MkDocsMaterialInstallationTest {
     fun `accepts an installation pip wrote`() {
         val location = MkDocsMaterialInstallationFixture.write(listOf("material/check.svg"))
 
-        assertNull(MkDocsMaterialInstallation.problemOf(location.path))
+        assertNull(MkDocsMaterialInstallation.read(location.path).problem)
     }
 
     /**
@@ -47,7 +52,7 @@ class MkDocsMaterialInstallationTest {
     fun `reports a path that is no directory`() {
         assertEquals(
             MkDocsMaterialInstallation.Problem.NO_DIRECTORY,
-            MkDocsMaterialInstallation.problemOf(File(temp(), "gone").path),
+            MkDocsMaterialInstallation.read(File(temp(), "gone").path).problem,
         )
     }
 
@@ -59,7 +64,7 @@ class MkDocsMaterialInstallationTest {
     fun `reports a directory without the metadata of pip`() {
         assertEquals(
             MkDocsMaterialInstallation.Problem.NO_DIST_INFO,
-            MkDocsMaterialInstallation.problemOf(temp().path),
+            MkDocsMaterialInstallation.read(temp().path).problem,
         )
     }
 
@@ -74,7 +79,7 @@ class MkDocsMaterialInstallationTest {
 
         assertEquals(
             MkDocsMaterialInstallation.Problem.WRONG_NAME,
-            MkDocsMaterialInstallation.problemOf(location.path),
+            MkDocsMaterialInstallation.read(location.path).problem,
         )
     }
 
@@ -89,7 +94,7 @@ class MkDocsMaterialInstallationTest {
 
         assertEquals(
             MkDocsMaterialInstallation.Problem.NO_RECORD,
-            MkDocsMaterialInstallation.problemOf(location.path),
+            MkDocsMaterialInstallation.read(location.path).problem,
         )
     }
 
@@ -104,7 +109,22 @@ class MkDocsMaterialInstallationTest {
 
         assertEquals(
             MkDocsMaterialInstallation.Problem.NO_RECORD,
-            MkDocsMaterialInstallation.problemOf(location.path),
+            MkDocsMaterialInstallation.read(location.path).problem,
+        )
+    }
+
+    /**
+     * Use case: a listing that is text, but not the comma separated lines pip writes. Nothing can be taken
+     * out of it, which is the same finding as a listing that cannot be decoded at all.
+     */
+    @Test
+    fun `reports a listing that is not the listing of pip`() {
+        val location = MkDocsMaterialInstallationFixture.write(listOf("material/check.svg"))
+        File(distInfo(location), "RECORD").writeText("just a sentence\nand another one\n")
+
+        assertEquals(
+            MkDocsMaterialInstallation.Problem.NO_RECORD,
+            MkDocsMaterialInstallation.read(location.path).problem,
         )
     }
 
@@ -120,7 +140,7 @@ class MkDocsMaterialInstallationTest {
 
         assertEquals(
             listOf("fontawesome/brands/github", "material/check"),
-            MkDocsMaterialInstallation.iconNames(location.path),
+            MkDocsMaterialInstallation.read(location.path).iconNames,
         )
     }
 
@@ -130,7 +150,7 @@ class MkDocsMaterialInstallationTest {
      */
     @Test
     fun `reads nothing out of a directory that is no installation`() {
-        assertTrue(MkDocsMaterialInstallation.iconNames(temp().path).isEmpty())
+        assertTrue(MkDocsMaterialInstallation.read(temp().path).iconNames.isEmpty())
     }
 
     /**
