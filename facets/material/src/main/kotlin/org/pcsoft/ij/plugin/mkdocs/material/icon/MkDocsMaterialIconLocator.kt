@@ -53,6 +53,9 @@ object MkDocsMaterialIconLocator {
     /** The path of the icon sets inside the installation directory. */
     const val ICONS_INSIDE_PACKAGE: String = "material/templates/.icons"
 
+    /** Why the highlighting is restarted, for the log of the daemon. */
+    private const val RESTART_REASON = "the location of mkdocs-material became known"
+
     /**
      * Returns the installation directory of the theme, or `null` if there is none.
      *
@@ -119,7 +122,7 @@ object MkDocsMaterialIconLocator {
             if (project.isDisposed) return@prefetch
             MkDocsMaterialIconIndex.getInstance(project).invalidate()
             ApplicationManager.getApplication().invokeLater(
-                { if (!project.isDisposed) DaemonCodeAnalyzer.getInstance(project).restart() },
+                { if (!project.isDisposed) DaemonCodeAnalyzer.getInstance(project).restart(RESTART_REASON) },
                 project.disposed,
             )
         }
