@@ -15,9 +15,8 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileVisitor
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.Icon
 
@@ -26,8 +25,8 @@ import javax.swing.Icon
  *
  * The theme addresses an icon as `set/name` — `material/check`, `fontawesome/brands/github`,
  * `octicons/repo-16` — and those names are simply the SVG files below `material/templates/.icons` of the
- * installed package. So the index is a directory listing: [MkDocsMaterialIconLocator] finds the directory,
- * this walks the sets in it and remembers the names.
+ * installed package. So the index is that listing: [MkDocsMaterialIconLocator] finds the installation and
+ * [MkDocsMaterialInstallation] reads the names out of the `RECORD` the installation itself wrote.
  *
  * Held per site rather than per project, because two sites of one project may well have virtual environments
  * of their own, with different versions of the theme and therefore different icons in them. The snapshot of a
@@ -35,7 +34,7 @@ import javax.swing.Icon
  * changed icon path in the settings, or a facet that came or went.
  *
  * Every function must be called inside a read action; none of them may be called on the EDT while the index
- * of a site is still cold, because the first call walks the directory.
+ * of a site is still cold, because the first call reads the installation.
  */
 @Service(Service.Level.PROJECT)
 class MkDocsMaterialIconIndex(private val project: Project) {
@@ -99,31 +98,24 @@ class MkDocsMaterialIconIndex(private val project: Project) {
      */
     private fun snapshotOf(siteRoot: VirtualFile?): Snapshot {
         if (siteRoot == null || !siteRoot.isValid) return Snapshot.EMPTY
-        return snapshots.computeIfAbsent(siteRoot.url) { build(siteRoot) }
+        snapshots[siteRoot.url]?.let { return it }
+        val snapshot = build()
+        // An empty answer given while pip has not answered yet is not a finding but a missing answer, and
+        // keeping it would leave the icons away until something invalidates the index. What the warm-up
+        // fetches invalidates it, so only a decided answer is remembered here.
+        if (snapshot.root != null || service<MkDocsPipService>().isKnown(MkDocsMaterialIconLocator.DISTRIBUTION)) {
+            snapshots[siteRoot.url] = snapshot
+        }
+        return snapshot
     }
 
     /**
-     * Walks the icon sets of the site at [siteRoot] and collects what they hold.
-     *
-     * @param siteRoot the directory holding `mkdocs.yml`
+     * Reads what the installation the settings point at brought along.
      */
-    private fun build(siteRoot: VirtualFile): Snapshot {
-        val root = MkDocsMaterialIconLocator.locate(project, siteRoot) ?: return Snapshot.EMPTY
-        val names = mutableListOf<String>()
-        VfsUtilCore.visitChildrenRecursively(
-            root,
-            object : VirtualFileVisitor<Any>(VirtualFileVisitor.limit(MAX_DEPTH)) {
-                override fun visitFile(file: VirtualFile): Boolean {
-                    if (!file.isDirectory && file.extension.equals(EXTENSION, ignoreCase = true)) {
-                        val relative = VfsUtilCore.getRelativePath(file, root, '/')
-                        if (relative != null) {
-                            names += relative.removeSuffix(".${file.extension}")
-                        }
-                    }
-                    return true
-                }
-            })
-        return Snapshot(root, names.sorted())
+    private fun build(): Snapshot {
+        val location = MkDocsMaterialIconLocator.locateInstallation(project) ?: return Snapshot.EMPTY
+        val root = MkDocsMaterialIconLocator.locate(project) ?: return Snapshot.EMPTY
+        return Snapshot(root, MkDocsMaterialInstallation.iconNames(location))
     }
 
     /**
@@ -142,17 +134,6 @@ class MkDocsMaterialIconIndex(private val project: Project) {
     }
 
     companion object {
-
-        /** The extension of the icon files. */
-        private const val EXTENSION = "svg"
-
-        /**
-         * How many levels below the icon directory are read; `fontawesome/brands/github` needs three.
-         *
-         * The depth is bounded so a directory that was mistaken for the icon sets cannot turn the walk into a
-         * walk of a whole file system.
-         */
-        private const val MAX_DEPTH = 4
 
         /**
          * Returns the index of [project].

@@ -24,8 +24,8 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
  * an icon is decided by the registered contributor and by the shape of the file, and only a run of the real
  * completion answers it.
  *
- * Every site is written with an installed theme below its own root, because that is where the index looks: the
- * icons of a site are a property of the package installed next to it, not of the IDE.
+ * The theme is installed for the whole class rather than written into the project: where it lies is asked of
+ * pip, and a test must depend neither on the machine it runs on nor on a directory of its fixture.
  */
 class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
 
@@ -33,7 +33,15 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
         super.setUp()
         // The light fixture hands every test of a class the same project, and with it the same index. The sites
         // of two tests share a path, so what one of them found would otherwise answer for the other.
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        MkDocsMaterialInstalledTheme.install(project, ICON_NAMES.map { "$it.svg" })
+    }
+
+    override fun tearDown() {
+        try {
+            MkDocsMaterialInstalledTheme.uninstall(project)
+        } finally {
+            super.tearDown()
+        }
     }
 
     /**
@@ -218,12 +226,13 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: a fresh checkout without a virtual environment. Nothing is offered and nothing goes wrong: which
+     * Use case: a fresh checkout where pip reports no installation. Nothing is offered and nothing goes wrong: which
      * icons exist is a property of the installed package, and until it is installed the answer is empty.
      */
     fun `test offers nothing without an installation`() {
-        // A site of its own, in a directory the installation of the other tests is not below: the light fixture
-        // hands every test of a class the same project, so the root already carries an installed theme.
+        // The set-up of the class installed the theme; here it is taken away again, which is the state of a
+        // checkout whose environment carries no mkdocs-material.
+        MkDocsMaterialInstalledTheme.uninstall(project)
         val text = """
             site_name: Plain
             theme:
@@ -232,7 +241,6 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
                 repo: material
         """.trimIndent() + "\n"
         val file = myFixture.addFileToProject("plain/mkdocs.yml", text).virtualFile
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
         MkDocsModuleService.getInstance(project).sync()
 
         myFixture.configureFromExistingVirtualFile(file)
@@ -264,21 +272,14 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
     /**
      * Runs completion in a configuration file holding [text] and returns what it offers.
      *
-     * The installed theme is written before the file itself, so the index finds it on the first ask. The site is
-     * detected afterwards, which is what attaches the facet the mark of the theme is decided on.
+     * The theme is installed by the set-up of the class. The site is detected afterwards, which is what
+     * attaches the facet the mark of the theme is decided on.
      *
      * @param text the content of the configuration file, indented as source and with the caret marked
      * @param name the file name to write the content under
      * @return the entries the completion popup offers, empty when it offers nothing
      */
     private fun complete(text: String, name: String = "mkdocs.yml"): List<String> {
-        ICON_NAMES.forEach { icon ->
-            if (myFixture.findFileInTempDir("$INSTALLED/$icon.svg") == null) {
-                myFixture.addFileToProject("$INSTALLED/$icon.svg", SVG)
-            }
-        }
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
-
         myFixture.configureByText(name, text.trimIndent() + "\n")
         MkDocsModuleService.getInstance(project).sync()
 
@@ -287,9 +288,6 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
     }
 
     private companion object {
-
-        /** The path of the icon sets inside an installed package, below the site root. */
-        const val INSTALLED = ".venv/Lib/site-packages/material/templates/.icons"
 
         /** An icon of a nested set, which the configuration file names with every level in front of it. */
         const val ICON_NESTED = "fontawesome/brands/github"
@@ -302,9 +300,5 @@ class MkDocsMaterialIconCompletionIT : BasePlatformTestCase() {
 
         /** The icons of the installed theme the tests complete against. */
         val ICON_NAMES = listOf(ICON_CHECK, "material/alert", ICON_NESTED)
-
-        /** The drawing every installed icon is written with; the popup renders it next to the entry. */
-        const val SVG =
-            """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"/></svg>"""
     }
 }

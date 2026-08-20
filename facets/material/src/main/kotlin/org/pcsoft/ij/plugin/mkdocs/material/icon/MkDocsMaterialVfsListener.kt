@@ -12,9 +12,11 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.icon
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.AsyncFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
 
 /**
  * Throws the icon index away whenever an installed Python package changes.
@@ -32,6 +34,8 @@ class MkDocsMaterialVfsListener : AsyncFileListener {
 
     override fun prepareChange(events: List<VFileEvent>): AsyncFileListener.ChangeApplier? {
         if (events.none(::isInstalledPackage)) return null
+        // Where the package lies is what pip answered once; an installation or a removal makes that stale.
+        service<MkDocsPipService>().invalidate()
         for (project in ProjectManager.getInstance().openProjects) {
             if (!project.isDisposed) MkDocsMaterialIconIndex.getInstance(project).invalidate()
         }

@@ -146,15 +146,21 @@ of the shorthand on a page, so a file full of names such as `material/weather-su
 A name the installed theme does not offer stays without a drawing, which is what makes a typo visible. Both
 hints can be switched off separately under *Settings → Editor → Inlay Hints*.
 
-The installation is looked for in `.venv`, `venv`, `env` and `.virtualenv`, in the Windows and the POSIX
-layout alike, from the site root up to the root of the project. For every other setup — a system wide
-interpreter, a container mount — the directory can be named under *Tools → MkDocs → Material*, which also
-states which installation was found; see [Settings](settings.md).
+Where the theme is installed is asked of pip: the plugin runs `pip show mkdocs-material` and reads the
+`Location` it reports, then takes the icon names out of the `RECORD` that installation wrote. For every setup
+pip does not answer for — an interpreter somewhere else, a container mount — the installation directory can be
+chosen under *Tools → MkDocs → Material*, which lists what was found and takes a directory of its own; a
+directory chosen by hand is checked against the metadata pip wrote there before it is accepted; see
+[Settings](settings.md).
+
+The drawings themselves are monochrome glyphs and are painted in the colour the IDE writes its text in, so
+they read in a light and in a dark theme alike.
 
 !!! note
 
-    Without an installed `mkdocs-material` nothing is offered. That is the normal state of a fresh checkout
-    whose virtual environment has not been created yet, and not an error.
+    Without an installed `mkdocs-material` nothing is offered, and `mkdocs.yml` carries a banner saying so,
+    with a link to the settings page. That is the normal state of a fresh checkout whose virtual environment
+    has not been created yet.
 
 ## Style sheets
 

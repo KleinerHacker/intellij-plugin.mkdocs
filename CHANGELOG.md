@@ -6,12 +6,25 @@
 
 ### Added
 
-- The **installation of Material for MkDocs is now found on its own** in far more setups: the virtual
-  environments are looked for from the site root up to the root of the project, so a site in `docs/` next to
-  a `.venv` in the project root is found as well.
+- The **installation of Material for MkDocs is now found through pip**: the plugin asks
+  `pip show mkdocs-material` where the package lies, so every interpreter pip answers for is found — a
+  virtual environment, a user installation, a system wide one — instead of directories being guessed.
 - The settings moved into a page of their own: *Tools → MkDocs* is now the node the features hang under, and
-  the icon directory sits below it under **Material**. That page also states which installation was found,
-  which is the answer to an empty icon completion.
+  the installation of the theme sits below it under **Material**. A fixed list offers the installation pip
+  reported — once, as the entry naming it — plus one entry for a directory of your own, which is the only one
+  unlocking the field below it,
+  and the line under both states which directory the icons are actually read from — the answer to an empty
+  icon completion.
+- A **directory chosen by hand is checked** before it is accepted: it has to hold a `mkdocs_material-*.dist-info`
+  whose `METADATA` names `mkdocs-material` and whose `RECORD` can be read. What is wrong with it is stated in
+  red on the page, and applying is refused until it is right.
+- The **icon names are read out of the `RECORD`** the installation wrote, so what is offered is what the
+  installed version actually shipped.
+- While **no installation can be found**, `mkdocs.yml` of a Material site carries a banner saying so, with a
+  quick fix opening the settings page — instead of an icon completion that is silently empty.
+- The **drawings of the icons follow the theme of the IDE**: the glyphs of *Material for MkDocs* carry no
+  colour of their own and were painted black, which is all but invisible in a dark IDE. They are now drawn in
+  the colour the IDE writes its text in, in the completion popup and in the editor alike.
 - The **drawing of an icon** is now shown in the editor: in `mkdocs.yml` in front of every value naming one,
   and in the pages of a site in front of every shorthand such as `:material-weather-sunny:`. A name the
   installed theme does not offer stays without a drawing. Both hints can be switched off separately under

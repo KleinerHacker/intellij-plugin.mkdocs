@@ -98,9 +98,11 @@
                 in <code>mkdocs.yml</code> and as the shorthands <code>:material-check:</code> in the pages, each
                 showing its drawing, and every place <code>mkdocs.yml</code> names an icon is covered. An icon
                 already written shows its drawing in the editor as well, in front of the name and in front of
-                the shorthand. The installation is found in the virtual environments next to the site, or
-                named under <i>Tools &rarr; MkDocs &rarr; Material</i>, which also states which installation was
-                found.</li>
+                the shorthand. The installation is found through <code>pip show mkdocs-material</code>, or
+                chosen under <i>Tools &rarr; MkDocs &rarr; Material</i>, which lists what was found and takes a
+                directory of your own &ndash; checked against the metadata pip wrote there before it is
+                accepted. While no installation can be found, <code>mkdocs.yml</code> says so in a banner
+                leading to that page.</li>
             <li><b>Material style sheets</b> &ndash; the custom properties of the theme (<code>--md-…</code>) are
                 completed inside CSS files.</li>
             <li><b>Material origin</b> &ndash; the keys a site owes to the Material theme are marked as such:

@@ -31,6 +31,23 @@ here.
 * Extends YAML support (intelligence, completion and annotation) in `mkdocs.yml` for the given feature
 * Extends file detection in MkDocs module folders
 
+## Installation of a feature
+
+* WHERE a feature is installed is asked of `pip`, through `MkDocsInstallationLocator` of `:utils`, and of
+  NOTHING else
+    * A facet names the distribution (`mkdocs-material`) and the path inside the package
+      (`material/templates/.icons`); the locator answers with the directory
+    * FORBIDDEN: searching the checkout for `.venv`, `venv`, `site-packages` or any other directory that
+      looks like an environment - pip knows where the packages of the interpreter in use lie
+    * The answer of `pip show` is cached in `MkDocsPipService`; anything that can change an installation
+      calls `invalidate()`
+    * The call starts a process and MUST NOT run on the EDT
+* The path a user configures by hand lives in `MkDocsInstallationSettings` of `:utils`, under a key of the
+  facet - a facet MUST NOT persist a path of its own
+* A settings page offering that path MUST use `MkDocsInstallationComboBox` of `:utils`
+    * It shows what was found and stays editable for setups pip cannot answer for
+    * The texts are handed in from the resource bundle of the facet
+
 ## Plugin descriptor
 
 * A facet is registered as a plugin content module of the V2 model, listed in `plugin.xml` under

@@ -12,86 +12,109 @@
 
 package org.pcsoft.ij.plugin.mkdocs.material.ui
 
-import com.intellij.openapi.application.runReadActionBlocking
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.components.service
 import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.config.MkDocsMaterialIconSettings
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
 import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconLocator
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallation
+import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsPipService
+import org.pcsoft.ij.plugin.mkdocs.utils.ui.MkDocsInstallationComboBox
 import javax.swing.JComponent
-import javax.swing.JLabel
 
 /**
  * The *Material* page of the settings, below the *MkDocs* page of the plugin.
  *
- * It answers one question, and it answers it in both directions: where the installed *Material for MkDocs*
- * lies. The page states what was found on its own — the icon completion, the icon hints and the shorthands of
- * a page all read the icons out of that installation, and an author seeing nothing offered has no other way
- * of telling whether the plugin found it. The field below is the answer for every setup the search cannot
- * guess: an interpreter somewhere else, a system wide installation, a container mount.
+ * It answers one question: where the installed *Material for MkDocs* lies. The installations
+ * `pip show mkdocs-material` reports are the fixed list of the page, and one entry below them stands for a
+ * directory chosen by hand — for every setup pip cannot answer for: an interpreter somewhere else, a system
+ * wide installation, a container mount.
  *
- * The page belongs to the Angular Material feature, which is why it lives here rather than next to the
- * plugin: it edits nothing the plugin itself reads, and a feature owns its own settings.
+ * A directory chosen by hand is checked before it is accepted. The icon completion, the icon hints and the
+ * shorthands of a page all read out of that directory, and a wrong one shows itself as an empty popup and
+ * nothing else — so what is wrong with it is said on the page, in red, and applying is refused.
  *
- * Applying throws the icon index away, so a corrected path takes effect in the very next completion popup
- * rather than after a restart.
+ * The page belongs to the Material feature, which is why it lives here rather than next to the plugin: it
+ * edits nothing the plugin itself reads, and a feature owns its own settings.
+ *
+ * Applying throws the icon index and the cached answer of pip away, so a corrected path takes effect in the
+ * very next completion popup rather than after a restart.
  *
  * @param project the project the settings belong to
  */
 class MkDocsMaterialIconSettingsConfigurable(private val project: Project) : Configurable {
 
-    private val iconPath = TextFieldWithBrowseButton().apply {
-        addBrowseFolderListener(
-            project,
-            FileChooserDescriptorFactory.createSingleFolderDescriptor()
-                .withTitle(MkDocsMaterialBundle.message("settings.iconPath.chooser")),
-        )
-    }
-
-    private val detected = JLabel()
+    private val iconPath = MkDocsInstallationComboBox(
+        project,
+        MkDocsMaterialIconLocator.DISTRIBUTION,
+        MkDocsMaterialBundle.message("settings.iconPath.chooser"),
+        MkDocsInstallationComboBox.Texts(
+            automatic = MkDocsMaterialBundle.message("settings.iconPath.auto"),
+            automaticNone = MkDocsMaterialBundle.message("settings.iconPath.auto.none"),
+            custom = MkDocsMaterialBundle.message("settings.iconPath.custom"),
+            inUse = MkDocsMaterialBundle.message("settings.iconPath.inUse"),
+            inUseNone = MkDocsMaterialBundle.message("settings.iconPath.inUse.none"),
+        ),
+        MkDocsMaterialBundle.message("settings.iconPath.progress"),
+        ::problemWith,
+    )
 
     override fun getDisplayName(): String = MkDocsMaterialBundle.message("settings.material.title")
 
     override fun createComponent(): JComponent = panel {
-        row(MkDocsMaterialBundle.message("settings.detected.label")) {
-            cell(detected).align(Align.FILL)
-        }
-        row(MkDocsMaterialBundle.message("settings.iconPath.label")) {
-            cell(iconPath).align(Align.FILL)
-        }
-        row {
-            comment(MkDocsMaterialBundle.message("settings.iconPath.comment"))
+        group(MkDocsMaterialBundle.message("settings.iconPath.group")) {
+            row(MkDocsMaterialBundle.message("settings.iconPath.label")) {
+                cell(iconPath).align(Align.FILL)
+            }
+            row {
+                comment(MkDocsMaterialBundle.message("settings.iconPath.comment"))
+            }
         }
     }
 
-    override fun isModified(): Boolean = iconPath.text.trim() != settings().iconPath
+    override fun isModified(): Boolean = iconPath.path != settings().iconPath
 
     override fun apply() {
-        settings().iconPath = iconPath.text.trim()
+        iconPath.errorText?.let { throw ConfigurationException(it) }
+        settings().iconPath = iconPath.path
+        service<MkDocsPipService>().invalidate()
         MkDocsMaterialIconIndex.getInstance(project).invalidate()
-        detected.text = detectedText()
     }
 
     override fun reset() {
-        iconPath.text = settings().iconPath
-        detected.text = detectedText()
+        iconPath.reloadCandidates()
+        iconPath.path = settings().iconPath
     }
 
     /**
-     * Returns what the page states about the installation it found on its own.
+     * Returns what is wrong with the directory [path], worded for the user, or `null` if nothing is.
      *
-     * The search reads the file system and therefore runs in a read action, off the settings of the page: what
-     * is shown here is what the plugin would find if the field below were empty.
+     * The finding itself comes from [MkDocsMaterialInstallation]; what it reads as belongs to the bundle of
+     * this feature, which is why the two are apart.
+     *
+     * @param path the directory that was chosen by hand
      */
-    private fun detectedText(): String {
-        val found = runReadActionBlocking { MkDocsMaterialIconLocator.detectInProject(project)?.presentableUrl }
-        return found ?: MkDocsMaterialBundle.message("settings.detected.none")
-    }
+    private fun problemWith(path: String): String? =
+        when (MkDocsMaterialInstallation.problemOf(path)) {
+            MkDocsMaterialInstallation.Problem.NO_DIRECTORY ->
+                MkDocsMaterialBundle.message("settings.iconPath.error.noDirectory")
+
+            MkDocsMaterialInstallation.Problem.NO_DIST_INFO ->
+                MkDocsMaterialBundle.message("settings.iconPath.error.noDistInfo")
+
+            MkDocsMaterialInstallation.Problem.WRONG_NAME ->
+                MkDocsMaterialBundle.message("settings.iconPath.error.wrongName")
+
+            MkDocsMaterialInstallation.Problem.NO_RECORD ->
+                MkDocsMaterialBundle.message("settings.iconPath.error.noRecord")
+
+            null -> null
+        }
 
     /**
      * Returns the settings this page edits.

@@ -82,6 +82,12 @@
         <annotator language="yaml"
                    implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialExtensionAnnotator"/>
 
+        <!-- Banner above a Material configuration file while no installation of the theme can be found.
+             Everything read out of the package is empty then, and an empty completion popup says nothing
+             about why — so the state is stated once, with the way to the settings page attached. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialInstallationAnnotator"/>
+
         <!-- The counterpart of that annotator for everything the theme merely builds on. A weak warning
              that can be switched off: a site keeping its Markdown plain is not doing anything wrong. -->
         <localInspection language="yaml"

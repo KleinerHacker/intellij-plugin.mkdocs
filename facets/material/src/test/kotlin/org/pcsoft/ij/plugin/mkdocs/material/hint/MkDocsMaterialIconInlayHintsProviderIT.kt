@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiRecursiveElementVisitor
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.yaml.YAMLLanguage
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallationFixture
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.
@@ -40,8 +40,17 @@ class MkDocsMaterialIconInlayHintsProviderIT : BasePlatformTestCase() {
     override fun setUp() {
         super.setUp()
         // The light fixture hands every test of a class the same project, and with it the same index. What one
-        // test found would otherwise answer for the next.
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        // test found would otherwise answer for the next. Where the theme lies is asked of pip, so it is
+        // installed here rather than written into the project.
+        MkDocsMaterialInstallationFixture.install(project, ICON_NAMES.map { "$it.svg" })
+    }
+
+    override fun tearDown() {
+        try {
+            MkDocsMaterialInstallationFixture.uninstall(project)
+        } finally {
+            super.tearDown()
+        }
     }
 
     /**
@@ -145,18 +154,11 @@ class MkDocsMaterialIconInlayHintsProviderIT : BasePlatformTestCase() {
     /**
      * Returns the values the drawings of [text] sit in front of.
      *
-     * The installed theme is written before the configuration file, so the index finds it on the first ask.
+     * The theme is installed by the set-up of the class.
      *
      * @param text the content of the configuration file
      */
     private fun markedValuesOf(text: String): Set<String> {
-        ICON_NAMES.forEach { icon ->
-            if (myFixture.findFileInTempDir("$INSTALLED/$icon.svg") == null) {
-                myFixture.addFileToProject("$INSTALLED/$icon.svg", SVG)
-            }
-        }
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
-
         val file = myFixture.configureByText("mkdocs.yml", text + "\n")
         val sink = RecordingSink()
         val collector = collectorFor(file, sink)
@@ -225,9 +227,6 @@ class MkDocsMaterialIconInlayHintsProviderIT : BasePlatformTestCase() {
 
     private companion object {
 
-        /** The path of the icon sets inside an installed package, below the site root. */
-        const val INSTALLED = ".venv/Lib/site-packages/material/templates/.icons"
-
         /** An icon of a nested set, which the configuration file names with every level in front of it. */
         const val ICON_NESTED = "fontawesome/brands/github"
 
@@ -236,9 +235,5 @@ class MkDocsMaterialIconInlayHintsProviderIT : BasePlatformTestCase() {
 
         /** The icons of the installed theme the tests are written against. */
         val ICON_NAMES = listOf(ICON_CHECK, ICON_NESTED)
-
-        /** The drawing every installed icon is written with. */
-        const val SVG =
-            """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"/></svg>"""
     }
 }

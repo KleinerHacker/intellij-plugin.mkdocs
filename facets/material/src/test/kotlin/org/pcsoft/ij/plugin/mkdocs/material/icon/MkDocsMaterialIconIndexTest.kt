@@ -24,14 +24,19 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
  */
 class MkDocsMaterialIconIndexTest : BasePlatformTestCase() {
 
-    /** The path of the icon sets inside an installed package, below the site root. */
-    private val installed = ".venv/Lib/site-packages/material/templates/.icons"
-
     override fun setUp() {
         super.setUp()
         // The light fixture hands every test of a class the same project, and with it the same index. The
         // sites of two tests share a path, so what one of them found would otherwise answer for the other.
-        index().invalidate()
+        MkDocsMaterialInstallationFixture.uninstall(project)
+    }
+
+    override fun tearDown() {
+        try {
+            MkDocsMaterialInstallationFixture.uninstall(project)
+        } finally {
+            super.tearDown()
+        }
     }
 
     /**
@@ -83,8 +88,8 @@ class MkDocsMaterialIconIndexTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: a fresh checkout without a virtual environment. An empty list is the answer, and it must not
-     * be an error: the completion simply offers nothing until the theme is installed.
+     * Use case: a fresh checkout where pip reports no installation. An empty list is the answer, and it must
+     * not be an error: the completion simply offers nothing until the theme is installed.
      */
     fun `test offers nothing without an installation`() {
         val root = myFixture.addFileToProject("site/mkdocs.yml", "site_name: Handbook\n").virtualFile.parent
@@ -100,19 +105,18 @@ class MkDocsMaterialIconIndexTest : BasePlatformTestCase() {
         val root = myFixture.addFileToProject("site/mkdocs.yml", "site_name: Handbook\n").virtualFile.parent
         assertTrue(runReadActionBlocking { index().names(root) }.isEmpty())
 
-        myFixture.addFileToProject("site/$installed/material/check.svg", "<svg/>")
-        index().invalidate()
+        MkDocsMaterialInstallationFixture.install(project, listOf("material/check.svg"))
 
         assertEquals(listOf("material/check"), runReadActionBlocking { index().names(root) })
     }
 
     /**
-     * Writes a site with an installed theme holding [icons] and returns its root directory.
+     * Installs a theme holding [icons], writes a site and returns its root directory.
      *
      * @param icons the icon files to create below the sets
      */
     private fun siteWith(vararg icons: String): VirtualFile {
-        icons.forEach { myFixture.addFileToProject("site/$installed/$it", "<svg/>") }
+        MkDocsMaterialInstallationFixture.install(project, icons.toList())
         return myFixture.addFileToProject("site/mkdocs.yml", "site_name: Handbook\n").virtualFile.parent
     }
 

@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiRecursiveElementVisitor
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.yaml.YAMLLanguage
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstallationFixture
 
 /**
  * Integration test (class name ends in `IT`) — runs under `test -PtestSuite=integration`.
@@ -43,8 +43,17 @@ class MkDocsMaterialShorthandInlayHintsProviderIT : BasePlatformTestCase() {
     override fun setUp() {
         super.setUp()
         // The light fixture hands every test of a class the same project, and with it the same index. What one
-        // test found would otherwise answer for the next.
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        // test found would otherwise answer for the next. Where the theme lies is asked of pip, so it is
+        // installed here rather than written into the project.
+        MkDocsMaterialInstallationFixture.install(project, ICON_NAMES.map { "$it.svg" })
+    }
+
+    override fun tearDown() {
+        try {
+            MkDocsMaterialInstallationFixture.uninstall(project)
+        } finally {
+            super.tearDown()
+        }
     }
 
     /**
@@ -134,21 +143,15 @@ class MkDocsMaterialShorthandInlayHintsProviderIT : BasePlatformTestCase() {
     private fun pageName(): String = "page-" + pages++ + ".md"
 
     /**
-     * Writes a site using the Material theme, with the icons of an installed theme next to it.
+     * Writes a site using the Material theme; the theme itself is installed by the set-up of the class.
      *
      * Written once per fixture: the light fixture hands every test of a class the same project, and a file
      * that is already there must not be written a second time.
      */
     private fun site() {
-        ICON_NAMES.forEach { icon ->
-            if (myFixture.findFileInTempDir("$INSTALLED/$icon.svg") == null) {
-                myFixture.addFileToProject("$INSTALLED/$icon.svg", SVG)
-            }
-        }
         if (myFixture.findFileInTempDir("mkdocs.yml") == null) {
             myFixture.addFileToProject("mkdocs.yml", "site_name: Handbook\ntheme:\n  name: material\n")
         }
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
     }
 
     /**
@@ -203,14 +206,7 @@ class MkDocsMaterialShorthandInlayHintsProviderIT : BasePlatformTestCase() {
 
     private companion object {
 
-        /** The path of the icon sets inside an installed package, below the site root. */
-        const val INSTALLED = ".venv/Lib/site-packages/material/templates/.icons"
-
         /** The icons of the installed theme the tests are written against. */
         val ICON_NAMES = listOf("material/check", "fontawesome/brands/github")
-
-        /** The drawing every installed icon is written with. */
-        const val SVG =
-            """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"/></svg>"""
     }
 }

@@ -15,8 +15,14 @@ package org.pcsoft.ij.plugin.mkdocs.material.icon
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.ui.ImageUtil
+import com.intellij.util.ui.UIUtil
 import org.pcsoft.ij.plugin.mkdocs.utils.MkDocsIconLoader
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
+import java.awt.Component
+import java.awt.Graphics
+import java.awt.image.BufferedImage
+import java.awt.image.RGBImageFilter
 import javax.swing.Icon
 
 /**
@@ -70,7 +76,7 @@ object MkDocsMaterialIconRenderer {
 
         val icon = try {
             IconLoader.findIcon(file.toNioPath().toUri().toURL(), true)
-                ?.let { MkDocsIconLoader.fixSize(it, size) }
+                ?.let { MkDocsIconLoader.fixSize(ForegroundIcon(it), size) }
                 ?: MkDocsMaterialIcons.Feature
         } catch (throwable: Throwable) {
             // Deliberately Throwable: what is read here is a file of a foreign package, and an image loader
@@ -81,6 +87,58 @@ object MkDocsMaterialIconRenderer {
         synchronized(cache) { cache[key] = icon }
         return icon
     }
+
+    /**
+     * An icon of the sets, drawn in the colour the IDE writes its text in.
+     *
+     * The drawings of the theme are monochrome glyphs and carry no colour of their own, which makes them
+     * black — the colour an SVG falls back to. Black is right in a light IDE and all but invisible in a dark
+     * one, so every pixel is given the foreground colour of the current theme while its transparency is
+     * kept, which is what leaves the shape of the glyph intact.
+     *
+     * The colour is read while painting rather than while loading: a theme switched at runtime then arrives
+     * at the next repaint, and nothing has to be thrown away for it.
+     *
+     * @property source the icon as the SVG was loaded
+     */
+    private class ForegroundIcon(private val source: Icon) : Icon {
+
+        override fun paintIcon(component: Component?, graphics: Graphics, x: Int, y: Int) {
+            if (source.iconWidth <= 0 || source.iconHeight <= 0) return
+            val image = ImageUtil.createImage(
+                graphics,
+                source.iconWidth,
+                source.iconHeight,
+                BufferedImage.TYPE_INT_ARGB,
+            )
+            val imageGraphics = image.createGraphics()
+            try {
+                source.paintIcon(component, imageGraphics, 0, 0)
+            } finally {
+                imageGraphics.dispose()
+            }
+            val foreground = UIUtil.getLabelForeground().rgb and RGB
+            val recoloured = ImageUtil.filter(image, object : RGBImageFilter() {
+
+                init {
+                    canFilterIndexColorModel = true
+                }
+
+                override fun filterRGB(x: Int, y: Int, rgb: Int): Int = (rgb and ALPHA) or foreground
+            })
+            UIUtil.drawImage(graphics, recoloured, x, y, component)
+        }
+
+        override fun getIconWidth(): Int = source.iconWidth
+
+        override fun getIconHeight(): Int = source.iconHeight
+    }
+
+    /** The bits of a pixel holding its transparency. */
+    private const val ALPHA = 0xFF000000.toInt()
+
+    /** The bits of a pixel holding its colour. */
+    private const val RGB = 0x00FFFFFF
 
     /**
      * Throws away every rendered icon.

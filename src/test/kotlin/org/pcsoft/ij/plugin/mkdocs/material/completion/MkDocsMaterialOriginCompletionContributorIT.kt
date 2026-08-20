@@ -19,7 +19,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.LayeredIcon
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
-import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconIndex
+import org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialInstalledTheme
 import org.pcsoft.ij.plugin.mkdocs.material.schema.MkDocsMaterialSchemaCache
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 import javax.swing.Icon
@@ -48,7 +48,17 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
     override fun setUp() {
         super.setUp()
         // The light fixture hands every test of a class the same project, and with it the same icon index.
-        MkDocsMaterialIconIndex.getInstance(project).invalidate()
+        // Installed once per test and never invalidated afterwards: a test comparing two completions compares
+        // the drawings by identity, and dropping the index in between would hand it two instances of one icon.
+        MkDocsMaterialInstalledTheme.install(project, listOf(ICON_FILE))
+    }
+
+    override fun tearDown() {
+        try {
+            MkDocsMaterialInstalledTheme.uninstall(project)
+        } finally {
+            super.tearDown()
+        }
     }
 
     /**
@@ -196,13 +206,6 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
      * @param detect whether the site is detected first, which the entries coming from the schema need
      */
     private fun completeIn(text: String, name: String = "mkdocs.yml", detect: Boolean = false) {
-        // A test comparing two runs completes twice, and the installation is written for the first of them.
-        if (myFixture.findFileInTempDir(ICON_FILE) == null) {
-            myFixture.addFileToProject(
-                ICON_FILE,
-                """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"/></svg>"""
-            )
-        }
         myFixture.configureByText(name, text + "\n")
         if (detect) {
             MkDocsModuleService.getInstance(project).sync()
@@ -231,6 +234,6 @@ class MkDocsMaterialOriginCompletionContributorIT : BasePlatformTestCase() {
         const val EXTENSION_SUPERFENCES = "pymdownx.superfences"
 
         /** The one icon of the installed theme the completion offers. */
-        const val ICON_FILE = ".venv/Lib/site-packages/material/templates/.icons/material/check.svg"
+        const val ICON_FILE = "material/check.svg"
     }
 }
