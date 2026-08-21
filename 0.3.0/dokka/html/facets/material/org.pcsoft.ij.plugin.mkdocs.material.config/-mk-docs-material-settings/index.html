@@ -1,0 +1,438 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsMaterialSettings</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":facets:material/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":facets:material/main" data-filter=":facets:material/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="material::org.pcsoft.ij.plugin.mkdocs.material.config/MkDocsMaterialSettings///PointingToDeclaration//-1826006413">
+  <div class="breadcrumbs"><a href="../../index.html">material</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.material.config</a><span class="delimiter">/</span><span class="current">MkDocsMaterialSettings</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span><span>Settings</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">MkDocsMaterialSettings</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>paletteMode<span class="token operator">: </span><a href="-palette-mode/index.html">MkDocsMaterialSettings.PaletteMode</a><span class="token operator"> = </span>PaletteMode.NONE<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>light<span class="token operator">: </span><a href="-palette-entry/index.html">MkDocsMaterialSettings.PaletteEntry</a><span class="token operator"> = </span>PaletteEntry()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>dark<span class="token operator">: </span><a href="-palette-entry/index.html">MkDocsMaterialSettings.PaletteEntry</a><span class="token operator"> = </span>PaletteEntry(scheme = MkDocsMaterialScheme.SLATE)<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>features<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptySet()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>fontText<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>fontCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>fontEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>language<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>direction<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>logo<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>favicon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>customDir<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>extensions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptySet()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>editable<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div><p class="paragraph">An immutable snapshot of everything the Material settings pages can change in an MkDocs configuration file.</p><p class="paragraph">The snapshot is deliberately <strong>not</strong> a model of <code class="lang-kotlin">mkdocs.yml</code>: it covers the keys the four settings pages offer and nothing else. Anything the file carries next to them — a key of another plugin, an option below a Markdown extension, a comment — is invisible here, which is exactly why <a href="../-mk-docs-material-config/write.html">MkDocsMaterialConfig.write</a> only writes the keys that differ between two snapshots instead of rendering a snapshot back into the file. A lossy model that rewrote whole blocks would silently destroy what it does not represent.</p><p class="paragraph">Reading and writing live in <a href="../-mk-docs-material-config/index.html">MkDocsMaterialConfig</a>; <a href="-mutable/index.html">Mutable</a> is the working copy a settings page binds to.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="1765887000%2FConstructors%2F-1826006413" anchor-label="MkDocsMaterialSettings" id="1765887000%2FConstructors%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mk-docs-material-settings.html"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1765887000%2FConstructors%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">paletteMode<span class="token operator">: </span><a href="-palette-mode/index.html">MkDocsMaterialSettings.PaletteMode</a><span class="token operator"> = </span>PaletteMode.NONE<span class="token punctuation">, </span></span><span class="parameter ">light<span class="token operator">: </span><a href="-palette-entry/index.html">MkDocsMaterialSettings.PaletteEntry</a><span class="token operator"> = </span>PaletteEntry()<span class="token punctuation">, </span></span><span class="parameter ">dark<span class="token operator">: </span><a href="-palette-entry/index.html">MkDocsMaterialSettings.PaletteEntry</a><span class="token operator"> = </span>PaletteEntry(scheme = MkDocsMaterialScheme.SLATE)<span class="token punctuation">, </span></span><span class="parameter ">features<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptySet()<span class="token punctuation">, </span></span><span class="parameter ">fontText<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">fontCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">fontEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">language<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">direction<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">logo<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">favicon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">customDir<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">extensions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptySet()<span class="token punctuation">, </span></span><span class="parameter ">editable<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-186495894%2FClasslikes%2F-1826006413" anchor-label="Companion" id="-186495894%2FClasslikes%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-186495894%2FClasslikes%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-499460400%2FClasslikes%2F-1826006413" anchor-label="Mutable" id="-499460400%2FClasslikes%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mutable/index.html"><span><span>Mutable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-499460400%2FClasslikes%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-mutable/index.html">Mutable</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">var </span>paletteMode<span class="token operator">: </span><a href="-palette-mode/index.html">MkDocsMaterialSettings.PaletteMode</a><span class="token operator"> = </span>PaletteMode.NONE<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>light<span class="token operator">: </span><a href="-palette-entry/-mutable/index.html">MkDocsMaterialSettings.PaletteEntry.Mutable</a><span class="token operator"> = </span>PaletteEntry().toMutable()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>dark<span class="token operator">: </span><a href="-palette-entry/-mutable/index.html">MkDocsMaterialSettings.PaletteEntry.Mutable</a><span class="token operator"> = </span>PaletteEntry(scheme = MkDocsMaterialScheme.SLATE).toMutable()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>features<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>mutableSetOf()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>fontText<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>fontCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>fontEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>language<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>direction<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>logo<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>favicon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>customDir<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>extensions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>mutableSetOf()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>editable<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">The working copy of a <a href="index.html">MkDocsMaterialSettings</a>, writable field by field.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="554780021%2FClasslikes%2F-1826006413" anchor-label="PaletteEntry" id="554780021%2FClasslikes%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-palette-entry/index.html"><span>Palette</span><wbr><span><span>Entry</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="554780021%2FClasslikes%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-palette-entry/index.html">PaletteEntry</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>scheme<span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.data/-mk-docs-material-scheme/index.html">MkDocsMaterialScheme</a><span class="token operator"> = </span>MkDocsMaterialScheme.DEFAULT<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>primary<span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.data/-mk-docs-material-color/index.html">MkDocsMaterialColor</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>accent<span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.data/-mk-docs-material-color/index.html">MkDocsMaterialColor</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>toggleIcon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>toggleName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">One palette of the theme.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-509087816%2FClasslikes%2F-1826006413" anchor-label="PaletteMode" id="-509087816%2FClasslikes%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-palette-mode/index.html"><span>Palette</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-509087816%2FClasslikes%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-palette-mode/index.html">PaletteMode</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-palette-mode/index.html">MkDocsMaterialSettings.PaletteMode</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">How the theme is told about colours.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1759394631%2FProperties%2F-1826006413" anchor-label="customDir" id="1759394631%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="custom-dir.html"><span>custom</span><wbr><span><span>Dir</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1759394631%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="custom-dir.html">customDir</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the value of <code class="lang-kotlin">theme.custom_dir</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="784762337%2FProperties%2F-1826006413" anchor-label="dark" id="784762337%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="dark.html"><span><span>dark</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="784762337%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="dark.html">dark</a><span class="token operator">: </span><a href="-palette-entry/index.html">MkDocsMaterialSettings.PaletteEntry</a></div><div class="brief "><p class="paragraph">the dark palette, used in <a href="-palette-mode/-l-i-g-h-t_-d-a-r-k_-t-o-g-g-l-e/index.html">PaletteMode.LIGHT_DARK_TOGGLE</a> only</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="903581828%2FProperties%2F-1826006413" anchor-label="direction" id="903581828%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="direction.html"><span><span>direction</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="903581828%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="direction.html">direction</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the value of <code class="lang-kotlin">theme.direction</code>, <code class="lang-kotlin">ltr</code> or <code class="lang-kotlin">rtl</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1694002765%2FProperties%2F-1826006413" anchor-label="editable" id="-1694002765%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="editable.html"><span><span>editable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1694002765%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="editable.html">editable</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><code class="lang-kotlin">false</code> if the palette of the file has a shape this model cannot represent; the palette            fields then carry their defaults and must never be written back</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1079358589%2FProperties%2F-1826006413" anchor-label="extensions" id="-1079358589%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="extensions.html"><span><span>extensions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1079358589%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="extensions.html">extensions</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">the identifiers listed under the top level <code class="lang-kotlin">markdown_extensions</code>, taken from both the            scalar and the mapping shape of an entry</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="868686095%2FProperties%2F-1826006413" anchor-label="favicon" id="868686095%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="favicon.html"><span><span>favicon</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="868686095%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="favicon.html">favicon</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the value of <code class="lang-kotlin">theme.favicon</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-909987334%2FProperties%2F-1826006413" anchor-label="features" id="-909987334%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="features.html"><span><span>features</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-909987334%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="features.html">features</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">the identifiers of <code class="lang-kotlin">theme.features</code>, including the ones this plugin does not know — a            newer version of the theme brings flags an older plugin must not drop</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-197785541%2FProperties%2F-1826006413" anchor-label="fontCode" id="-197785541%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="font-code.html"><span>font</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-197785541%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="font-code.html">fontCode</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the family of <code class="lang-kotlin">theme.font.code</code>, or <code class="lang-kotlin">null</code> if the theme decides</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-470204943%2FProperties%2F-1826006413" anchor-label="fontEnabled" id="-470204943%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="font-enabled.html"><span>font</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-470204943%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="font-enabled.html">fontEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><code class="lang-kotlin">false</code> for <code class="lang-kotlin">font: false</code>, which tells the theme to load no font from Google Fonts</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-529852165%2FProperties%2F-1826006413" anchor-label="fontText" id="-529852165%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="font-text.html"><span>font</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-529852165%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="font-text.html">fontText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the family of <code class="lang-kotlin">theme.font.text</code>, or <code class="lang-kotlin">null</code> if the theme decides</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-33839297%2FProperties%2F-1826006413" anchor-label="language" id="-33839297%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="language.html"><span><span>language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-33839297%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="language.html">language</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the value of <code class="lang-kotlin">theme.language</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1412738509%2FProperties%2F-1826006413" anchor-label="light" id="1412738509%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="light.html"><span><span>light</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1412738509%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="light.html">light</a><span class="token operator">: </span><a href="-palette-entry/index.html">MkDocsMaterialSettings.PaletteEntry</a></div><div class="brief "><p class="paragraph">the palette used on its own in <a href="-palette-mode/-s-i-n-g-l-e/index.html">PaletteMode.SINGLE</a>, and the light one in            <a href="-palette-mode/-l-i-g-h-t_-d-a-r-k_-t-o-g-g-l-e/index.html">PaletteMode.LIGHT_DARK_TOGGLE</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="899523916%2FProperties%2F-1826006413" anchor-label="logo" id="899523916%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="logo.html"><span><span>logo</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="899523916%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="logo.html">logo</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">the value of <code class="lang-kotlin">theme.logo</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1390142299%2FProperties%2F-1826006413" anchor-label="paletteMode" id="-1390142299%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="palette-mode.html"><span>palette</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1390142299%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="palette-mode.html">paletteMode</a><span class="token operator">: </span><a href="-palette-mode/index.html">MkDocsMaterialSettings.PaletteMode</a></div><div class="brief "><p class="paragraph">how many palettes the theme is configured with</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1119134040%2FFunctions%2F-1826006413" anchor-label="toMutable" id="1119134040%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-mutable.html"><span>to</span><wbr><span><span>Mutable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1119134040%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="to-mutable.html"><span class="token function">toMutable</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-mutable/index.html">MkDocsMaterialSettings.Mutable</a></div><div class="brief "><p class="paragraph">Returns a working copy of this snapshot.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

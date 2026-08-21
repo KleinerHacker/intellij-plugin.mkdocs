@@ -1,0 +1,355 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsProject</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":utils/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":utils/main" data-filter=":utils/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="utils::org.pcsoft.ij.plugin.mkdocs.utils/MkDocsProject///PointingToDeclaration//-360489313">
+  <div class="breadcrumbs"><a href="../../index.html">utils</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.utils</a><span class="delimiter">/</span><span class="current">MkDocsProject</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span><span>Project</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">MkDocsProject</a></div><p class="paragraph">Recognition of MkDocs project files by name.</p><p class="paragraph">This is intentionally a pure, platform-independent helper: it answers questions about <i>file names</i> only, so it can be unit-tested without booting the IntelliJ Platform. Anything that needs a <code class="lang-kotlin">VirtualFile</code>, a <code class="lang-kotlin">Project</code> or PSI belongs in a separate, platform-aware layer on top of this.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-918908056%2FProperties%2F-360489313" anchor-label="CONFIG_FILE_NAMES" id="-918908056%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-n-f-i-g_-f-i-l-e_-n-a-m-e-s.html"><span>CONFIG_</span><wbr><span>FILE_</span><wbr><span>NAMES</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-918908056%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-n-f-i-g_-f-i-l-e_-n-a-m-e-s.html">CONFIG_FILE_NAMES</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Names MkDocs accepts for its configuration file.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1655746467%2FProperties%2F-360489313" anchor-label="GRADLE_SITE_DIR" id="-1655746467%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-r-a-d-l-e_-s-i-t-e_-d-i-r.html"><span>GRADLE_</span><wbr><span>SITE_</span><wbr><span>DIR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1655746467%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-g-r-a-d-l-e_-s-i-t-e_-d-i-r.html">GRADLE_SITE_DIR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Build output directory of a site living in a Gradle module.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1879580083%2FProperties%2F-360489313" anchor-label="IDEA_SITE_DIR" id="-1879580083%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-e-a_-s-i-t-e_-d-i-r.html"><span>IDEA_</span><wbr><span>SITE_</span><wbr><span>DIR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1879580083%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-i-d-e-a_-s-i-t-e_-d-i-r.html">IDEA_SITE_DIR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Build output directory of a site living in a plain IntelliJ IDEA module.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1170556876%2FProperties%2F-360489313" anchor-label="IGNORED_DIRECTORIES" id="1170556876%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-g-n-o-r-e-d_-d-i-r-e-c-t-o-r-i-e-s.html"><span>IGNORED_</span><wbr><span><span>DIRECTORIES</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1170556876%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-i-g-n-o-r-e-d_-d-i-r-e-c-t-o-r-i-e-s.html">IGNORED_DIRECTORIES</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Directory names never descended into while searching for MkDocs configuration files.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1818917369%2FProperties%2F-360489313" anchor-label="MAVEN_SITE_DIR" id="-1818917369%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-a-v-e-n_-s-i-t-e_-d-i-r.html"><span>MAVEN_</span><wbr><span>SITE_</span><wbr><span>DIR</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1818917369%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-m-a-v-e-n_-s-i-t-e_-d-i-r.html">MAVEN_SITE_DIR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Build output directory of a site living in a Maven module.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1753410015%2FProperties%2F-360489313" anchor-label="PAGE_EXTENSION" id="-1753410015%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-a-g-e_-e-x-t-e-n-s-i-o-n.html"><span>PAGE_</span><wbr><span>EXTENSION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1753410015%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-p-a-g-e_-e-x-t-e-n-s-i-o-n.html">PAGE_EXTENSION</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Extension of the Markdown files MkDocs turns into pages.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="973969681%2FProperties%2F-360489313" anchor-label="REQUIREMENTS_FILE_NAME" id="973969681%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-q-u-i-r-e-m-e-n-t-s_-f-i-l-e_-n-a-m-e.html"><span>REQUIREMENTS_</span><wbr><span>FILE_</span><wbr><span>NAME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="973969681%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-q-u-i-r-e-m-e-n-t-s_-f-i-l-e_-n-a-m-e.html">REQUIREMENTS_FILE_NAME</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Name of the file pinning the Python packages a site is built with.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1715964866%2FProperties%2F-360489313" anchor-label="STYLESHEET_EXTENSION" id="1715964866%2FProperties%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-s-t-y-l-e-s-h-e-e-t_-e-x-t-e-n-s-i-o-n.html"><span>STYLESHEET_</span><wbr><span>EXTENSION</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1715964866%2FProperties%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-t-y-l-e-s-h-e-e-t_-e-x-t-e-n-s-i-o-n.html">STYLESHEET_EXTENSION</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Extension of the style sheets a site pulls in through <code class="lang-kotlin">extra_css</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="2035366716%2FFunctions%2F-360489313" anchor-label="isConfigFile" id="2035366716%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-config-file.html"><span>is</span><wbr><span>Config</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2035366716%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-config-file.html"><span class="token function">isConfigFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-config-file.html">fileName</a> is an MkDocs configuration file.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1464376329%2FFunctions%2F-360489313" anchor-label="isPageFile" id="1464376329%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-page-file.html"><span>is</span><wbr><span>Page</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1464376329%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-page-file.html"><span class="token function">isPageFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-page-file.html">fileName</a> is a Markdown file, and therefore a page of a site.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-886002230%2FFunctions%2F-360489313" anchor-label="isRequirementsFile" id="-886002230%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-requirements-file.html"><span>is</span><wbr><span>Requirements</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-886002230%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-requirements-file.html"><span class="token function">isRequirementsFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-requirements-file.html">fileName</a> is the requirements file of a site.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-937182264%2FFunctions%2F-360489313" anchor-label="isStylesheetFile" id="-937182264%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-stylesheet-file.html"><span>is</span><wbr><span>Stylesheet</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-937182264%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-stylesheet-file.html"><span class="token function">isStylesheetFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-stylesheet-file.html">fileName</a> is a style sheet.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="318364122%2FFunctions%2F-360489313" anchor-label="isValidDirectoryName" id="318364122%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-valid-directory-name.html"><span>is</span><wbr><span>Valid</span><wbr><span>Directory</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="318364122%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-valid-directory-name.html"><span class="token function">isValidDirectoryName</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-valid-directory-name.html">name</a> is usable as a single directory name inside a site.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-336098637%2FFunctions%2F-360489313" anchor-label="isValidSiteDirName" id="-336098637%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-valid-site-dir-name.html"><span>is</span><wbr><span>Valid</span><wbr><span>Site</span><wbr><span>Dir</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-336098637%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-valid-site-dir-name.html"><span class="token function">isValidSiteDirName</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-valid-site-dir-name.html">name</a> is usable as the build output directory of a site.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1824090103%2FFunctions%2F-360489313" anchor-label="siteDirFor" id="1824090103%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="site-dir-for.html"><span>site</span><wbr><span>Dir</span><wbr><span><span>For</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1824090103%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="site-dir-for.html"><span class="token function">siteDirFor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entryNames<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Returns the build output directory suggested for a module whose directory holds <a href="site-dir-for.html">entryNames</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

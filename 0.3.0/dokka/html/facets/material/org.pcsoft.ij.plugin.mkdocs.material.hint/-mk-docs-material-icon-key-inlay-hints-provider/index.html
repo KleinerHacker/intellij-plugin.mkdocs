@@ -1,0 +1,389 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsMaterialIconKeyInlayHintsProvider</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":facets:material/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":facets:material/main" data-filter=":facets:material/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="material::org.pcsoft.ij.plugin.mkdocs.material.hint/MkDocsMaterialIconKeyInlayHintsProvider///PointingToDeclaration//-1826006413">
+  <div class="breadcrumbs"><a href="../../index.html">material</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.material.hint</a><span class="delimiter">/</span><span class="current">MkDocsMaterialIconKeyInlayHintsProvider</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Icon</span><wbr><span>Key</span><wbr><span>Inlay</span><wbr><span>Hints</span><wbr><span><span>Provider</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MkDocsMaterialIconKeyInlayHintsProvider</a> : <span data-unresolved-link="com.intellij.codeInsight.hints/InlayHintsProvider///PointingToDeclaration/">InlayHintsProvider</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span><span class="token operator">&gt; </span></div><p class="paragraph">Writes the shorthand of an icon behind the name naming it in a configuration file.</p><p class="paragraph">A configuration file addresses an icon by its path, <code class="lang-kotlin">material/pencil</code>, while a page writes the same icon as <code class="lang-kotlin">:material-pencil:</code> — and the two spellings are what an author has to translate by hand whenever the icon of <code class="lang-kotlin">theme.icon</code> is to appear in the text as well. The hint spells it out where the name stands, behind the value, so the shorthand can be read off instead of being derived.</p><p class="paragraph">Every place the configuration file names an icon is covered, which <a href="../../org.pcsoft.ij.plugin.mkdocs.material.icon/-mk-docs-material-icon-keys/index.html">MkDocsMaterialIconKeys</a> decides — the same answer the completion of those names is built on.</p><p class="paragraph">A name the installed theme does not offer gets no hint: a shorthand written for it would name an icon that does not exist, and the missing text is the honest statement that the name does not resolve.</p><p class="paragraph">Built on the imperative hints API rather than on the declarative one, exactly like the hint painting the drawing of the same name in front of it, whose switch in the settings this one is kept apart from.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-1029808955%2FConstructors%2F-1826006413" anchor-label="MkDocsMaterialIconKeyInlayHintsProvider" id="-1029808955%2FConstructors%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mk-docs-material-icon-key-inlay-hints-provider.html"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Icon</span><wbr><span>Key</span><wbr><span>Inlay</span><wbr><span>Hints</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1029808955%2FConstructors%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1799936990%2FProperties%2F-1826006413" anchor-label="description" id="-1799936990%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1799936990%2FProperties%2F-1826006413"><span><span>description</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1799936990%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1799936990%2FProperties%2F-1826006413">description</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1425541185%2FProperties%2F-1826006413" anchor-label="group" id="-1425541185%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1425541185%2FProperties%2F-1826006413"><span><span>group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1425541185%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1425541185%2FProperties%2F-1826006413">group</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/InlayGroup///PointingToDeclaration/">InlayGroup</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1150544082%2FProperties%2F-1826006413" anchor-label="isVisibleInSettings" id="-1150544082%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1150544082%2FProperties%2F-1826006413"><span>is</span><wbr><span>Visible</span><wbr><span>In</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1150544082%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1150544082%2FProperties%2F-1826006413">isVisibleInSettings</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1847889462%2FProperties%2F-1826006413" anchor-label="key" id="-1847889462%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key.html"><span><span>key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1847889462%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="key.html">key</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/SettingsKey///PointingToDeclaration/">SettingsKey</span><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-169203322%2FProperties%2F-1826006413" anchor-label="name" id="-169203322%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="name.html"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-169203322%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="name.html">name</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-504912940%2FProperties%2F-1826006413" anchor-label="previewText" id="-504912940%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="preview-text.html"><span>preview</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-504912940%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="preview-text.html">previewText</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1223561453%2FFunctions%2F-1826006413" anchor-label="createConfigurable" id="-1223561453%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-configurable.html"><span>create</span><wbr><span><span>Configurable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1223561453%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="create-configurable.html"><span class="token function">createConfigurable</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">settings<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/ImmediateConfigurable///PointingToDeclaration/">ImmediateConfigurable</span></div><div class="brief "><p class="paragraph">Returns the settings panel of the hint, which holds nothing but its description.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-847296817%2FFunctions%2F-1826006413" anchor-label="createFile" id="-847296817%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-847296817%2FFunctions%2F-1826006413"><span>create</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-847296817%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-847296817%2FFunctions%2F-1826006413"><span class="token function">createFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">fileType<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.fileTypes/FileType///PointingToDeclaration/">FileType</span><span class="token punctuation">, </span></span><span class="parameter ">document<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.editor/Document///PointingToDeclaration/">Document</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-61509550%2FFunctions%2F-1826006413" anchor-label="createSettings" id="-61509550%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-settings.html"><span>create</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-61509550%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="create-settings.html"><span class="token function">createSettings</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1399897575%2FFunctions%2F-1826006413" anchor-label="getCaseDescription" id="-1399897575%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1399897575%2FFunctions%2F-1826006413"><span>get</span><wbr><span>Case</span><wbr><span><span>Description</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1399897575%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-1399897575%2FFunctions%2F-1826006413"><span class="token function">getCaseDescription</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">case<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/ImmediateConfigurable.Case///PointingToDeclaration/">ImmediateConfigurable.Case</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="840489238%2FFunctions%2F-1826006413" anchor-label="getCollectorFor" id="840489238%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-collector-for.html"><span>get</span><wbr><span>Collector</span><wbr><span><span>For</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="840489238%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-collector-for.html"><span class="token function">getCollectorFor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span><span class="token punctuation">, </span></span><span class="parameter ">editor<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.editor/Editor///PointingToDeclaration/">Editor</span><span class="token punctuation">, </span></span><span class="parameter ">settings<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span><span class="token punctuation">, </span></span><span class="parameter ">sink<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/InlayHintsSink///PointingToDeclaration/">InlayHintsSink</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/InlayHintsCollector///PointingToDeclaration/">InlayHintsCollector</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-284033213%2FFunctions%2F-1826006413" anchor-label="getPlaceholdersCollectorFor" id="-284033213%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-284033213%2FFunctions%2F-1826006413"><span>get</span><wbr><span>Placeholders</span><wbr><span>Collector</span><wbr><span><span>For</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-284033213%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/ApiStatus.Experimental///PointingToDeclaration/"><span class="token annotation builtin">ApiStatus.Experimental</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-284033213%2FFunctions%2F-1826006413"><span class="token function">getPlaceholdersCollectorFor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span><span class="token punctuation">, </span></span><span class="parameter ">editor<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.editor/Editor///PointingToDeclaration/">Editor</span><span class="token punctuation">, </span></span><span class="parameter ">settings<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span><span class="token punctuation">, </span></span><span class="parameter ">sink<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/InlayHintsSink///PointingToDeclaration/">InlayHintsSink</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/InlayHintsCollector///PointingToDeclaration/">InlayHintsCollector</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-290858959%2FFunctions%2F-1826006413" anchor-label="getProperty" id="-290858959%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-290858959%2FFunctions%2F-1826006413"><span>get</span><wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-290858959%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#-290858959%2FFunctions%2F-1826006413"><span class="token function">getProperty</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="838999839%2FFunctions%2F-1826006413" anchor-label="getSettingsLanguage" id="838999839%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#838999839%2FFunctions%2F-1826006413"><span>get</span><wbr><span>Settings</span><wbr><span><span>Language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="838999839%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#838999839%2FFunctions%2F-1826006413"><span class="token function">getSettingsLanguage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">language<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/Language///PointingToDeclaration/">Language</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/Language///PointingToDeclaration/">Language</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="766536463%2FFunctions%2F-1826006413" anchor-label="isLanguageSupported" id="766536463%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-language-supported.html"><span>is</span><wbr><span>Language</span><wbr><span><span>Supported</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="766536463%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="is-language-supported.html"><span class="token function">isLanguageSupported</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">language<span class="token operator">: </span><span data-unresolved-link="com.intellij.lang/Language///PointingToDeclaration/">Language</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="275521394%2FFunctions%2F-1826006413" anchor-label="preparePreview" id="275521394%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#275521394%2FFunctions%2F-1826006413"><span>prepare</span><wbr><span><span>Preview</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="275521394%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-inlay-hints-provider/index.html#275521394%2FFunctions%2F-1826006413"><span class="token function">preparePreview</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">editor<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.editor/Editor///PointingToDeclaration/">Editor</span><span class="token punctuation">, </span></span><span class="parameter ">file<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span><span class="token punctuation">, </span></span><span class="parameter ">settings<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInsight.hints/NoSettings///PointingToDeclaration/">NoSettings</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

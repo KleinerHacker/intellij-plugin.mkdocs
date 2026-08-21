@@ -1,0 +1,719 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsMaterialRecommendedExtensionInspection</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":facets:material/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":facets:material/main" data-filter=":facets:material/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="material::org.pcsoft.ij.plugin.mkdocs.material.inspection/MkDocsMaterialRecommendedExtensionInspection///PointingToDeclaration//-1826006413">
+  <div class="breadcrumbs"><a href="../../index.html">material</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.material.inspection</a><span class="delimiter">/</span><span class="current">MkDocsMaterialRecommendedExtensionInspection</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Recommended</span><wbr><span>Extension</span><wbr><span><span>Inspection</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MkDocsMaterialRecommendedExtensionInspection</a> : <span data-unresolved-link="com.intellij.codeInspection/LocalInspectionTool///PointingToDeclaration/">LocalInspectionTool</span></div><p class="paragraph">Points out the Markdown extensions <i>Material for MkDocs</i> builds on wherever they are there.</p><p class="paragraph">Nothing here is wrong: a site listing none of these extensions builds and renders. What it loses is the markup the theme styles — call-outs, content tabs, key caps, highlighted code — which is why this is a weak warning and why it may be switched off entirely. An author who deliberately keeps the Markdown of the site plain is right to do so, and should not have to read about it on every file.</p><p class="paragraph">The extensions the configuration <i>forces</i> are none of this inspection's business; those are an error <a href="../-mk-docs-material-extension-annotator/index.html">MkDocsMaterialExtensionAnnotator</a> reports and that cannot be turned off.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-1348275262%2FConstructors%2F-1826006413" anchor-label="MkDocsMaterialRecommendedExtensionInspection" id="-1348275262%2FConstructors%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mk-docs-material-recommended-extension-inspection.html"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Recommended</span><wbr><span>Extension</span><wbr><span><span>Inspection</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1348275262%2FConstructors%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1634679599%2FProperties%2F-1826006413" anchor-label="alternativeID" id="-1634679599%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1634679599%2FProperties%2F-1826006413"><span>alternative</span><wbr><span><span>ID</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1634679599%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1634679599%2FProperties%2F-1826006413">alternativeID</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-291602516%2FProperties%2F-1826006413" anchor-label="defaultLevel" id="-291602516%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-291602516%2FProperties%2F-1826006413"><span>default</span><wbr><span><span>Level</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-291602516%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-291602516%2FProperties%2F-1826006413">defaultLevel</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeHighlighting/HighlightDisplayLevel///PointingToDeclaration/">HighlightDisplayLevel</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1068815843%2FProperties%2F-1826006413" anchor-label="descriptionAddendum" id="-1068815843%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1068815843%2FProperties%2F-1826006413"><span>description</span><wbr><span><span>Addendum</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1068815843%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1068815843%2FProperties%2F-1826006413">descriptionAddendum</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.util.text/HtmlChunk///PointingToDeclaration/">HtmlChunk</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1342795192%2FProperties%2F-1826006413" anchor-label="descriptionFileName" id="-1342795192%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1342795192%2FProperties%2F-1826006413"><span>description</span><wbr><span>File</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1342795192%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1342795192%2FProperties%2F-1826006413">descriptionFileName</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2041569442%2FProperties%2F-1826006413" anchor-label="displayName" id="-2041569442%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-2041569442%2FProperties%2F-1826006413"><span>display</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2041569442%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span><span class="token punctuation">(</span><span>capitalization<span class="token operator"> = </span><span data-unresolved-link="org.jetbrains.annotations/Nls.Capitalization.Sentence///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}">Nls.Capitalization.Sentence</span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-2041569442%2FProperties%2F-1826006413">displayName</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span><span class="token punctuation">(</span><span>capitalization<span class="token operator"> = </span><span data-unresolved-link="org.jetbrains.annotations/Nls.Capitalization.Sentence///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}">Nls.Capitalization.Sentence</span></span><wbr><span class="token punctuation">)</span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="933262960%2FProperties%2F-1826006413" anchor-label="editorAttributesKey" id="933262960%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#933262960%2FProperties%2F-1826006413"><span>editor</span><wbr><span>Attributes</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="933262960%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#933262960%2FProperties%2F-1826006413">editorAttributesKey</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="276025441%2FProperties%2F-1826006413" anchor-label="groupDisplayName" id="276025441%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#276025441%2FProperties%2F-1826006413"><span>group</span><wbr><span>Display</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="276025441%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span><span class="token punctuation">(</span><span>capitalization<span class="token operator"> = </span><span data-unresolved-link="org.jetbrains.annotations/Nls.Capitalization.Sentence///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}">Nls.Capitalization.Sentence</span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#276025441%2FProperties%2F-1826006413">groupDisplayName</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span><span class="token punctuation">(</span><span>capitalization<span class="token operator"> = </span><span data-unresolved-link="org.jetbrains.annotations/Nls.Capitalization.Sentence///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}">Nls.Capitalization.Sentence</span></span><wbr><span class="token punctuation">)</span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1671004753%2FProperties%2F-1826006413" anchor-label="groupKey" id="-1671004753%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1671004753%2FProperties%2F-1826006413"><span>group</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1671004753%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1671004753%2FProperties%2F-1826006413">groupKey</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="639881703%2FProperties%2F-1826006413" anchor-label="groupPath" id="639881703%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#639881703%2FProperties%2F-1826006413"><span>group</span><wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="639881703%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span><span class="token punctuation">(</span><span>capitalization<span class="token operator"> = </span><span data-unresolved-link="org.jetbrains.annotations/Nls.Capitalization.Sentence///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}">Nls.Capitalization.Sentence</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#639881703%2FProperties%2F-1826006413">groupPath</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span><span class="token punctuation">(</span><span>capitalization<span class="token operator"> = </span><span data-unresolved-link="org.jetbrains.annotations/Nls.Capitalization.Sentence///PointingToDeclaration/{&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;:{&quot;key&quot;:&quot;org.jetbrains.dokka.links.EnumEntryDRIExtra&quot;}}">Nls.Capitalization.Sentence</span></span><wbr><span class="token punctuation">)</span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1936331494%2FProperties%2F-1826006413" anchor-label="id" id="1936331494%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1936331494%2FProperties%2F-1826006413"><span><span>id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1936331494%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#1936331494%2FProperties%2F-1826006413">id</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1709095241%2FProperties%2F-1826006413" anchor-label="isDumbAware" id="1709095241%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-completion-contributor/index.html#1709095241%2FProperties%2F-1826006413"><span>is</span><wbr><span>Dumb</span><wbr><span><span>Aware</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1709095241%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Contract///PointingToDeclaration/"><span class="token annotation builtin">Contract</span></span><span class="token punctuation">(</span><span>pure<span class="token operator"> = </span><span class="breakable-word"><span class="token boolean">true</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.markdown/-mk-docs-material-shorthand-completion-contributor/index.html#1709095241%2FProperties%2F-1826006413">isDumbAware</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2133981436%2FProperties%2F-1826006413" anchor-label="isEnabledByDefault" id="2133981436%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#2133981436%2FProperties%2F-1826006413"><span>is</span><wbr><span>Enabled</span><wbr><span>By</span><wbr><span><span>Default</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2133981436%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#2133981436%2FProperties%2F-1826006413">isEnabledByDefault</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="944918945%2FProperties%2F-1826006413" anchor-label="isInitialized" id="944918945%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#944918945%2FProperties%2F-1826006413"><span>is</span><wbr><span><span>Initialized</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="944918945%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#944918945%2FProperties%2F-1826006413">isInitialized</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1237549897%2FProperties%2F-1826006413" anchor-label="language" id="-1237549897%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1237549897%2FProperties%2F-1826006413"><span><span>language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1237549897%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1237549897%2FProperties%2F-1826006413">language</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="604381731%2FProperties%2F-1826006413" anchor-label="mainToolId" id="604381731%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#604381731%2FProperties%2F-1826006413"><span>main</span><wbr><span>Tool</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="604381731%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#604381731%2FProperties%2F-1826006413">mainToolId</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="486326771%2FProperties%2F-1826006413" anchor-label="nameProvider" id="486326771%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#486326771%2FProperties%2F-1826006413"><span>name</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="486326771%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/ApiStatus.Internal///PointingToDeclaration/"><span class="token annotation builtin">ApiStatus.Internal</span></span></div><div class="block"><span class="token annotation builtin">@set:</span><span data-unresolved-link="org.jetbrains.annotations/ApiStatus.Internal///PointingToDeclaration/"><span class="token annotation builtin">ApiStatus.Internal</span></span></div></div><span class="token keyword">open </span><span class="token keyword">var </span><a href="index.html#486326771%2FProperties%2F-1826006413">nameProvider</a><span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInspection/InspectionProfileEntry.DefaultNameProvider///PointingToDeclaration/">InspectionProfileEntry.DefaultNameProvider</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2092902741%2FProperties%2F-1826006413" anchor-label="optionController" id="2092902741%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#2092902741%2FProperties%2F-1826006413"><span>option</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2092902741%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#2092902741%2FProperties%2F-1826006413">optionController</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection.options/OptionController///PointingToDeclaration/">OptionController</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1366698181%2FProperties%2F-1826006413" anchor-label="optionsPane" id="1366698181%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1366698181%2FProperties%2F-1826006413"><span>options</span><wbr><span><span>Pane</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1366698181%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#1366698181%2FProperties%2F-1826006413">optionsPane</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection.options/OptPane///PointingToDeclaration/">OptPane</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-204945052%2FProperties%2F-1826006413" anchor-label="shortName" id="-204945052%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-204945052%2FProperties%2F-1826006413"><span>short</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-204945052%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-204945052%2FProperties%2F-1826006413">shortName</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NonNls///PointingToDeclaration/"><span class="token annotation builtin">NonNls</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="734321085%2FProperties%2F-1826006413" anchor-label="staticDescription" id="734321085%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#734321085%2FProperties%2F-1826006413"><span>static</span><wbr><span><span>Description</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="734321085%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#734321085%2FProperties%2F-1826006413">staticDescription</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1160226545%2FProperties%2F-1826006413" anchor-label="suppressId" id="1160226545%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1160226545%2FProperties%2F-1826006413"><span>suppress</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1160226545%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">val </span><a href="index.html#1160226545%2FProperties%2F-1826006413">suppressId</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1745387793%2FFunctions%2F-1826006413" anchor-label="buildVisitor" id="1745387793%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-2065557274%2FFunctions%2F-1826006413"><span>build</span><wbr><span><span>Visitor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1745387793%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-2065557274%2FFunctions%2F-1826006413"><span class="token function">buildVisitor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>holder<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/ProblemsHolder///PointingToDeclaration/">ProblemsHolder</span><span class="token punctuation">, </span></span><span class="parameter ">isOnTheFly<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1023212471%2FFunctions%2F-1826006413"><span class="token function">buildVisitor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>holder<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/ProblemsHolder///PointingToDeclaration/">ProblemsHolder</span><span class="token punctuation">, </span></span><span class="parameter ">isOnTheFly<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>session<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/LocalInspectionToolSession///PointingToDeclaration/">LocalInspectionToolSession</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiElementVisitor///PointingToDeclaration/">PsiElementVisitor</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1906891477%2FFunctions%2F-1826006413" anchor-label="checkFile" id="-1906891477%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="check-file.html"><span>check</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1906891477%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="check-file.html"><span class="token function">checkFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span><span class="token punctuation">, </span></span><span class="parameter ">manager<span class="token operator">: </span><span data-unresolved-link="com.intellij.codeInspection/InspectionManager///PointingToDeclaration/">InspectionManager</span><span class="token punctuation">, </span></span><span class="parameter ">isOnTheFly<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.codeInspection/ProblemDescriptor///PointingToDeclaration/">ProblemDescriptor</span><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1160794901%2FFunctions%2F-1826006413" anchor-label="cleanup" id="-1160794901%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1160794901%2FFunctions%2F-1826006413"><span><span>cleanup</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1160794901%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1160794901%2FFunctions%2F-1826006413"><span class="token function">cleanup</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>project<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="512616365%2FFunctions%2F-1826006413" anchor-label="createOptionsPanel" id="512616365%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#512616365%2FFunctions%2F-1826006413"><span>create</span><wbr><span>Options</span><wbr><span><span>Panel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="512616365%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/ApiStatus.Obsolete///PointingToDeclaration/"><span class="token annotation builtin">ApiStatus.Obsolete</span></span></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/ApiStatus.OverrideOnly///PointingToDeclaration/"><span class="token annotation builtin">ApiStatus.OverrideOnly</span></span></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#512616365%2FFunctions%2F-1826006413"><span class="token function">createOptionsPanel</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JComponent.html">JComponent</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-566613516%2FFunctions%2F-1826006413" anchor-label="getBatchSuppressActions" id="-566613516%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-566613516%2FFunctions%2F-1826006413"><span>get</span><wbr><span>Batch</span><wbr><span>Suppress</span><wbr><span><span>Actions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-566613516%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-566613516%2FFunctions%2F-1826006413"><span class="token function">getBatchSuppressActions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span>element<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span data-unresolved-link="com.intellij.codeInspection/SuppressQuickFix///PointingToDeclaration/">SuppressQuickFix</span><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-149637484%2FFunctions%2F-1826006413" anchor-label="getProblemElement" id="-149637484%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-149637484%2FFunctions%2F-1826006413"><span>get</span><wbr><span>Problem</span><wbr><span><span>Element</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-149637484%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-149637484%2FFunctions%2F-1826006413"><span class="token function">getProblemElement</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>psiElement<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiNamedElement///PointingToDeclaration/">PsiNamedElement</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1533231890%2FFunctions%2F-1826006413" anchor-label="initialize" id="-1533231890%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1533231890%2FFunctions%2F-1826006413"><span><span>initialize</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1533231890%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1533231890%2FFunctions%2F-1826006413"><span class="token function">initialize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>context<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/GlobalInspectionContext///PointingToDeclaration/">GlobalInspectionContext</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-453600893%2FFunctions%2F-1826006413" anchor-label="inspectionFinished" id="-453600893%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-453600893%2FFunctions%2F-1826006413"><span>inspection</span><wbr><span><span>Finished</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-453600893%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-453600893%2FFunctions%2F-1826006413"><span class="token function">inspectionFinished</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>session<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/LocalInspectionToolSession///PointingToDeclaration/">LocalInspectionToolSession</span><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>problemsHolder<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/ProblemsHolder///PointingToDeclaration/">ProblemsHolder</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="383648154%2FFunctions%2F-1826006413" anchor-label="inspectionStarted" id="383648154%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#383648154%2FFunctions%2F-1826006413"><span>inspection</span><wbr><span><span>Started</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="383648154%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#383648154%2FFunctions%2F-1826006413"><span class="token function">inspectionStarted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>session<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/LocalInspectionToolSession///PointingToDeclaration/">LocalInspectionToolSession</span><span class="token punctuation">, </span></span><span class="parameter ">isOnTheFly<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1321982133%2FFunctions%2F-1826006413" anchor-label="isAvailableForFile" id="-1321982133%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1321982133%2FFunctions%2F-1826006413"><span>is</span><wbr><span>Available</span><wbr><span>For</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1321982133%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1321982133%2FFunctions%2F-1826006413"><span class="token function">isAvailableForFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>file<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2009870838%2FFunctions%2F-1826006413" anchor-label="isSuppressedFor" id="2009870838%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#2009870838%2FFunctions%2F-1826006413"><span>is</span><wbr><span>Suppressed</span><wbr><span><span>For</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2009870838%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#2009870838%2FFunctions%2F-1826006413"><span class="token function">isSuppressedFor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>element<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1000986549%2FFunctions%2F-1826006413" anchor-label="loadDescription" id="1000986549%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1000986549%2FFunctions%2F-1826006413"><span>load</span><wbr><span><span>Description</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1000986549%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1000986549%2FFunctions%2F-1826006413"><span class="token function">loadDescription</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nls///PointingToDeclaration/"><span class="token annotation builtin">Nls</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1232031339%2FFunctions%2F-1826006413" anchor-label="processFile" id="1232031339%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1232031339%2FFunctions%2F-1826006413"><span>process</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1232031339%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1232031339%2FFunctions%2F-1826006413"><span class="token function">processFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>file<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiFile///PointingToDeclaration/">PsiFile</span><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>manager<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.codeInspection/InspectionManager///PointingToDeclaration/">InspectionManager</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Unmodifiable///PointingToDeclaration/"><span class="token annotation builtin">Unmodifiable</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.codeInspection/ProblemDescriptor///PointingToDeclaration/">ProblemDescriptor</span><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="350257158%2FFunctions%2F-1826006413" anchor-label="readSettings" id="350257158%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#350257158%2FFunctions%2F-1826006413"><span>read</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="350257158%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#350257158%2FFunctions%2F-1826006413"><span class="token function">readSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>node<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="org.jdom/Element///PointingToDeclaration/">Element</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="370933956%2FFunctions%2F-1826006413" anchor-label="runForWholeFile" id="370933956%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#370933956%2FFunctions%2F-1826006413"><span>run</span><wbr><span>For</span><wbr><span>Whole</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="370933956%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#370933956%2FFunctions%2F-1826006413"><span class="token function">runForWholeFile</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-935526337%2FFunctions%2F-1826006413" anchor-label="showDefaultConfigurationOptions" id="-935526337%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-935526337%2FFunctions%2F-1826006413"><span>show</span><wbr><span>Default</span><wbr><span>Configuration</span><wbr><span><span>Options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-935526337%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-935526337%2FFunctions%2F-1826006413"><span class="token function">showDefaultConfigurationOptions</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1579421063%2FFunctions%2F-1826006413" anchor-label="writeSettings" id="-1579421063%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1579421063%2FFunctions%2F-1826006413"><span>write</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1579421063%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1579421063%2FFunctions%2F-1826006413"><span class="token function">writeSettings</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span>node<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="org.jdom/Element///PointingToDeclaration/">Element</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsMaterialSettingsPages</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":facets:material/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":facets:material/main" data-filter=":facets:material/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="material::org.pcsoft.ij.plugin.mkdocs.material.ui/MkDocsMaterialSettingsPages///PointingToDeclaration//-1826006413">
+  <div class="breadcrumbs"><a href="../../index.html">material</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.material.ui</a><span class="delimiter">/</span><span class="current">MkDocsMaterialSettingsPages</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Settings</span><wbr><span><span>Pages</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MkDocsMaterialSettingsPages</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">docsDir<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token operator">?</span><span class="token operator"> = </span>{ null }<span class="token punctuation">, </span></span><span class="parameter ">siteRoot<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token operator">?</span><span class="token operator"> = </span>{ null }</span></span><span class="token punctuation">)</span></div><p class="paragraph">The four Material settings pages, built once and wired to each other.</p><p class="paragraph">Both hosts go through this class rather than through the pages themselves, and that is the whole point: the site creation wizard and the Angular Material facet show the same four page objects, so a page never exists twice with two behaviours to keep in step. What a host adds is the frame around them — steps in one case, tabs in the other.</p><p class="paragraph">The wiring is what the pages cannot do on their own: the extensions page has to know what the features page currently has ticked, because <i>required</i> is a statement about the feature selection and not about the theme.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>project</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the project the site belongs to, or <code class="lang-kotlin">null</code> in a wizard that has none yet</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>docs</span><wbr><span><span>Dir</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the documentation directory of the site, or <code class="lang-kotlin">null</code> while it does not exist</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>site</span><wbr><span><span>Root</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the directory holding the configuration file, or <code class="lang-kotlin">null</code> while it does not exist</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-289490717%2FConstructors%2F-1826006413" anchor-label="MkDocsMaterialSettingsPages" id="-289490717%2FConstructors%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mk-docs-material-settings-pages.html"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Settings</span><wbr><span><span>Pages</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-289490717%2FConstructors%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">docsDir<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token operator">?</span><span class="token operator"> = </span>{ null }<span class="token punctuation">, </span></span><span class="parameter ">siteRoot<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token operator">?</span><span class="token operator"> = </span>{ null }</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1087898761%2FProperties%2F-1826006413" anchor-label="appearance" id="-1087898761%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="appearance.html"><span><span>appearance</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1087898761%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="appearance.html">appearance</a><span class="token operator">: </span><a href="../-mk-docs-material-appearance-page/index.html">MkDocsMaterialAppearancePage</a></div><div class="brief "><p class="paragraph">The page holding the palette and the fonts.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1192670264%2FProperties%2F-1826006413" anchor-label="assets" id="1192670264%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="assets.html"><span><span>assets</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1192670264%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="assets.html">assets</a><span class="token operator">: </span><a href="../-mk-docs-material-assets-page/index.html">MkDocsMaterialAssetsPage</a></div><div class="brief "><p class="paragraph">The page holding the paths, the language and the writing direction.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="387273159%2FProperties%2F-1826006413" anchor-label="extensions" id="387273159%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="extensions.html"><span><span>extensions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="387273159%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="extensions.html">extensions</a><span class="token operator">: </span><a href="../-mk-docs-material-extensions-page/index.html">MkDocsMaterialExtensionsPage</a></div><div class="brief "><p class="paragraph">The page holding the Markdown extensions.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="839022910%2FProperties%2F-1826006413" anchor-label="features" id="839022910%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="features.html"><span><span>features</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="839022910%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="features.html">features</a><span class="token operator">: </span><a href="../-mk-docs-material-features-page/index.html">MkDocsMaterialFeaturesPage</a></div><div class="brief "><p class="paragraph">The page holding <code class="lang-kotlin">theme.features</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-24853974%2FProperties%2F-1826006413" anchor-label="onChanged" id="-24853974%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-changed.html"><span>on</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-24853974%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">var </span><a href="on-changed.html">onChanged</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></div><div class="brief "><p class="paragraph">Called after any page changed, so a host can re-check its buttons.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="128897563%2FProperties%2F-1826006413" anchor-label="pages" id="128897563%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="pages.html"><span><span>pages</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="128897563%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="pages.html">pages</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-mk-docs-material-settings-page/index.html">MkDocsMaterialSettingsPage</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The pages in the order both hosts show them.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="253726990%2FFunctions%2F-1826006413" anchor-label="applyTo" id="253726990%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="apply-to.html"><span>apply</span><wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="253726990%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="apply-to.html"><span class="token function">applyTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">settings<span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.config/-mk-docs-material-settings/index.html">MkDocsMaterialSettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.config/-mk-docs-material-settings/index.html">MkDocsMaterialSettings</a></div><div class="brief "><p class="paragraph">Returns <span data-unresolved-link="settings////PointingToDeclaration/">settings</span> with the edits of every page folded into it.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="316739264%2FFunctions%2F-1826006413" anchor-label="isModified" id="316739264%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-modified.html"><span>is</span><wbr><span><span>Modified</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="316739264%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-modified.html"><span class="token function">isModified</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">original<span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.config/-mk-docs-material-settings/index.html">MkDocsMaterialSettings</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Tells whether any page would change <a href="is-modified.html">original</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="231424776%2FFunctions%2F-1826006413" anchor-label="reset" id="231424776%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reset.html"><span><span>reset</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="231424776%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="reset.html"><span class="token function">reset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">settings<span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.config/-mk-docs-material-settings/index.html">MkDocsMaterialSettings</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Fills every page from <span data-unresolved-link="settings////PointingToDeclaration/">settings</span>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1392523909%2FFunctions%2F-1826006413" anchor-label="validate" id="1392523909%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="validate.html"><span><span>validate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1392523909%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="validate.html"><span class="token function">validate</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The first reason the current input cannot be used, or <code class="lang-kotlin">null</code> if there is none.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

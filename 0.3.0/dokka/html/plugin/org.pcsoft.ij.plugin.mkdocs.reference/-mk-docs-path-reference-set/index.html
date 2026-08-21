@@ -1,0 +1,479 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsPathReferenceSet</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":plugin/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":plugin/main" data-filter=":plugin/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="plugin::org.pcsoft.ij.plugin.mkdocs.reference/MkDocsPathReferenceSet///PointingToDeclaration//-862521613">
+  <div class="breadcrumbs"><a href="../../index.html">plugin</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.reference</a><span class="delimiter">/</span><span class="current">MkDocsPathReferenceSet</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Path</span><wbr><span>Reference</span><wbr><span><span>Set</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MkDocsPathReferenceSet</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">scalar<span class="token operator">: </span><span data-unresolved-link="org.jetbrains.yaml.psi/YAMLScalar///PointingToDeclaration/">YAMLScalar</span><span class="token punctuation">, </span></span><span class="parameter ">startInElement<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">kind<span class="token operator">: </span><a href="../-mk-docs-path-kind/index.html">MkDocsPathKind</a><span class="token punctuation">, </span></span><span class="parameter ">baseDirectory<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFileSystemItem///PointingToDeclaration/">PsiFileSystemItem</span></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileReferenceSet///PointingToDeclaration/">FileReferenceSet</span></div><p class="paragraph">The file references of one path value of an MkDocs configuration file.</p><p class="paragraph">Three things are adjusted against the platform default. The default context is the directory MkDocs resolves the value against instead of the directory the configuration file lies in, which is what makes an entry of <code class="lang-kotlin">nav</code> find its page below <code class="lang-kotlin">docs_dir</code>. An absolute path is not accepted for any kind but <a href="../-mk-docs-path-kind/-s-i-t-e_-d-i-r/index.html">MkDocsPathKind.SITE_DIR</a>, because MkDocs reads those values relative to the site — <code class="lang-kotlin">site_dir</code> alone names the build output, which may lie anywhere, so there the platform decides as it does everywhere else and an absolute value resolves from the root of the file system. And a kind naming a directory offers only directories in the completion, so <code class="lang-kotlin">docs_dir</code> is not filled with the name of a page.</p><p class="paragraph">The set is created uninitialised and parsed from the initialiser below: parsing asks for <span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileReferenceSet/isEndingSlashNotAllowed/#/PointingToDeclaration/">isEndingSlashNotAllowed</span>, and a set parsed from the constructor of its own superclass would ask before the properties of this class exist.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>path</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the path as written, without the quotes of a quoted scalar</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>scalar</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the scalar holding <a href="../../../plugin/org.pcsoft.ij.plugin.mkdocs.reference/-mk-docs-path-reference-set/--root--.html">path</a></p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>start</span><wbr><span>In</span><wbr><span><span>Element</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the offset <a href="../../../plugin/org.pcsoft.ij.plugin.mkdocs.reference/-mk-docs-path-reference-set/--root--.html">path</a> starts at inside <a href="../../../plugin/org.pcsoft.ij.plugin.mkdocs.reference/-mk-docs-path-reference-set/--root--.html">scalar</a></p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>kind</span></span></u></div></span></div><div><div class="title"><p class="paragraph">what MkDocs reads the value as</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>base</span><wbr><span><span>Directory</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the directory the value is resolved against</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="829637643%2FConstructors%2F-862521613" anchor-label="MkDocsPathReferenceSet" id="829637643%2FConstructors%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-mk-docs-path-reference-set.html"><span>Mk</span><wbr><span>Docs</span><wbr><span>Path</span><wbr><span>Reference</span><wbr><span><span>Set</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="829637643%2FConstructors%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">scalar<span class="token operator">: </span><span data-unresolved-link="org.jetbrains.yaml.psi/YAMLScalar///PointingToDeclaration/">YAMLScalar</span><span class="token punctuation">, </span></span><span class="parameter ">startInElement<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">kind<span class="token operator">: </span><a href="../-mk-docs-path-kind/index.html">MkDocsPathKind</a><span class="token punctuation">, </span></span><span class="parameter ">baseDirectory<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiFileSystemItem///PointingToDeclaration/">PsiFileSystemItem</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1274091951%2FProperties%2F-862521613" anchor-label="allReferences" id="-1274091951%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1274091951%2FProperties%2F-862521613"><span>all</span><wbr><span><span>References</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1274091951%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1274091951%2FProperties%2F-862521613">allReferences</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileReference///PointingToDeclaration/">FileReference</span><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1855278997%2FProperties%2F-862521613" anchor-label="defaultContexts" id="1855278997%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1855278997%2FProperties%2F-862521613"><span>default</span><wbr><span><span>Contexts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1855278997%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#1855278997%2FProperties%2F-862521613">defaultContexts</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiFileSystemItem///PointingToDeclaration/">PsiFileSystemItem</span><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1685038210%2FProperties%2F-862521613" anchor-label="element" id="-1685038210%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1685038210%2FProperties%2F-862521613"><span><span>element</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1685038210%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">var </span><a href="index.html#-1685038210%2FProperties%2F-862521613">element</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-18425586%2FProperties%2F-862521613" anchor-label="isAbsolutePathReference" id="-18425586%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-absolute-path-reference.html"><span>is</span><wbr><span>Absolute</span><wbr><span>Path</span><wbr><span><span>Reference</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-18425586%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="is-absolute-path-reference.html">isAbsolutePathReference</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1882125630%2FProperties%2F-862521613" anchor-label="isCaseSensitive" id="1882125630%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1882125630%2FProperties%2F-862521613"><span>is</span><wbr><span>Case</span><wbr><span><span>Sensitive</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1882125630%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#1882125630%2FProperties%2F-862521613">isCaseSensitive</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1355700000%2FProperties%2F-862521613" anchor-label="isEmptyPathAllowed" id="-1355700000%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1355700000%2FProperties%2F-862521613"><span>is</span><wbr><span>Empty</span><wbr><span>Path</span><wbr><span><span>Allowed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1355700000%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">var </span><a href="index.html#-1355700000%2FProperties%2F-862521613">isEmptyPathAllowed</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-747841895%2FProperties%2F-862521613" anchor-label="isEndingSlashNotAllowed" id="-747841895%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-747841895%2FProperties%2F-862521613"><span>is</span><wbr><span>Ending</span><wbr><span>Slash</span><wbr><span>Not</span><wbr><span><span>Allowed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-747841895%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-747841895%2FProperties%2F-862521613">isEndingSlashNotAllowed</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1283413627%2FProperties%2F-862521613" anchor-label="lastReference" id="-1283413627%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1283413627%2FProperties%2F-862521613"><span>last</span><wbr><span><span>Reference</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1283413627%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1283413627%2FProperties%2F-862521613">lastReference</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileReference///PointingToDeclaration/">FileReference</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1616686986%2FProperties%2F-862521613" anchor-label="pathString" id="1616686986%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1616686986%2FProperties%2F-862521613"><span>path</span><wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1616686986%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="com.intellij.openapi.util/NlsSafe///PointingToDeclaration/"><span class="token annotation builtin">NlsSafe</span></span></div><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span></div></div><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#1616686986%2FProperties%2F-862521613">pathString</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="com.intellij.openapi.util/NlsSafe///PointingToDeclaration/"><span class="token annotation builtin">NlsSafe</span></span>&nbsp;<span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="575895396%2FProperties%2F-862521613" anchor-label="separatorString" id="575895396%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#575895396%2FProperties%2F-862521613"><span>separator</span><wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="575895396%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#575895396%2FProperties%2F-862521613">separatorString</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1436349525%2FProperties%2F-862521613" anchor-label="startInElement" id="-1436349525%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1436349525%2FProperties%2F-862521613"><span>start</span><wbr><span>In</span><wbr><span><span>Element</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1436349525%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-1436349525%2FProperties%2F-862521613">startInElement</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-609942204%2FProperties%2F-862521613" anchor-label="suitableFileTypes" id="-609942204%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-609942204%2FProperties%2F-862521613"><span>suitable</span><wbr><span>File</span><wbr><span><span>Types</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-609942204%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#-609942204%2FProperties%2F-862521613">suitableFileTypes</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/NotNull///PointingToDeclaration/"><span class="token annotation builtin">NotNull</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span class="token keyword">out </span><span data-unresolved-link="com.intellij.openapi.fileTypes/FileType///PointingToDeclaration/">FileType</span><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="453097003%2FProperties%2F-862521613" anchor-label="targetContexts" id="453097003%2FProperties%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#453097003%2FProperties%2F-862521613"><span>target</span><wbr><span><span>Contexts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="453097003%2FProperties%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="index.html#453097003%2FProperties%2F-862521613">targetContexts</a><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Unmodifiable///PointingToDeclaration/"><span class="token annotation builtin">Unmodifiable</span></span>&nbsp;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileTargetContext///PointingToDeclaration/">FileTargetContext</span><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="720648256%2FFunctions%2F-862521613" anchor-label="absoluteUrlNeedsStartSlash" id="720648256%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#720648256%2FFunctions%2F-862521613"><span>absolute</span><wbr><span>Url</span><wbr><span>Needs</span><wbr><span>Start</span><wbr><span><span>Slash</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="720648256%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#720648256%2FFunctions%2F-862521613"><span class="token function">absoluteUrlNeedsStartSlash</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-827277979%2FFunctions%2F-862521613" anchor-label="addCustomization" id="-827277979%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-827277979%2FFunctions%2F-862521613"><span>add</span><wbr><span><span>Customization</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-827277979%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="index.html#-827277979%2FFunctions%2F-862521613">Option</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token operator">&gt; </span><a href="index.html#-827277979%2FFunctions%2F-862521613"><span class="token function">addCustomization</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/CustomizableReferenceProvider.CustomizationKey///PointingToDeclaration/">CustomizableReferenceProvider.CustomizationKey</span><span class="token operator">&lt;</span><a href="index.html#-827277979%2FFunctions%2F-862521613">Option</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="index.html#-827277979%2FFunctions%2F-862521613">Option</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1897819353%2FFunctions%2F-862521613" anchor-label="computeDefaultContexts" id="1897819353%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="compute-default-contexts.html"><span>compute</span><wbr><span>Default</span><wbr><span><span>Contexts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1897819353%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="compute-default-contexts.html"><span class="token function">computeDefaultContexts</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><span data-unresolved-link="com.intellij.psi/PsiFileSystemItem///PointingToDeclaration/">PsiFileSystemItem</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1693384540%2FFunctions%2F-862521613" anchor-label="couldBeConvertedTo" id="1693384540%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1693384540%2FFunctions%2F-862521613"><span>could</span><wbr><span>Be</span><wbr><span>Converted</span><wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1693384540%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1693384540%2FFunctions%2F-862521613"><span class="token function">couldBeConvertedTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">relative<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1850944457%2FFunctions%2F-862521613" anchor-label="createFileReference" id="-1850944457%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-file-reference.html"><span>create</span><wbr><span>File</span><wbr><span><span>Reference</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1850944457%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="create-file-reference.html"><span class="token function">createFileReference</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">range<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.util/TextRange///PointingToDeclaration/">TextRange</span><span class="token punctuation">, </span></span><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">text<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileReference///PointingToDeclaration/">FileReference</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1080962953%2FFunctions%2F-862521613" anchor-label="getReference" id="1080962953%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1080962953%2FFunctions%2F-862521613"><span>get</span><wbr><span><span>Reference</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1080962953%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1080962953%2FFunctions%2F-862521613"><span class="token function">getReference</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.intellij.psi.impl.source.resolve.reference.impl.providers/FileReference///PointingToDeclaration/">FileReference</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-18425586%2FFunctions%2F-862521613" anchor-label="isAbsolutePathReference" id="-18425586%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-absolute-path-reference.html"><span>is</span><wbr><span>Absolute</span><wbr><span>Path</span><wbr><span><span>Reference</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-18425586%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="is-absolute-path-reference.html"><span class="token function">isAbsolutePathReference</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1808062834%2FFunctions%2F-862521613" anchor-label="resolve" id="-1808062834%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1808062834%2FFunctions%2F-862521613"><span><span>resolve</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1808062834%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1808062834%2FFunctions%2F-862521613"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="org.jetbrains.annotations/Nullable///PointingToDeclaration/"><span class="token annotation builtin">Nullable</span></span>&nbsp;</span><span data-unresolved-link="com.intellij.psi/PsiFileSystemItem///PointingToDeclaration/">PsiFileSystemItem</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1989850137%2FFunctions%2F-862521613" anchor-label="supportsExtendedCompletion" id="-1989850137%2FFunctions%2F-862521613" data-filterable-set=":plugin/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":plugin/main" data-filterable-set=":plugin/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1989850137%2FFunctions%2F-862521613"><span>supports</span><wbr><span>Extended</span><wbr><span><span>Completion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1989850137%2FFunctions%2F-862521613"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":plugin/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#-1989850137%2FFunctions%2F-862521613"><span class="token function">supportsExtendedCompletion</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsConfigWriter</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":utils/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":utils/main" data-filter=":utils/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="utils::org.pcsoft.ij.plugin.mkdocs.utils/MkDocsConfigWriter///PointingToDeclaration//-360489313">
+  <div class="breadcrumbs"><a href="../../index.html">utils</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.utils</a><span class="delimiter">/</span><span class="current">MkDocsConfigWriter</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Config</span><wbr><span><span>Writer</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">MkDocsConfigWriter</a></div><p class="paragraph">Writes the configuration keys the IDE side of the plugin has to change back into an MkDocs configuration file.</p><p class="paragraph">Writing is deliberately surgical: a change never rewrites a whole mapping or a whole sequence, it touches exactly the one node that has to change and leaves everything around it — the arrangement of the keys, the comments between and behind them, the indentation the author picked — byte for byte where it was. That is the reason a value is replaced through <span data-unresolved-link="org.jetbrains.yaml.psi/YAMLKeyValue/setValue/#org.jetbrains.yaml.psi.YAMLValue/PointingToDeclaration/">YAMLKeyValue.setValue</span> instead of replacing the key-value itself (which would take a trailing same-line comment with it), and the reason new lines are built with their final indentation and inserted into the document instead of being grafted in as freshly generated PSI.</p><p class="paragraph">The counterpart reading these keys is <a href="../-mk-docs-config/index.html">MkDocsConfig</a>.</p><p class="paragraph">Every function here must be called inside a write action — the caller owns it, because a change to the configuration usually belongs into the same undoable command as whatever triggered it. Every single function commits the document on its own; a caller changing several keys at once should use <a href="edit.html">edit</a>, which commits exactly once for the whole batch.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-628477168%2FFunctions%2F-360489313" anchor-label="addMappingItem" id="-628477168%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-mapping-item.html"><span>add</span><wbr><span>Mapping</span><wbr><span><span>Item</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-628477168%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="add-mapping-item.html"><span class="token function">addMappingItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">entries<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-pair/index.html">Pair</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Appends a mapping entry built from <a href="add-mapping-item.html">entries</a> to the sequence at <a href="add-mapping-item.html">path</a> of <a href="add-mapping-item.html">configFile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1125117009%2FFunctions%2F-360489313" anchor-label="addScalarItem" id="1125117009%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-scalar-item.html"><span>add</span><wbr><span>Scalar</span><wbr><span><span>Item</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1125117009%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="add-scalar-item.html"><span class="token function">addScalarItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Adds <a href="add-scalar-item.html">value</a> to the scalar sequence at <a href="add-scalar-item.html">path</a> of <a href="add-scalar-item.html">configFile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1461135333%2FFunctions%2F-360489313" anchor-label="edit" id="1461135333%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="edit.html"><span><span>edit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1461135333%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="edit.html"><span class="token function">edit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">block<span class="token operator">: </span><a href="../-mk-docs-config-edit-scope/index.html">MkDocsConfigEditScope</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Runs <a href="edit.html">block</a> against <a href="edit.html">configFile</a> and commits the result exactly once.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1075005432%2FFunctions%2F-360489313" anchor-label="itemCount" id="-1075005432%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="item-count.html"><span>item</span><wbr><span><span>Count</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1075005432%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="item-count.html"><span class="token function">itemCount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Returns how many entries the sequence at <a href="item-count.html">path</a> of <a href="item-count.html">configFile</a> holds.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-477764482%2FFunctions%2F-360489313" anchor-label="promoteScalarToMapping" id="-477764482%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="promote-scalar-to-mapping.html"><span>promote</span><wbr><span>Scalar</span><wbr><span>To</span><wbr><span><span>Mapping</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-477764482%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="promote-scalar-to-mapping.html"><span class="token function">promoteScalarToMapping</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Turns the scalar at <a href="promote-scalar-to-mapping.html">path</a> into a mapping holding that scalar under <a href="promote-scalar-to-mapping.html">key</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2100908140%2FFunctions%2F-360489313" anchor-label="removeItem" id="-2100908140%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-item.html"><span>remove</span><wbr><span><span>Item</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2100908140%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="remove-item.html"><span class="token function">removeItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes the entry <a href="remove-item.html">index</a> from the sequence at <a href="remove-item.html">path</a> of <a href="remove-item.html">configFile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1349387385%2FFunctions%2F-360489313" anchor-label="removeKey" id="-1349387385%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-key.html"><span>remove</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1349387385%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="remove-key.html"><span class="token function">removeKey</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes the top level key <a href="remove-key.html">key</a> from <a href="remove-key.html">configFile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-501844400%2FFunctions%2F-360489313" anchor-label="removeNestedKey" id="-501844400%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-nested-key.html"><span>remove</span><wbr><span>Nested</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-501844400%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="remove-nested-key.html"><span class="token function">removeNestedKey</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes the key addressed by the dotted <a href="remove-nested-key.html">path</a> from <a href="remove-nested-key.html">configFile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="143789850%2FFunctions%2F-360489313" anchor-label="removeScalarItem" id="143789850%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-scalar-item.html"><span>remove</span><wbr><span>Scalar</span><wbr><span><span>Item</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="143789850%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="remove-scalar-item.html"><span class="token function">removeScalarItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Removes <a href="remove-scalar-item.html">value</a> from the scalar sequence at <a href="remove-scalar-item.html">path</a> of <a href="remove-scalar-item.html">configFile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-537102132%2FFunctions%2F-360489313" anchor-label="removeTheme" id="-537102132%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-theme.html"><span>remove</span><wbr><span><span>Theme</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-537102132%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="remove-theme.html"><span class="token function">removeTheme</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes the theme of the site described by <a href="remove-theme.html">configFile</a>, so MkDocs falls back to its built-in one.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="986787738%2FFunctions%2F-360489313" anchor-label="setItemScalar" id="986787738%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-item-scalar.html"><span>set</span><wbr><span>Item</span><wbr><span><span>Scalar</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="986787738%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-item-scalar.html"><span class="token function">setItemScalar</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Sets <a href="set-item-scalar.html">key</a> of the mapping entry <a href="set-item-scalar.html">index</a> of the sequence at <a href="set-item-scalar.html">path</a> of <a href="set-item-scalar.html">configFile</a> to <a href="set-item-scalar.html">value</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="41598275%2FFunctions%2F-360489313" anchor-label="setNestedBoolean" id="41598275%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-nested-boolean.html"><span>set</span><wbr><span>Nested</span><wbr><span><span>Boolean</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="41598275%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-nested-boolean.html"><span class="token function">setNestedBoolean</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Sets the key addressed by the dotted <a href="set-nested-boolean.html">path</a> of <a href="set-nested-boolean.html">configFile</a> to the boolean <a href="set-nested-boolean.html">value</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1675166454%2FFunctions%2F-360489313" anchor-label="setNestedScalar" id="1675166454%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-nested-scalar.html"><span>set</span><wbr><span>Nested</span><wbr><span><span>Scalar</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1675166454%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-nested-scalar.html"><span class="token function">setNestedScalar</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Sets the key addressed by the dotted <a href="set-nested-scalar.html">path</a> of <a href="set-nested-scalar.html">configFile</a> to the scalar <a href="set-nested-scalar.html">value</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1608008907%2FFunctions%2F-360489313" anchor-label="setScalarItem" id="-1608008907%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-scalar-item.html"><span>set</span><wbr><span>Scalar</span><wbr><span><span>Item</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1608008907%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-scalar-item.html"><span class="token function">setScalarItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">index<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the entry <a href="set-scalar-item.html">index</a> of the scalar sequence at <a href="set-scalar-item.html">path</a> of <a href="set-scalar-item.html">configFile</a> to <a href="set-scalar-item.html">value</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="763059176%2FFunctions%2F-360489313" anchor-label="setScalarKey" id="763059176%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-scalar-key.html"><span>set</span><wbr><span>Scalar</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="763059176%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-scalar-key.html"><span class="token function">setScalarKey</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the top level key <a href="set-scalar-key.html">key</a> of <a href="set-scalar-key.html">configFile</a> to the scalar <a href="set-scalar-key.html">value</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-460069020%2FFunctions%2F-360489313" anchor-label="setThemeName" id="-460069020%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-theme-name.html"><span>set</span><wbr><span>Theme</span><wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-460069020%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-theme-name.html"><span class="token function">setThemeName</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">project<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.project/Project///PointingToDeclaration/">Project</span><span class="token punctuation">, </span></span><span class="parameter ">configFile<span class="token operator">: </span><span data-unresolved-link="com.intellij.openapi.vfs/VirtualFile///PointingToDeclaration/">VirtualFile</span><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the theme of the site described by <a href="set-theme-name.html">configFile</a> to <a href="set-theme-name.html">name</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2082522307%2FFunctions%2F-360489313" anchor-label="yamlScalar" id="-2082522307%2FFunctions%2F-360489313" data-filterable-set=":utils/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":utils/main" data-filterable-set=":utils/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="yaml-scalar.html"><span>yaml</span><wbr><span><span>Scalar</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2082522307%2FFunctions%2F-360489313"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":utils/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword">fun </span><a href="yaml-scalar.html"><span class="token function">yamlScalar</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Renders <a href="yaml-scalar.html">value</a> as a YAML scalar.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

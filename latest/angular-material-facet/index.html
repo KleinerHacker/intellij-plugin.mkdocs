@@ -1,0 +1,1762 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="JetBrains plugin providing MkDocs support in all IntelliJ-platform IDEs">
+      
+      
+        <meta name="author" content="PCSoft">
+      
+      
+      
+        <link rel="prev" href="../mkdocs-facet/">
+      
+      
+        <link rel="next" href="../configuration/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Angular Material - MkDocs – JetBrains Plugin</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#angular-material" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="MkDocs – JetBrains Plugin" class="md-header__button md-logo" aria-label="MkDocs – JetBrains Plugin" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MkDocs – JetBrains Plugin
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Angular Material
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="MkDocs – JetBrains Plugin" class="md-nav__button md-logo" aria-label="MkDocs – JetBrains Plugin" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    MkDocs – JetBrains Plugin
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Facets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Facets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mkdocs-facet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MKDocs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Angular Material
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Angular Material
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-facet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The facet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-settings-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The settings pages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The settings pages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appearance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-the-creation-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In the creation wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-written-and-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is written, and when
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editing-the-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing the configuration file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markdown-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown extensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#icons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Icons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#style-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Style sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-palette-and-the-style-sheets-read-against-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The palette and the style sheets, read against each other
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ground-of-a-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ground of a palette
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-a-key-comes-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where a key comes from
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where a key comes from">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-the-file-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In the file itself
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template overrides
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration (mkdocs.yml)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDE Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDE Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../toolwindow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Page tool window
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dokka/html/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../licences/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-facet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The facet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-settings-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The settings pages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The settings pages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appearance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-the-creation-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In the creation wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-written-and-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is written, and when
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editing-the-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing the configuration file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markdown-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown extensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#icons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Icons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#style-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Style sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-palette-and-the-style-sheets-read-against-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The palette and the style sheets, read against each other
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ground-of-a-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ground of a palette
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-a-key-comes-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where a key comes from
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where a key comes from">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-the-file-itself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In the file itself
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template overrides
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="angular-material">Angular Material</h1>
+<p>A site rendered with <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a> carries the
+<em>MkDocs Angular Material</em> facet, next to the <em>MkDocs</em> facet described in the
+<a href="../mkdocs-facet/#the-mkdocs-facet">Overview</a>. This page describes what that facet adds to the IDE: the settings
+pages it brings to the Project Structure dialog and to the site creation wizard, and the support it adds to
+the editor.</p>
+<div class="admonition note">
+<p class="admonition-title">What a setting means is documented by the theme</p>
+<p>Nothing on this page explains what <code>navigation.instant</code> does to a site or which colour <code>deep-purple</code> is.
+That is the theme's own documentation, it is excellent, and it is what the plugin follows:</p>
+<ul>
+<li><a href="https://squidfunk.github.io/mkdocs-material/setup/">Setup</a> — every key of <code>theme</code> and <code>extra</code></li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/">Changing the colors</a> and
+  <a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/">Changing the fonts</a></li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/">Setting up navigation</a> —
+  the <code>navigation.*</code> feature flags</li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/setup/extensions/">Extensions</a> — the Markdown extensions</li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/">Icons and emojis</a></li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/customization/">Customization</a> — style sheets and
+  template overrides</li>
+</ul>
+<p>The descriptions shown in the completion popup, in <em>Ctrl+Q</em> and below the feature flags are one-line
+summaries of those pages, not a replacement for them.</p>
+</div>
+<h2 id="the-facet">The facet</h2>
+<p>The facet appears only on a module that holds an MkDocs site, and it is removed together with the <em>MkDocs</em>
+facet when the site disappears. The dialog lists facets flat rather than as a tree, so the name and the icon
+are what tie the two together: the facet is named after MkDocs and sorts directly beside it, and it wears the
+MkDocs logo with the Material glyph badged into the corner.</p>
+<p>The facet and the configuration file say the same thing, and either one can be the one that changes:</p>
+<table>
+<thead>
+<tr>
+<th>You change</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>theme.name: material</code> appears in <code>mkdocs.yml</code></td>
+<td>the next detection run adds the facet</td>
+</tr>
+<tr>
+<td>the theme is taken out or switched to another one</td>
+<td>the detection removes the facet again</td>
+</tr>
+<tr>
+<td>the facet is added in <em>Project Structure</em></td>
+<td><code>theme.name: material</code> is written into <code>mkdocs.yml</code></td>
+</tr>
+<tr>
+<td>the facet is removed in <em>Project Structure</em></td>
+<td>the whole <code>theme</code> key is taken out of <code>mkdocs.yml</code></td>
+</tr>
+</tbody>
+</table>
+<p>Nothing is written when the file already says what the facet says, so a facet the detection itself created
+leaves the file untouched.</p>
+<p>Both shapes MkDocs accepts are recognised, and the name is compared without regard to case:</p>
+<pre><code class="language-yaml">theme:
+  name: material
+</code></pre>
+<pre><code class="language-yaml">theme: material
+</code></pre>
+<p>Only the theme name is touched. Settings written next to it survive:</p>
+<pre><code class="language-yaml">theme:
+  name: material     # ← replaced
+  highlightjs: true  # ← kept
+</code></pre>
+<p>A <code>theme</code> written as a plain scalar has nowhere to keep the name, so adding the facet turns it into a
+mapping. A file without a <code>theme</code> at all gets the key appended. Removing the facet removes the <code>theme</code> key as
+a whole, and MkDocs falls back to its built-in theme.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The facet records what <code>mkdocs.yml</code> declares — it does not install the theme. The
+<a href="https://squidfunk.github.io/mkdocs-material/getting-started/"><code>mkdocs-material</code> package</a> still has to be
+available to the MkDocs build itself.</p>
+</div>
+<h2 id="the-settings-pages">The settings pages</h2>
+<p>The settings of the theme are shown by <strong>five tabs</strong> in
+<em>File → Project Structure → Modules → &lt;module&gt; → Facets → MkDocs Angular Material</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overview</td>
+<td>what the facet stands for; nothing to edit</td>
+</tr>
+<tr>
+<td>Appearance</td>
+<td>the colour palette and the fonts</td>
+</tr>
+<tr>
+<td>Features</td>
+<td><code>theme.features</code>, one tick per flag</td>
+</tr>
+<tr>
+<td>Assets</td>
+<td>logo, favicon, override directory, language, writing direction</td>
+</tr>
+<tr>
+<td>Extensions</td>
+<td>the Markdown extensions the theme builds on</td>
+</tr>
+</tbody>
+</table>
+<h3 id="overview">Overview</h3>
+<p>The first tab shows the theme the facet was detected from and nothing else. There is no field on it, because
+there is no decision to make here: the facet mirrors <code>theme.name</code> of the configuration file, and adding or
+removing the facet is done in the tree on the left of the dialog rather than on the tab.</p>
+<h3 id="appearance">Appearance</h3>
+<p><img alt="The Appearance page" src="../assets/images/facet_material_appearance.png" /></p>
+<p>The shape of the palette is chosen first, because it decides what the rest of the page is worth:</p>
+<table>
+<thead>
+<tr>
+<th>Colour palette</th>
+<th>What is written to <code>theme.palette</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Theme default</td>
+<td>nothing — the theme paints in its own colours</td>
+</tr>
+<tr>
+<td>One palette</td>
+<td>a single mapping</td>
+</tr>
+<tr>
+<td>Light and dark, with a toggle</td>
+<td>a sequence of two mappings, each with its <code>toggle</code></td>
+</tr>
+</tbody>
+</table>
+<p>The second group of controls appears only in the two palette shape; in the other two there is no second
+palette to fill in. A palette left at <em>Theme default</em> leaves the key out of the file entirely instead of
+writing an empty one.</p>
+<p>Each palette carries three values:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Written to</th>
+<th>Offered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scheme</td>
+<td><code>scheme</code></td>
+<td>the two grounds the theme ships, light and dark</td>
+</tr>
+<tr>
+<td>Primary colour</td>
+<td><code>primary</code></td>
+<td>the primary colours of the theme, each with a swatch of its shade</td>
+</tr>
+<tr>
+<td>Accent colour</td>
+<td><code>accent</code></td>
+<td>the accent colours, a shorter set — the theme has no accent for the neutral colours</td>
+</tr>
+</tbody>
+</table>
+<p><em>Theme default</em> is offered for both colours and is not a colour at all: it leaves the key out and lets the
+theme decide. The swatch is what makes the list readable — <code>indigo</code> and <code>deep-purple</code> say very little on their
+own. Which colour is which is
+<a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/">shown by the theme</a>.</p>
+<p><strong>Fonts</strong> follow the tick that loads them: <code>theme.font</code> is written only while <em>Load fonts from Google Fonts</em>
+is on, and switching it off writes <code>font: false</code>, which is how the theme is told to load nothing. Both drop
+downs are editable on purpose. The families they offer are a selection, not a rule — the theme loads whatever
+family is named from <a href="https://fonts.google.com/">Google Fonts</a> — so a family typed by hand is kept exactly as
+it was typed.</p>
+<div class="admonition note">
+<p class="admonition-title">A palette these controls cannot represent</p>
+<p>A site whose <code>theme.palette</code> has a shape outside the three above — three entries, a media query of its
+own — switches every palette control off and says so above them. The fonts stay editable. The palette is
+then read-only and is left untouched by <em>Apply</em>: writing an approximation back would take a working setup
+apart, and neither half of the file would say which of the two was meant.</p>
+</div>
+<h3 id="features">Features</h3>
+<p><img alt="The Features page" src="../assets/images/facet_material_features.png" /></p>
+<p>One tick per flag of <code>theme.features</code>, grouped by the part of the page the flag changes, each with a line
+saying what it does — the long form is under
+<a href="https://squidfunk.github.io/mkdocs-material/setup/">Setup</a>. Two rules keep the selection consistent, and both
+only ever <em>prevent</em> a tick:</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What the page does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A flag contradicts one that is ticked</td>
+<td>it is disabled, and the tooltip names the blocker</td>
+</tr>
+<tr>
+<td>A flag needs another one that is not ticked</td>
+<td>it is disabled, and the tooltip names the prerequisite</td>
+</tr>
+<tr>
+<td>A prerequisite is unticked</td>
+<td>what depends on it is unticked with it</td>
+</tr>
+<tr>
+<td>The file declares two flags that contradict each other</td>
+<td>both stay ticked and stay enabled</td>
+</tr>
+</tbody>
+</table>
+<p>Nothing is ticked on the user's behalf: a prerequisite is named rather than switched on silently. The reverse
+direction is the one place the page acts on its own, because a dependent left ticked and disabled would have
+no way back.</p>
+<p>A flag that only works with the
+<a href="https://squidfunk.github.io/mkdocs-material/insiders/">Insiders edition</a> of the theme is shown greyed out and
+says so in its tooltip. A flag the configuration file declares that this plugin does not know — a newer
+version of the theme brings new ones — is not listed here and survives <em>Apply</em> untouched.</p>
+<h3 id="assets">Assets</h3>
+<p><img alt="The Assets page" src="../assets/images/facet_material_assets.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Written to</th>
+<th>Relative to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logo</td>
+<td><code>theme.logo</code></td>
+<td>the documentation directory</td>
+</tr>
+<tr>
+<td>Favicon</td>
+<td><code>theme.favicon</code></td>
+<td>the documentation directory</td>
+</tr>
+<tr>
+<td>Override directory</td>
+<td><code>theme.custom_dir</code></td>
+<td>the configuration file</td>
+</tr>
+<tr>
+<td>Language</td>
+<td><code>theme.language</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Writing direction</td>
+<td><code>theme.direction</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The three paths are written relative, and to two different places — that is a rule of MkDocs, not a choice of
+this page. The file choosers therefore start in the right directory and turn what was picked back into a
+relative path; an absolute one would work on the machine that picked it and nowhere else. A path typed by hand
+is left exactly as typed, because a site may well point at something that does not exist yet.</p>
+<p>The writing direction offers <em>Theme default</em>, <code>ltr</code> and <code>rtl</code>; <em>Theme default</em> leaves the key out. An empty
+field is not the same as a missing key, so a field naming nothing removes its key rather than writing an empty
+value. Which language codes the theme ships translations for is listed under
+<a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-language/">Changing the language</a>.</p>
+<p>The override directory is the same directory the action <em>Material Template Overrides…</em> fills — see
+<a href="#template-overrides">Template overrides</a>.</p>
+<h3 id="extensions">Extensions</h3>
+<p><img alt="The Extensions page" src="../assets/images/facet_material_extensions.png" /></p>
+<p>Every Markdown extension the theme builds on, with what it is worth to <em>this</em> site and whether the site lists
+it. Enabling happens in the row itself, through the tick in the last column.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Required</td>
+<td>something in the configuration forces it; without it that something does not render</td>
+</tr>
+<tr>
+<td>Recommended</td>
+<td>nothing forces it, but the theme builds on it wherever it is there</td>
+</tr>
+<tr>
+<td>Optional</td>
+<td>it merely widens what an author can write</td>
+</tr>
+</tbody>
+</table>
+<p>Nothing is required by the theme as such — it renders a plain site without a single entry under
+<code>markdown_extensions</code>. An extension becomes <em>required</em> only once something asks for it, and here that means a
+flag ticked on the Features page: the status column is computed against the current selection of that page, so
+ticking <code>content.code.annotate</code> turns <code>pymdownx.superfences</code> from a recommendation into a requirement while
+both pages are open.</p>
+<p>An extension the file configures with options of its own — <code>- toc:</code> with a <code>permalink</code> below it — is kept with
+its options: the table only ever sees the identifier. What each extension adds to the Markdown of a site is
+documented under <a href="https://squidfunk.github.io/mkdocs-material/setup/extensions/">Extensions</a>.</p>
+<h3 id="in-the-creation-wizard">In the creation wizard</h3>
+<p><em>New → MkDocs Site</em> offers <strong>Angular Material</strong> in its feature step. Switching it on writes the theme into the
+configuration file of the new site and attaches the facet right away, so the finished site carries it without
+waiting for the next detection run.</p>
+<p>The four editable pages appear there a second time: they are appended behind the feature step, in the same
+order, and unticking the feature takes them out again. They are the same page objects rather than a second
+implementation of them — what one place can do, the other can do too, and neither can drift away from the
+other. What is filled in there lands in the <code>theme</code> block of the file the wizard writes.</p>
+<h3 id="what-is-written-and-when">What is written, and when</h3>
+<p>The configuration file is the single source of truth, and the facet state is not: opening a tab reads
+<code>mkdocs.yml</code>, and <em>Apply</em> is compared against exactly that snapshot. A tab filling itself from remembered
+state would show a palette the file stopped carrying two commits ago.</p>
+<p><em>Apply</em> touches only the keys that really differ, inside one undoable command. The comments of the author, the
+keys of other plugins and the options below a Markdown extension therefore survive an <em>Apply</em> that changed a
+single colour. A page whose values equal the snapshot writes nothing at all.</p>
+<h2 id="editing-the-configuration-file">Editing the configuration file</h2>
+<p>MkDocs itself knows next to nothing about the theme it renders with. Its schema describes <code>theme</code> with a
+handful of keys and <code>extra</code> with none at all, which is correct for MkDocs and of very little use here: those
+two blocks are where a Material site keeps most of its configuration. A site carrying the facet is therefore
+edited against a <strong>refined schema</strong>, which describes them properly — so the keys are completed, an unknown one
+is reported, and every offered value comes with a line saying what it does.</p>
+<p>What the refinement covers, and where the theme documents it:</p>
+<table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Documented under</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>theme.features</code></td>
+<td>all feature flags of the theme — <a href="https://squidfunk.github.io/mkdocs-material/setup/">Setup</a></td>
+</tr>
+<tr>
+<td><code>theme.palette</code></td>
+<td><a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/">Changing the colors</a></td>
+</tr>
+<tr>
+<td><code>theme.font</code></td>
+<td><a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/">Changing the fonts</a></td>
+</tr>
+<tr>
+<td><code>theme.language</code>, <code>theme.direction</code></td>
+<td><a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-language/">Changing the language</a></td>
+</tr>
+<tr>
+<td><code>theme.icon</code></td>
+<td><a href="https://squidfunk.github.io/mkdocs-material/setup/changing-the-logo-and-icons/">Changing the logo and icons</a></td>
+</tr>
+<tr>
+<td><code>theme.logo</code>, <code>theme.favicon</code>, <code>theme.custom_dir</code></td>
+<td>the assets and the override directory</td>
+</tr>
+<tr>
+<td><code>extra</code></td>
+<td>the Material part of it: <code>social</code>, <code>analytics</code>, <code>consent</code>, <code>generator</code> and <code>status</code></td>
+</tr>
+</tbody>
+</table>
+<p>The palette is written either as a single mapping or as a sequence of them, the latter being what gives a site
+its light/dark toggle. Both forms are described the same way, because a colour offered in one and missing in
+the other would be an arbitrary difference. The colour names are the ones the theme actually ships, and
+primary and accent get their own sets — the accent set is the shorter one, the theme having no accent for the
+neutral colours.</p>
+<p>Every colour and both schemes <strong>explain themselves</strong>. A name says nothing about what it paints, so each value
+carries a one line description that reaches the completion popup and <em>Ctrl+Q</em> alike — on the offered value and
+on one already written into the file, where the popup shows the role it plays (primary or accent colour,
+ground of the palette) and the shade the swatch stands for.</p>
+<p>In the popup a colour is drawn as a <strong>square of its shade</strong>, badged with the mark of the theme like every
+other entry it contributes. The <code>custom</code> placeholder deliberately keeps the plain mark: that colour is defined
+by the site itself through the <code>--md-*</code> custom properties of its own style sheet, so any square painted for it
+would show a shade that appears nowhere in the built site.</p>
+<p>The <code>media</code> of a palette is where the schema stops: its value is an ordinary CSS media query, handed to the
+<code>media</code> attribute of the style sheet the theme renders, so anything a browser accepts is legal there. Three of
+them are what the theme is built around, and those three are <strong>completed</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Query</th>
+<th>When the palette applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(prefers-color-scheme: light)</code></td>
+<td>the system is set to a light appearance</td>
+</tr>
+<tr>
+<td><code>(prefers-color-scheme: dark)</code></td>
+<td>the system is set to a dark appearance</td>
+</tr>
+<tr>
+<td><code>(prefers-color-scheme)</code></td>
+<td>the palette of the system preference itself, in a three palette setup</td>
+</tr>
+</tbody>
+</table>
+<p>The value arrives in the file <strong>in quotes</strong>, because <code>(prefers-color-scheme: light)</code> carries a colon followed
+by a space and YAML would read the rest of the line as a mapping.</p>
+<p>A query outside those three is reported as a <strong>warning</strong> — never as an error, and the inspection can be
+switched off under <em>Settings → Editor → Inspections → MkDocs</em>. Nothing about such a file is broken; what it
+loses is the colour scheme toggle, which has nothing to act on and leaves the palette either always active or
+never. There is deliberately no quick fix: which of the three was meant is not something the file says.</p>
+<p>The refinement is bound to the facet. A site on another theme keeps the plain MkDocs schema and is offered
+nothing the theme rendering it would not read; take the theme out of <code>mkdocs.yml</code> and the refinement goes with
+it. Where it does apply it does not replace the MkDocs schema but stands in front of it — both are in force,
+so the keys MkDocs defines keep their completion and their documentation exactly as before.</p>
+<p>Two keys under <code>extra</code> are deliberately left open:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Left to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>extra.version</code></td>
+<td>the planned Mike feature</td>
+</tr>
+<tr>
+<td><code>extra.alternate</code></td>
+<td>the planned I18N feature</td>
+</tr>
+</tbody>
+</table>
+<p>They are not part of the theme, and reporting them as unknown while the features that own them are still being
+built would be wrong in the one direction that matters — a warning on a line that is perfectly correct.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The MkDocs schema the refinement builds on is bundled with the plugin instead of being fetched, so the
+completion in a Material site works offline and cannot change under you between two IDE starts.</p>
+</div>
+<h2 id="markdown-extensions">Markdown extensions</h2>
+<p>The rule the <a href="#extensions">Extensions</a> page applies is applied to the configuration file as well. An extension
+the configuration forces — a feature flag such as <code>content.code.annotate</code> renders nothing without
+<code>pymdownx.superfences</code>, <code>attr_list</code> and <code>md_in_html</code> — is reported as an <strong>error</strong> in a banner above
+<code>mkdocs.yml</code>, one per extension, each with a fix that adds it together with the options it needs, because
+<code>pymdownx.tabbed</code> without <code>alternate_style: true</code> renders the old tab style and looks broken.</p>
+<p>Everything the theme merely builds on is offered separately as a <strong>weak warning</strong>, and that inspection can be
+switched off entirely under <em>Settings → Editor → Inspections → MkDocs</em>. Keeping the Markdown of a site plain
+is a decision, not a defect.</p>
+<p>Completion under <code>markdown_extensions</code> offers the extensions the theme builds upon, each with its one line
+description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
+extension outside that list is left alone: a site is free to install one of its own.</p>
+<p>One level deeper — <code>permalink</code> below <code>- toc:</code> — the <strong>options</strong> of that extension are completed, each with the
+kind of value it takes and what it does. Where the value is a flag or a fixed set of choices, that value is
+offered as well. No schema describes this level, which is why it stayed empty before.</p>
+<p>Pressing <strong>Ctrl+Q</strong> on an entry of <code>markdown_extensions</code> explains what the extension does and links to its
+own documentation — the theme's page under
+<a href="https://squidfunk.github.io/mkdocs-material/setup/extensions/">Extensions</a>, or the
+<a href="https://python-markdown.github.io/extensions/">Python Markdown</a> and
+<a href="https://facelessuser.github.io/pymdown-extensions/">PyMdown Extensions</a> documentation behind it. On an option
+below such an entry it explains what the option does, what it takes, which values it accepts, what the
+extension falls back to without it and what the theme recommends for it.</p>
+<h2 id="icons">Icons</h2>
+<p>The icons the theme offers are the SVG files of the installed <code>mkdocs-material</code> package, so they are read
+from the installation rather than carried as a list — which sets they are and how a page writes them is
+documented under
+<a href="https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/">Icons and emojis</a>. They are completed at
+every place <code>mkdocs.yml</code> names an icon — every key below <code>theme.icon</code>, the mappings <code>theme.icon.admonition</code>
+and <code>theme.icon.tag</code> included, the <code>toggle.icon</code> of a palette, the <code>icon</code> of an entry of <code>extra.social</code> and the
+<code>icon</code> of a rating of <code>extra.analytics.feedback</code> — and in the pages of the site as the shorthands
+<code>:material-check:</code>, <code>:fontawesome-brands-github:</code> and their like. Each entry shows the drawing next to the
+name, and an entry that is an icon rather than a set states its shorthand at the right edge of the row.</p>
+<p>An icon already written is shown as well: the drawing sits in front of the name in <code>mkdocs.yml</code> and in front
+of the shorthand on a page, so a file full of names such as <code>material/weather-sunny</code> can be read at a glance.
+A name the installed theme does not offer stays without a drawing, which is what makes a typo visible.</p>
+<p>The two spellings of one icon are shown together as well: behind a name in <code>mkdocs.yml</code> stands the shorthand
+a page writes the same icon with — <code>material/pencil</code> as <code>:material-pencil:</code> — so the spelling of the pages is
+read off instead of being derived by hand. It follows the same rule as the drawing: a name the installation
+does not offer gets nothing. Every one of these hints can be switched off separately under
+<em>Settings → Editor → Inlay Hints</em>.</p>
+<p>Where the theme is installed is asked of pip: the plugin runs <code>pip show mkdocs-material</code> and reads the
+<code>Location</code> it reports, then takes the icon names out of the <code>RECORD</code> that installation wrote. For every setup
+pip does not answer for — an interpreter somewhere else, a container mount — the installation directory can be
+chosen under <em>Tools → MkDocs → Material</em>, which lists what was found and takes a directory of its own; a
+directory chosen by hand is checked against the metadata pip wrote there before it is accepted; see
+<a href="../settings/">Settings</a>.</p>
+<p>An installation is read once and then kept, because it does not change by itself. A theme installed next to a
+running IDE is picked up by asking for it: the <em>Reload installation</em> button on the settings page, the action
+<em>Reload Material for MkDocs Installation</em> in <em>Find Action</em>, or <em>Reload the installed icons</em> in the menu at the
+foot of the icon completion popup — see <a href="../settings/#reading-the-installation-again">Settings</a>.</p>
+<p>The drawings themselves are monochrome glyphs and are painted in the colour the IDE writes its text in, so
+they read in a light and in a dark theme alike.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Without an installed <code>mkdocs-material</code> nothing is offered, and <code>mkdocs.yml</code> carries a banner saying so,
+with a link to the settings page. That is the normal state of a fresh checkout whose virtual environment
+has not been created yet.</p>
+</div>
+<h2 id="style-sheets">Style sheets</h2>
+<p>A site is restyled beyond the palette by redefining the custom properties of the theme in a style sheet listed
+under <code>extra_css</code> — the properties and what they paint are documented under
+<a href="https://squidfunk.github.io/mkdocs-material/customization/">Customization</a>. All of them are completed inside
+CSS files, each with the part of the page it paints.</p>
+<h3 id="the-palette-and-the-style-sheets-read-against-each-other">The palette and the style sheets, read against each other</h3>
+<p><code>theme.palette</code> and those style sheets describe the same colours twice, and neither file shows the other. Two
+ways of writing the two halves down leave a site painted differently than it reads, and both are reported as a
+<strong>warning</strong> on the value in <code>mkdocs.yml</code>:</p>
+<table>
+<thead>
+<tr>
+<th>What is written</th>
+<th>What is reported</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>primary: custom</code> or <code>accent: custom</code>, and no style sheet defines <code>--md-primary-fg-color</code> / <code>--md-accent-fg-color</code></td>
+<td>nothing sets the colour, so the theme falls back to its own</td>
+</tr>
+<tr>
+<td>a named colour such as <code>indigo</code>, and a style sheet redefines the very property the theme paints it through</td>
+<td>which of the two paints the site is no longer readable in either file</td>
+</tr>
+</tbody>
+</table>
+<p>Which definitions count for a palette is decided by the <strong>ground it stands on</strong>. A rule below <code>:root</code> paints
+every palette of the site; a rule below <code>[data-md-color-scheme="slate"]</code> paints exactly the palette whose
+<code>scheme</code> names that identifier. So one palette of a colour scheme toggle may well be <code>custom</code> while its
+neighbour is not, and a definition written for the other ground is as good as none.</p>
+<p>The style sheets are read through the CSS parser of the IDE rather than searched as text, so a property behind
+an <code>@media</code>, inside a comment or below a selector of the author's own is judged for what it is. Neither
+warning carries a quick fix: which of the two halves was meant is not something the file says. Both are
+silent while <code>extra_css</code> names no readable style sheet.</p>
+<h3 id="the-ground-of-a-palette">The ground of a palette</h3>
+<p><code>theme.palette.scheme</code> is a name of the CSS and nothing else — it is the identifier written into
+<code>[data-md-color-scheme="…"]</code>. So the grounds <strong>offered in completion are the ones the style sheets a site
+loads actually paint</strong>, and a site loads two kinds of them:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>What it contributes</th>
+<th>How the popup names it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the style sheet the installed theme ships</td>
+<td><code>default</code> and <code>slate</code></td>
+<td><em>Material for MkDocs</em></td>
+</tr>
+<tr>
+<td>the files behind <code>extra_css</code></td>
+<td>every ground the site paints itself</td>
+<td>the file name</td>
+</tr>
+</tbody>
+</table>
+<p><code>default</code> and <code>slate</code> are therefore offered as what they are — two grounds a file of the theme paints, not two
+values the plugin has been told about. A version of the theme adding a third one adds it to the popup by
+itself. A ground the site repaints under a name of the theme is offered once, as the site's own, since that is
+the file worth editing.</p>
+<p><em>Ctrl+Click</em> on the value leads to the selector painting the ground, or to the style sheet of the theme
+shipping it — that file is minified, so there is nothing inside it worth landing on.</p>
+<p>A ground <strong>no style sheet paints is marked</strong> the way an unresolved name is: the theme writes it into
+<code>data-md-color-scheme</code>, no rule of any style sheet matches it, and the site keeps the colours it would have
+had anyway — a mistyped <code>slaet</code> was invisible before.</p>
+<p>Judged against both sources, so it works without a found installation as well: <code>default</code> and <code>slate</code> are then
+named out of the model rather than read out of the shipped style sheet. They stay valid without any
+<code>extra_css</code> — a site on <code>scheme: slate</code> and nothing else is the documented way to a dark site, not a mistake.</p>
+<h2 id="where-a-key-comes-from">Where a key comes from</h2>
+<p>A configuration file of a Material site mixes two vocabularies. Some keys are read by MkDocs and work with any
+theme; others exist only because this theme renders the site, and would be silently ignored the moment the
+theme changes. Nothing in the file says which is which.</p>
+<p>The plugin says it in the completion popup: every entry the theme alone reads — <code>theme.features</code>,
+<code>theme.palette</code>, <code>theme.font</code>, <code>theme.icon</code>, <code>theme.direction</code> and the theme's own keys below <code>extra</code> —
+carries the icon of the theme.</p>
+<p>What MkDocs reads stays unmarked, on purpose: <code>theme.name</code> names the theme, <code>theme.logo</code>, <code>theme.favicon</code> and
+<code>theme.custom_dir</code> are part of the theme contract of MkDocs, and <code>markdown_extensions</code> is a top level key of
+MkDocs. The theme uses all of them, but it does not own them.</p>
+<p>The mark appears everywhere the theme contributes an entry — in <code>mkdocs.yml</code>, on the icon
+shorthands in the pages and on the custom properties in the style sheets. An entry that already shows a
+drawing of its own, such as an icon name, keeps the drawing and carries the mark as a small badge on it.</p>
+<h3 id="in-the-file-itself">In the file itself</h3>
+<p>The completion answers the question while a key is being typed. In a file that is already written, the same
+answer is given in the gutter: the icon of the theme stands next to every key the theme brings along, next to
+everything written below such a key, and next to every value that carries the theme in itself — a feature flag
+of <code>theme.features</code>, a Markdown extension the theme describes. Hovering a mark says whether it stands for the
+key or for the value, and the marks can be switched off under
+<em>Settings → Editor → General → Gutter Icons → Material for MkDocs settings in mkdocs.yml</em>.</p>
+<p>A line can carry more than one mark, and that is the point of drawing them in the gutter rather than into the
+text: <code>markdown_extensions</code> is a key of MkDocs holding values of the theme, so the key stays plain while the
+value below it is marked. Where a key already carries the mark, the value next to it stays plain —
+<code>primary: indigo</code> names a colour, and that the setting is the theme's is said once, by the key.</p>
+<h2 id="template-overrides">Template overrides</h2>
+<p><em>Material Template Overrides…</em> in the context menu of a site root creates what an override needs, in one
+undoable step: the override directory, the selected files at exactly the path the theme reads them from, a
+Jinja scaffold inside each of them, and <code>theme.custom_dir</code> pointing at the directory. A file that is already
+there keeps its content.</p>
+<p>Offered are <code>main.html</code> and the partials for header, footer, navigation, copyright notice and logo. The
+scaffold of <code>main.html</code> extends <code>base.html</code> and opens a block with <code>{{ super() }}</code> in it; a partial is
+<em>replaced</em> rather than extended, which its scaffold says, because MkDocs includes the file of <code>custom_dir</code>
+instead of the original. Which blocks and partials exist, and what each of them wraps, is documented under
+<a href="https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme">Extending the theme</a>.</p>
+<p>Live templates for the Jinja constructs come with it: <code>mext</code>, <code>mblock</code>, <code>mblockr</code>, <code>minc</code> and <code>mif</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,419 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MkDocsMaterialPaletteKeys</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    mkdocs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.3.0
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":facets:material/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":facets:material/main" data-filter=":facets:material/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    mkdocs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="material::org.pcsoft.ij.plugin.mkdocs.material.config/MkDocsMaterialPaletteKeys///PointingToDeclaration//-1826006413">
+  <div class="breadcrumbs"><a href="../../index.html">material</a><span class="delimiter">/</span><a href="../index.html">org.pcsoft.ij.plugin.mkdocs.material.config</a><span class="delimiter">/</span><span class="current">MkDocsMaterialPaletteKeys</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mk</span><wbr><span>Docs</span><wbr><span>Material</span><wbr><span>Palette</span><wbr><span><span>Keys</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">MkDocsMaterialPaletteKeys</a></div><p class="paragraph">The values <code class="lang-kotlin">theme.palette</code> of <i>Material for MkDocs</i> is written with, and where each of them stands.</p><p class="paragraph">Four keys carry a value of a closed set: the ground the palette is painted on, the two colours, and the media query the palette is chosen by. Several features ask what a caret or a written value stands for — the completion putting a swatch on a colour, the quick documentation explaining it, the inspection judging a media query — and they must never answer it differently. So the places live here and nowhere else.</p><p class="paragraph">Decided on the whole path, never on the name of the nearest key: <code class="lang-kotlin">primary</code> means a colour of the theme below <code class="lang-kotlin">theme.palette</code>, and means whatever a plugin makes of it anywhere else. The sequence a palette of several entries is written as contributes nothing to that path, so both shapes of <code class="lang-kotlin">theme.palette</code> — the single mapping and the sequence — reach the same answer.</p><p class="paragraph">A media query is compared without its white space and without regard to case, the same way <a href="../-mk-docs-material-config/index.html">MkDocsMaterialConfig</a> compares the <code class="lang-kotlin">media</code> of a palette it reads: <code class="lang-kotlin">(prefers-color-scheme:dark)</code> and <code class="lang-kotlin">(prefers-color-scheme: dark)</code> are one query, and a browser reads them as one.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-394141582%2FClasslikes%2F-1826006413" anchor-label="Media" id="-394141582%2FClasslikes%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-media/index.html"><span><span>Media</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-394141582%2FClasslikes%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-media/index.html">Media</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>query<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>descriptionKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">One of the media queries a palette is chosen by.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="43502646%2FClasslikes%2F-1826006413" anchor-label="Role" id="43502646%2FClasslikes%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-role/index.html"><span><span>Role</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="43502646%2FClasslikes%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-role/index.html">Role</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-role/index.html">MkDocsMaterialPaletteKeys.Role</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">What the value below one of the keys of a palette stands for.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1877711850%2FProperties%2F-1826006413" anchor-label="COLOR_CUSTOM" id="1877711850%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-l-o-r_-c-u-s-t-o-m.html"><span>COLOR_</span><wbr><span>CUSTOM</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1877711850%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-c-o-l-o-r_-c-u-s-t-o-m.html">COLOR_CUSTOM</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The identifier <code class="lang-kotlin">primary</code> and <code class="lang-kotlin">accent</code> carry while the colour comes out of a style sheet of the site.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1072100819%2FProperties%2F-1826006413" anchor-label="KEY_ACCENT" id="-1072100819%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-k-e-y_-a-c-c-e-n-t.html"><span>KEY_</span><wbr><span>ACCENT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1072100819%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-k-e-y_-a-c-c-e-n-t.html">KEY_ACCENT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The key naming the accent colour of a palette.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-192786113%2FProperties%2F-1826006413" anchor-label="KEY_MEDIA" id="-192786113%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-k-e-y_-m-e-d-i-a.html"><span>KEY_</span><wbr><span>MEDIA</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-192786113%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-k-e-y_-m-e-d-i-a.html">KEY_MEDIA</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The key naming the media query of a palette entry.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1175720801%2FProperties%2F-1826006413" anchor-label="KEY_PRIMARY" id="1175720801%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-k-e-y_-p-r-i-m-a-r-y.html"><span>KEY_</span><wbr><span>PRIMARY</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1175720801%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-k-e-y_-p-r-i-m-a-r-y.html">KEY_PRIMARY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The key naming the primary colour of a palette.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1309039182%2FProperties%2F-1826006413" anchor-label="KEY_SCHEME" id="-1309039182%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-k-e-y_-s-c-h-e-m-e.html"><span>KEY_</span><wbr><span>SCHEME</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1309039182%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-k-e-y_-s-c-h-e-m-e.html">KEY_SCHEME</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The key naming the ground a palette is painted on.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1163778072%2FProperties%2F-1826006413" anchor-label="MEDIA_QUERIES" id="1163778072%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-m-e-d-i-a_-q-u-e-r-i-e-s.html"><span>MEDIA_</span><wbr><span>QUERIES</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1163778072%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="-m-e-d-i-a_-q-u-e-r-i-e-s.html">MEDIA_QUERIES</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="-media/index.html">MkDocsMaterialPaletteKeys.Media</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The media queries the theme is built around, in the order the completion offers them.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="115435190%2FProperties%2F-1826006413" anchor-label="VARIABLE_ACCENT" id="115435190%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-v-a-r-i-a-b-l-e_-a-c-c-e-n-t.html"><span>VARIABLE_</span><wbr><span>ACCENT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="115435190%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-v-a-r-i-a-b-l-e_-a-c-c-e-n-t.html">VARIABLE_ACCENT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The custom property the theme paints the accent colour of a palette through.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-665368584%2FProperties%2F-1826006413" anchor-label="VARIABLE_PRIMARY" id="-665368584%2FProperties%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-v-a-r-i-a-b-l-e_-p-r-i-m-a-r-y.html"><span>VARIABLE_</span><wbr><span>PRIMARY</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-665368584%2FProperties%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-v-a-r-i-a-b-l-e_-p-r-i-m-a-r-y.html">VARIABLE_PRIMARY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The custom property the theme paints the primary colour of a palette through.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="942539609%2FFunctions%2F-1826006413" anchor-label="colorOf" id="942539609%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="color-of.html"><span>color</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="942539609%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="color-of.html"><span class="token function">colorOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">role<span class="token operator">: </span><a href="-role/index.html">MkDocsMaterialPaletteKeys.Role</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.data/-mk-docs-material-color/index.html">MkDocsMaterialColor</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Returns the colour <a href="color-of.html">value</a> names, if it is one the theme accepts in <a href="color-of.html">role</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="451717656%2FFunctions%2F-1826006413" anchor-label="isKnownMedia" id="451717656%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-known-media.html"><span>is</span><wbr><span>Known</span><wbr><span><span>Media</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="451717656%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-known-media.html"><span class="token function">isKnownMedia</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-known-media.html">value</a> is one of the three queries the theme is built around.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="558985664%2FFunctions%2F-1826006413" anchor-label="isMediaPath" id="558985664%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-media-path.html"><span>is</span><wbr><span>Media</span><wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="558985664%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-media-path.html"><span class="token function">isMediaPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if the dotted <a href="is-media-path.html">path</a> addresses the media query of a palette.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1063357018%2FFunctions%2F-1826006413" anchor-label="isMediaValue" id="1063357018%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-media-value.html"><span>is</span><wbr><span>Media</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1063357018%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="is-media-value.html"><span class="token function">isMediaValue</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">position<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="is-media-value.html">position</a> sits in the value of a <code class="lang-kotlin">media</code> of a palette.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="837238457%2FFunctions%2F-1826006413" anchor-label="matches" id="837238457%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="matches.html"><span><span>matches</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="837238457%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="matches.html"><span class="token function">matches</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">one<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">other<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <span data-unresolved-link="one////PointingToDeclaration/">one</span> and <a href="matches.html">other</a> are the same media query.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="209121296%2FFunctions%2F-1826006413" anchor-label="roleOf" id="209121296%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="role-of.html"><span>role</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="209121296%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="role-of.html"><span class="token function">roleOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">position<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-role/index.html">MkDocsMaterialPaletteKeys.Role</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Returns what the value <a href="role-of.html">position</a> sits in stands for, or <code class="lang-kotlin">null</code> if it is no value of a palette.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1312507242%2FFunctions%2F-1826006413" anchor-label="schemeNameOf" id="1312507242%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="scheme-name-of.html"><span>scheme</span><wbr><span>Name</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1312507242%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="scheme-name-of.html"><span class="token function">schemeNameOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">position<span class="token operator">: </span><span data-unresolved-link="com.intellij.psi/PsiElement///PointingToDeclaration/">PsiElement</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the ground the palette around <a href="scheme-name-of.html">position</a> is painted on.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-480579703%2FFunctions%2F-1826006413" anchor-label="schemeOf" id="-480579703%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="scheme-of.html"><span>scheme</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-480579703%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="scheme-of.html"><span class="token function">schemeOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../org.pcsoft.ij.plugin.mkdocs.material.data/-mk-docs-material-scheme/index.html">MkDocsMaterialScheme</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Returns the scheme <a href="scheme-of.html">value</a> names, or <code class="lang-kotlin">null</code> if the theme knows no such scheme.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1895015527%2FFunctions%2F-1826006413" anchor-label="variableOf" id="-1895015527%2FFunctions%2F-1826006413" data-filterable-set=":facets:material/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":facets:material/main" data-filterable-set=":facets:material/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="variable-of.html"><span>variable</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1895015527%2FFunctions%2F-1826006413"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":facets:material/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="variable-of.html"><span class="token function">variableOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">role<span class="token operator">: </span><a href="-role/index.html">MkDocsMaterialPaletteKeys.Role</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Returns the custom property a colour of <a href="variable-of.html">role</a> is painted through, or <code class="lang-kotlin">null</code> for the other roles.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
