@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/colors.schema.json",
+  "title": "Material for MkDocs palette colours",
+  "description": "The colours accepted by theme.palette.primary and theme.palette.accent.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "hex",
+      "descriptionKey",
+      "primary",
+      "accent"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The identifier as it appears in the configuration file, for example deep-purple.",
+        "pattern": "^[a-z]+(-[a-z]+)*$"
+      },
+      "hex": {
+        "type": "string",
+        "description": "A representative shade of the colour, used for the swatch shown next to the name.",
+        "pattern": "^#[0-9A-Fa-f]{6}$"
+      },
+      "descriptionKey": {
+        "type": "string",
+        "description": "The bundle key of the one line description shown in QuickDoc and behind the offered value."
+      },
+      "primary": {
+        "type": "boolean",
+        "description": "Whether the colour is accepted for theme.palette.primary."
+      },
+      "accent": {
+        "type": "boolean",
+        "description": "Whether the colour is accepted for theme.palette.accent."
+      },
+      "custom": {
+        "type": "boolean",
+        "description": "Whether this entry is the `custom` placeholder rather than a colour of the palette.",
+        "default": false
+      }
+    }
+  }
+}

@@ -1,0 +1,380 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MkDocs configuration refined for Material for MkDocs",
+  "description": "The MkDocs configuration schema, refined with the theme and extra keys the Material for MkDocs theme reads. The base schema is pulled in through a relative reference to the vendored copy next to this file; a remote reference would silently drop the whole base branch, because a bundled schema resolves references against its own file only. Both refined keys wrap their definition in an `anyOf` rather than naming it with a bare `$ref`: the base schema describes `theme` and `extra` as well, and the platform merges the two branches of the `allOf` per key - measured, a bare `$ref` is merged away and the popup below `extra` stays empty, while a branch of an `anyOf` is walked on its own and keeps its keys.",
+  "allOf": [
+    {
+      "$ref": "mkdocs-1.6.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/materialTheme"
+            }
+          ]
+        },
+        "extra": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/materialExtra"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "materialTheme": {
+      "type": "object",
+      "description": "The theme block of a site rendered with Material for MkDocs.",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The installed theme rendering the site. `material` selects Material for MkDocs."
+        },
+        "custom_dir": {
+          "type": "string",
+          "description": "A directory with template overrides, resolved relative to the directory holding the configuration file."
+        },
+        "static_templates": {
+          "type": "array",
+          "description": "Templates rendered to a static page of their own, for example `404.html`.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "language": {
+          "type": "string",
+          "description": "The language the theme renders its own labels in, as a two letter code such as `en` or `de`."
+        },
+        "locale": {
+          "type": "string",
+          "description": "The MkDocs locale of the site. Material for MkDocs reads `language` instead."
+        },
+        "direction": {
+          "type": "string",
+          "description": "The writing direction of the site.",
+          "enum": [
+            "ltr",
+            "rtl"
+          ]
+        },
+        "logo": {
+          "type": "string",
+          "description": "An image used as the logo in the header, relative to `docs_dir`. Takes precedence over `theme.icon.logo`."
+        },
+        "favicon": {
+          "type": "string",
+          "description": "The icon shown in the browser tab, relative to `docs_dir`."
+        },
+        "font": {
+          "description": "The typefaces the theme loads from Google Fonts, or `false` to load no web fonts at all.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "description": "The typeface used for headings and body text, for example `Roboto`."
+                },
+                "code": {
+                  "type": "string",
+                  "description": "The typeface used for code, for example `Roboto Mono`."
+                }
+              }
+            }
+          ]
+        },
+        "icon": {
+          "$ref": "#/definitions/materialIcons"
+        },
+        "features": {
+          "type": "array",
+          "description": "The optional behaviours of the theme to switch on.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "palette": {
+          "description": "The colours of the site. A single mapping paints one palette; a sequence of mappings offers a colour scheme toggle.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/materialPaletteSingle"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/materialPaletteItem"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "materialPaletteSingle": {
+      "type": "object",
+      "description": "A single palette of the theme.",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "description": "The ground the palette is painted on."
+        },
+        "primary": {
+          "type": "string",
+          "description": "The primary colour, used for the header, links and accents of the navigation."
+        },
+        "accent": {
+          "type": "string",
+          "description": "The accent colour, used for elements the reader can interact with."
+        },
+        "media": {
+          "type": "string",
+          "description": "A media query deciding when this palette applies. The theme is built around `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)` for the palette of the system preference."
+        },
+        "toggle": {
+          "$ref": "#/definitions/materialPaletteToggle"
+        }
+      }
+    },
+    "materialPaletteItem": {
+      "type": "object",
+      "description": "One palette of a colour scheme toggle.",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "description": "The ground this palette is painted on."
+        },
+        "primary": {
+          "type": "string",
+          "description": "The primary colour of this palette."
+        },
+        "accent": {
+          "type": "string",
+          "description": "The accent colour of this palette."
+        },
+        "media": {
+          "type": "string",
+          "description": "A media query deciding when this palette is chosen automatically. The theme is built around `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)` for the palette of the system preference."
+        },
+        "toggle": {
+          "$ref": "#/definitions/materialPaletteToggle"
+        }
+      }
+    },
+    "materialPaletteToggle": {
+      "type": "object",
+      "description": "The button switching to the next palette of the sequence.",
+      "properties": {
+        "icon": {
+          "type": "string",
+          "description": "The icon of the toggle button, as an icon reference such as `material/brightness-7`."
+        },
+        "name": {
+          "type": "string",
+          "description": "The tooltip of the toggle button."
+        }
+      }
+    },
+    "materialIcons": {
+      "type": "object",
+      "description": "The icons the theme uses instead of its built-in ones. Every value is an icon reference such as `material/tag`, `fontawesome/brands/github` or `octicons/mark-github-16`.",
+      "properties": {
+        "logo": {
+          "type": "string",
+          "description": "The icon shown in the header when `theme.logo` is not set."
+        },
+        "repo": {
+          "type": "string",
+          "description": "The icon of the repository link in the header."
+        },
+        "edit": {
+          "type": "string",
+          "description": "The icon of the edit button, shown when `content.action.edit` is enabled."
+        },
+        "view": {
+          "type": "string",
+          "description": "The icon of the view source button, shown when `content.action.view` is enabled."
+        },
+        "menu": {
+          "type": "string",
+          "description": "The icon opening the navigation drawer on small screens."
+        },
+        "alternate": {
+          "type": "string",
+          "description": "The icon of the language selector."
+        },
+        "search": {
+          "type": "string",
+          "description": "The icon of the search field."
+        },
+        "share": {
+          "type": "string",
+          "description": "The icon of the share search button."
+        },
+        "close": {
+          "type": "string",
+          "description": "The icon closing search and dialogues."
+        },
+        "top": {
+          "type": "string",
+          "description": "The icon of the back to top button."
+        },
+        "previous": {
+          "type": "string",
+          "description": "The icon of the link to the previous page."
+        },
+        "next": {
+          "type": "string",
+          "description": "The icon of the link to the next page."
+        },
+        "annotation": {
+          "type": "string",
+          "description": "The icon marking an annotation inside a code block."
+        },
+        "admonition": {
+          "type": "object",
+          "description": "The icon of each admonition type, keyed by the type name such as `note` or `warning`.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "tag": {
+          "type": "object",
+          "description": "The icon of each tag, keyed by the tag name.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "materialExtra": {
+      "type": "object",
+      "description": "The extra block passed to the templates. Material for MkDocs reads the keys below; every other key stays available to the site and to other features, so `version` (mike) and `alternate` (i18n) are deliberately left unconstrained.",
+      "properties": {
+        "social": {
+          "type": "array",
+          "description": "The accounts of the project, rendered as a row of icons in the footer.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "icon": {
+                "type": "string",
+                "description": "The icon of the link, as an icon reference such as `fontawesome/brands/github`."
+              },
+              "link": {
+                "type": "string",
+                "description": "The address the icon links to."
+              },
+              "name": {
+                "type": "string",
+                "description": "The tooltip of the link. Derived from the address when absent."
+              }
+            }
+          }
+        },
+        "analytics": {
+          "type": "object",
+          "description": "The site analytics provider and the feedback widget below each page.",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "The analytics provider the theme loads. The theme ships support for `google`."
+            },
+            "property": {
+              "type": "string",
+              "description": "The property or measurement id of the analytics account."
+            },
+            "feedback": {
+              "type": "object",
+              "description": "The feedback widget rendered below each page.",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "The question asked above the rating buttons."
+                },
+                "ratings": {
+                  "type": "array",
+                  "description": "The buttons the reader can answer with.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "icon": {
+                        "type": "string",
+                        "description": "The icon of the rating button."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The tooltip of the rating button."
+                      },
+                      "data": {
+                        "description": "The value reported to the analytics provider for this rating."
+                      },
+                      "note": {
+                        "type": "string",
+                        "description": "The note shown after the reader answered."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "consent": {
+          "type": "object",
+          "description": "The cookie consent dialogue shown before analytics are loaded.",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The heading of the consent dialogue."
+            },
+            "description": {
+              "type": "string",
+              "description": "The text of the consent dialogue."
+            },
+            "cookies": {
+              "type": "object",
+              "description": "The cookie groups the reader may accept or reject, keyed by group name.",
+              "additionalProperties": true
+            },
+            "actions": {
+              "type": "array",
+              "description": "The buttons of the consent dialogue, in the order they are rendered.",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "accept",
+                  "reject",
+                  "manage"
+                ]
+              }
+            }
+          }
+        },
+        "generator": {
+          "type": "boolean",
+          "description": "Whether the \"Made with Material for MkDocs\" notice is rendered in the footer."
+        },
+        "status": {
+          "type": "object",
+          "description": "The badges a page may carry through its `status` front matter key, keyed by status name with the icon reference as value.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

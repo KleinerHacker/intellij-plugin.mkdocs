@@ -13,6 +13,12 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   assigned by the detection only — it cannot be added by hand, and a facet without a configuration file
   behind it reports an error.
 - The module name is taken from `site_name`, falling back to the directory name.
+- **Rename the site on the facet page** — the site name is written into `site_name`, so the module and the
+  project view follow.
+- **Rename the technical directories on the facet page** — the documentation, output, assets and stylesheets
+  directory can be changed in *Project Structure*. The directory is renamed and every reference to it follows
+  (`extra_css`, `nav`, `theme.logo`, `theme.favicon` and the links of the pages); `docs_dir` and `site_dir`
+  are written back into `mkdocs.yml` and taken out again once they hold nothing but the MkDocs default.
 - Detection re-runs after every relevant change to the virtual file system, so adding, renaming or deleting a
   configuration file is picked up without a reload.
 - A module of its own is created only for a site that belongs to no module at all; otherwise the surrounding
@@ -22,8 +28,65 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   directory, stylesheets directory, build output directory), the site metadata (`site_name`, `site_author`, `site_description`,
   `site_url`), the repository (`repo_name`, `repo_url`), the `copyright` notice and the optional features,
   then writes `mkdocs.yml`, a start page and the directory structure. Everything left empty is omitted from
-  the configuration file. The last step is fed by the `siteFeature` extension point and is empty until the
-  first feature ships.
+  the configuration file. The last step is fed by the `siteFeature` extension point and currently offers
+  *Angular Material*.
+- **Angular Material facet** — a site whose `mkdocs.yml` names `material` as its theme carries the
+  *MkDocs Angular Material* facet, next to the *MkDocs* facet and wearing the MkDocs logo badged with the
+  Material glyph. The facet follows the file, and the file follows
+  the facet: adding it in *Project Structure* writes `theme.name: material`, removing it takes the `theme`
+  key out again, and settings written next to the name survive. Both shapes MkDocs accepts — `theme` as a
+  mapping and `theme` as a plain scalar — are recognised.
+- **Refined schema for a Material site** — a site carrying the Angular Material facet is edited against a
+  schema describing the two blocks the theme actually fills: all 28 flags of `theme.features` with a
+  description each, `theme.palette` in both its shapes with the colours and schemes the theme ships,
+  `theme.font`, `theme.language`, `theme.icon`, `theme.direction`, `theme.logo`, `theme.favicon`,
+  `theme.custom_dir`, and `social`, `analytics`, `consent`, `generator` and `status` under `extra`. It stands
+  in front of the MkDocs schema rather than replacing it, applies only where the facet is, and leaves
+  `extra.version` and `extra.alternate` open for the planned Mike and I18N features. The MkDocs schema it
+  builds on is bundled, so it works offline.
+- **Values of `theme.palette`** — `scheme`, `primary` and `accent` describe every value they accept, in the
+  completion popup and under *Ctrl+Q*, on an offered value as well as on one already written into the file. A
+  colour is drawn in the popup as a square of its shade, badged with the mark of the theme; `custom` keeps the
+  plain mark, since the site defines that colour itself through the `--md-*` properties.
+- **Media query of a palette** — `theme.palette.media` completes the three queries the theme is built around,
+  `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)`, each with a
+  line saying when its palette applies, and writes the value quoted so the colon inside it cannot end the
+  line. A query outside them is reported as a warning that can be switched off — nothing is broken, but the
+  colour scheme toggle has nothing to act on.
+- **Palette read against the style sheets** — `theme.palette` and the files behind `extra_css` describe the
+  same colours twice, and the IDE reads them against each other through its CSS parser. A `custom` colour no
+  style sheet defines `--md-primary-fg-color` or `--md-accent-fg-color` for is reported, and so is a named
+  colour whose property a style sheet redefines all the same. Which definitions count is decided by the ground
+  the palette stands on: `:root` counts for every palette, a rule below `[data-md-color-scheme="…"]` only for
+  the palette whose `scheme` names it.
+- **Ground of a palette** — `theme.palette.scheme` completes the grounds the style sheets a site loads
+  actually paint: the one the installed theme ships, which is where `default` and `slate` come from, and the
+  files behind `extra_css`. Each entry names where it came from, and *Ctrl+Click* on the value jumps to the
+  `[data-md-color-scheme="…"]` selector painting it. A ground no style sheet paints is marked the way an
+  unresolved name is; `default` and `slate` stay valid without any `extra_css`, being painted by the theme
+  itself.
+- **Markdown extensions of a Material site** — an extension the configuration forces, because a flag under
+  `theme.features` does not render without it, is reported above `mkdocs.yml` as an error, with a fix adding
+  it together with the options it needs. Everything the theme merely builds on is a weak warning that can be
+  switched off. The options below an entry — `permalink` under `- toc:` — are completed as well, values
+  included. Quick documentation explains every entry of `markdown_extensions` and every option below it, in
+  the file as well as inside the completion popup.
+- **Icons of the installed theme** — the icons of `mkdocs-material` are completed in `mkdocs.yml`
+  (`theme.icon.*`, the toggle of a palette, `extra.social`) and in the pages as the shorthands
+  `:material-check:`, each showing its drawing. They are read from the installed package, which is looked for
+  in the virtual environments next to the site or named under *Tools → MkDocs*. The custom properties of the
+  theme (`--md-…`) are completed inside CSS files.
+- **Origin of a Material key** — the completion entries that come from the theme rather than from MkDocs carry
+  its icon, in `mkdocs.yml`, in the pages and in the style sheets. What MkDocs itself reads stays unmarked.
+  In a written `mkdocs.yml` the same answer stands in the gutter, next to every key of the theme and next to a
+  value that carries the theme in itself. The marks can be switched off under
+  *Settings → Editor → General → Gutter Icons*.
+- **Shorthand of an icon** — an icon named in `mkdocs.yml` shows behind its name the shorthand a page writes
+  it with, `material/pencil` as `:material-pencil:`, so the spelling of the pages does not have to be derived
+  by hand. The hint can be switched off under *Settings → Editor → Inlay Hints*.
+- **Template overrides** — the context menu of a site root creates the override directory, the selected
+  templates with a working Jinja scaffold, and `theme.custom_dir` pointing at them, in one undoable step.
+  Live templates for the Jinja blocks come with it.
 - **Prefilled from the environment** — repository address, repository name and author come from the Git
   repository the site is created in; an entry deviating from it is reported as a warning. The copyright
   notice comes from the IDE's Copyright profiles, with a choice when several are configured and none is
@@ -65,7 +128,10 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
 
 ## Project structure
 
-Single-project Gradle build — the root project *is* the publishable plugin.
+Multi-project Gradle build — the root project *is* the publishable plugin, the projects below it carry the
+code and are merged into the plugin jar. An optional feature of a site is a project of its own and reaches
+the plugin through the `siteFeature` extension point alone, which is what lets it be built, tested and left
+out on its own.
 
 ```
 .
@@ -76,15 +142,43 @@ Single-project Gradle build — the root project *is* the publishable plugin.
 │   ├── wrapper/            Gradle wrapper
 │   ├── libs.versions.toml  Version catalog — the single source of truth for versions
 │   └── test-logging.properties  JUL config that silences platform-test logging
-├── src/main
-│   ├── kotlin/             Kotlin production sources
-│   └── resources/
-│       └── META-INF/       plugin.xml and plugin logo
-├── build.gradle.kts        The entire build: plugin, quality gates and docs tasks
+├── build-logic/            Convention plugins shared by every project (included build)
+├── utils/                  Shared model and helpers, plus the vendored MkDocs schema
+├── facets/
+│   ├── api/                The contract between the plugin and a feature
+│   └── material/           The Material for MkDocs feature: code, spec and descriptors
+├── plugin/                 The publishable plugin — a leaf project, no project nested below it
+│   ├── build.gradle.kts    Packaging, signing, publishing, verification matrix, licence report
+│   └── src/main
+│       ├── kotlin/         Kotlin production sources of the plugin itself
+│       └── resources/
+│           ├── META-INF/   plugin.xml and plugin logo
+│           ├── icons/      Icons of the plugin
+│           └── messages/   Message bundles of the plugin
+├── build.gradle.kts        The aggregator: Dokka, coverage merge, licences and the docs tasks
 ├── gradle.properties       Gradle configuration properties
 ├── settings.gradle.kts     Gradle project settings
 └── CHANGELOG.md            Release notes — the release workflow reads them from here
 ```
+
+The root project is a pure aggregator: it carries no production code and no plugin descriptor, only the
+Dokka publication over every project, the merged coverage report, the licence report hand-off and the
+MkDocs site tasks. `:plugin` is deliberately a leaf — the licence-report plugin reports over
+`project + subprojects`, and resolving a foreign project's `runtimeClasspath` at execution time is
+rejected by Gradle 9.
+
+| Project            | Applies                                   | Depends on                     |
+|--------------------|-------------------------------------------|--------------------------------|
+| `.` (aggregator)   | `org.jetbrains.dokka`, `…kotlinx.kover`   | every project below            |
+| `:plugin`          | `org.jetbrains.intellij.platform`         | every module project           |
+| `:utils`           | `org.jetbrains.intellij.platform.module`  | nothing                        |
+| `:facets:api`      | `org.jetbrains.intellij.platform.module`  | `:utils` (`compileOnly`)       |
+| `:facets:material` | `org.jetbrains.intellij.platform.module`  | `:facets:api`, `:utils`        |
+
+Each facet is registered as a plugin content module of the V2 model: `plugin.xml` names it under `<content>`,
+and its descriptor sits in the resource root of its project, named after the module. A part needing an IDE
+plugin that not every IDE ships — CSS, Markdown — is a module of its own marked `loading="optional"`, so the
+plugin keeps loading where that plugin is absent.
 
 ## Target platform
 
@@ -108,9 +202,9 @@ IDE installation root (the directory containing `lib/`, `plugins/`, `bin/`).
 | `test -PtestSuite=developer`   | Only fast developer tests (every class *not* named `*IT`)          |
 | `test -PtestSuite=integration` | Only integration tests (classes named `*IT`)                       |
 | `verifyPlugin`                 | Plugin Verifier compatibility check                                |
-| `buildPlugin`                  | Build the distributable plugin archive into `build/distributions/` |
+| `buildPlugin`                  | Build the distributable plugin archive into `plugin/build/distributions/` |
 | `licensee` / `cyclonedxBom`    | Licence policy check / SBOM generation                             |
-| `generateLicenseReport`        | Third-party licence report into `build/licences/`                  |
+| `generateLicenseReport`        | Third-party licence report into `plugin/build/licences/`           |
 | `koverHtmlReport`              | Test coverage report                                               |
 | `selfSignPlugin`               | Sign locally with `.signing/keystore.p12`                          |
 | `buildDocs`                    | Build the docs with `mkdocs --strict` (generation test)            |

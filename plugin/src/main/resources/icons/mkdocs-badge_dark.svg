@@ -1,0 +1,25 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="rBodyD" x1="8" y1="1.5" x2="8" y2="14.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3B4A5C"/>
+            <stop offset="1" stop-color="#2E3A48"/>
+        </linearGradient>
+        <linearGradient id="rGlossD" x1="3" y1="14" x2="13" y2="7.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7FBDEC" stop-opacity="0.30"/>
+            <stop offset="1" stop-color="#7FBDEC" stop-opacity="0"/>
+        </linearGradient>
+        <clipPath id="rClipD">
+            <circle cx="8" cy="8" r="6.5"/>
+        </clipPath>
+    </defs>
+    <g transform="scale(3)">
+        <circle cx="8" cy="8" r="6.5" fill="url(#rBodyD)" stroke="#6EA9E0" stroke-width="1"/>
+        <g clip-path="url(#rClipD)">
+            <path d="M0 14.5c4.5 0 10.5-2.2 14.5-6.2V16H0z" fill="url(#rGlossD)"/>
+        </g>
+        <path d="M4.6 10.9V5.4L8 8.4l3.4-3v5.5" stroke="#8CC8FA" stroke-width="1.6"
+              stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M3.6 4.6A6.4 6.4 0 0 1 8 2.6" stroke="#FFFFFF" stroke-opacity="0.16"
+              stroke-width="1" stroke-linecap="round" fill="none"/>
+    </g>
+</svg>

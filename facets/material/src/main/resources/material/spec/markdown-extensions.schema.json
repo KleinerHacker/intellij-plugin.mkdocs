@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/markdown-extensions.schema.json",
+  "title": "Material for MkDocs markdown extensions",
+  "description": "The Markdown extensions the Material for MkDocs theme builds upon, as listed under markdown_extensions.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "level",
+      "descriptionKey",
+      "docUrl"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The identifier as it appears under markdown_extensions, for example pymdownx.superfences."
+      },
+      "pipPackage": {
+        "type": "string",
+        "description": "The PyPI package providing the extension. Absent if Python Markdown itself ships it."
+      },
+      "level": {
+        "type": "string",
+        "description": "How strongly the extension is tied to the configuration of the site.",
+        "enum": [
+          "REQUIRED_BY_FEATURE",
+          "RECOMMENDED"
+        ]
+      },
+      "descriptionKey": {
+        "type": "string",
+        "description": "The bundle key of the one line description shown in QuickDoc and in the settings page."
+      },
+      "docUrl": {
+        "type": "string",
+        "description": "The address of the documentation of the extension, offered as a link in QuickDoc.",
+        "format": "uri"
+      },
+      "options": {
+        "type": "array",
+        "description": "The options the extension accepts below its entry, offered in completion and explained in QuickDoc.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key",
+            "kind",
+            "descriptionKey"
+          ],
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The name of the option, as written below the entry of the extension."
+            },
+            "kind": {
+              "type": "string",
+              "description": "The kind of value the option takes.",
+              "enum": [
+                "BOOLEAN",
+                "STRING",
+                "INTEGER",
+                "ENUM",
+                "PYTHON_REFERENCE"
+              ]
+            },
+            "descriptionKey": {
+              "type": "string",
+              "description": "The bundle key of the one line description shown in completion and in QuickDoc."
+            },
+            "values": {
+              "type": "array",
+              "description": "The values the option accepts, offered in completion. Only for kind ENUM.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "defaultValue": {
+              "type": "string",
+              "description": "The value the extension itself falls back to, shown in QuickDoc. Verbatim, as written in YAML."
+            },
+            "recommendedValue": {
+              "type": "string",
+              "description": "The value the quick fix writes for this option when it adds the extension, verbatim. Absent if the fix leaves the option out."
+            }
+          }
+        }
+      },
+      "iconShorthand": {
+        "type": "boolean",
+        "description": "Whether this extension is the one the icon and emoji shorthands of the theme need.",
+        "default": false
+      }
+    }
+  }
+}

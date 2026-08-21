@@ -1,0 +1,19 @@
+<html>
+<body>
+Reports a <code>media</code> of <code>theme.palette</code> that is none of the media queries
+<i>Material for MkDocs</i> is built around.
+
+<p>
+    The value is handed to the <code>media</code> attribute of the style sheet the theme renders, so every
+    query a browser accepts is legal here. The theme itself is built around three of them:
+    <code>(prefers-color-scheme: light)</code>, <code>(prefers-color-scheme: dark)</code> and
+    <code>(prefers-color-scheme)</code> for the palette of the system preference.
+</p>
+
+<p>
+    A query outside them decides nothing the colour scheme toggle of the theme can act on: the palette is
+    either always active or never, and both look like the palette being ignored. There is no quick fix &mdash;
+    which of the three was meant is not something the file says.
+</p>
+</body>
+</html>

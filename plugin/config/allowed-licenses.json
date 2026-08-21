@@ -1,0 +1,17 @@
+{
+  "_comment": [
+    "Licence policy of `checkLicense` (com.github.jk1.dependency-license-report).",
+    "It mirrors the policy of `licensee` in `mkdocs.kotlin-conventions`: everything shipped with the",
+    "plugin has to be Apache-2.0. Licensee matches SPDX identifiers, this plugin matches the licence",
+    "name as the POM declares it, so every spelling Apache-2.0 appears under is listed here.",
+    "A new entry MUST stay an Apache-2.0 spelling - another licence is a policy change."
+  ],
+  "allowedLicenses": [
+    { "moduleLicense": "Apache-2.0" },
+    { "moduleLicense": "Apache 2.0" },
+    { "moduleLicense": "Apache License 2.0" },
+    { "moduleLicense": "Apache License, Version 2.0" },
+    { "moduleLicense": "The Apache License, Version 2.0" },
+    { "moduleLicense": "The Apache Software License, Version 2.0" }
+  ]
+}

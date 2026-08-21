@@ -12,11 +12,11 @@
 
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 
-rootProject.name = "mkdocs"
-
-// Single-project build: the plugin itself is the root project — there are no sub-modules.
-
+// Must stay the first block of this file — Gradle rejects a `pluginManagement` that anything precedes.
 pluginManagement {
+    // The convention plugins every project of this build is configured with.
+    includeBuild("build-logic")
+
     repositories {
         gradlePluginPortal()
     }
@@ -26,6 +26,18 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
     id("org.jetbrains.intellij.platform.settings") version "2.18.1"
 }
+
+rootProject.name = "mkdocs"
+
+// Multi-project build: the root project is a pure aggregator, every project below carries code.
+//   :plugin           the publishable IntelliJ plugin — a LEAF, so the licence report stays inside it
+//   :utils            shared model and helpers, no project dependency
+//   :facets:api       the contract between the plugin and a facet
+//   :facets:material  the Angular Material facet
+include(":plugin")
+include(":utils")
+include(":facets:api")
+include(":facets:material")
 
 // Relocate the local build cache when GRADLE_BUILD_CACHE_DIR is set. On CI the `build` job populates that
 // directory and the two test jobs restore it, so the test jobs reuse the compilation output of the build

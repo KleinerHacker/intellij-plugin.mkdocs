@@ -4,6 +4,225 @@
 
 ## [Unreleased]
 
+### Added
+
+- **A path in `mkdocs.yml` whose target does not exist is now marked red**: `docs_dir`, `theme.custom_dir`,
+  `theme.logo`, `theme.favicon`, the entries of `extra_css` and `extra_javascript` and every target under `nav`
+  are reported as an error when nothing lies where they point, with *Create the missing target* offered next to
+  the mark. Only the first segment leading nowhere is marked, so one broken path reads as one mistake.
+  `site_dir` stays untouched — build output need not exist before the first build — and a `theme.logo` or
+  `theme.favicon` naming an icon of the theme, such as `material/library`, is no path and is left alone.
+- **`theme.palette` and the style sheets of the site are now read against each other**: a `primary` or `accent`
+  set to `custom` while no style sheet behind `extra_css` defines `--md-primary-fg-color` or
+  `--md-accent-fg-color` is reported, and so is a named colour whose custom property a style sheet redefines
+  all the same — there the file no longer says which of the two paints the site. Which definitions count is
+  decided by the ground the palette stands on: `:root` counts for every palette, a rule below
+  `[data-md-color-scheme="…"]` only for the palette whose `scheme` names it. Warnings in both cases, because
+  either is legal, and without a quick fix, because which half was meant is not something the file says.
+- **`theme.palette.scheme` is now completed out of the CSS**: the grounds offered are the ones the style
+  sheets a site loads actually paint, read out of their `[data-md-color-scheme="…"]` selectors — both the
+  style sheet the installed *Material for MkDocs* ships, which is where `default` and `slate` come from, and
+  the files behind `extra_css`. Each entry names where it came from, the style sheet of the site by its file
+  name and the theme by its own. A ground the site repaints under a name of the theme is offered once, as the
+  site's own.
+- The **ground of a palette now leads to the rule painting it**: *Ctrl+Click* on the value of
+  `theme.palette.scheme` jumps to the `[data-md-color-scheme="…"]` selector in the style sheet of the site,
+  or to the style sheet the theme ships it in. A ground **no style sheet paints is marked** the way an
+  unresolved name is: the theme writes it into `data-md-color-scheme`, no rule matches it, and the site keeps
+  the colours it would have had anyway. `default` and `slate` stay valid without any `extra_css` — they are
+  painted by the style sheet the theme itself ships.
+
+- The **colours and schemes of `theme.palette` now say what they are**: every value of `scheme`, `primary` and
+  `accent` carries a one line description, in the completion popup and under *Ctrl+Q* — on an offered value as
+  well as on one already written into the file, where the popup also names the role it plays and the shade the
+  swatch stands for.
+- A **colour is now shown as a square of its shade** in the completion popup, badged with the mark of the
+  theme. `custom` keeps the plain mark: that colour is defined by the site itself through the `--md-*`
+  properties, so no square could show what it will look like.
+- The **media query of a palette is now completed**: `theme.palette.media` offers
+  `(prefers-color-scheme: light)`, `(prefers-color-scheme: dark)` and `(prefers-color-scheme)`, each with a
+  line saying when its palette applies. The value is written into the file in quotes, which is what keeps the
+  colon inside the query from ending the line.
+- A **query outside those three is now reported**: the theme is built around them, and a value outside leaves
+  the colour scheme toggle with nothing to act on — the palette is then either always active or never. A
+  warning, switchable off under *Settings → Editor → Inspections → MkDocs*, and without a quick fix, because
+  which query was meant is not something the file says.
+
+- The **path completion of `mkdocs.yml` now offers only what the key accepts**: `extra_css` lists `*.css`,
+  `extra_javascript` lists `*.js` and `*.mjs`, and `theme.logo` and `theme.favicon` list image files such as
+  `*.png`, `*.jpg`, `*.svg` or `*.ico`. Directories stay in the list, so a file in a sub directory is still
+  reachable.
+- A value **naming a file of the wrong type is now reported**: a page behind `extra_css`, a style sheet behind
+  `theme.logo`. The file exists, so nothing marked it before, while the built site loaded a page as a style
+  sheet. It is an inspection of its own — *Settings → Editor → Inspections → MkDocs* — and a value without an
+  extension, such as the icon name `material/library`, stays untouched.
+
+- **`mkdocs.yml` now says in the gutter what comes from Material for MkDocs**: the icon of the theme stands
+  next to every key the theme brings along — `theme.features`, `theme.palette`, `theme.font`, `theme.icon`,
+  `theme.direction` and its keys below `extra` — next to everything written below such a key, and next to a
+  value that carries the theme in itself, such as a feature flag or a Markdown extension the theme describes.
+  A line can carry several marks, so `markdown_extensions` stays plain while the extension below it is marked.
+  Hovering a mark says whether it stands for the key or for the value. The marks can be switched off under
+  *Settings → Editor → General → Gutter Icons*.
+
+- The **shorthand of an icon** is now written behind every value of `mkdocs.yml` naming one:
+  `edit: material/pencil` shows `:material-pencil:`, which is the spelling a page uses for the same icon. A
+  name the installed theme does not offer stays without one. The hint can be switched off under
+  *Settings → Editor → Inlay Hints*. The **icon completion states the same shorthand** behind every icon it
+  offers, so it can be read off before the name is even taken.
+
+- The installed Material for MkDocs is now **read again on request**: a *Reload installation* button on the
+  settings page, an action of the same name in *Find Action*, and an entry in the menu at the foot of the icon
+  completion popup. All three do the same thing, which is what picks up a theme installed next to a running
+  IDE — until then nothing re-reads an installation, because it does not change by itself.
+- Looking the installation up now **says that it is happening**: the search for the package and the reading of
+  its file list run as a background task named *Analysing Material for MkDocs*, with its progress in the status
+  bar, instead of the IDE being quiet until the icons appear.
+- The **installation of Material for MkDocs is now found through pip**: the plugin asks
+  `pip show mkdocs-material` where the package lies, so every interpreter pip answers for is found — a
+  virtual environment, a user installation, a system wide one — instead of directories being guessed.
+- The settings moved into a page of their own: *Tools → MkDocs* is now the node the features hang under, and
+  the installation of the theme sits below it under **Material**. A fixed list offers the installation pip
+  reported — once, as the entry naming it — plus one entry for a directory of your own, which is the only one
+  unlocking the field below it,
+  and the line under both states which directory the icons are actually read from — the answer to an empty
+  icon completion.
+- A **directory chosen by hand is checked** before it is accepted: it has to hold a `mkdocs_material-*.dist-info`
+  whose `METADATA` names `mkdocs-material` and whose `RECORD` can be read. What is wrong with it is stated in
+  red on the page, and applying is refused until it is right.
+- The **icon names are read out of the `RECORD`** the installation wrote, so what is offered is what the
+  installed version actually shipped.
+- While **no installation can be found**, `mkdocs.yml` of a Material site carries a banner saying so, with a
+  quick fix opening the settings page — instead of an icon completion that is silently empty.
+- The **drawings of the icons follow the theme of the IDE**: the glyphs of *Material for MkDocs* carry no
+  colour of their own and were painted black, which is all but invisible in a dark IDE. They are now drawn in
+  the colour the IDE writes its text in, in the completion popup and in the editor alike.
+- The **drawing of an icon** is now shown in the editor: in `mkdocs.yml` in front of every value naming one,
+  and in the pages of a site in front of every shorthand such as `:material-weather-sunny:`. A name the
+  installed theme does not offer stays without a drawing. Both hints can be switched off separately under
+  *Settings → Editor → Inlay Hints*.
+- The **icon names are now completed at every place** `mkdocs.yml` names an icon: next to the keys below
+  `theme.icon`, the palette toggle and `extra.social`, the mappings `theme.icon.admonition` and
+  `theme.icon.tag` and the `icon` of a rating of `extra.analytics.feedback` are offered as well.
+- A site rendered with the **Material theme** now carries the *MkDocs Angular Material* facet, next to the
+  MkDocs facet and visible in *Project Structure → Facets*. It wears the MkDocs logo with the Material glyph
+  badged into its corner, so it reads as part of MkDocs in a list that shows facets flat. It appears as soon
+  as `mkdocs.yml` names `material` as
+  its theme — written as a mapping or as a plain scalar, in any case — and disappears again when the theme is
+  taken out or switched to another one.
+- The facet can also be added and removed by hand: adding it writes `theme.name: material` into `mkdocs.yml`,
+  removing it takes the whole `theme` key out again. Settings written next to the theme name survive, and a
+  file that already declares the theme is left untouched.
+- The feature step of the creation wizard offers **Angular Material**, which writes the theme into the new
+  site and attaches the facet right away. It is the first feature filling that step.
+- The **site name** can now be changed on the facet page in *Project Structure*. It is written into
+  `site_name`, so the module, the project view and the *Site Page* tool window follow. An empty name is
+  refused.
+- The **technical directories** of a site can now be changed on its facet page in *Project Structure*: the
+  documentation directory, the output directory, the assets directory and the stylesheets directory. Applying
+  the page renames the directory on disk and every reference to it follows — the entries of `extra_css`, the
+  targets of `nav`, `theme.logo`, `theme.favicon` and the links of the pages. `docs_dir` and `site_dir` are
+  written back into `mkdocs.yml`, and taken out again once they carry nothing but the MkDocs default. The
+  output directory is only written, never moved: it holds build output, which the next build writes anyway.
+- A name that cannot be applied is reported before anything is moved: a name carrying a path of its own, a
+  directory that is not there, and a name already taken inside the site.
+- A site carrying the *MkDocs Angular Material* facet now gets a **refined JSON schema** for its `mkdocs.yml` /
+  `mkdocs.yaml`, so the two blocks the Material theme actually fills — `theme` and `extra` — are completed,
+  validated and explained instead of being waved through. The plain MkDocs schema describes `theme` with four
+  keys and `extra` with none, which is correct for MkDocs and of no use to a site rendered with Material.
+- `theme.features` offers all 28 feature flags of the theme, each with a one line description shown next to the
+  offered value, and a flag the theme does not know is reported.
+- `theme.palette` is covered in both shapes the theme accepts — a single mapping and a sequence for the colour
+  scheme toggle — with `scheme`, `primary`, `accent`, `media` and `toggle`. The colour names offered are the
+  ones the theme ships, primary and accent each with their own set.
+- `theme.font`, `theme.language`, `theme.icon`, `theme.logo`, `theme.favicon`, `theme.custom_dir` and
+  `theme.direction` are described as well, as is the Material part of `extra`: `social`, `analytics`,
+  `consent`, `generator` and `status`.
+- `extra.version` and `extra.alternate` are deliberately left unconstrained — they belong to the coming Mike
+  and I18N features and must not be reported as unknown in the meantime.
+- The refined schema is bound to the facet: a site on another theme keeps the plain MkDocs schema, so no key is
+  offered that the theme rendering the site does not read. Both schemas apply side by side, the refined one
+  first, and the MkDocs schema it builds on is bundled with the plugin rather than fetched at runtime.
+- A **Markdown extension that the configuration forces** is now reported above `mkdocs.yml` as an error: a flag
+  such as `content.code.annotate` renders nothing at all without `pymdownx.superfences`, and nothing in the
+  file shows it. The quick fix adds the extension together with the options it needs. Nothing is reported for a
+  site that ticks no such flag — the theme renders a plain site without a single extension.
+- Everything the theme merely **builds on** is offered separately, as a weak warning that can be switched off
+  in *Settings → Editor → Inspections*: a site keeping its Markdown plain is not doing anything wrong.
+- **Quick documentation** on an entry of `markdown_extensions` now explains what the extension does and links
+  to its own documentation, instead of saying nothing.
+- **Quick documentation** on an entry of `theme.features` now explains what the flag does: its one line
+  description, the section of the page it changes, the flags it needs or clashes with, the Markdown
+  extensions it forces, whether it needs an *Insiders* build, and a link into the documentation of the theme.
+- `markdown_extensions` now **completes** the extensions the theme builds upon, each with its one line
+  description — in both shapes the key accepts, the sequence of names and the mapping of name to options. An
+  extension outside that list stays valid, so a site may keep on using one of its own.
+- The **options of a Markdown extension** are now completed one level below its entry — `permalink` and
+  `toc_depth` under `- toc:`, and the same for every other extension the theme builds upon. Each entry names
+  the kind of value it takes and what it does, and the value itself is offered where it is a flag or a fixed
+  set of choices. That level was empty before: no schema describes it.
+- **Quick documentation** on such an option now explains what it does, what it takes, which values it accepts,
+  what the extension falls back to without it and what *Material for MkDocs* recommends for it.
+- ++ctrl+q++ inside the **completion popup** now answers as well, for an extension and for an option alike. The
+  descriptions are no longer written behind the offered names: a popup of two dozen entries, each carrying a
+  sentence, was unreadable, and the sentence is one key away.
+- `theme.custom_dir` and the entries of `extra_javascript` — in both the plain and the mapping form MkDocs 1.6
+  accepts — are now **path values** like every other: navigation, completion, renaming, the gutter icon and the
+  path check apply to them. The override directory is resolved next to `mkdocs.yml`, a script below `docs_dir`.
+- A new intention **creates the target** a path points at, with the directories along the way, as a directory or
+  as an empty file depending on the key. Not offered for `site_dir`, which the build writes itself.
+- The **icons of the installed Material for MkDocs** are now completed in `mkdocs.yml` — at `theme.icon.*`, at
+  the toggle of a palette and at the icons of `extra.social` — and in the pages of a site as the shorthands
+  `:material-check:` and their like. The drawing is shown next to each entry. The names are read from the
+  installed package, so they always match the version of the theme that is actually there.
+- The installation is looked for in the virtual environments next to the site (`.venv`, `venv`, `env`,
+  `.virtualenv`, on Windows and on POSIX layouts alike). A new settings page under *Tools → MkDocs* takes the
+  path for every other setup.
+- The **custom properties of the theme** (`--md-…`) are completed inside CSS files, each with the part of the
+  page it paints.
+- **Template overrides** can now be created from the context menu of a site root: the override directory, the
+  selected files with a working Jinja scaffold in them, and `theme.custom_dir` pointing at the directory — all
+  in one undoable step. Live templates for the Jinja blocks come with it.
+- The keys a configuration file owes to the **Material theme** are now marked as such. An icon sits in front of
+  `theme.features`, `theme.palette`, `theme.font`, `theme.icon`, `theme.direction` and the theme's own keys
+  below `extra`, with a tooltip saying that MkDocs itself does not read them. What MkDocs reads — `theme.name`,
+  `theme.logo`, `theme.favicon`, `theme.custom_dir`, `markdown_extensions` — stays unmarked. The hint can be
+  switched off under *Settings → Editor → Inlay Hints*.
+- The same mark now appears on the **completion entries** coming from the theme: in `mkdocs.yml`, on the icon
+  shorthands `:material-…:` in the pages, and on the `--md-*` custom properties in the style sheets. An entry
+  that already shows a drawing of its own keeps it and is badged instead.
+- The user interface is now **localised** into the three languages JetBrains ships a language pack for:
+  Simplified Chinese, Japanese and Korean. The IDE picks the texts up on its own once the matching language
+  pack is installed; without one everything stays English as before.
+- An icon name the installed theme does not offer is now **marked in the editor**. In `mkdocs.yml` the two
+  cases are told apart: an icon set that is not installed is marked on the set, a wrong name below a set that
+  is installed on the name. Until then a site simply rendered nothing there, without saying so.
+- The same on the **pages of a site**: `:material-…:` and its like are marked when the set is installed and
+  the icon is not. Shorthands of any other kind are left alone — `:smile:` and the emoji of `pymdownx.emoji`
+  are written exactly the same way.
+
+### Removed
+
+- The inlay hint putting the icon of *Material for MkDocs* in front of every key only that theme reads is
+  gone. The same statement is still made where it is asked for: the completion entries of the theme carry its
+  icon.
+
+### Fixed
+
+- An **icon of the plugin is now painted at the size of the place showing it**, whatever moment the drawing
+  behind it is read at. Where the file had not been read yet when the icon was handed out, its size was
+  computed against a width that did not stand for the drawing, and the icon ended up rendered at the full
+  48 pixels of its canvas instead of the 16 of a list entry.
+- The **icon completion no longer stalls on every keystroke**. The sets of the theme hold several thousand
+  icons, and each of them was loaded from its file whenever the popup measured itself — which took seconds per
+  letter. A drawing is now read only when it is actually shown, and what has been read is kept for as long as
+  the installation stands.
+- The popup no longer offers thousands of entries at once. It is walked **one level at a time** — the icon
+  sets first, then what lies below the chosen one, and the icons at the bottom — in `mkdocs.yml` and on the
+  `:material-…:` shorthands of a page alike. Taking a set opens the next level on its own. A level that is
+  still very long, as the flat `material` set is, shows its first 100 matching entries and says so at its
+  foot; typing another letter brings the rest back in.
+
 ## [0.2.0]
 
 ### Added
@@ -96,8 +315,7 @@
   step warns when the target directory is not empty and refuses a directory that already holds an MkDocs
   configuration file. *Next* stays disabled until the location, the site name and both directory names are
   usable.
-- The second wizard step offers the optional features of a site. No feature ships yet — the `siteFeature`
-  extension point exists so the planned MkDocs extensions can be plugged in later.
+- The second wizard step offers the optional features of a site. No feature ships yet.
 - The documentation directory and the assets directory of a site now carry their own badge in the project
   view, so the three directories of a site are distinguishable at a glance.
 - A module containing more than one MkDocs site no longer silently drops all but the first one: every further

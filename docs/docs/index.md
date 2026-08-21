@@ -10,6 +10,9 @@ JetBrains plugin providing MkDocs support in all IntelliJ-platform IDEs.
   repository link and the copyright notice, prefilled from Git and from the IDE's Copyright profiles.
 - [Configuration file support](configuration.md) — a JSON schema for both spellings of the configuration
   file, and an inspection reporting missing site metadata with a quick fix.
+- [Angular Material](angular-material.md) — a site using the Material theme carries a facet of its own, and its
+  `mkdocs.yml` is edited against a refined schema covering `theme.features`, `theme.palette`, the fonts, the
+  icons and the Material part of `extra`.
 
 ## Installation
 

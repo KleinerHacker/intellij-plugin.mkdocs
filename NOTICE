@@ -1,0 +1,24 @@
+MkDocs IntelliJ Plugin
+Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026
+
+This product includes software developed by third parties, listed below.
+
+--------------------------------------------------------------------------------
+JSON Schema Store — MkDocs schema
+--------------------------------------------------------------------------------
+
+File:    src/main/resources/schema/mkdocs-1.6.json
+Source:  https://www.schemastore.org/mkdocs-1.6.json
+Project: JSON Schema Store — https://github.com/SchemaStore/schemastore
+Licence: Apache License, Version 2.0
+         http://www.apache.org/licenses/LICENSE-2.0
+
+The file is a verbatim, vendored snapshot of the MkDocs 1.6 schema published by the
+JSON Schema Store project. It is bundled rather than fetched at runtime because a
+bundled JSON schema cannot reference a remote schema: the IntelliJ Platform resolves
+a relative "$ref" against the parent directory of the schema's own file, so a remote
+reference would silently drop the referenced branch.
+
+Refresh the snapshot with:
+
+    ./gradlew refreshMkDocsSchema

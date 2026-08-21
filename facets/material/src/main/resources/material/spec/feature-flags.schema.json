@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/feature-flags.schema.json",
+  "title": "Material for MkDocs feature flags",
+  "description": "The entries of the theme.features sequence of the Material for MkDocs theme.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "group",
+      "descriptionKey",
+      "docUrl"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The identifier as it appears in theme.features, for example navigation.tabs."
+      },
+      "group": {
+        "type": "string",
+        "description": "The section of the page this flag changes.",
+        "enum": [
+          "ANNOUNCE",
+          "CONTENT",
+          "HEADER",
+          "NAVIGATION",
+          "SEARCH",
+          "TOC"
+        ]
+      },
+      "descriptionKey": {
+        "type": "string",
+        "description": "The bundle key of the one line description shown in QuickDoc, completion and the settings page."
+      },
+      "docUrl": {
+        "type": "string",
+        "format": "uri",
+        "description": "The address of the section of the Material for MkDocs documentation describing this flag, linked from QuickDoc."
+      },
+      "insiders": {
+        "type": "boolean",
+        "description": "Whether the flag only has an effect in an Insiders build of the theme.",
+        "default": false
+      },
+      "requires": {
+        "type": "array",
+        "description": "The ids of the flags that have to be enabled as well for this flag to do anything.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "conflictsWith": {
+        "type": "array",
+        "description": "The ids of the flags this one cannot be combined with. Declared on one side only; the symmetric closure is computed when the file is read.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "requiredExtensions": {
+        "type": "array",
+        "description": "The markdown extension ids that have to be enabled for this flag to work.",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

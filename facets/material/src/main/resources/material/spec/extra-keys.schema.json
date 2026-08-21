@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/extra-keys.schema.json",
+  "title": "Material for MkDocs extra keys",
+  "description": "The keys below `extra` the Material for MkDocs theme reads.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fields"
+  ],
+  "properties": {
+    "reserved": {
+      "type": "array",
+      "description": "The keys below `extra` other features own, which this model must never describe or overwrite.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fields": {
+      "type": "array",
+      "description": "The keys the theme owns, in the order the settings page and the schema list them.",
+      "items": {
+        "$ref": "#/$defs/field"
+      }
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "kind",
+        "descriptionKey"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The key as it is written in the configuration file."
+        },
+        "kind": {
+          "type": "string",
+          "description": "The shape of the value below the key.",
+          "enum": [
+            "STRING",
+            "BOOLEAN",
+            "MAPPING",
+            "SEQUENCE_OF_MAPPINGS",
+            "SEQUENCE_OF_STRINGS",
+            "MAP_OF_STRINGS"
+          ]
+        },
+        "descriptionKey": {
+          "type": "string",
+          "description": "The bundle key of the one line description."
+        },
+        "children": {
+          "type": "array",
+          "description": "The keys below this one, absent unless `kind` describes a mapping.",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        }
+      }
+    }
+  }
+}

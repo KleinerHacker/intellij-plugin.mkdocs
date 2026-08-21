@@ -1,0 +1,208 @@
+<!--
+  ~ Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+  ~ This work is licensed under the Apache License, Version 2.0.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, this software is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations.
+  -->
+
+<!-- The Angular Material facet, as a plugin content module of the V2 model. Named after the module and living
+     in the resource root, which is where the platform looks for it — under META-INF it would not be found.
+     Everything the theme contributes is registered here rather than in plugin.xml, so the plugin knows nothing
+     about the feature beyond the `siteFeature` extension point it plugs into. -->
+<idea-plugin package="org.pcsoft.ij.plugin.mkdocs.material">
+    <!-- Every user visible text of the feature. Kept apart from the bundle of the plugin: a text about the
+         theme is none of the plugin's business. -->
+    <resource-bundle>messages.MkDocsMaterialBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- The Angular Material theme, sitting next to the MkDocs facet: present exactly while the
+             configuration file names "material" as its theme. -->
+        <facetType implementation="org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacetType"/>
+
+        <!-- The feature watches the installed package its icon sets come from. -->
+        <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialVfsListener"/>
+
+        <!-- The settings of the feature, as a page of its own below the MkDocs page of the plugin. The parent
+             id is the only thing the two share: the plugin knows nothing about this page. -->
+        <projectConfigurable
+                id="org.pcsoft.ij.plugin.mkdocs.settings.material"
+                parentId="org.pcsoft.ij.plugin.mkdocs.settings"
+                bundle="messages.MkDocsMaterialBundle"
+                key="settings.material.title"
+                instance="org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialIconSettingsConfigurable"/>
+
+        <!-- Completes the icons of the installed Material for MkDocs. Not part of the schema: which icons
+             exist is a property of the installed package, and there are several thousand of them. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconCompletionContributor"/>
+
+        <!-- Puts the re-reading of the installation into the footer menu of the completion popup, where a
+             stale list of icon names shows itself. Not as an entry of the list: that list belongs to the
+             icons, and an entry inserting no name would be a name that is none. -->
+        <lookup.actionProvider
+                implementation="org.pcsoft.ij.plugin.mkdocs.material.icon.MkDocsMaterialIconLookupActionProvider"/>
+
+        <!-- Completes the Markdown extensions the theme builds upon, under `markdown_extensions`. Not part of
+             the refined schema: the key carries two shapes and the base schema constrains it already, and the
+             values reached no popup through that — see the class for the measurement. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialExtensionCompletionContributor"/>
+
+        <!-- Completes the options an extension accepts below its own entry, and the values of those options.
+             Neither the base schema nor the refined one describes them, so that level stayed empty. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialExtensionOptionCompletionContributor"/>
+
+        <!-- Completes the media queries a palette is chosen by. The schema describes the key as a plain
+             string, and has to: every valid CSS media query is legal there. The three the theme is built
+             around are what an author is looking for, and they are easy to mistype. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialPaletteMediaCompletionContributor"/>
+
+        <!-- The counterpart of that completion. A warning that can be switched off, because a query of the
+             author's own is legal — but one outside the three leaves the colour scheme toggle with nothing
+             to act on, and that is invisible in the file. No quick fix: which query was meant is a guess. -->
+        <localInspection language="yaml"
+                         shortName="MkDocsMaterialPaletteMedia"
+                         bundle="messages.MkDocsMaterialBundle"
+                         key="inspection.material.paletteMedia"
+                         groupBundle="messages.MkDocsBundle"
+                         groupKey="inspection.group.mkdocs"
+                         level="WARNING"
+                         enabledByDefault="true"
+                         implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialPaletteMediaInspection"/>
+
+        <!-- Puts the mark of the Material theme on the completion entries that come from it. Runs first and
+             lets the other contributors — the JSON schema above all — produce their entries through it, which
+             is the only place all of them pass through. -->
+        <completion.contributor
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.completion.MkDocsMaterialOriginCompletionContributor"/>
+
+        <!-- The shorthand of an icon behind every value naming one: a page writes `material/pencil` as
+             `:material-pencil:`, and that translation is otherwise done by hand. -->
+        <codeInsight.inlayProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialIconKeyInlayHintsProvider"/>
+
+        <!-- The drawing of an icon in front of every value naming one. The name alone says nothing about
+             what it draws, and the sets of an installed theme hold thousands of them. -->
+        <codeInsight.inlayProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.hint.MkDocsMaterialIconInlayHintsProvider"/>
+
+        <!-- The mark of the Material theme in the gutter, next to every key and every value of mkdocs.yml the
+             theme brings along. Says which settings stop working on a change of theme, without touching the
+             text of the file. Several marks per line are intended: a key of MkDocs can carry a value of the
+             theme. -->
+        <codeInsight.lineMarkerProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialOriginLineMarkerProvider"/>
+
+        <!-- Banner above a Material configuration file whose own features ask for a Markdown extension it
+             does not list. An error, and only for extensions that are actually forced: the site renders
+             nothing for such a feature, and there is nothing in the file to see it on. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialExtensionAnnotator"/>
+
+        <!-- Banner above a Material configuration file while no installation of the theme can be found.
+             Everything read out of the package is empty then, and an empty completion popup says nothing
+             about why — so the state is stated once, with the way to the settings page attached. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialInstallationAnnotator"/>
+
+        <!-- Marks a name that the installed sets do not hold. Told apart by where it goes wrong: an unknown
+             set is marked on the set, an unknown icon below a known set on the name. Silent while nothing
+             can be read, which the annotator above states once for the whole file. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialIconAnnotator"/>
+
+        <!-- The counterpart of that annotator for everything the theme merely builds on. A weak warning
+             that can be switched off: a site keeping its Markdown plain is not doing anything wrong. -->
+        <localInspection language="yaml"
+                         shortName="MkDocsMaterialRecommendedExtension"
+                         bundle="messages.MkDocsMaterialBundle"
+                         key="inspection.material.recommendedExtension"
+                         groupBundle="messages.MkDocsBundle"
+                         groupKey="inspection.group.mkdocs"
+                         level="WEAK WARNING"
+                         enabledByDefault="true"
+                         implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialRecommendedExtensionInspection"/>
+
+        <!-- Quick documentation for the entries of markdown_extensions. The JSON schema describes the shape
+             of that list, not what a single entry does — which is the question an author actually has. -->
+        <lang.documentationProvider
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialExtensionDocumentationProvider"/>
+
+        <!-- The same for the entries of theme.features. Registered first on purpose: the JSON schema of the
+             key answers Ctrl+Q as well, with the one line describing the *shape* of the list ("A feature flag
+             of Material for MkDocs"), and the platform takes the first provider that answers at all. -->
+        <lang.documentationProvider
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialFeatureDocumentationProvider"/>
+
+        <!-- The same for the values of theme.palette. The generated schema carries the description on the
+             value it offers, which answers inside the popup — but a colour already written into the file has
+             nobody to explain it, and `deep-purple` says nothing about what it paints. Registered first for
+             the same reason the provider above is: the schema answers with the description of the key. -->
+        <lang.documentationProvider
+                language="yaml"
+                order="first"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialPaletteDocumentationProvider"/>
+
+        <!-- Quick documentation on an entry of the completion popup. A separate extension point of its own:
+             the popup no longer asks the documentation provider of the language, and without this it shows
+             the bare name of the element behind the entry. -->
+        <platform.backend.documentation.lookupElementTargetProvider
+                implementation="org.pcsoft.ij.plugin.mkdocs.material.inspection.MkDocsMaterialLookupDocumentationTargetProvider"/>
+
+        <!-- The Jinja constructs an override file of the theme is written with. Text expansions rather than
+             a language: the plugin adds no PSI for the templates of the theme. -->
+        <defaultLiveTemplates file="/material/liveTemplates/MkDocsMaterial.xml"/>
+    </extensions>
+
+    <!-- Carries a facet added or removed by hand in the Project Structure dialog back into mkdocs.yml,
+         the opposite direction of the detection. -->
+    <projectListeners>
+        <listener class="org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialFacetListener"
+                  topic="com.intellij.facet.FacetManagerListener"/>
+    </projectListeners>
+
+    <!-- The one place the plugin and the feature meet. -->
+    <extensions defaultExtensionNs="org.pcsoft.ij.plugin.mkdocs">
+        <!-- Offers the Material theme in the site creation wizard, mirrors the facet after every detection
+             run and contributes the refined JSON schema. -->
+        <siteFeature implementation="org.pcsoft.ij.plugin.mkdocs.material.facet.MkDocsMaterialSiteFeature"/>
+    </extensions>
+
+    <actions resource-bundle="messages.MkDocsMaterialBundle">
+        <!-- Offered on the root directory of a site using the Material theme. Creating an override means a
+             directory, a key in mkdocs.yml and a file at exactly the right path — all three at once, because
+             missing one of them produces a site that builds and ignores the override. -->
+        <action id="org.pcsoft.ij.plugin.mkdocs.CreateMaterialOverride"
+                class="org.pcsoft.ij.plugin.mkdocs.material.override.MkDocsMaterialCreateOverrideAction"
+                icon="org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons.Feature">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+
+        <!-- Reads the installation again on request. Nothing re-checks it on its own — it does not change
+             while the IDE runs — so this is how a package installed next to a running IDE is picked up. In no
+             menu on purpose: it belongs to the moment an icon list looks stale, and that moment is reached
+             through Find Action, through the settings page and through the footer of the completion popup. -->
+        <action id="org.pcsoft.ij.plugin.mkdocs.ReloadMaterialInstallation"
+                class="org.pcsoft.ij.plugin.mkdocs.material.ui.MkDocsMaterialReloadAction"
+                icon="org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialIcons.Feature"/>
+    </actions>
+</idea-plugin>

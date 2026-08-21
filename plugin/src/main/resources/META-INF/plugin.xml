@@ -1,0 +1,329 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>org.pcsoft.ij.plugin.mkdocs</id>
+
+    <!-- Public plugin name should be written in Title Case.
+     Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
+    <name>Mkdocs</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor url="https://github.com/KleinerHacker">PCSoft</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
+    <description><![CDATA[
+        Support for <a href="https://www.mkdocs.org">MkDocs</a> projects in all IntelliJ-platform IDEs.<br>
+        <br>
+        The plugin recognizes every MkDocs site inside your project, makes it visible in the IDE and lets you
+        create new sites without leaving the editor.<br>
+        <br>
+        <b>Features</b>
+        <ul>
+            <li><b>Automatic site detection</b> &ndash; every <code>mkdocs.yml</code> / <code>mkdocs.yaml</code>
+                turns its directory into an MkDocs site, re-detected after every file system change.</li>
+            <li><b>Module integration</b> &ndash; a detected site is represented by an <i>MkDocs</i> facet on the
+                surrounding module; if the site belongs to no module, an own module is created. Its name is taken
+                from <code>site_name</code>, falling back to the directory name. Its page in
+                <i>Project Structure</i> lets the site be renamed through <code>site_name</code> and the technical
+                directories along with it: the directory is moved and every
+                reference to it &ndash; in <code>mkdocs.yml</code> and in the pages &ndash; follows, while
+                <code>docs_dir</code> and <code>site_dir</code> are written back into the configuration file.</li>
+            <li><b>Project view</b> &ndash; the site root is labelled with the site name and badged, and the
+                documentation directory (<code>docs_dir</code>) as well as the assets and stylesheets directories are
+                marked.</li>
+            <li><b>File icons</b> &ndash; own icons for <code>mkdocs.yml</code> / <code>mkdocs.yaml</code>, for
+                the Markdown pages below <code>docs_dir</code>, for a <code>requirements.txt</code> sitting
+                directly next to the configuration file and for every style sheet listed in
+                <code>extra_css</code>.</li>
+            <li><b>Site Page tool window</b> &ndash; one tab per detected site, each showing the navigation
+                written under <code>nav</code>. A node is labelled with the title from <code>nav</code>, else
+                with the first <code>#</code> heading of the page, else with the file name, followed in grey by
+                the file name and, for a page in a subdirectory, its relative path. Sections carry an own
+                MkDocs folder icon. Double clicking opens the page in the editor or the address in the browser;
+                entries pointing nowhere are kept and marked.</li>
+            <li><b>Path references</b> &ndash; the entries of <code>extra_css</code>, the targets of
+                <code>nav</code>, <code>theme.logo</code>, <code>theme.favicon</code>, <code>docs_dir</code>
+                and <code>site_dir</code> point at the file or directory they name: Ctrl+click follows the
+                path, completion offers what is there, renaming rewrites the entry, and a path leading
+                nowhere is reported &mdash; except <code>site_dir</code>, which names the build output.
+                Completion offers only what the key accepts: <code>*.css</code> below <code>extra_css</code>,
+                <code>*.js</code> and <code>*.mjs</code> below <code>extra_javascript</code>, image files
+                behind <code>theme.logo</code> and <code>theme.favicon</code>.</li>
+            <li><b>File type check</b> &ndash; a path naming a file of a type its key cannot use &mdash; a page
+                behind <code>extra_css</code>, a style sheet behind <code>theme.logo</code> &mdash; is reported
+                by an inspection of its own. A value carrying no extension, such as the icon name
+                <code>material/library</code>, is left alone.</li>
+            <li><b>Gutter icons</b> &ndash; every one of those paths carries an icon opening the target with
+                one click, a file with the icon it carries elsewhere in the IDE, <code>docs_dir</code> and
+                <code>site_dir</code> with the badge of their directory.</li>
+            <li><b>Path check</b> &ndash; forbidden or control characters, empty segments, a segment ending in
+                a dot or a space, an absolute path, a drive letter and a <code>..</code> leaving the site are
+                reported as errors; what only breaks on other operating systems &mdash; backslash separator,
+                reserved Windows names, non-ASCII characters, spaces in segments &mdash; as warnings.
+                <code>site_dir</code> names the build output and may lie outside the site, so an absolute path,
+                a drive letter and a <code>..</code> are not reported there.</li>
+            <li><b>Site creation</b> &ndash; <i>New &rarr; MkDocs Site</i> walks through layout
+                (<code>docs_dir</code>, assets, stylesheets, <code>site_dir</code>), site metadata (<code>site_name</code>,
+                <code>site_author</code>, <code>site_description</code>, <code>site_url</code>), repository
+                (<code>repo_name</code>, <code>repo_url</code>), <code>copyright</code> and optional features,
+                and writes the configuration, the documentation directory and a start page.</li>
+            <li><b>Repository detection</b> &ndash; repository address, repository name and author are prefilled
+                from Git, and an entry deviating from the local repository is reported.</li>
+            <li><b>Copyright integration</b> &ndash; the notice is taken from the IDE's Copyright profiles, with a
+                choice when several are configured and no default is set.</li>
+            <li><b>Metadata banner</b> &ndash; a missing <code>site_name</code>, <code>site_author</code> or
+                <code>site_description</code> is reported by a banner above <code>mkdocs.yml</code> /
+                <code>mkdocs.yaml</code>, each with a fix adding the key.</li>
+            <li><b>JSON schema</b> &ndash; <code>mkdocs.yaml</code> is mapped to the MkDocs schema, which the
+                bundled catalogue only offers for <code>mkdocs.yml</code>.</li>
+            <li><b>Directory completion</b> &ndash; missing site directories are suggested in the
+                <i>New Directory</i> dialog.</li>
+            <li><b>Feature extension point</b> &ndash; <code>siteFeature</code> allows optional MkDocs extensions
+                (Angular Material, I18N, Mike) to plug into the creation wizard.</li>
+            <li><b>Angular Material</b> &ndash; a site using the Material theme carries the Angular Material facet,
+                detected from <code>theme.name</code>. The facet can be selected in the creation wizard and added
+                or removed in the Project Structure dialog, which writes the theme into <code>mkdocs.yml</code>
+                or takes it out again. It is bound to the MkDocs facet and disappears with it.</li>
+            <li><b>Material schema</b> &ndash; a site carrying the Angular Material facet is edited against a refined
+                schema for the blocks the theme fills: all 28 flags of <code>theme.features</code> with a description
+                each, <code>theme.palette</code> in both its shapes with the colours and schemes of the theme,
+                <code>theme.font</code>, <code>theme.language</code>, <code>theme.icon</code>,
+                <code>theme.direction</code>, <code>theme.logo</code>, <code>theme.favicon</code>,
+                <code>theme.custom_dir</code>, and <code>social</code>, <code>analytics</code>, <code>consent</code>,
+                <code>generator</code> and <code>status</code> below <code>extra</code>. It stands in front of the
+                MkDocs schema instead of replacing it and is bundled with the plugin, so it works offline.</li>
+            <li><b>Palette values</b> &ndash; every value of <code>theme.palette.scheme</code>,
+                <code>theme.palette.primary</code> and <code>theme.palette.accent</code> carries a one line
+                description, shown in the completion popup and under <i>Ctrl+Q</i> &ndash; on an offered value
+                as well as on one already written, where the popup also names the role it plays and the shade
+                of its swatch. A colour is drawn in the popup as a square of that shade, badged with the mark
+                of the theme; <code>custom</code> keeps the plain mark, being defined by the site itself.</li>
+            <li><b>Palette media query</b> &ndash; <code>theme.palette.media</code> completes the three queries
+                the theme is built around &ndash; <code>(prefers-color-scheme: light)</code>,
+                <code>(prefers-color-scheme: dark)</code> and <code>(prefers-color-scheme)</code> &ndash; each
+                with a line saying when its palette applies, and writes the value into the file in quotes. A
+                query outside them is reported as a warning that can be switched off.</li>
+            <li><b>Palette against the style sheets</b> &ndash; <code>theme.palette</code> and the style sheets
+                behind <code>extra_css</code> are read against each other, through the CSS parser of the IDE. A
+                <code>custom</code> colour no style sheet defines <code>--md-primary-fg-color</code> or
+                <code>--md-accent-fg-color</code> for is reported, and so is a named colour whose property a
+                style sheet redefines all the same. Which definitions count is decided by the ground the
+                palette stands on: <code>:root</code> counts for every palette, a rule below
+                <code>[data-md-color-scheme]</code> only for the one naming it.</li>
+            <li><b>Palette scheme</b> &ndash; <code>theme.palette.scheme</code> completes the grounds the style
+                sheets a site loads actually paint: the one the installed theme ships, which is where
+                <code>default</code> and <code>slate</code> come from, and the files behind
+                <code>extra_css</code>. Each entry names where it came from, and <i>Ctrl+Click</i> on the value
+                jumps to the selector painting it. A ground no style sheet paints is marked the way an
+                unresolved name is; <code>default</code> and <code>slate</code> stay valid without any
+                <code>extra_css</code>, being painted by the theme itself.</li>
+            <li><b>Markdown extensions</b> &ndash; an extension the configuration forces, because a feature flag
+                does not render without it, is reported above <code>mkdocs.yml</code> as an error, with a fix
+                adding it together with the options it needs. Everything the theme merely builds on is a weak
+                warning that can be switched off. Quick documentation explains each entry of
+                <code>markdown_extensions</code>.</li>
+            <li><b>Path values</b> &ndash; <code>theme.custom_dir</code> and the entries of
+                <code>extra_javascript</code>, in both shapes MkDocs 1.6 accepts, are file references like every
+                other path, and an intention creates the target a path points at.</li>
+            <li><b>Material icons</b> &ndash; the icons of the installed <code>mkdocs-material</code> are completed
+                in <code>mkdocs.yml</code> and as the shorthands <code>:material-check:</code> in the pages, each
+                showing its drawing, and every place <code>mkdocs.yml</code> names an icon is covered. An icon
+                already written shows its drawing in the editor as well, in front of the name and in front of
+                the shorthand. The installation is found through <code>pip show mkdocs-material</code>, or
+                chosen under <i>Tools &rarr; MkDocs &rarr; Material</i>, which lists what was found and takes a
+                directory of your own &ndash; checked against the metadata pip wrote there before it is
+                accepted. While no installation can be found, <code>mkdocs.yml</code> says so in a banner
+                leading to that page.</li>
+            <li><b>Material style sheets</b> &ndash; the custom properties of the theme (<code>--md-…</code>) are
+                completed inside CSS files.</li>
+            <li><b>Material origin</b> &ndash; the completion entries a site owes to the Material theme carry
+                its icon, in <code>mkdocs.yml</code>, in the pages and in the style sheets. What MkDocs itself
+                reads stays unmarked. In a written <code>mkdocs.yml</code> the gutter carries the same mark,
+                next to every key of the theme and next to a value that stands for it on its own.</li>
+            <li><b>Icon shorthands in <code>mkdocs.yml</code></b> &ndash; an icon named in the configuration
+                file shows behind its name the shorthand a page writes it with,
+                <code>material/pencil</code> as <code>:material-pencil:</code>.</li>
+            <li><b>Template overrides</b> &ndash; the context menu of a site root creates the override directory,
+                the selected templates with a working Jinja scaffold, and <code>theme.custom_dir</code> pointing at
+                them, in one undoable step. Live templates for the Jinja blocks come with it.</li>
+        </ul>
+        The current implementation status is tracked in
+        <a href="https://github.com/KleinerHacker/intellij-plugin.mkdocs/blob/master/STATUS.md">STATUS.md</a>.<br>
+        <br>
+        Documentation: <a href="https://kleinerhacker.github.io/intellij-plugin.mkdocs/">kleinerhacker.github.io/intellij-plugin.mkdocs</a>
+        ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <!-- No dependency on org.jetbrains.kotlin: the plugin is *written* in Kotlin, which needs nothing but the
+         platform-bundled stdlib at runtime. Declaring the Kotlin IDE plugin would make the plugin
+         unloadable in Rider, CLion and GoLand, which do not ship it. -->
+    <depends>org.jetbrains.plugins.yaml</depends>
+    <depends>com.intellij.modules.json</depends>
+
+    <!-- Optional: both plugins are bundled with every JetBrains IDE, but the user may switch them off. The
+         prefilling they enable is a convenience, never a requirement — so everything touching them lives in a
+         descriptor of its own that is simply not loaded when the plugin is missing. -->
+    <depends optional="true" config-file="mkdocs-git.xml">Git4Idea</depends>
+    <depends optional="true" config-file="mkdocs-copyright.xml">com.intellij.copyright</depends>
+
+    <!-- Message bundle for every user visible text. -->
+    <resource-bundle>messages.MkDocsBundle</resource-bundle>
+
+    <!-- The optional features of an MkDocs site, each one a content module of the V2 model. The plugin knows
+         nothing about them beyond the `siteFeature` extension point they register with; their descriptors sit
+         in the resource root of their own Gradle project, named after the module.
+
+         The two modules marked `loading="optional"` need an IDE plugin that not every IDE ships. Such a module
+         is left out where its plugin is missing, which is what keeps the whole plugin loadable in Rider, CLion
+         and GoLand. -->
+    <content>
+        <module name="org.pcsoft.ij.plugin.mkdocs.material"/>
+        <module name="org.pcsoft.ij.plugin.mkdocs.material.css" loading="optional"/>
+        <module name="org.pcsoft.ij.plugin.mkdocs.material.markdown" loading="optional"/>
+    </content>
+
+    <!-- Extension points offered to other plugins and to later parts of this one. -->
+    <extensionPoints>
+        <!-- Optional features of an MkDocs site: the entry in the creation wizard, the facet mirroring the
+             feature and the refined JSON schema its sites are edited against. Implemented by the content
+             modules declared above — Angular Material today, I18N and Mike later — and the only place the
+             plugin and a feature meet, which is what lets a feature live in a Gradle project of its own. -->
+        <extensionPoint name="siteFeature"
+                        interface="org.pcsoft.ij.plugin.mkdocs.api.MkDocsSiteFeature"
+                        dynamic="true"/>
+
+        <!-- Reads remote and user from the version control system. Implemented per VCS, because neither is
+             part of the generic VCS API of the platform. -->
+        <extensionPoint name="scmProvider"
+                        interface="org.pcsoft.ij.plugin.mkdocs.types.MkDocsScmProvider"
+                        dynamic="true"/>
+
+        <!-- Reads the copyright notices configured in the IDE. -->
+        <extensionPoint name="copyrightProvider"
+                        interface="org.pcsoft.ij.plugin.mkdocs.types.MkDocsCopyrightProvider"
+                        dynamic="true"/>
+    </extensionPoints>
+
+    <!-- Actions contributed by the plugin. -->
+    <actions>
+        <!-- NewGroup backs both the "New" context menu of the project view and File | New. -->
+        <action id="org.pcsoft.ij.plugin.mkdocs.CreateSite"
+                class="org.pcsoft.ij.plugin.mkdocs.module.create.MkDocsCreateSiteAction"
+                icon="org.pcsoft.ij.plugin.mkdocs.MkDocsIcons.MkDocs">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+
+    </actions>
+
+    <!-- Extensions defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- The MkDocs module system: the directory above an mkdocs.yml becomes an MkDocs module, which is
+             represented by this facet. Optional MkDocs features are meant to be added later as facets
+             declaring "mkdocs" as their underlying facet type. -->
+        <facetType implementation="org.pcsoft.ij.plugin.mkdocs.module.facet.MkDocsFacetType"/>
+
+        <!-- The MkDocs page below Tools. It edits nothing itself: it is the node the settings of the features
+             hang under, each registering against its id. -->
+        <projectConfigurable
+                id="org.pcsoft.ij.plugin.mkdocs.settings"
+                parentId="tools"
+                bundle="messages.MkDocsBundle"
+                key="settings.title"
+                instance="org.pcsoft.ij.plugin.mkdocs.settings.MkDocsSettingsConfigurable"/>
+
+        <!-- Initial detection when a project is opened … -->
+        <postStartupActivity implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsStartupActivity"/>
+        <!-- … and re-detection after every relevant virtual file system change. -->
+        <vfs.asyncListener implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsVfsListener"/>
+
+        <!-- Shows the site name behind the site root directory in the project view and badges its icon. -->
+        <projectViewNodeDecorator implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsProjectViewDecorator"/>
+
+        <!-- Gives mkdocs.yml / mkdocs.yaml, the Markdown pages and the referenced style sheets their own icons. -->
+        <fileIconProvider implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsFileIconProvider"/>
+
+        <!-- Suggests the missing documentation, assets and stylesheets directories in the New Directory dialog. -->
+        <createDirectoryCompletionContributor
+                implementation="org.pcsoft.ij.plugin.mkdocs.module.MkDocsDirectoryCompletionContributor"/>
+
+        <!-- Banner above a configuration file missing its metadata keys. A file level annotation rather than
+             a highlight: what is reported is precisely what is not in the file, so there is nothing in the
+             text to underline. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.inspection.MkDocsMissingMetadataAnnotator"/>
+
+        <!-- Turns every path value of mkdocs.yml / mkdocs.yaml — docs_dir, site_dir, theme.logo,
+             theme.favicon, the entries of extra_css and the targets of nav — into a file reference, which
+             gives them navigation, completion, renaming and a marking of targets that do not exist. -->
+        <psi.referenceContributor language="yaml"
+                                  implementation="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathReferenceContributor"/>
+
+        <!-- Gutter icon next to every path value pointing somewhere, showing the icon of the target. Files go
+             through the file icon provider above, so a page and a loaded style sheet keep their MkDocs icon. -->
+        <codeInsight.lineMarkerProvider language="yaml"
+                                        implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathLineMarkerProvider"/>
+
+        <!-- Checks the characters and the structure of those path values. Separate from the references: they
+             answer whether a path leads anywhere, this answers whether any file system can read it — and a
+             value breaking only on another operating system is reported as a warning, not as an error. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathAnnotator"/>
+
+        <!-- Marks a path value whose target does not exist. The file references know it already, but YAML
+             draws nothing for an unresolved reference, so the mark has to be created here. Soft kinds -
+             site_dir - are left alone, since build output before the first build is no mistake. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsMissingPathAnnotator"/>
+
+        <!-- Reports a path value naming a file of a type its key cannot use: a page behind extra_css, a style
+             sheet behind theme.logo. An inspection rather than an annotator, so a project doing something
+             unusual can switch it off without losing the character check of the same value. -->
+        <localInspection language="yaml"
+                         shortName="MkDocsPathFileType"
+                         bundle="messages.MkDocsBundle"
+                         key="inspection.pathFileType.displayName"
+                         groupBundle="messages.MkDocsBundle"
+                         groupKey="inspection.group.mkdocs"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="org.pcsoft.ij.plugin.mkdocs.inspection.MkDocsPathFileTypeInspection"/>
+
+        <!-- One tab per detected site, each showing the navigation written under "nav" in mkdocs.yml.
+             Reading the navigation needs no index, so the tool window is available while the IDE is still
+             indexing. Its stripe title comes from the resource bundle, key toolwindow.stripe.MkDocs_Site_Page. -->
+        <toolWindow id="MkDocs Site Page"
+                    anchor="left"
+                    icon="org.pcsoft.ij.plugin.mkdocs.MkDocsIcons.SitePageToolWindow"
+                    factoryClass="org.pcsoft.ij.plugin.mkdocs.ui.toolwindow.MkDocsSitePageToolWindowFactory"/>
+
+        <!-- Creates the target a path value points at, resolved the way MkDocs resolves it. The path check
+             above says whether a value can be read at all, the references say whether it leads anywhere —
+             this is the answer to the second, and it is always the same handful of steps. -->
+        <intentionAction>
+            <language>yaml</language>
+            <className>org.pcsoft.ij.plugin.mkdocs.reference.MkDocsCreatePathIntention</className>
+            <category>MkDocs</category>
+        </intentionAction>
+
+        <!-- Colors of the plugin's own text attributes, for light and for dark themes. -->
+        <additionalTextAttributes scheme="Default" file="colorSchemes/MkDocsDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/MkDocsDarcula.xml"/>
+    </extensions>
+
+    <!-- Shows, hides and refreshes the tool window as sites appear and disappear. A project can gain its
+         first site long after it was opened, so availability is decided after every detection run rather
+         than once at start up. -->
+    <projectListeners>
+        <listener class="org.pcsoft.ij.plugin.mkdocs.ui.toolwindow.MkDocsSitePageAvailabilityListener"
+                  topic="org.pcsoft.ij.plugin.mkdocs.services.MkDocsSitesListener"/>
+    </projectListeners>
+
+    <!-- Maps mkdocs.yaml to the MkDocs JSON schema. The bundled SchemaStore catalogue matches mkdocs.yml
+         only, so the second spelling MkDocs accepts would otherwise stay without completion. -->
+    <extensions defaultExtensionNs="JavaScript.JsonSchema">
+        <ProviderFactory implementation="org.pcsoft.ij.plugin.mkdocs.schema.MkDocsSchemaProviderFactory"/>
+    </extensions>
+</idea-plugin>

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcsoft.org/mkdocs/facets/material/css-variables.schema.json",
+  "title": "Material for MkDocs custom properties",
+  "description": "The --md-* CSS custom properties the theme styles itself with.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "group",
+      "isColor",
+      "descriptionKey"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "The custom property including the two leading hyphens, for example --md-primary-fg-color.",
+        "pattern": "^--md-[a-z0-9]+(-{1,2}[a-z0-9]+)*$"
+      },
+      "group": {
+        "type": "string",
+        "description": "The part of the page the property paints; one entry of MkDocsMaterialCssVariableGroup.",
+        "enum": [
+          "PRIMARY",
+          "ACCENT",
+          "DEFAULT",
+          "CODE",
+          "TYPESET",
+          "ADMONITION",
+          "FOOTER",
+          "SHADOW",
+          "FONT"
+        ]
+      },
+      "isColor": {
+        "type": "boolean",
+        "description": "Whether the value is a colour, which makes the IDE offer a colour swatch for it."
+      },
+      "descriptionKey": {
+        "type": "string",
+        "description": "Key of the one line description in messages/MkDocsMaterialBundle.properties.",
+        "pattern": "^material\\.css\\..+$"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="amBody" x1="8" y1="1.6" x2="8" y2="14.6" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FDFEFF"/>
+            <stop offset="1" stop-color="#E4EFFD"/>
+        </linearGradient>
+        <linearGradient id="amGloss" x1="3.5" y1="14.2" x2="13" y2="7.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#A9D6FB" stop-opacity="0.55"/>
+            <stop offset="1" stop-color="#A9D6FB" stop-opacity="0"/>
+        </linearGradient>
+        <clipPath id="amClip">
+            <path d="M8 1.6l5.6 1.95-.85 7.05L8 14.4l-4.75-3.8-.85-7.05z"/>
+        </clipPath>
+    </defs>
+    <g transform="scale(3)">
+        <path d="M8 1.6l5.6 1.95-.85 7.05L8 14.4l-4.75-3.8-.85-7.05z"
+              fill="url(#amBody)" stroke="#7CBEF9" stroke-width="1.1" stroke-linejoin="round"/>
+        <g clip-path="url(#amClip)">
+            <path d="M2 12.6c3.6 0 8.4-1.7 11.6-4.6v6.6H2z" fill="url(#amGloss)"/>
+        </g>
+        <circle cx="8" cy="7.4" r="2.75" stroke="#55A8F5" stroke-width="1.2" fill="none"/>
+        <path d="M5.25 7.4a2.75 2.75 0 0 0 5.5 0z" fill="#55A8F5"/>
+    </g>
+</svg>

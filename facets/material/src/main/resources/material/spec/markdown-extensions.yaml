@@ -1,0 +1,570 @@
+# yaml-language-server: $schema=./markdown-extensions.schema.json
+#
+# The Markdown extensions the *Material for MkDocs* theme builds upon, as listed under `markdown_extensions`.
+#
+# The theme renders a plain site without any of them, so **no extension is required unconditionally**. An
+# extension only becomes mandatory once something in the configuration actually asks for it — that is what
+# `level: REQUIRED_BY_FEATURE` marks, together with the `requiredExtensions` of a feature flag. Everything
+# else is a recommendation the site is free to ignore, which is why the annotator may only report the former
+# as an error.
+#
+# `pipPackage` names the PyPI package the extension comes from, and is absent when Python Markdown itself
+# ships it.
+#
+# `options` lists what an extension accepts below its own entry — `- toc:` and then `permalink` under it. The
+# list feeds the completion popup and QuickDoc, and `recommendedValue` marks the options the quick fix writes
+# when it adds the extension; the order of that write is the order of this list.
+#
+# Options taking a mapping or a list of mappings — the custom fences of superfences, the key map of keys, the
+# emoji options — are deliberately absent: completion would offer them as a scalar, which is not what they
+# take, and QuickDoc cannot describe their shape in one line either.
+
+# --- Python Markdown -----------------------------------------------------------------------------------
+
+# Call-out blocks such as note, warning and tip.
+- id: admonition
+  level: RECOMMENDED
+  descriptionKey: material.extension.admonition
+  docUrl: https://python-markdown.github.io/extensions/admonition/
+
+# HTML attributes and CSS classes attached to Markdown elements.
+#
+# No feature forces it: it widens what an author may write — buttons, grids, annotations outside of code
+# blocks — but every one of those is a choice made on a page, not something `theme.features` implies.
+- id: attr_list
+  level: RECOMMENDED
+  descriptionKey: material.extension.attr_list
+  docUrl: https://python-markdown.github.io/extensions/attr_list/
+
+# Markdown inside HTML blocks marked with markdown="1". Recommended for the same reason as attr_list: it is
+# the pages that ask for it, never the theme.
+- id: md_in_html
+  level: RECOMMENDED
+  descriptionKey: material.extension.md_in_html
+  docUrl: https://python-markdown.github.io/extensions/md_in_html/
+
+# Definition lists, and the base of task lists.
+- id: def_list
+  level: RECOMMENDED
+  descriptionKey: material.extension.def_list
+  docUrl: https://python-markdown.github.io/extensions/definition_lists/
+
+# Footnote references and their definitions.
+- id: footnotes
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.footnotes
+  docUrl: https://python-markdown.github.io/extensions/footnotes/
+  options:
+    - key: PLACE_MARKER
+      kind: STRING
+      descriptionKey: material.extension.option.footnotes.PLACE_MARKER
+      defaultValue: "///Footnotes Go Here///"
+    - key: UNIQUE_IDS
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.footnotes.UNIQUE_IDS
+      defaultValue: "false"
+    - key: BACKLINK_TEXT
+      kind: STRING
+      descriptionKey: material.extension.option.footnotes.BACKLINK_TEXT
+      defaultValue: "&#8617;"
+    - key: BACKLINK_TITLE
+      kind: STRING
+      descriptionKey: material.extension.option.footnotes.BACKLINK_TITLE
+      defaultValue: "Jump back to footnote %d in the text"
+    - key: SUPERSCRIPT_TEXT
+      kind: STRING
+      descriptionKey: material.extension.option.footnotes.SUPERSCRIPT_TEXT
+      defaultValue: "{}"
+    - key: SEPARATOR
+      kind: STRING
+      descriptionKey: material.extension.option.footnotes.SEPARATOR
+      defaultValue: ":"
+
+# Pipe tables.
+- id: tables
+  level: RECOMMENDED
+  descriptionKey: material.extension.tables
+  docUrl: https://python-markdown.github.io/extensions/tables/
+  options:
+    - key: use_align_attribute
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.tables.use_align_attribute
+      defaultValue: "false"
+
+# The table of contents and the anchor links next to the headings.
+- id: toc
+  level: RECOMMENDED
+  descriptionKey: material.extension.toc
+  docUrl: https://python-markdown.github.io/extensions/toc/
+  options:
+    - key: permalink
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.toc.permalink
+      defaultValue: "false"
+      recommendedValue: "true"
+    - key: permalink_class
+      kind: STRING
+      descriptionKey: material.extension.option.toc.permalink_class
+      defaultValue: headerlink
+    - key: permalink_title
+      kind: STRING
+      descriptionKey: material.extension.option.toc.permalink_title
+      defaultValue: Permanent link
+    - key: permalink_leading
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.toc.permalink_leading
+      defaultValue: "false"
+    - key: anchorlink
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.toc.anchorlink
+      defaultValue: "false"
+    - key: anchorlink_class
+      kind: STRING
+      descriptionKey: material.extension.option.toc.anchorlink_class
+      defaultValue: toclink
+    - key: baselevel
+      kind: INTEGER
+      descriptionKey: material.extension.option.toc.baselevel
+      defaultValue: "1"
+    - key: title
+      kind: STRING
+      descriptionKey: material.extension.option.toc.title
+    - key: title_class
+      kind: STRING
+      descriptionKey: material.extension.option.toc.title_class
+      defaultValue: toctitle
+    - key: toc_class
+      kind: STRING
+      descriptionKey: material.extension.option.toc.toc_class
+      defaultValue: toc
+    - key: toc_depth
+      kind: STRING
+      descriptionKey: material.extension.option.toc.toc_depth
+      defaultValue: "6"
+    - key: marker
+      kind: STRING
+      descriptionKey: material.extension.option.toc.marker
+      defaultValue: "[TOC]"
+    - key: separator
+      kind: STRING
+      descriptionKey: material.extension.option.toc.separator
+      defaultValue: "-"
+    - key: slugify
+      kind: PYTHON_REFERENCE
+      descriptionKey: material.extension.option.toc.slugify
+
+# --- PyMdown Extensions --------------------------------------------------------------------------------
+
+# Nested fenced blocks, custom fences and diagram support.
+- id: pymdownx.superfences
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.superfences
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/superfences/
+  options:
+    - key: disable_indented_code_blocks
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.superfences.disable_indented_code_blocks
+      defaultValue: "false"
+    - key: preserve_tabs
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.superfences.preserve_tabs
+      defaultValue: "false"
+    - key: css_class
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.superfences.css_class
+
+# Syntax highlighting of code blocks through Pygments.
+- id: pymdownx.highlight
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.highlight
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/highlight/
+  options:
+    - key: anchor_linenums
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.anchor_linenums
+      defaultValue: "false"
+      recommendedValue: "true"
+    - key: line_spans
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.highlight.line_spans
+      recommendedValue: __span
+    - key: pygments_lang_class
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.pygments_lang_class
+      defaultValue: "false"
+      recommendedValue: "true"
+    - key: use_pygments
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.use_pygments
+      defaultValue: "true"
+    - key: guess_lang
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.guess_lang
+      defaultValue: "false"
+    - key: pygments_style
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.highlight.pygments_style
+      defaultValue: default
+    - key: noclasses
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.noclasses
+      defaultValue: "false"
+    - key: linenums
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.linenums
+      defaultValue: "false"
+    - key: linenums_style
+      kind: ENUM
+      descriptionKey: material.extension.option.pymdownx.highlight.linenums_style
+      values:
+        - table
+        - inline
+        - pymdownx-inline
+      defaultValue: table
+    - key: linenums_special
+      kind: INTEGER
+      descriptionKey: material.extension.option.pymdownx.highlight.linenums_special
+      defaultValue: "-1"
+    - key: linenums_class
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.highlight.linenums_class
+      defaultValue: linenums
+    - key: line_anchors
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.highlight.line_anchors
+    - key: language_prefix
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.highlight.language_prefix
+      defaultValue: language-
+    - key: code_attr_on_pre
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.code_attr_on_pre
+      defaultValue: "false"
+    - key: auto_title
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.auto_title
+      defaultValue: "false"
+    - key: stripnl
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.highlight.stripnl
+      defaultValue: "true"
+
+# Syntax highlighting of inline code spans.
+- id: pymdownx.inlinehilite
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.inlinehilite
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/inlinehilite/
+  options:
+    - key: style_plain_text
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.inlinehilite.style_plain_text
+      defaultValue: "false"
+    - key: css_class
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.inlinehilite.css_class
+    - key: guess_lang
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.inlinehilite.guess_lang
+      defaultValue: "false"
+    - key: language_prefix
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.inlinehilite.language_prefix
+
+# Content of other files embedded into a page.
+- id: pymdownx.snippets
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.snippets
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
+  options:
+    - key: base_path
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.snippets.base_path
+      defaultValue: "."
+    - key: encoding
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.snippets.encoding
+      defaultValue: utf-8
+    - key: check_paths
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.snippets.check_paths
+      defaultValue: "false"
+    - key: auto_append
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.snippets.auto_append
+    - key: url_download
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.snippets.url_download
+      defaultValue: "false"
+    - key: url_max_size
+      kind: INTEGER
+      descriptionKey: material.extension.option.pymdownx.snippets.url_max_size
+      defaultValue: "33554432"
+    - key: url_timeout
+      kind: INTEGER
+      descriptionKey: material.extension.option.pymdownx.snippets.url_timeout
+      defaultValue: "10"
+    - key: restrict_base_path
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.snippets.restrict_base_path
+      defaultValue: "true"
+    - key: dedent_subsections
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.snippets.dedent_subsections
+      defaultValue: "false"
+
+# Content tabs.
+- id: pymdownx.tabbed
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.tabbed
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/
+  options:
+    - key: alternate_style
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tabbed.alternate_style
+      defaultValue: "false"
+      recommendedValue: "true"
+    - key: combine_header_slug
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tabbed.combine_header_slug
+      defaultValue: "false"
+    - key: separator
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.tabbed.separator
+      defaultValue: "-"
+    - key: slugify
+      kind: PYTHON_REFERENCE
+      descriptionKey: material.extension.option.pymdownx.tabbed.slugify
+
+# Emoji shorthands, and the icon shorthands of the theme. This is the extension a site needs as soon as it
+# writes shorthands such as :material-check:, which is what `iconShorthand` marks.
+- id: pymdownx.emoji
+  pipPackage: pymdown-extensions
+  level: REQUIRED_BY_FEATURE
+  descriptionKey: material.extension.pymdownx.emoji
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/emoji/
+  options:
+    - key: emoji_index
+      kind: PYTHON_REFERENCE
+      descriptionKey: material.extension.option.pymdownx.emoji.emoji_index
+      recommendedValue: "!!python/name:material.extensions.emoji.twemoji"
+    - key: emoji_generator
+      kind: PYTHON_REFERENCE
+      descriptionKey: material.extension.option.pymdownx.emoji.emoji_generator
+      recommendedValue: "!!python/name:material.extensions.emoji.to_svg"
+    - key: alt
+      kind: ENUM
+      descriptionKey: material.extension.option.pymdownx.emoji.alt
+      values:
+        - unicode
+        - short
+        - html_entity
+      defaultValue: unicode
+    - key: title
+      kind: ENUM
+      descriptionKey: material.extension.option.pymdownx.emoji.title
+      values:
+        - short
+        - long
+        - none
+      defaultValue: short
+    - key: remove_variation_selector
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.emoji.remove_variation_selector
+      defaultValue: "false"
+  iconShorthand: true
+
+# Collapsible call-outs.
+- id: pymdownx.details
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.details
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/details/
+
+# The markup of Critic Markup for tracked changes.
+- id: pymdownx.critic
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.critic
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/critic/
+  options:
+    - key: mode
+      kind: ENUM
+      descriptionKey: material.extension.option.pymdownx.critic.mode
+      values:
+        - view
+        - accept
+        - reject
+      defaultValue: view
+
+# Superscript and inserted text.
+- id: pymdownx.caret
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.caret
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/caret/
+  options:
+    - key: smart_insert
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.caret.smart_insert
+      defaultValue: "true"
+    - key: insert
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.caret.insert
+      defaultValue: "true"
+    - key: superscript
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.caret.superscript
+      defaultValue: "true"
+
+# Keyboard keys rendered as key caps.
+- id: pymdownx.keys
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.keys
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/keys/
+  options:
+    - key: separator
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.keys.separator
+      defaultValue: "+"
+    - key: strict
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.keys.strict
+      defaultValue: "false"
+    - key: camel_case
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.keys.camel_case
+      defaultValue: "false"
+
+# Highlighted text.
+- id: pymdownx.mark
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.mark
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/mark/
+  options:
+    - key: smart_mark
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.mark.smart_mark
+      defaultValue: "true"
+
+# Subscript and deleted text.
+- id: pymdownx.tilde
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.tilde
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/tilde/
+  options:
+    - key: smart_delete
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tilde.smart_delete
+      defaultValue: "true"
+    - key: delete
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tilde.delete
+      defaultValue: "true"
+    - key: subscript
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tilde.subscript
+      defaultValue: "true"
+
+# Lists of check boxes.
+- id: pymdownx.tasklist
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.tasklist
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/tasklist/
+  options:
+    - key: custom_checkbox
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tasklist.custom_checkbox
+      defaultValue: "false"
+      recommendedValue: "true"
+    - key: clickable_checkbox
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.tasklist.clickable_checkbox
+      defaultValue: "false"
+
+# Typographic replacements such as arrows and fractions.
+- id: pymdownx.smartsymbols
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.smartsymbols
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/smartsymbols/
+  options:
+    - key: trademark
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.trademark
+      defaultValue: "true"
+    - key: copyright
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.copyright
+      defaultValue: "true"
+    - key: registered
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.registered
+      defaultValue: "true"
+    - key: care_of
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.care_of
+      defaultValue: "true"
+    - key: plusminus
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.plusminus
+      defaultValue: "true"
+    - key: arrows
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.arrows
+      defaultValue: "true"
+    - key: notequal
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.notequal
+      defaultValue: "true"
+    - key: fractions
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.fractions
+      defaultValue: "true"
+    - key: ordinal_numbers
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.smartsymbols.ordinal_numbers
+      defaultValue: "true"
+
+# Mathematical expressions handed to MathJax or KaTeX.
+- id: pymdownx.arithmatex
+  pipPackage: pymdown-extensions
+  level: RECOMMENDED
+  descriptionKey: material.extension.pymdownx.arithmatex
+  docUrl: https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
+  options:
+    - key: generic
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.arithmatex.generic
+      defaultValue: "false"
+      recommendedValue: "true"
+    - key: preview
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.arithmatex.preview
+      defaultValue: "false"
+    - key: smart_dollar
+      kind: BOOLEAN
+      descriptionKey: material.extension.option.pymdownx.arithmatex.smart_dollar
+      defaultValue: "true"
+    - key: block_syntax
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.arithmatex.block_syntax
+      defaultValue: "dollar, square, begin"
+    - key: inline_syntax
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.arithmatex.inline_syntax
+      defaultValue: "dollar, round"
+    - key: tex_inline_wrap
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.arithmatex.tex_inline_wrap
+    - key: tex_block_wrap
+      kind: STRING
+      descriptionKey: material.extension.option.pymdownx.arithmatex.tex_block_wrap

@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=./colors.schema.json
+#
+# The colours accepted by `theme.palette.primary` and `theme.palette.accent`.
+#
+# The theme takes the colour names of the Material Design palette, written in lower case with a hyphen instead
+# of a space. `hex` is the representative shade painted as a swatch next to the name in completion and in the
+# settings page — a preview, not the exact value the theme compiles into its style sheet.
+#
+# `descriptionKey` names the one line description shown in QuickDoc and behind the offered value, so a name
+# says what it paints before it is taken.
+#
+# Not every colour works in both roles: the primary colour also has to sit behind white text, which is why
+# brown, grey, blue grey, black and white are offered for it only. The order below is the order the theme
+# documents, and it is the order completion and the settings page present.
+
+- id: red
+  hex: "#F44336"
+  descriptionKey: material.color.red
+  primary: true
+  accent: true
+
+- id: pink
+  hex: "#E91E63"
+  descriptionKey: material.color.pink
+  primary: true
+  accent: true
+
+- id: purple
+  hex: "#9C27B0"
+  descriptionKey: material.color.purple
+  primary: true
+  accent: true
+
+- id: deep-purple
+  hex: "#673AB7"
+  descriptionKey: material.color.deep-purple
+  primary: true
+  accent: true
+
+- id: indigo
+  hex: "#3F51B5"
+  descriptionKey: material.color.indigo
+  primary: true
+  accent: true
+
+- id: blue
+  hex: "#2196F3"
+  descriptionKey: material.color.blue
+  primary: true
+  accent: true
+
+- id: light-blue
+  hex: "#03A9F4"
+  descriptionKey: material.color.light-blue
+  primary: true
+  accent: true
+
+- id: cyan
+  hex: "#00BCD4"
+  descriptionKey: material.color.cyan
+  primary: true
+  accent: true
+
+- id: teal
+  hex: "#009688"
+  descriptionKey: material.color.teal
+  primary: true
+  accent: true
+
+- id: green
+  hex: "#4CAF50"
+  descriptionKey: material.color.green
+  primary: true
+  accent: true
+
+- id: light-green
+  hex: "#8BC34A"
+  descriptionKey: material.color.light-green
+  primary: true
+  accent: true
+
+- id: lime
+  hex: "#CDDC39"
+  descriptionKey: material.color.lime
+  primary: true
+  accent: true
+
+- id: yellow
+  hex: "#FFEB3B"
+  descriptionKey: material.color.yellow
+  primary: true
+  accent: true
+
+- id: amber
+  hex: "#FFC107"
+  descriptionKey: material.color.amber
+  primary: true
+  accent: true
+
+- id: orange
+  hex: "#FF9800"
+  descriptionKey: material.color.orange
+  primary: true
+  accent: true
+
+- id: deep-orange
+  hex: "#FF5722"
+  descriptionKey: material.color.deep-orange
+  primary: true
+  accent: true
+
+# Primary only from here on: these do not carry white text well enough for the accent role.
+- id: brown
+  hex: "#795548"
+  descriptionKey: material.color.brown
+  primary: true
+  accent: false
+
+- id: grey
+  hex: "#9E9E9E"
+  descriptionKey: material.color.grey
+  primary: true
+  accent: false
+
+- id: blue-grey
+  hex: "#607D8B"
+  descriptionKey: material.color.blue-grey
+  primary: true
+  accent: false
+
+- id: black
+  hex: "#000000"
+  descriptionKey: material.color.black
+  primary: true
+  accent: false
+
+- id: white
+  hex: "#FFFFFF"
+  descriptionKey: material.color.white
+  primary: true
+  accent: false
+
+# Not a colour of the palette: the site defines it itself through `--md-*` variables in its own style sheet.
+- id: custom
+  hex: "#757575"
+  descriptionKey: material.color.custom
+  primary: true
+  accent: true
+  custom: true

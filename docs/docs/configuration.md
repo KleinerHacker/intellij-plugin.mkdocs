@@ -21,6 +21,15 @@ against instead of ageing inside the plugin.
     *Settings → Languages & Frameworks → Schemas and DTDs → JSON Schema Mappings* lists the mapping under the
     name *MkDocs*.
 
+### Refined for the Material theme
+
+The MkDocs schema stops where the theme begins: it describes `theme` with a handful of keys and `extra` with
+none, which is all MkDocs itself defines. A site rendered with the Material theme keeps most of its
+configuration in exactly those two blocks, so a site carrying the *MkDocs Angular Material* facet is edited
+against a refined schema on top — the feature flags, the palette, the fonts, the icons and the Material part
+of `extra`, each key completed, validated and documented. It comes in front of the MkDocs schema rather than
+in place of it, so both are in force. See [Angular Material](angular-material.md#editing-the-configuration-file).
+
 ## Paths are references
 
 A path in `mkdocs.yml` is not a piece of text to the plugin, it is a reference to the file or directory it
@@ -29,17 +38,39 @@ names:
 | Key                              | Points at   | Resolved against |
 |----------------------------------|-------------|------------------|
 | `docs_dir`, `site_dir`           | a directory | the site root    |
+| `theme.custom_dir`               | a directory | the site root    |
 | `theme.logo`, `theme.favicon`    | a file      | `docs_dir`       |
 | every entry of `extra_css`       | a file      | `docs_dir`       |
+| every entry of `extra_javascript`| a file      | `docs_dir`       |
 | every target of `nav`            | a file      | `docs_dir`       |
+
+`theme.custom_dir` is read next to `mkdocs.yml` rather than below `docs_dir`: the templates it holds are not
+content of the site, they are what renders it. An entry of `extra_javascript` counts in both shapes MkDocs
+1.6 accepts — the plain `- extra.js` and the mapping `- path: extra.js` carrying `type` and `defer` next to
+it.
 
 That is what MkDocs itself resolves them against, so what the IDE follows is what the build reads. Being a
 reference brings everything the platform ties to one: **Ctrl+click** and *Go to declaration* open the target,
-completion offers what actually lies there — directories only where a directory is expected — **renaming** the
-file rewrites the entry, and *Find usages* on a page lists the `nav` entry pointing at it.
+completion offers what actually lies there — directories only where a directory is expected, and of the files
+only those the key accepts: `*.css` below `extra_css`, `*.js` and `*.mjs` below `extra_javascript`, and image
+files such as `*.png`, `*.jpg`, `*.svg` or `*.ico` behind `theme.logo` and `theme.favicon`. A directory is
+always offered, so a file lying in a sub directory stays reachable. **Renaming** the
+file rewrites the entry, and *Find usages* on a page lists the `nav` entry pointing at it. The rewritten entry
+stays relative to the directory MkDocs reads it against, so renaming the stylesheets directory leaves the
+`extra_css` entries pointing at their style sheets rather than at a path relative to the site root.
 
-A path leading nowhere is reported in the text. `site_dir` is the one exception: it names the output of the
-build, which is not expected to exist before the site has been built once.
+A value naming a file of a type its key cannot use — a page behind `extra_css`, a style sheet behind
+`theme.logo` — is reported by the inspection *Path naming a file of the wrong type*, found under
+*Settings → Editor → Inspections → MkDocs*. It is a check of its own rather than part of the path check below,
+so a project generating an asset into a file without the usual extension can switch it off and keep everything
+else. A value carrying no extension at all is never reported: behind `theme.logo` and `theme.favicon` the
+Material theme accepts the name of one of its own icons, such as `material/library`, which is no path.
+
+A path leading nowhere is marked in the text as an error, the way an unresolved reference is marked anywhere
+else in the IDE, and *Create the missing target* is offered next to it. Only the first segment that leads
+nowhere is marked — a `nav` entry reading `old/guide/tuning.md` whose `old` is gone is one mistake, not three.
+`site_dir` is the one exception: it names the output of the build, which is not expected to exist before the
+site has been built once.
 
 `site_dir` is also the one value that need not lie inside the site at all. It says where the build *writes*,
 so a directory beside the checkout, above it through `..` or an absolute one on another volume is perfectly
@@ -48,6 +79,16 @@ site, and a part of the site lies inside it.
 
 A target of `nav` leaving the site — an address with a scheme, or a protocol relative one — is left alone.
 There is no file behind it, and MkDocs passes it through to the theme unchanged.
+
+### Creating the target
+
+**Alt+Enter** on a path that leads nowhere offers *Create the missing target*. It creates the directories
+along the way and puts a directory or an empty file at the end of it, depending on what the key names — a
+page, a style sheet and a script become files, `docs_dir` and `theme.custom_dir` become directories. The
+value itself is left exactly as written: what is created is what was already asked for.
+
+It is not offered for `site_dir`. That directory is build output, and creating it by hand only produces an
+empty directory the next build would have written anyway.
 
 ## Gutter icons
 

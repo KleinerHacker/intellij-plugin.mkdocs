@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: sbom
-          path: build/reports/cyclonedx/bom.xml
+          path: plugin/build/reports/cyclonedx/bom.xml
 
   # Head of the pipeline: this job compiles everything once — the distributable plugin (`buildPlugin`) AND
   # the test code (`testClasses`) — and publishes the result through the shared Gradle build cache. Both
@@ -106,7 +106,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: plugin-distribution
-          path: build/distributions/*.zip
+          path: plugin/build/distributions/*.zip
 
   # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
   # Runs in parallel with the integration tests, both fed by the build job's cache.
@@ -184,24 +184,17 @@ jobs:
             .intellijPlatform/sandbox/**/log-test/**
           if-no-files-found: ignore
 
-  # Single gate name for everything that publishes: a release only happens when BOTH suites are green.
-  # Until this was introduced a tagged release was published without running any test at all.
-  tests:
+  # Run the JetBrains Plugin Verifier against the full IDE matrix declared in build.gradle.kts
+  # (IntelliJ IDEA, Rider, CLion, GoLand). A release must never publish a plugin that fails verification
+  # on one of the supported products. See .claude/rules/plugin.md.
+  verify-plugin:
     runs-on: ubuntu-latest
+    # Gated on both test suites: a red suite must stop the pipeline, not merely be reported next to it.
+    # Everything that publishes hangs behind this job, so a release only happens with both suites green.
+    # Named directly instead of through an aggregating job, which would occupy a runner for nothing.
     needs:
       - test-developer
       - test-integration
-    steps:
-      - name: Both test suites passed
-        run: echo "Developer and integration tests are green."
-
-  # Run the JetBrains Plugin Verifier against the full IDE matrix declared in build.gradle.kts
-  # (IntelliJ IDEA, Rider, CLion, GoLand). A release must never publish a plugin that fails verification
-  # on one of the supported products. See .claude/rules/plugin-verification.md.
-  verify-plugin:
-    runs-on: ubuntu-latest
-    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
-    needs: tests
 
     steps:
       - uses: actions/checkout@v7

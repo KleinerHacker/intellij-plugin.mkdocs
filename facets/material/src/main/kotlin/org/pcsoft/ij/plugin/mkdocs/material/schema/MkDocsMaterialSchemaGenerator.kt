@@ -1,0 +1,239 @@
+/*
+ * Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+ * This work is licensed under the Apache License, Version 2.0.
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, this software is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations.
+ */
+
+package org.pcsoft.ij.plugin.mkdocs.material.schema
+
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.intellij.json.JsonFileType
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.testFramework.LightVirtualFile
+import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
+import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
+
+/**
+ * Builds the JSON schema an `mkdocs.yml` of a *Material for MkDocs* site is validated and completed against.
+ *
+ * Two halves make up the result. The shape of the `theme` and `extra` blocks is hand written and shipped as
+ * `material/schema/material-theme.json`, because a schema is the only sensible way to describe nested mappings. The
+ * *values* — the feature flags, the palette colours and the schemes — are not written there at all: they live
+ * in `material.data` as Kotlin enums, and a second copy inside a resource would drift away from them the first
+ * time the theme gains a flag. They are spliced into the schema here instead, so enum and schema cannot
+ * disagree by construction.
+ *
+ * The base MkDocs schema is folded in as well. `material-theme.json` names it through a *relative* reference
+ * to the vendored `schema/mkdocs-1.6.json`, but a reference of any kind is resolved against the parent
+ * directory of the schema's own `VirtualFile` — and the generated schema is an in-memory file without a parent
+ * directory. The generator therefore reads the vendored copy and inlines it, which is what the relative
+ * reference asks for and what makes it work outside a directory. The base's own `definitions` are hoisted to
+ * the root of the result so its internal `#/definitions/…` references keep resolving.
+ *
+ * An application service because of the [schemaFile]: the platform holds on to the file it is handed only
+ * weakly, so a file created per lookup would be collected between two of them and the schema would vanish
+ * from under the editor. Held here, it lives as long as the IDE does.
+ */
+@Service(Service.Level.APP)
+class MkDocsMaterialSchemaGenerator {
+
+    companion object {
+
+        /** The hand written refinement of the `theme` and `extra` blocks. */
+        const val MATERIAL_RESOURCE: String = "/material/schema/material-theme.json"
+
+        /** The vendored copy of the SchemaStore MkDocs schema the refinement builds on. */
+        const val BASE_RESOURCE: String = "/schema/mkdocs-1.6.json"
+
+        /** The file name of the vendored copy, as the relative reference in [MATERIAL_RESOURCE] spells it. */
+        const val BASE_FILE_NAME: String = "mkdocs-1.6.json"
+
+        /** The name the generated schema is shown under, for example in the status bar widget. */
+        const val SCHEMA_FILE_NAME: String = "mkdocs-material.schema.json"
+    }
+
+    /**
+     * The generated schema as text.
+     *
+     * Built once, on first access: neither the resources nor the enums can change while the IDE runs.
+     */
+    val schemaText: String by lazy { generate().toString() }
+
+    /**
+     * The generated schema as a file the platform can read.
+     *
+     * Deliberately a `val` rather than a function building a file per call — see the class documentation.
+     */
+    val schemaFile: VirtualFile by lazy { LightVirtualFile(SCHEMA_FILE_NAME, JsonFileType.INSTANCE, schemaText) }
+
+    /**
+     * Builds the schema from the two bundled resources and the enums of `material.data`.
+     *
+     * Public so a test can check the result without booting a project.
+     *
+     * @return the generated schema, serialised as JSON
+     */
+    fun generate(): JsonObject {
+        val root = readResource(MATERIAL_RESOURCE)
+        val definitions = root.getAsJsonObject("definitions") ?: JsonObject().also { root.add("definitions", it) }
+
+        inlineBaseSchema(root, definitions)
+        spliceFeatureFlags(definitions)
+        spliceColours(definitions)
+
+        return root
+    }
+
+    /**
+     * Replaces the relative reference to the vendored base schema with the schema itself.
+     *
+     * The base's `$schema` and `$id` are dropped: the result declares its own, and an `$id` nested inside an
+     * `allOf` branch would re-base every reference resolved below it. Its `definitions` move to [definitions]
+     * so `#/definitions/…` still points at them from the root of the result.
+     *
+     * @param root the parsed refinement, modified in place
+     * @param definitions the `definitions` object of [root]
+     */
+    private fun inlineBaseSchema(root: JsonObject, definitions: JsonObject) {
+        val base = readResource(BASE_RESOURCE)
+        base.remove("\$schema")
+        base.remove("\$id")
+        base.remove("title")
+        base.getAsJsonObject("definitions")?.entrySet()?.forEach { (name, value) -> definitions.add(name, value) }
+        base.remove("definitions")
+
+        val allOf = root.getAsJsonArray("allOf") ?: return
+        val replaced = JsonArray()
+        allOf.forEach { branch ->
+            val isBaseRef = branch.isJsonObject &&
+                    branch.asJsonObject.get("\$ref")?.takeIf { it.isJsonPrimitive }?.asString == BASE_FILE_NAME
+            replaced.add(if (isBaseRef) base else branch)
+        }
+        root.add("allOf", replaced)
+    }
+
+    /**
+     * Writes the known feature flags into `theme.features`.
+     *
+     * Each flag contributes twice: once to the `enum`, which is what completion offers and what validation
+     * checks, and once to a `oneOf` branch carrying its description, which is what QuickDoc shows next to the
+     * offered value. A plain `enum` cannot carry a description per value.
+     *
+     * @param definitions the `definitions` object of the schema being built
+     */
+    private fun spliceFeatureFlags(definitions: JsonObject) {
+        val items = definitions.getAsJsonObject("materialTheme")
+            ?.getAsJsonObject("properties")
+            ?.getAsJsonObject("features")
+            ?.getAsJsonObject("items")
+            ?: return
+
+        val values = JsonArray()
+        val described = JsonArray()
+        service<MkDocsMaterialDataService>().featureFlags.all.forEach { flag ->
+            values.add(flag.id)
+            described.add(JsonObject().apply {
+                addProperty("const", flag.id)
+                addProperty("description", describe(flag))
+            })
+        }
+        items.add("enum", values)
+        items.add("oneOf", described)
+    }
+
+    /**
+     * Writes the known palette colours into both palette forms.
+     *
+     * Both forms are filled: the theme accepts a single palette as a mapping and a colour scheme toggle as a
+     * sequence of them, and a value offered in one form but not the other would be an arbitrary difference.
+     *
+     * `scheme` is deliberately left as the plain string it is described as. A ground is not a value of the
+     * theme but a name a style sheet of the site answers to — it is written into `[data-md-color-scheme="…"]`
+     * — so a fixed set here would offer grounds the site does not stand on, and refuse the ones it does. What
+     * the style sheets behind `extra_css` actually paint is offered by
+     * `MkDocsMaterialPaletteSchemeCompletionContributor` instead.
+     *
+     * @param definitions the `definitions` object of the schema being built
+     */
+    private fun spliceColours(definitions: JsonObject) {
+        val colors = service<MkDocsMaterialDataService>().colors
+        val primaries = colors.primaries().map { it.id to it.descriptionKey }
+        val accents = colors.accents().map { it.id to it.descriptionKey }
+
+        listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->
+            val properties = definitions.getAsJsonObject(name)?.getAsJsonObject("properties") ?: return@forEach
+            describe(properties.getAsJsonObject("primary"), primaries)
+            describe(properties.getAsJsonObject("accent"), accents)
+        }
+    }
+
+    /**
+     * Writes [values] into [property] as the set it accepts.
+     *
+     * Each value contributes twice, exactly the way a feature flag does: once to the `enum`, which is what
+     * completion offers and what validation checks, and once to a `oneOf` branch carrying its description,
+     * which is what QuickDoc shows next to the offered value. A plain `enum` cannot carry a description per
+     * value.
+     *
+     * @param property the property of the schema to fill, or `null` if the refinement does not describe it
+     * @param values the identifier of each value together with the bundle key of its description
+     */
+    private fun describe(property: JsonObject?, values: List<Pair<String, String>>) {
+        if (property == null) return
+        val ids = JsonArray()
+        val described = JsonArray()
+        values.forEach { (id, descriptionKey) ->
+            ids.add(id)
+            described.add(JsonObject().apply {
+                addProperty("const", id)
+                addProperty("description", message(descriptionKey))
+            })
+        }
+        property.add("enum", ids)
+        property.add("oneOf", described)
+    }
+
+    /**
+     * The one line description of [flag], read from the message bundle.
+     *
+     * Falls back to the bundle key: a description is what completion shows, and a key that has not been
+     * translated yet must not leave the entry blank.
+     *
+     * @param flag the feature flag to describe
+     */
+    private fun describe(flag: MkDocsMaterialFeatureFlag): String = message(flag.descriptionKey)
+
+    /**
+     * The text [key] stands for, read from the message bundle.
+     *
+     * Falls back to the key itself: a description is what completion and QuickDoc show, and a key that has not
+     * been translated yet must not leave the entry blank.
+     *
+     * @param key the bundle key of the description
+     */
+    private fun message(key: String): String =
+        MkDocsMaterialBundle.messageOrDefault(key, key) ?: key
+
+    /**
+     * Reads a bundled JSON resource.
+     *
+     * @param resource the absolute classpath path of the resource
+     * @throws IllegalStateException if the resource is missing from the plugin, which is a packaging error
+     */
+    private fun readResource(resource: String): JsonObject {
+        val stream = javaClass.getResourceAsStream(resource)
+            ?: error("Bundled schema resource '$resource' is missing")
+        return stream.reader(Charsets.UTF_8).use { JsonParser.parseReader(it) }.asJsonObject
+    }
+}

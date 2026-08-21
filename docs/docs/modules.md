@@ -160,16 +160,39 @@ Detection runs immediately afterwards, so the new site is an MkDocs module as so
 A detected module is marked with the **MkDocs** facet. You can see it in
 *File → Project Structure → Modules → &lt;module&gt; → Facets*, showing:
 
-| Field                   | Meaning                                                       |
-|-------------------------|---------------------------------------------------------------|
-| Site name               | `site_name` from the configuration file                       |
-| Configuration file      | the detected file, relative to the site root                  |
-| Documentation directory | `docs_dir` from the configuration file, default `docs`        |
-| Assets directory        | the name chosen when the site was created, default `assets`   |
-| Stylesheets directory   | the name chosen when the site was created, default `stylesheets` |
+| Field                   | Meaning                                                          | Editable |
+|-------------------------|------------------------------------------------------------------|----------|
+| Site name               | `site_name` from the configuration file                          | yes      |
+| Configuration file      | the detected file, relative to the site root                     | no       |
+| Documentation directory | `docs_dir` from the configuration file, default `docs`           | yes      |
+| Output directory        | `site_dir` from the configuration file, default `site`           | yes      |
+| Assets directory        | the name chosen when the site was created, default `assets`      | yes      |
+| Stylesheets directory   | the name chosen when the site was created, default `stylesheets` | yes      |
 
-Both values are read-only: the configuration file is the single source of truth. Change `site_name` in
-`mkdocs.yml` and the facet follows.
+The configuration file itself is read-only — it is the file the site was detected from. Everything else is
+written back into `mkdocs.yml`, which stays the single source of truth: change `site_name` there and the facet
+follows just as well.
+
+Renaming the site writes `site_name` and therefore renames the module with it, in the project view and in the
+*Site Page* tool window. An empty name is refused: MkDocs would render an empty header for it.
+
+### Renaming the technical directories
+
+The four directories can be renamed here. Applying the dialog renames the directory itself and rewrites every
+reference pointing into it — the entries of `extra_css`, the targets of `nav`, `theme.logo`, `theme.favicon`
+and the links of the pages — because those are the same references
+[Ctrl+click follows](configuration.md). `docs_dir` and `site_dir` are written back into `mkdocs.yml`, and
+taken out again once they carry nothing but the MkDocs default. The assets and the stylesheets directory have
+no MkDocs key, so their names are stored in the facet.
+
+The output directory is only written, never moved: it holds build output, which the next build writes anyway.
+
+A change that cannot be carried out is reported before anything moves:
+
+* a name carrying a path of its own (the output directory may carry one, the others may not),
+* a directory that is not there,
+* a name already taken by something else inside the site,
+* the same name for the assets and the stylesheets directory.
 
 For the same reason the facet cannot be assigned by hand — it is not offered in the "+" menu of the
 Project Structure dialog. A facet without a configuration file behind it would carry no site information
