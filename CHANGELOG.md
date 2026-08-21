@@ -6,6 +6,17 @@
 
 ### Added
 
+- **Python, pip and MkDocs are now found and shown under *Tools → MkDocs***: each of the three programs a site
+  is built with is searched for and stated with the version it answered `--version` with, and each can be
+  replaced by a program of your own through a file chooser. The interpreter is looked for in the activated
+  virtual environment first — the one `VIRTUAL_ENV` names — then on the `PATH`, and on Windows through the
+  `py -3` launcher; pip and MkDocs are then run *through* that interpreter, so that all three belong to the
+  same environment. A path naming nothing, a directory or a file that may not be run is stated in red and the
+  page refuses to apply on it. *Search again* picks up a program installed next to a running IDE.
+- **The installation of a feature is now looked up through the interpreter of the settings**: `pip show` is
+  asked through the Python named under *Tools → MkDocs* rather than through whichever pip lies on the `PATH`,
+  so a second installation on the machine can no longer answer for an environment the site is not built with.
+
 - **A path in `mkdocs.yml` whose target does not exist is now marked red**: `docs_dir`, `theme.custom_dir`,
   `theme.logo`, `theme.favicon`, the entries of `extra_css` and `extra_javascript` and every target under `nav`
   are reported as an error when nothing lies where they point, with *Create the missing target* offered next to

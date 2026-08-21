@@ -73,9 +73,14 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   the file as well as inside the completion popup.
 - **Icons of the installed theme** — the icons of `mkdocs-material` are completed in `mkdocs.yml`
   (`theme.icon.*`, the toggle of a palette, `extra.social`) and in the pages as the shorthands
-  `:material-check:`, each showing its drawing. They are read from the installed package, which is looked for
-  in the virtual environments next to the site or named under *Tools → MkDocs*. The custom properties of the
+  `:material-check:`, each showing its drawing. They are read from the installed package, which `pip show`
+  is asked for or which is named under *Tools → MkDocs → Material*. The custom properties of the
   theme (`--md-…`) are completed inside CSS files.
+- **Python, pip and MkDocs** — the three programs a site is built with are found and shown under
+  *Tools → MkDocs*, each with the version it answered `--version` with, and each replaceable by a program of
+  your own. The interpreter is taken from the activated virtual environment (`VIRTUAL_ENV`) first, then from
+  the `PATH`, on Windows through the `py -3` launcher; pip and MkDocs are run through that interpreter, so all
+  three — and the search for an installed feature — belong to the same environment.
 - **Origin of a Material key** — the completion entries that come from the theme rather than from MkDocs carry
   its icon, in `mkdocs.yml`, in the pages and in the style sheets. What MkDocs itself reads stays unmarked.
   In a written `mkdocs.yml` the same answer stands in the gutter, next to every key of the theme and next to a

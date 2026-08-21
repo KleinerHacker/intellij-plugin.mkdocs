@@ -147,6 +147,12 @@
             <li><b>Template overrides</b> &ndash; the context menu of a site root creates the override directory,
                 the selected templates with a working Jinja scaffold, and <code>theme.custom_dir</code> pointing at
                 them, in one undoable step. Live templates for the Jinja blocks come with it.</li>
+            <li><b>Python, pip and MkDocs</b> &ndash; the three programs a site is built with are found and shown
+                under <i>Tools &rarr; MkDocs</i>, each with the version it answered <code>--version</code> with,
+                and each replaceable by a program of your own. The interpreter is taken from the activated
+                virtual environment (<code>VIRTUAL_ENV</code>) first, then from the <code>PATH</code>, on Windows
+                through the <code>py -3</code> launcher; pip and MkDocs are run through that interpreter, so all
+                three &ndash; and the search for an installed feature &ndash; belong to the same environment.</li>
         </ul>
         The current implementation status is tracked in
         <a href="https://github.com/KleinerHacker/intellij-plugin.mkdocs/blob/master/STATUS.md">STATUS.md</a>.<br>

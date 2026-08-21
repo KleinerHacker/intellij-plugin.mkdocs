@@ -16,6 +16,7 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import org.jetbrains.annotations.TestOnly
 import java.util.concurrent.ConcurrentHashMap
@@ -27,6 +28,10 @@ import java.util.concurrent.ConcurrentHashMap
  * `mkdocs-static-i18n`, `mike` — and each of them ships files the IDE has to read: the icon sets of a theme,
  * the templates of a plugin. Where those files lie is not something to be guessed from directory names; the
  * installation itself knows it, and `pip show <distribution>` prints it as its `Location`.
+ *
+ * Which pip is asked follows the interpreter of [MkDocsToolService], as far as that is known — see
+ * [commands]. Everything else about a distribution is answered here; the three programs a site is *built*
+ * with are answered there.
  *
  * The answer is cached per distribution, because the call starts a process: a completion popup asking again
  * for every keystroke would pay for a process each time. Anything that can change an installation — a write
@@ -132,19 +137,31 @@ class MkDocsPipService {
     /**
      * Asks `pip` where [distribution] is installed, or returns `null` if it cannot say.
      *
-     * Which command answers depends on the machine: an entry point called `pip`, one called `pip3`, or none
-     * at all, in which case the interpreter runs the module itself. The first command that answers wins;
+     * Which command answers depends on the machine — see [commands]. The first command that answers wins;
      * a command that is not on the `PATH` throws, and that is not an error but the next candidate's turn.
      *
      * @param distribution the name of the distribution as pip knows it
      */
     private fun ask(distribution: String): String? {
-        for (command in COMMANDS) {
+        for (command in commands()) {
             val output = run(command + listOf(SHOW, distribution)) ?: continue
             parseLocation(output)?.let { return it }
         }
         return null
     }
+
+    /**
+     * Returns the commands to try, in the order they are to be tried in.
+     *
+     * The interpreter [MkDocsToolService] knows about comes first, because a `pip` lying on the `PATH` may
+     * well belong to another Python than the one a site is built with — and then it reports installations
+     * that are not the ones the build reads. Only as far as that answer is already there, though: this
+     * service is asked from places that may not wait for a process, and asking for the interpreter here would
+     * start a second one. A cold answer therefore falls back to the `PATH`, which is what was tried before
+     * this existed.
+     */
+    private fun commands(): List<List<String>> =
+        listOfNotNull(service<MkDocsToolService>().cachedCommand(MkDocsTool.PYTHON)?.plus(MODULE)) + FALLBACK
 
     /**
      * Runs [command] and returns what it wrote, or `null` if it did not run or failed.
@@ -163,8 +180,11 @@ class MkDocsPipService {
 
     companion object {
 
-        /** The commands that are tried, in order, until one of them answers. */
-        private val COMMANDS = listOf(listOf("pip"), listOf("pip3"), listOf("python", "-m", "pip"))
+        /** How an interpreter is told to run pip rather than a program of its own. */
+        internal val MODULE = listOf("-m", "pip")
+
+        /** The commands that are tried once the interpreter cannot be named: an entry point, or any Python. */
+        internal val FALLBACK = listOf(listOf("pip"), listOf("pip3"), listOf("python", "-m", "pip"))
 
         /** The pip sub command that prints what is known about a distribution. */
         private const val SHOW = "show"

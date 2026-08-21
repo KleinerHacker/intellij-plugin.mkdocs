@@ -1,9 +1,60 @@
 # Settings
 
-The settings of the plugin live under *Tools → MkDocs*. That page holds nothing itself — every setting
-belongs to one feature of a site, and each feature carries a page of its own below it. Today there is one:
-*Material*. Its setting belongs to the project rather than to the IDE, because it points into the environment
-of *this* project.
+The settings of the plugin live under *Tools → MkDocs*. That page names the three programs a site is built
+with — Python, pip and MkDocs itself. Everything belonging to one *feature* of a site is not edited there: a
+feature carries a page of its own below it, and today there is one, *Material*. Both belong to the project
+rather than to the IDE, because both point into the environment of *this* project.
+
+## MkDocs
+
+![MkDocs Settings](assets/images/settings.png)
+
+### The programs a site is built with
+
+A site is not built by the plugin but by the programs of the environment it lives in, and the page states for
+each of the three which one that is:
+
+| Program | What it is for |
+|---------|----------------|
+| Python  | the interpreter the other two are run through |
+| pip     | what installs MkDocs and every feature of a site, and what is asked where they lie |
+| MkDocs  | what builds and serves the site |
+
+Each of them is searched for, and each of them can be replaced by a program of your own. The search never
+merely looks for a file: every candidate is run with `--version`, and only a candidate that answers with a
+version of the program it was looked for as counts as found — which is why the entry naming it names the
+version as well. A file lying where an interpreter is expected proves nothing; the answer does.
+
+The candidates are tried in a fixed order, and the first one that answers wins:
+
+* **Python** — the interpreter of the activated virtual environment, which `VIRTUAL_ENV` names, then `python3`
+  and `python` from the `PATH`, and on Windows the launcher `py -3`. What the entry shows is the path the
+  interpreter reports of itself, not the name it was run under, so it is readable which of the interpreters on
+  the machine answered.
+* **pip** and **MkDocs** — the interpreter that was found, run as `python -m pip` and `python -m mkdocs`, then
+  the entry point of the same name from the `PATH`.
+
+Deriving pip and MkDocs from the interpreter rather than looking them up on their own is what keeps the three
+answers about one and the same environment. It is also what the search for a feature follows: `pip show
+mkdocs-material` is asked through the interpreter named here, so a second pip lying on the `PATH` cannot
+answer for an environment the site is not built with.
+
+Pick *A program of my own* for every setup none of the candidates fits — an interpreter in a place nothing
+looks at, a system wide installation, a program mounted from a container. Only then does the field below the
+list become editable, and the button next to it opens a file chooser. What is wrong with a path is stated in
+red below the fields — nothing lies there, it names a directory, the file may not be run — and the page
+refuses to apply until it is right.
+
+Otherwise that line states which program is actually run: a program of your own wins over the one that was
+found, and a line saying that no program is in use is the answer to a build that does nothing.
+
+!!! note
+
+    Nothing is searched for again by itself, because none of the three changes by itself. The *Search again*
+    button at the foot of the group is what a program installed next to a running IDE is picked up with — a
+    `pip install mkdocs` in a terminal, or an environment created after the project was opened. Applying the
+    page does the same, and it also drops the answer of pip, because which pip answers follows the
+    interpreter named here.
 
 ## Material
 

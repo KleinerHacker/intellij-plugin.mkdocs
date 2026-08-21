@@ -195,6 +195,9 @@ are the ones offered.
 
 | Topic                             | Status |
 |-----------------------------------|--------|
+| Python detected (`VIRTUAL_ENV`, `PATH`, `py -3`) and settable by hand | ✅      |
+| pip detected through that interpreter and settable by hand | ✅      |
+| MkDocs detected through that interpreter and settable by hand | ✅      |
 | Run configuration `mkdocs serve`  | ⬜      |
 | Run configuration `mkdocs build`  | ⬜      |
 | Deployment (`gh-deploy`, `mike`)  | ⬜      |
