@@ -32,7 +32,7 @@ plugins {
     id("org.jetbrains.dokka") version "2.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.9"
     id("com.github.jk1.dependency-license-report") version "3.1.4"
-    id("org.cyclonedx.bom") version "3.3.0"
+    id("org.cyclonedx.bom") version "3.4.1"
     id("app.cash.licensee") version "1.14.1"
 }
 
