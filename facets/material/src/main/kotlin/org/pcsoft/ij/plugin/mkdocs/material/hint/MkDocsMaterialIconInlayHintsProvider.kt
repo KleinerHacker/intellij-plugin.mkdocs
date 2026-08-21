@@ -113,7 +113,7 @@ class MkDocsMaterialIconInlayHintsProvider : InlayHintsProvider<NoSettings> {
             // hand: the inset lifts it off the baseline into the middle of the line and keeps it off the name.
             val presentation = factory.withTooltip(
                 MkDocsMaterialBundle.message("material.hint.icon.tooltip", name),
-                factory.inset(factory.icon(icon), top = 5, right = 1),
+                factory.inset(factory.icon(icon), top = 6, right = 2),
             )
             // The drawing belongs to the name that follows it, so it must not move with the text in front of it.
             sink.addInlineElement(scalar.textRange.startOffset, false, presentation, false)

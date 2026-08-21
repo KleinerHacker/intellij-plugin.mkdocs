@@ -18,6 +18,7 @@ import com.intellij.ui.LayeredIcon
 import com.intellij.util.IconUtil
 import javax.swing.Icon
 import javax.swing.SwingConstants
+import kotlin.math.roundToInt
 
 /**
  * Brings an icon file to the size the place rendering it needs.
@@ -57,7 +58,13 @@ object MkDocsIconLoader {
      * The scaling happens on the vector, not on a rasterised image: [IconLoader] hands out a `ScalableIcon`
      * for an SVG, which [IconUtil.scale] re-renders at the requested size rather than resampling it.
      *
-     * The scaled icon is then fixed at that size and handed out as a plain [Icon]. [IconUtil.scale] returns a
+     * The size is decided by the returned icon itself and never computed from the icon that was loaded here.
+     * [IconLoader.getIcon] answers before the file behind it is read, and a not yet resolved icon reports a
+     * width of its own that has nothing to do with the canvas of the drawing — a factor taken from it turns
+     * the requested 16 pixels into 768 once the SVG arrives. The icon returned here therefore reports [size]
+     * whatever the source says and does the scaling when it is painted.
+     *
+     * The icon is fixed at that size and handed out as a plain [Icon]. [IconUtil.scale] returns a
      * `ScalableIcon`, and a `ScalableIcon` scales from the size it was *loaded from* — the 48 unit canvas —
      * not from the size it was brought to here. Anything scaling it once more therefore throws that size away
      * and renders the icon at 48 pixels, which is what the inlay hints API does to every icon it is handed.
@@ -68,10 +75,7 @@ object MkDocsIconLoader {
      * @param owner a class of the module shipping the file, used to find it on the class path
      */
     @JvmStatic
-    fun load(path: String, size: Int, owner: Class<*>): Icon {
-        val icon = IconLoader.getIcon(path, owner)
-        return FixedSizeIcon(IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth))
-    }
+    fun load(path: String, size: Int, owner: Class<*>): Icon = FixedSizeIcon(IconLoader.getIcon(path, owner), size)
 
     /**
      * Brings [icon] to [size] pixels and fixes it there.
@@ -84,10 +88,7 @@ object MkDocsIconLoader {
      * @param size the edge length in pixels the icon is to be rendered at
      */
     @JvmStatic
-    fun fixSize(icon: Icon, size: Int): Icon {
-        if (icon.iconWidth <= 0) return icon
-        return FixedSizeIcon(IconUtil.scale(icon, null, size.toFloat() / icon.iconWidth))
-    }
+    fun fixSize(icon: Icon, size: Int): Icon = FixedSizeIcon(icon, size)
 
     /**
      * Puts [badge] into the lower right corner of [base].
@@ -104,22 +105,40 @@ object MkDocsIconLoader {
     }
 
     /**
-     * A [ScalableIcon] painting [delegate] and keeping the scaled size as its baseline.
+     * A [ScalableIcon] reporting [size] and painting [source] brought to it.
      *
-     * @property delegate the icon to paint, already at the size it is to keep
+     * The scaling is done on the first paint and kept afterwards, so an icon that is not resolved yet when it
+     * is loaded still ends up at the size that was asked for.
+     *
+     * @property source the icon to paint, at whatever size it was drawn at
+     * @property size the edge length in pixels this icon reports and paints at
      */
-    private class FixedSizeIcon(private val delegate: Icon) : ScalableIcon {
+    private class FixedSizeIcon(private val source: Icon, private val size: Int) : ScalableIcon {
+
+        /** The source brought to [size], as soon as the source could say how wide it is. */
+        private var scaled: Icon? = null
+
+        /**
+         * Answers the icon to paint: [source] brought to [size], or [source] itself while it cannot say how
+         * wide it is.
+         */
+        private fun resolve(): Icon {
+            scaled?.let { return it }
+            val width = source.iconWidth
+            if (width <= 0) return source
+            return IconUtil.scale(source, null, size.toFloat() / width).also { scaled = it }
+        }
 
         override fun paintIcon(component: java.awt.Component?, graphics: java.awt.Graphics?, x: Int, y: Int) =
-            delegate.paintIcon(component, graphics, x, y)
+            resolve().paintIcon(component, graphics, x, y)
 
-        override fun getIconWidth(): Int = delegate.iconWidth
+        override fun getIconWidth(): Int = size
 
-        override fun getIconHeight(): Int = delegate.iconHeight
+        override fun getIconHeight(): Int = size
 
         override fun scale(scaleFactor: Float): Icon {
             if (scaleFactor == 1f) return this
-            return FixedSizeIcon(IconUtil.scale(delegate, null, scaleFactor))
+            return FixedSizeIcon(source, (size * scaleFactor).roundToInt())
         }
 
         override fun getScale(): Float = 1.0f

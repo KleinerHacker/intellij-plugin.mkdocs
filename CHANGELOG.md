@@ -209,6 +209,10 @@
 
 ### Fixed
 
+- An **icon of the plugin is now painted at the size of the place showing it**, whatever moment the drawing
+  behind it is read at. Where the file had not been read yet when the icon was handed out, its size was
+  computed against a width that did not stand for the drawing, and the icon ended up rendered at the full
+  48 pixels of its canvas instead of the 16 of a list entry.
 - The **icon completion no longer stalls on every keystroke**. The sets of the theme hold several thousand
   icons, and each of them was loaded from its file whenever the popup measured itself — which took seconds per
   letter. A drawing is now read only when it is actually shown, and what has been read is kept for as long as
