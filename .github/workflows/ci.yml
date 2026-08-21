@@ -190,23 +190,16 @@ jobs:
             .intellijPlatform/sandbox/**/log-test/**
           if-no-files-found: ignore
 
-  # Single gate name for everything downstream: the pipeline continues only when BOTH suites are green.
-  tests:
-    runs-on: ubuntu-latest
-    needs:
-      - test-developer
-      - test-integration
-    steps:
-      - name: Both test suites passed
-        run: echo "Developer and integration tests are green."
-
   # Run the JetBrains Plugin Verifier against the full IDE matrix declared in build.gradle.kts
   # (IntelliJ IDEA, Rider, CLion, GoLand). The matrix is version-catalog driven, so this job automatically
   # follows a platform bump. See .claude/rules/plugin.md.
   verify-plugin:
     runs-on: ubuntu-latest
-    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
-    needs: tests
+    # Gated on both test suites: a red suite must stop the pipeline, not merely be reported next to it.
+    # Named directly instead of through an aggregating job, which would occupy a runner for nothing.
+    needs:
+      - test-developer
+      - test-integration
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
@@ -243,8 +236,10 @@ jobs:
   # password is caught on every push instead of only failing the real release.
   verify-signing:
     runs-on: ubuntu-latest
-    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
-    needs: tests
+    # Gated on both test suites: a red suite must stop the pipeline, not merely be reported next to it.
+    needs:
+      - test-developer
+      - test-integration
     # Secrets are not exposed to pull requests coming from forks; only run where they exist.
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
 
