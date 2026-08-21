@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
 
 - **Python, pip and MkDocs are now found and shown under *Tools → MkDocs***: each of the three programs a site
