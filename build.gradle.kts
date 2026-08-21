@@ -30,7 +30,7 @@ plugins {
     id("org.jetbrains.intellij.platform")
     id("org.jetbrains.dokka") version "2.2.0"
     id("com.github.jk1.dependency-license-report") version "3.1.4"
-    id("org.cyclonedx.bom") version "3.3.0"
+    id("org.cyclonedx.bom") version "3.4.1"
 }
 
 intellijPlatform {
