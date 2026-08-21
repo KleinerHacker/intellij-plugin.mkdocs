@@ -161,10 +161,14 @@ dependencies {
 }
 
 // The licence-report plugin holds on to the Project instance at execution time, which the configuration
-// cache (enabled in gradle.properties) rejects outright. Opting the task out makes Gradle skip caching for
-// builds that include it instead of failing them — `buildDocs` depends on it via `copyLicenceReport`.
-tasks.named("generateLicenseReport") {
-    notCompatibleWithConfigurationCache("com.github.jk1.dependency-license-report accesses Project at execution time")
+// cache (enabled in gradle.properties) rejects outright. Opting the tasks out makes Gradle skip caching for
+// builds that include them instead of failing them — `buildDocs` depends on the report via
+// `copyLicenceReport`. Every task of the plugin is affected, not only the report itself: `checkLicense` and
+// its preparation task serialise the `Project` as well.
+listOf("generateLicenseReport", "checkLicensePreparation", "checkLicense").forEach { name ->
+    tasks.named(name) {
+        notCompatibleWithConfigurationCache("com.github.jk1.dependency-license-report accesses Project at execution time")
+    }
 }
 
 licenseReport {
@@ -174,6 +178,10 @@ licenseReport {
         com.github.jk1.license.render.JsonReportRenderer(),
         com.github.jk1.license.render.SimpleHtmlReportRenderer()
     )
+    // `checkLicense` declares `allowedLicenseFile` as a mandatory input; without it the task fails its own
+    // validation ("property 'allowedLicenseFile' doesn't have a configured value") before it even runs.
+    // The file states the same policy `licensee` enforces: Apache-2.0 only.
+    allowedLicensesFile = file("config/allowed-licenses.json")
 }
 
 tasks {

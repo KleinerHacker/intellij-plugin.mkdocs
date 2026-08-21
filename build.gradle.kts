@@ -26,6 +26,20 @@
 // configuration ':utils:runtimeClasspath' was attempted without an exclusive lock".
 // ─────────────────────────────────────────────────────────────────────────────────────────────
 
+// The build script class loaders are hierarchical: the one of this root project is the PARENT of the one
+// every project below builds its script with, and class loading is parent first. `org.cyclonedx.bom` in
+// `:plugin` brings jackson-dataformat-xml 2.15.3 along, while the IntelliJ Platform Gradle plugin — resolved
+// in the settings scope, above this one — puts jackson-databind 2.22.1 on the classpath. Mixed that way
+// `cyclonedxBom` dies with "Class …XmlBeanSerializerBase does not have member field …_anyGetterWriter": in
+// 2.22.x `BeanSerializerBase` moved to `ser.std` and lost that field, which only the 2.22.x XML module knows.
+// Naming the matching XML module here puts it into the parent loader, where it shadows the outdated one.
+// The version MUST stay the one jackson-databind resolves to on the build classpath.
+buildscript {
+    dependencies {
+        classpath("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.1")
+    }
+}
+
 plugins {
     // Applied to NOTHING here — the root compiles no Kotlin. It is named only to put the Kotlin plugin on
     // the classpath of the root, which every project below inherits. Without it the plugin is loaded once
