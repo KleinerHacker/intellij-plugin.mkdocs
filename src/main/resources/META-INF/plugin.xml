@@ -104,6 +104,20 @@
                 <code>(prefers-color-scheme: dark)</code> and <code>(prefers-color-scheme)</code> &ndash; each
                 with a line saying when its palette applies, and writes the value into the file in quotes. A
                 query outside them is reported as a warning that can be switched off.</li>
+            <li><b>Palette against the style sheets</b> &ndash; <code>theme.palette</code> and the style sheets
+                behind <code>extra_css</code> are read against each other, through the CSS parser of the IDE. A
+                <code>custom</code> colour no style sheet defines <code>--md-primary-fg-color</code> or
+                <code>--md-accent-fg-color</code> for is reported, and so is a named colour whose property a
+                style sheet redefines all the same. Which definitions count is decided by the ground the
+                palette stands on: <code>:root</code> counts for every palette, a rule below
+                <code>[data-md-color-scheme]</code> only for the one naming it.</li>
+            <li><b>Palette scheme</b> &ndash; <code>theme.palette.scheme</code> completes the grounds the style
+                sheets a site loads actually paint: the one the installed theme ships, which is where
+                <code>default</code> and <code>slate</code> come from, and the files behind
+                <code>extra_css</code>. Each entry names where it came from, and <i>Ctrl+Click</i> on the value
+                jumps to the selector painting it. A ground no style sheet paints is marked the way an
+                unresolved name is; <code>default</code> and <code>slate</code> stay valid without any
+                <code>extra_css</code>, being painted by the theme itself.</li>
             <li><b>Markdown extensions</b> &ndash; an extension the configuration forces, because a feature flag
                 does not render without it, is reported above <code>mkdocs.yml</code> as an error, with a fix
                 adding it together with the options it needs. Everything the theme merely builds on is a weak
@@ -257,6 +271,12 @@
              value breaking only on another operating system is reported as a warning, not as an error. -->
         <annotator language="yaml"
                    implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsPathAnnotator"/>
+
+        <!-- Marks a path value whose target does not exist. The file references know it already, but YAML
+             draws nothing for an unresolved reference, so the mark has to be created here. Soft kinds -
+             site_dir - are left alone, since build output before the first build is no mistake. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.reference.MkDocsMissingPathAnnotator"/>
 
         <!-- Reports a path value naming a file of a type its key cannot use: a page behind extra_css, a style
              sheet behind theme.logo. An inspection rather than an annotator, so a project doing something

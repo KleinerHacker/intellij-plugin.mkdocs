@@ -16,6 +16,8 @@ import com.intellij.openapi.components.service
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import org.jetbrains.yaml.psi.YAMLKeyValue
+import org.jetbrains.yaml.psi.YAMLMapping
+import org.jetbrains.yaml.psi.YAMLScalar
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialKeys
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialColor
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
@@ -51,6 +53,15 @@ object MkDocsMaterialPaletteKeys {
 
     /** The key naming the accent colour of a palette. */
     const val KEY_ACCENT: String = "accent"
+
+    /** The custom property the theme paints the primary colour of a palette through. */
+    const val VARIABLE_PRIMARY: String = "--md-primary-fg-color"
+
+    /** The custom property the theme paints the accent colour of a palette through. */
+    const val VARIABLE_ACCENT: String = "--md-accent-fg-color"
+
+    /** The identifier `primary` and `accent` carry while the colour comes out of a style sheet of the site. */
+    const val COLOR_CUSTOM: String = "custom"
 
     /** The dotted paths of the keys, by the role the value below them plays. */
     private val PATHS: Map<String, Role> = mapOf(
@@ -137,6 +148,42 @@ object MkDocsMaterialPaletteKeys {
             Role.ACCENT -> colors.accents()
             else -> return null
         }.firstOrNull { it.id == value.trim() }
+    }
+
+    /**
+     * Returns the custom property a colour of [role] is painted through, or `null` for the other roles.
+     *
+     * These are the two names the theme reads a colour of its own out of. `custom` under `primary` means
+     * nothing more than "the theme will not set `--md-primary-fg-color`, a style sheet of the site does" — so
+     * whether the two agree can only be judged with the name in hand.
+     *
+     * @param role what the value stands for, as [roleOf] answered
+     */
+    fun variableOf(role: Role?): String? = when (role) {
+        Role.PRIMARY -> VARIABLE_PRIMARY
+        Role.ACCENT -> VARIABLE_ACCENT
+        else -> null
+    }
+
+    /**
+     * Returns the ground the palette around [position] is painted on.
+     *
+     * A palette without a `scheme` of its own stands on [MkDocsMaterialScheme.DEFAULT], which is what the theme
+     * falls back to — and which a style sheet addresses as `[data-md-color-scheme="default"]` all the same.
+     *
+     * Both shapes of `theme.palette` are answered: the key sits in the mapping the value belongs to, and a
+     * sequence entry is such a mapping as much as the single palette is.
+     *
+     * The caller must hold a read action.
+     *
+     * @param position the element to judge, a scalar of a palette or an element inside one
+     */
+    fun schemeNameOf(position: PsiElement): String {
+        val keyValue = position.parentOfType<YAMLKeyValue>(withSelf = true) ?: return MkDocsMaterialScheme.DEFAULT.id
+        val mapping = keyValue.parent as? YAMLMapping ?: return MkDocsMaterialScheme.DEFAULT.id
+        val scheme = mapping.getKeyValueByKey(KEY_SCHEME)?.value as? YAMLScalar
+            ?: return MkDocsMaterialScheme.DEFAULT.id
+        return scheme.textValue.trim().ifEmpty { MkDocsMaterialScheme.DEFAULT.id }
     }
 
     /**

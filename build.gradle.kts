@@ -126,6 +126,15 @@ dependencies {
         bundledPlugin("Git4Idea")
         bundledPlugin("com.intellij.copyright")
 
+        // Optional at runtime as well: the content module of the Material facet reading the style sheets
+        // behind `extra_css` is loaded only where the CSS plugin is. Needed here so its tests — the ones
+        // driving completion, references and the annotator, which have to run against a registered plugin —
+        // have a CSS language to parse with.
+        bundledPlugin("com.intellij.css")
+        // The CSS PSI lies in a content module of that plugin rather than in its jar. Mirrors the
+        // `<module name="intellij.css"/>` the CSS content module of the facet declares.
+        bundledModule("intellij.css")
+
         // Git4Idea's GitRepository/GitRepositoryManager extend the DVCS base types, which live in a platform
         // module of their own. Without it Kotlin cannot even read the supertypes of what git4idea exposes.
         bundledModule("intellij.platform.vcs.dvcs")

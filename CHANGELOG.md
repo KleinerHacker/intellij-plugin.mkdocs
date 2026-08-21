@@ -6,6 +6,32 @@
 
 ### Added
 
+- **A path in `mkdocs.yml` whose target does not exist is now marked red**: `docs_dir`, `theme.custom_dir`,
+  `theme.logo`, `theme.favicon`, the entries of `extra_css` and `extra_javascript` and every target under `nav`
+  are reported as an error when nothing lies where they point, with *Create the missing target* offered next to
+  the mark. Only the first segment leading nowhere is marked, so one broken path reads as one mistake.
+  `site_dir` stays untouched — build output need not exist before the first build — and a `theme.logo` or
+  `theme.favicon` naming an icon of the theme, such as `material/library`, is no path and is left alone.
+- **`theme.palette` and the style sheets of the site are now read against each other**: a `primary` or `accent`
+  set to `custom` while no style sheet behind `extra_css` defines `--md-primary-fg-color` or
+  `--md-accent-fg-color` is reported, and so is a named colour whose custom property a style sheet redefines
+  all the same — there the file no longer says which of the two paints the site. Which definitions count is
+  decided by the ground the palette stands on: `:root` counts for every palette, a rule below
+  `[data-md-color-scheme="…"]` only for the palette whose `scheme` names it. Warnings in both cases, because
+  either is legal, and without a quick fix, because which half was meant is not something the file says.
+- **`theme.palette.scheme` is now completed out of the CSS**: the grounds offered are the ones the style
+  sheets a site loads actually paint, read out of their `[data-md-color-scheme="…"]` selectors — both the
+  style sheet the installed *Material for MkDocs* ships, which is where `default` and `slate` come from, and
+  the files behind `extra_css`. Each entry names where it came from, the style sheet of the site by its file
+  name and the theme by its own. A ground the site repaints under a name of the theme is offered once, as the
+  site's own.
+- The **ground of a palette now leads to the rule painting it**: *Ctrl+Click* on the value of
+  `theme.palette.scheme` jumps to the `[data-md-color-scheme="…"]` selector in the style sheet of the site,
+  or to the style sheet the theme ships it in. A ground **no style sheet paints is marked** the way an
+  unresolved name is: the theme writes it into `data-md-color-scheme`, no rule matches it, and the site keeps
+  the colours it would have had anyway. `default` and `slate` stay valid without any `extra_css` — they are
+  painted by the style sheet the theme itself ships.
+
 - The **colours and schemes of `theme.palette` now say what they are**: every value of `scheme`, `primary` and
   `accent` carries a one line description, in the completion popup and under *Ctrl+Q* — on an offered value as
   well as on one already written into the file, where the popup also names the role it plays and the shade the

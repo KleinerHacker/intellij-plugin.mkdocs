@@ -79,6 +79,9 @@ Tracks what the plugin supports compared to
 | `theme.palette` — single mapping and toggle sequence, colours and schemes              | ✅      |
 | `theme.palette.media` — the three `prefers-color-scheme` queries completed and checked | ✅      |
 | `theme.palette` — colours and schemes described, colours drawn as their own swatch      | ✅      |
+| `theme.palette.scheme` — completed from the `[data-md-color-scheme]` of the theme's and the site's CSS | ✅      |
+| `theme.palette.scheme` — resolved to the selector painting that ground                  | ✅      |
+| `theme.palette` — colours read against the `--md-*` of the style sheets behind `extra_css` | ✅      |
 | `theme.font`, `theme.language`, `theme.icon`, `theme.direction`                        | ✅      |
 | `theme.logo`, `theme.favicon`, `theme.custom_dir`                                      | ✅      |
 | `extra.social`, `extra.analytics`, `extra.consent`, `extra.generator`, `extra.status`  | ✅      |

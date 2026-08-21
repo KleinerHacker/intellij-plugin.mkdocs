@@ -53,6 +53,18 @@ Support for [MkDocs](https://www.mkdocs.org) projects in all IntelliJ-platform I
   line saying when its palette applies, and writes the value quoted so the colon inside it cannot end the
   line. A query outside them is reported as a warning that can be switched off — nothing is broken, but the
   colour scheme toggle has nothing to act on.
+- **Palette read against the style sheets** — `theme.palette` and the files behind `extra_css` describe the
+  same colours twice, and the IDE reads them against each other through its CSS parser. A `custom` colour no
+  style sheet defines `--md-primary-fg-color` or `--md-accent-fg-color` for is reported, and so is a named
+  colour whose property a style sheet redefines all the same. Which definitions count is decided by the ground
+  the palette stands on: `:root` counts for every palette, a rule below `[data-md-color-scheme="…"]` only for
+  the palette whose `scheme` names it.
+- **Ground of a palette** — `theme.palette.scheme` completes the grounds the style sheets a site loads
+  actually paint: the one the installed theme ships, which is where `default` and `slate` come from, and the
+  files behind `extra_css`. Each entry names where it came from, and *Ctrl+Click* on the value jumps to the
+  `[data-md-color-scheme="…"]` selector painting it. A ground no style sheet paints is marked the way an
+  unresolved name is; `default` and `slate` stay valid without any `extra_css`, being painted by the theme
+  itself.
 - **Markdown extensions of a Material site** — an extension the configuration forces, because a flag under
   `theme.features` does not render without it, is reported above `mkdocs.yml` as an error, with a fix adding
   it together with the options it needs. Everything the theme merely builds on is a weak warning that can be

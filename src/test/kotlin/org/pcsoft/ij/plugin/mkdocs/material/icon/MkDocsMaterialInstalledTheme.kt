@@ -46,6 +46,27 @@ internal object MkDocsMaterialInstalledTheme {
     /** The path of the icon sets inside the installation. */
     private const val ICONS = "material/templates/.icons"
 
+    /** The path of the style sheets inside the installation. */
+    private const val STYLE_SHEETS = "material/templates/assets/stylesheets"
+
+    /** The grounds a real installation paints, written into the style sheet of the fixture. */
+    val SCHEMES: List<String> = listOf("default", "slate")
+
+    /**
+     * Points [project] at an installation painting [SCHEMES] and returns the style sheet painting them.
+     *
+     * The counterpart of [install] for everything reading the palette rather than the icons: the grounds of
+     * the theme are rules of the shipped style sheet, so a test asking for them needs one to exist.
+     *
+     * @param project the project whose settings are pointed at the installation
+     */
+    fun installStyleSheets(project: Project): VirtualFile {
+        val location = write(emptyList())
+        point(project, location.path)
+        return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(File(location, "$STYLE_SHEETS/palette.css"))
+            ?: error("cannot reach the style sheets below ${location.path}")
+    }
+
     /**
      * Installs [icons] for [project] and returns the directory holding the icon sets.
      *
@@ -75,6 +96,13 @@ internal object MkDocsMaterialInstalledTheme {
             file.parentFile.mkdirs()
             file.writeText(SVG)
         }
+        // The style sheet the theme paints its grounds in. Written for every installation of the fixture, and
+        // minified the way the shipped one is: the palette service reads it as text, and a test that got a
+        // prettily formatted file would say nothing about the real one.
+        val palette = File(location, "$STYLE_SHEETS/palette.css")
+        palette.parentFile.mkdirs()
+        palette.writeText(SCHEMES.joinToString("") { "[data-md-color-scheme=$it]{--md-primary-fg-color:#4051b5}" })
+
         val distInfo = File(location, "mkdocs_material-$VERSION.dist-info")
         distInfo.mkdirs()
         File(distInfo, "METADATA").writeText(
@@ -109,6 +137,7 @@ internal object MkDocsMaterialInstalledTheme {
      * @param icons the icon files, as the theme addresses them plus the extension
      */
     private fun record(icons: List<String>): String =
-        (listOf("mkdocs_material-$VERSION.dist-info/METADATA") + icons.map { "$ICONS/$it" })
+        (listOf("mkdocs_material-$VERSION.dist-info/METADATA", "$STYLE_SHEETS/palette.css") +
+            icons.map { "$ICONS/$it" })
             .joinToString("\n") { "$it,sha256=0000000000000000000000000000000000000000000,1" }
 }

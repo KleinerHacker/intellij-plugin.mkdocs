@@ -62,7 +62,7 @@ What the refinement covers:
 | Block | What it describes |
 |-------|-------------------|
 | `theme.features` | all 28 feature flags of the theme, each with its own description |
-| `theme.palette` | `scheme`, `primary`, `accent`, `media` and `toggle`, in both shapes the theme accepts |
+| `theme.palette` | `primary`, `accent` and `toggle`, in both shapes the theme accepts; `scheme` and `media` stay free strings |
 | `theme.font` | the text and the code font |
 | `theme.language`, `theme.direction` | the language of the built-in labels and the reading direction |
 | `theme.icon` | the icons the theme lets you replace — logo, repository, edit, menu, search and the rest |
@@ -201,6 +201,54 @@ they read in a light and in a dark theme alike.
 A site is restyled beyond the palette by redefining the custom properties of the theme in a style sheet
 listed under `extra_css`. All of them are completed inside CSS files, each with the part of the page it
 paints.
+
+### The palette and the style sheets, read against each other
+
+`theme.palette` and those style sheets describe the same colours twice, and neither file shows the other. Two
+ways of writing the two halves down leave a site painted differently than it reads, and both are reported as a
+**warning** on the value in `mkdocs.yml`:
+
+| What is written | What is reported |
+|-----------------|------------------|
+| `primary: custom` or `accent: custom`, and no style sheet defines `--md-primary-fg-color` / `--md-accent-fg-color` | nothing sets the colour, so the theme falls back to its own |
+| a named colour such as `indigo`, and a style sheet redefines the very property the theme paints it through | which of the two paints the site is no longer readable in either file |
+
+Which definitions count for a palette is decided by the **ground it stands on**. A rule below `:root` paints
+every palette of the site; a rule below `[data-md-color-scheme="slate"]` paints exactly the palette whose
+`scheme` names that identifier. So one palette of a colour scheme toggle may well be `custom` while its
+neighbour is not, and a definition written for the other ground is as good as none.
+
+The style sheets are read through the CSS parser of the IDE rather than searched as text, so a property behind
+an `@media`, inside a comment or below a selector of the author's own is judged for what it is. Neither
+warning carries a quick fix: which of the two halves was meant is not something the file says. Both are
+silent while `extra_css` names no readable style sheet.
+
+### The ground of a palette
+
+`theme.palette.scheme` is a name of the CSS and nothing else — it is the identifier written into
+`[data-md-color-scheme="…"]`. So the grounds **offered in completion are the ones the style sheets a site
+loads actually paint**, and a site loads two kinds of them:
+
+| Source | What it contributes | How the popup names it |
+|--------|---------------------|------------------------|
+| the style sheet the installed theme ships | `default` and `slate` | *Material for MkDocs* |
+| the files behind `extra_css` | every ground the site paints itself | the file name |
+
+`default` and `slate` are therefore offered as what they are — two grounds a file of the theme paints, not two
+values the plugin has been told about. A version of the theme adding a third one adds it to the popup by
+itself. A ground the site repaints under a name of the theme is offered once, as the site's own, since that is
+the file worth editing.
+
+*Ctrl+Click* on the value leads to the selector painting the ground, or to the style sheet of the theme
+shipping it — that file is minified, so there is nothing inside it worth landing on.
+
+A ground **no style sheet paints is marked** the way an unresolved name is: the theme writes it into
+`data-md-color-scheme`, no rule of any style sheet matches it, and the site keeps the colours it would have
+had anyway — a mistyped `slaet` was invisible before.
+
+Judged against both sources, so it works without a found installation as well: `default` and `slate` are then
+named out of the model rather than read out of the shipped style sheet. They stay valid without any
+`extra_css` — a site on `scheme: slate` and nothing else is the documented way to a dark site, not a mistake.
 
 ## Where a key comes from
 

@@ -91,8 +91,24 @@ class MkDocsMaterialDescriptorIT {
             content.contains("""<module name="org.pcsoft.ij.plugin.mkdocs.material"/>"""),
         )
         assertTrue(
+            "the CSS module does not depend on the module carrying the CSS PSI",
+            content.contains("""<module name="intellij.css"/>"""),
+        )
+        assertTrue(
             "the CSS module does not register the custom property completion",
             content.contains("org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialCssVariableCompletionContributor"),
+        )
+        assertTrue(
+            "the CSS module does not register the scheme completion",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialPaletteSchemeCompletionContributor"),
+        )
+        assertTrue(
+            "the CSS module does not register the scheme reference",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialSchemeReferenceContributor"),
+        )
+        assertTrue(
+            "the CSS module does not register the palette annotator",
+            content.contains("org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialPaletteCssAnnotator"),
         )
     }
 

@@ -15,7 +15,6 @@ package org.pcsoft.ij.plugin.mkdocs.material.schema
 import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
 
 /**
@@ -30,6 +29,11 @@ import org.pcsoft.ij.plugin.mkdocs.services.MkDocsModuleService
  * The lists of values are compared against `MkDocsMaterialDataService` rather than against a literal, because the
  * schema is built from that very service: a colour added to `material/spec/colors.yaml` then has to arrive in the
  * popup without this test being touched, and if it does not arrive the test fails.
+ *
+ * `theme.palette.scheme` is deliberately absent here: the schema describes it as a plain string and constrains
+ * it to nothing, because a ground is a name a style sheet answers to rather than a value of the theme. That the
+ * schema hands out no set for it is asserted by `MkDocsMaterialSchemaGeneratorTest`, and what does reach that
+ * popup by `MkDocsMaterialPaletteSchemeCompletionIT`.
  */
 class MkDocsMaterialSchemaValueCompletionIT : BasePlatformTestCase() {
 
@@ -110,26 +114,8 @@ class MkDocsMaterialSchemaValueCompletionIT : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: the palette written as a single mapping, which is what a site without a colour scheme toggle
-     * does. `scheme` decides the ground the palette is painted on, and the theme knows exactly two.
-     */
-    fun `test offers the schemes of the single palette`() {
-        val offered = complete(
-            """
-            site_name: Handbook
-            theme:
-              name: material
-              palette:
-                scheme: <caret>
-            """
-        )
-
-        assertContainsElements(offered, MkDocsMaterialScheme.entries.map { it.id })
-    }
-
-    /**
-     * Use case: `theme.palette.primary` of that same mapping. The colours are spliced in out of
-     * `material/spec/colors.yaml`, and only the ones the theme accepts as a primary colour belong there.
+     * Use case: `theme.palette.primary` of a palette written as a single mapping. The colours are spliced in
+     * out of `material/spec/colors.yaml`, and only the ones the theme accepts as a primary colour belong there.
      */
     fun `test offers the primary colours of the single palette`() {
         val offered = complete(
@@ -181,23 +167,6 @@ class MkDocsMaterialSchemaValueCompletionIT : BasePlatformTestCase() {
         )
 
         assertContainsElements(offered, data.colors.primaries().map { it.id })
-    }
-
-    /**
-     * Use case: the scheme of an entry of that sequence, the value a colour scheme toggle switches between.
-     */
-    fun `test offers the schemes in the sequence form of the palette`() {
-        val offered = complete(
-            """
-            site_name: Handbook
-            theme:
-              name: material
-              palette:
-                - scheme: <caret>
-            """
-        )
-
-        assertContainsElements(offered, MkDocsMaterialScheme.entries.map { it.id })
     }
 
     /**

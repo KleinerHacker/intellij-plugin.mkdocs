@@ -23,7 +23,6 @@ import com.intellij.testFramework.LightVirtualFile
 import org.pcsoft.ij.plugin.mkdocs.material.MkDocsMaterialBundle
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialFeatureFlag
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 
 /**
  * Builds the JSON schema an `mkdocs.yml` of a *Material for MkDocs* site is validated and completed against.
@@ -154,10 +153,16 @@ class MkDocsMaterialSchemaGenerator {
     }
 
     /**
-     * Writes the known palette colours and schemes into both palette forms.
+     * Writes the known palette colours into both palette forms.
      *
      * Both forms are filled: the theme accepts a single palette as a mapping and a colour scheme toggle as a
      * sequence of them, and a value offered in one form but not the other would be an arbitrary difference.
+     *
+     * `scheme` is deliberately left as the plain string it is described as. A ground is not a value of the
+     * theme but a name a style sheet of the site answers to — it is written into `[data-md-color-scheme="…"]`
+     * — so a fixed set here would offer grounds the site does not stand on, and refuse the ones it does. What
+     * the style sheets behind `extra_css` actually paint is offered by
+     * `MkDocsMaterialPaletteSchemeCompletionContributor` instead.
      *
      * @param definitions the `definitions` object of the schema being built
      */
@@ -165,13 +170,11 @@ class MkDocsMaterialSchemaGenerator {
         val colors = service<MkDocsMaterialDataService>().colors
         val primaries = colors.primaries().map { it.id to it.descriptionKey }
         val accents = colors.accents().map { it.id to it.descriptionKey }
-        val schemes = MkDocsMaterialScheme.entries.map { it.id to it.descriptionKey }
 
         listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->
             val properties = definitions.getAsJsonObject(name)?.getAsJsonObject("properties") ?: return@forEach
             describe(properties.getAsJsonObject("primary"), primaries)
             describe(properties.getAsJsonObject("accent"), accents)
-            describe(properties.getAsJsonObject("scheme"), schemes)
         }
     }
 

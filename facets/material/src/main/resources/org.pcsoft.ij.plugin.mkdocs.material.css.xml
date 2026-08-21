@@ -16,6 +16,12 @@
 <idea-plugin package="org.pcsoft.ij.plugin.mkdocs.material.css">
     <dependencies>
         <plugin id="com.intellij.css"/>
+        <!-- The CSS PSI — `CssFile`, `CssRuleset`, `CssSelector`, `CssDeclaration` — does not lie in the jar of
+             the CSS plugin but in a content module of its own, and every content module has a class loader
+             whose parents are only what its <dependencies> name. Without this entry the plugin loads, the
+             registrations take effect, and the first read of a style sheet dies with a NoClassDefFoundError
+             for `com.intellij.psi.css.CssFile`. Naming the plugin above is not enough. -->
+        <module name="intellij.css"/>
         <module name="org.pcsoft.ij.plugin.mkdocs.material"/>
     </dependencies>
 
@@ -27,5 +33,24 @@
         <completion.contributor
                 language="CSS"
                 implementationClass="org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialCssVariableCompletionContributor"/>
+
+        <!-- Completes the ground a palette stands on with the colour schemes the style sheets behind
+             `extra_css` actually paint. Not part of the refined schema: a scheme is a name of the CSS, not a
+             value of the theme, so a fixed set would offer grounds the site does not stand on. -->
+        <completion.contributor
+                language="yaml"
+                implementationClass="org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialPaletteSchemeCompletionContributor"/>
+
+        <!-- The link from that ground to the selector painting it. Soft: a ground the installed theme brings
+             along is painted by no style sheet of the site. -->
+        <psi.referenceContributor
+                language="yaml"
+                implementation="org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialSchemeReferenceContributor"/>
+
+        <!-- Marks a colour of `theme.palette` that the style sheets of the site contradict: `custom` with no
+             custom property behind it, or a named colour a style sheet redefines all the same. A warning,
+             because either is legal — and without a quick fix, because which half was meant is a guess. -->
+        <annotator language="yaml"
+                   implementationClass="org.pcsoft.ij.plugin.mkdocs.material.css.MkDocsMaterialPaletteCssAnnotator"/>
     </extensions>
 </idea-plugin>

@@ -17,7 +17,6 @@ import com.google.gson.JsonParser
 import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialDataService
-import org.pcsoft.ij.plugin.mkdocs.material.data.MkDocsMaterialScheme
 
 /**
  * Developer test (class name does NOT end in `IT`) — runs under `test -PtestSuite=developer`.
@@ -109,12 +108,16 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: the same for the ground the palette is painted on. `default` and `slate` say nothing about
-     * which of them is the dark one, which is exactly the question the description answers.
+     * Use case: the ground the palette is painted on. It is deliberately left as the plain string the schema
+     * describes it as — a scheme is a name a style sheet of the site answers to, written into
+     * `[data-md-color-scheme="…"]`, so a fixed set here would offer grounds the site does not stand on and
+     * refuse the ones it does. What the style sheets behind `extra_css` paint is offered by a contributor.
      */
-    fun `test describes every palette scheme`() {
+    fun `test constrains the palette scheme to nothing`() {
         listOf("materialPaletteSingle", "materialPaletteItem").forEach { name ->
-            assertDescribed(name, "scheme", MkDocsMaterialScheme.entries.map { it.id })
+            val scheme = definitions.getAsJsonObject(name).getAsJsonObject("properties").getAsJsonObject("scheme")
+            assertNull("$name.scheme", scheme.getAsJsonArray("enum"))
+            assertEquals("$name.scheme", "string", scheme.get("type").asString)
         }
     }
 
@@ -166,7 +169,7 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
             .getAsJsonObject("items")
 
     /**
-     * Asserts that the palette definition [name] offers exactly the known schemes and colours.
+     * Asserts that the palette definition [name] offers exactly the known colours.
      *
      * @param name the name of the palette definition inside the generated schema
      */
@@ -175,11 +178,9 @@ class MkDocsMaterialSchemaGeneratorTest : BasePlatformTestCase() {
 
         val primary = properties.getAsJsonObject("primary").getAsJsonArray("enum").map { it.asString }
         val accent = properties.getAsJsonObject("accent").getAsJsonArray("enum").map { it.asString }
-        val scheme = properties.getAsJsonObject("scheme").getAsJsonArray("enum").map { it.asString }
 
         assertEquals("$name.primary", data.colors.primaries().map { it.id }, primary)
         assertEquals("$name.accent", data.colors.accents().map { it.id }, accent)
-        assertEquals("$name.scheme", MkDocsMaterialScheme.entries.map { it.id }, scheme)
     }
 
     /**

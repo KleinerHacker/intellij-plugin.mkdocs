@@ -211,6 +211,85 @@ class MkDocsMaterialPaletteKeysTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: the custom property behind a colour role. The theme paints `primary` and `accent` through two
+     * names of its own, and a style sheet of the site redefines exactly those — so the two must never be
+     * confused, and the other roles must carry none.
+     */
+    fun `test names the custom property of each colour role`() {
+        assertEquals(
+            MkDocsMaterialPaletteKeys.VARIABLE_PRIMARY,
+            MkDocsMaterialPaletteKeys.variableOf(MkDocsMaterialPaletteKeys.Role.PRIMARY),
+        )
+        assertEquals(
+            MkDocsMaterialPaletteKeys.VARIABLE_ACCENT,
+            MkDocsMaterialPaletteKeys.variableOf(MkDocsMaterialPaletteKeys.Role.ACCENT),
+        )
+        assertNull(MkDocsMaterialPaletteKeys.variableOf(MkDocsMaterialPaletteKeys.Role.SCHEME))
+        assertNull(MkDocsMaterialPaletteKeys.variableOf(null))
+    }
+
+    /**
+     * Use case: the ground a colour of a single palette stands on. Which definitions of a style sheet count
+     * for that colour is decided by it, so it has to be read off the mapping the colour belongs to.
+     */
+    fun `test reads the scheme of a palette written as a mapping`() {
+        val element = elementAt(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+              palette:
+                scheme: slate
+                primary: indigo
+            """,
+            "indigo",
+        )
+
+        assertEquals("slate", MkDocsMaterialPaletteKeys.schemeNameOf(element))
+    }
+
+    /**
+     * Use case: the same in the sequence form, where the palettes of a colour scheme toggle stand next to each
+     * other. The ground of the neighbouring entry says nothing about this one.
+     */
+    fun `test reads the scheme of the entry a colour belongs to`() {
+        val element = elementAt(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+              palette:
+                - scheme: default
+                  primary: teal
+                - scheme: slate
+                  primary: indigo
+            """,
+            "indigo",
+        )
+
+        assertEquals("slate", MkDocsMaterialPaletteKeys.schemeNameOf(element))
+    }
+
+    /**
+     * Use case: a palette that names no ground at all. The theme paints it on its own default one, and a
+     * style sheet addresses that ground under exactly that name.
+     */
+    fun `test falls back to the default scheme`() {
+        val element = elementAt(
+            """
+            site_name: Handbook
+            theme:
+              name: material
+              palette:
+                primary: indigo
+            """,
+            "indigo",
+        )
+
+        assertEquals(MkDocsMaterialScheme.DEFAULT.id, MkDocsMaterialPaletteKeys.schemeNameOf(element))
+    }
+
+    /**
      * Returns what the value standing at the first occurrence of [marker] in [text] stands for.
      *
      * @param text the content of the configuration file, indented as source

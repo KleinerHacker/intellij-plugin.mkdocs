@@ -139,13 +139,20 @@ class MkDocsMaterialPaletteColorCompletionIT : BasePlatformTestCase() {
     }
 
     /**
-     * Use case: the ground the palette is painted on. `default` and `slate` are no colours, so they keep the
-     * plain mark of the theme — a square would claim a shade the value does not stand for.
+     * Use case: the ground the palette is painted on. A ground is no colour, so it keeps the plain mark of
+     * the theme — a square would claim a shade the value does not stand for. The grounds come out of the
+     * style sheets of the site, so one has to be there for the popup to hold any.
      */
     fun `test leaves the scheme with the plain mark of the theme`() {
+        myFixture.addFileToProject(
+            "docs/stylesheets/extra.css",
+            """[data-md-color-scheme="slate"] { --md-primary-fg-color: #101010; }""",
+        )
         complete(
             """
             site_name: Handbook
+            extra_css:
+              - stylesheets/extra.css
             theme:
               name: material
               palette:

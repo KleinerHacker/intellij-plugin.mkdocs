@@ -66,8 +66,11 @@ so a project generating an asset into a file without the usual extension can swi
 else. A value carrying no extension at all is never reported: behind `theme.logo` and `theme.favicon` the
 Material theme accepts the name of one of its own icons, such as `material/library`, which is no path.
 
-A path leading nowhere is reported in the text. `site_dir` is the one exception: it names the output of the
-build, which is not expected to exist before the site has been built once.
+A path leading nowhere is marked in the text as an error, the way an unresolved reference is marked anywhere
+else in the IDE, and *Create the missing target* is offered next to it. Only the first segment that leads
+nowhere is marked — a `nav` entry reading `old/guide/tuning.md` whose `old` is gone is one mistake, not three.
+`site_dir` is the one exception: it names the output of the build, which is not expected to exist before the
+site has been built once.
 
 `site_dir` is also the one value that need not lie inside the site at all. It says where the build *writes*,
 so a directory beside the checkout, above it through `..` or an absolute one on another volume is perfectly

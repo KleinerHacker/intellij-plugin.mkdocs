@@ -26,5 +26,12 @@ dependencies {
         bundledPlugin("org.jetbrains.plugins.yaml")
         // … and the refined theme schema it contributes is JSON.
         bundledPlugin("com.intellij.modules.json")
+        // The style sheets behind `extra_css` are read through the CSS PSI of the platform rather than with a
+        // regular expression. Everything using it is registered in the optional content module of the facet,
+        // so an IDE without the CSS plugin keeps working — the dependency here is a compile time one.
+        bundledPlugin("com.intellij.css")
+        // The CSS PSI lies in a content module of that plugin rather than in its jar, and a content module is
+        // a class loader of its own. This mirrors the `<module name="intellij.css"/>` of the descriptor.
+        bundledModule("intellij.css")
     }
 }

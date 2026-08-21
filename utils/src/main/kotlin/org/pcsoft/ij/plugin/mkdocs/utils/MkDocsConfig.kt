@@ -13,6 +13,7 @@
 package org.pcsoft.ij.plugin.mkdocs.utils
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import org.jetbrains.yaml.YAMLUtil
@@ -58,6 +59,14 @@ object MkDocsConfig {
 
     /** The MkDocs configuration key holding the directory the documentation sources live in. */
     const val KEY_DOCS_DIR: String = "docs_dir"
+
+    /**
+     * The directory MkDocs takes the documentation sources from while `docs_dir` is unwritten.
+     *
+     * Held here next to the key it stands in for, so a caller resolving a path against the documentation
+     * directory does not have to know the default of MkDocs itself.
+     */
+    const val DEFAULT_DOCS_DIR: String = "docs"
 
     /** The MkDocs configuration key holding the directory the rendered site is written to. */
     const val KEY_SITE_DIR: String = "site_dir"
@@ -196,6 +205,32 @@ object MkDocsConfig {
         return sequence.items.mapNotNull { item ->
             (item.value as? YAMLScalar)?.textValue?.trim()?.takeIf { it.isNotEmpty() }
         }
+    }
+
+    /**
+     * Resolves the style sheets `extra_css` of [configFile] names.
+     *
+     * The entries of the key are paths relative to the documentation directory, so resolving them means
+     * walking from the directory of the configuration file into `docs_dir` first — the directory the site
+     * ships, whose name defaults to [DEFAULT_DOCS_DIR] while the key is unwritten.
+     *
+     * An entry pointing nowhere is skipped rather than reported: a path being typed names no file yet, and a
+     * caller reading the style sheets of a site has nothing to say about that. What is missing behind the key
+     * is marked by the reference of the plugin, at the entry itself.
+     *
+     * The caller must hold a read action.
+     *
+     * @param project the project [configFile] belongs to, used to obtain the PSI
+     * @param configFile an MkDocs configuration file
+     * @return the existing files behind the key, in the order the key names them
+     */
+    fun resolveExtraCss(project: Project, configFile: VirtualFile): List<VirtualFile> {
+        val siteRoot = configFile.parent ?: return emptyList()
+        val docsDirName = readDocsDir(project, configFile) ?: DEFAULT_DOCS_DIR
+        val docsDir = VfsUtilCore.findRelativeFile(docsDirName, siteRoot) ?: return emptyList()
+        return readExtraCss(project, configFile)
+            .mapNotNull { VfsUtilCore.findRelativeFile(it, docsDir) }
+            .filterNot { it.isDirectory }
     }
 
     /**

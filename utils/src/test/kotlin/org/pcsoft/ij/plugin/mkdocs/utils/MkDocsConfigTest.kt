@@ -198,6 +198,63 @@ class MkDocsConfigTest : BasePlatformTestCase() {
         assertEquals(listOf("stylesheets/extra.css"), readExtraCss(file))
     }
 
+    /**
+     * Use case: the style sheets of a site, as files rather than as paths. `extra_css` is written relative to
+     * the documentation directory, so resolving an entry means walking through `docs_dir` first — and only a
+     * file the caller can open is of any use to whoever reads a style sheet.
+     */
+    fun `test resolves the referenced style sheets to files`() {
+        val file = configFile(
+            "resolved/mkdocs.yml",
+            "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n  - css/print.css\n",
+        )
+        myFixture.addFileToProject("resolved/docs/stylesheets/extra.css", ":root {}")
+        myFixture.addFileToProject("resolved/docs/css/print.css", ":root {}")
+
+        assertEquals(listOf("extra.css", "print.css"), resolveExtraCss(file).map { it.name })
+    }
+
+    /**
+     * Use case: a site pointing `docs_dir` at a directory of its own. The entries are relative to that one,
+     * and resolving them against the conventional name would find nothing.
+     */
+    fun `test resolves against a configured documentation directory`() {
+        val file = configFile(
+            "own-docs/mkdocs.yml",
+            "site_name: Handbook\ndocs_dir: sources\nextra_css:\n  - extra.css\n",
+        )
+        myFixture.addFileToProject("own-docs/sources/extra.css", ":root {}")
+
+        assertEquals(listOf("extra.css"), resolveExtraCss(file).map { it.name })
+    }
+
+    /**
+     * Use case: a path still being typed, or one naming a file that has been deleted. The entry is skipped —
+     * what is missing behind the key is marked at the entry itself, not by whoever reads the style sheets.
+     */
+    fun `test skips an entry naming no file`() {
+        val file = configFile(
+            "missing/mkdocs.yml",
+            "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n  - stylesheets/gone.css\n",
+        )
+        myFixture.addFileToProject("missing/docs/stylesheets/extra.css", ":root {}")
+
+        assertEquals(listOf("extra.css"), resolveExtraCss(file).map { it.name })
+    }
+
+    /**
+     * Use case: a site whose documentation directory does not exist yet. Nothing can be resolved against a
+     * directory that is not there, and the answer has to be empty rather than a guess.
+     */
+    fun `test resolves nothing without a documentation directory`() {
+        val file = configFile(
+            "no-docs/mkdocs.yml",
+            "site_name: Handbook\nextra_css:\n  - stylesheets/extra.css\n",
+        )
+
+        assertEmpty(resolveExtraCss(file))
+    }
+
     private fun configFile(path: String, text: String): VirtualFile =
         myFixture.addFileToProject(path, text).virtualFile
 
@@ -215,4 +272,7 @@ class MkDocsConfigTest : BasePlatformTestCase() {
 
     private fun readExtraCss(file: VirtualFile): List<String> =
         runReadActionBlocking { MkDocsConfig.readExtraCss(project, file) }
+
+    private fun resolveExtraCss(file: VirtualFile): List<VirtualFile> =
+        runReadActionBlocking { MkDocsConfig.resolveExtraCss(project, file) }
 }
