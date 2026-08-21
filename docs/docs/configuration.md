@@ -28,7 +28,7 @@ none, which is all MkDocs itself defines. A site rendered with the Material them
 configuration in exactly those two blocks, so a site carrying the *MkDocs Angular Material* facet is edited
 against a refined schema on top — the feature flags, the palette, the fonts, the icons and the Material part
 of `extra`, each key completed, validated and documented. It comes in front of the MkDocs schema rather than
-in place of it, so both are in force. See [Angular Material](angular-material.md#editing-the-configuration-file).
+in place of it, so both are in force. See [Angular Material](angular-material-facet.md#editing-the-configuration-file).
 
 ## Paths are references
 
@@ -130,13 +130,9 @@ the directory lies.
 
 ## Missing site metadata
 
-Three keys decide how a built site presents itself:
-
-| Key                | Effect                                                     |
-|--------------------|------------------------------------------------------------|
-| `site_name`        | the browser title and the name shown in the theme          |
-| `site_author`      | the author metadata of every generated page                |
-| `site_description` | the description search engines and link previews show      |
+Three keys decide how a built site presents itself: `site_name`, `site_author` and `site_description`. What
+each of them does is described by
+[the MkDocs documentation](https://www.mkdocs.org/user-guide/configuration/#project-information).
 
 MkDocs requires none of them, which is exactly why they are so easily forgotten. The plugin therefore shows
 a **banner** at the top of the editor for every missing key — in `mkdocs.yml` and `mkdocs.yaml` only; every

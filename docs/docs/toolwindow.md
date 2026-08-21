@@ -6,9 +6,14 @@ in your project — one tab per site, each rendering the tree written under `nav
 The tool window appears as soon as the project holds an MkDocs site and disappears again with the last one.
 Nothing needs to be enabled.
 
+![Site Page tool window](assets/images/toolwindow.png)
+
 ## What a tab shows
 
-A tab shows the `nav` section of the site it belongs to, in the order the configuration file writes it:
+A tab shows the `nav` section of the site it belongs to, in the order the configuration file writes it. What
+that section may contain is described by
+[the MkDocs documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation);
+each of its entry kinds is rendered as a node of its own:
 
 ```yaml
 nav:
@@ -41,17 +46,16 @@ A link shows its address instead.
 
 ## How a node is labelled
 
-Three sources are consulted, in the order MkDocs itself uses:
+The label is the one MkDocs itself would render: the title written in `nav`, otherwise the first heading of
+the page, otherwise the file name — the order
+[the MkDocs documentation](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) lays down. A
+`title` in the YAML front matter of a page counts as its heading.
 
-1. the title written in `nav`, if the entry carries one,
-2. otherwise the first `#` heading of the page,
-3. otherwise the file name without its extension.
+Two things are worth knowing about how the tool window reads it:
 
-A `title` in the YAML front matter of a page counts as its heading. A `#` inside a fenced code block does
-not — it is sample code, not a heading.
-
-Headings are read out of the editor when it holds unsaved changes, so renaming a heading shows up in the tree
-without saving the file first.
+- a `#` inside a fenced code block is not taken for a heading — it is sample code,
+- headings are read out of the editor while it holds unsaved changes, so renaming a heading shows up in the
+  tree without saving the file first.
 
 ## Entries pointing nowhere
 
@@ -61,9 +65,9 @@ see.
 
 ## Sites without a navigation
 
-MkDocs builds a navigation out of `docs_dir` when `mkdocs.yml` carries no `nav`. The tool window deliberately
-does **not** reproduce that: what it shows is the navigation the site has written down. A site without `nav`
-— or with an empty one — therefore shows a note saying so instead of a tree.
+A site whose `mkdocs.yml` carries no `nav` is still built with one, which MkDocs derives from `docs_dir`. The
+tool window deliberately does **not** reproduce that: what it shows is the navigation the site has written
+down. A site without `nav` — or with an empty one — therefore shows a note saying so instead of a tree.
 
 The note is wrapped at word boundaries to the width the tool window currently has, and it is re-wrapped when
 that width changes — docking the tool window at the bottom or dragging its edge never cuts the text off.

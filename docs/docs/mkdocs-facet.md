@@ -1,4 +1,4 @@
-# Modules
+# MKDocs Facet
 
 The plugin turns every MkDocs site in your project into a *module* the IDE knows about. This is the
 foundation everything else builds on: optional MkDocs extensions are added on top of a module, the same way
@@ -126,8 +126,18 @@ every case — a footer line is rarely word for word the notice of a source file
 
 **Step 5 — the features**
 
-Optional features of the site. Nothing ships here yet, so the step currently shows a hint; the planned
-MkDocs extensions will appear in it once they are available.
+Optional features of the site, each switched on or off on its own. Today the step offers
+**Angular Material**: switching it on writes the theme into the new `mkdocs.yml` and attaches the
+[Angular Material facet](angular-material-facet.md#in-the-creation-wizard) right away, so the finished site carries
+it without waiting for the next detection run. Further features appear in this step as they arrive.
+
+**Behind step 5 — the pages of the selected features**
+
+A feature switched on appends its own pages behind the feature step, and unticking it takes them out again.
+Angular Material contributes four of them — appearance, features, assets and extensions — and they are the
+very same pages the facet shows as tabs afterwards; see
+[Angular Material](angular-material-facet.md). What is filled in there lands in the `theme` block of the
+configuration file the wizard writes.
 
 The result is the smallest structure MkDocs works with:
 
@@ -160,6 +170,8 @@ Detection runs immediately afterwards, so the new site is an MkDocs module as so
 A detected module is marked with the **MkDocs** facet. You can see it in
 *File → Project Structure → Modules → &lt;module&gt; → Facets*, showing:
 
+![The MkDocs facet](assets/images/facet_mkdocs.png)
+
 | Field                   | Meaning                                                          | Editable |
 |-------------------------|------------------------------------------------------------------|----------|
 | Site name               | `site_name` from the configuration file                          | yes      |
@@ -175,6 +187,9 @@ follows just as well.
 
 Renaming the site writes `site_name` and therefore renames the module with it, in the project view and in the
 *Site Page* tool window. An empty name is refused: MkDocs would render an empty header for it.
+
+A feature of the site adds a facet of its own next to this one, with settings pages of its own — today
+[Angular Material](angular-material-facet.md).
 
 ### Renaming the technical directories
 
@@ -205,6 +220,8 @@ file — its tab reports an error instead of showing empty fields.
 ## In the project view
 
 The site root is marked wherever it appears in the project view:
+
+![A site root in the project view](assets/images/project_tree.png)
 
 - the site name is shown bold in brackets behind the directory name — exactly the way a Maven project
   directory is rendered, so a site is recognisable without opening anything, and

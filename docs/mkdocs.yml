@@ -55,10 +55,12 @@ theme:
 
 nav:
   - Home: index.md
-  - Modules: modules.md
-  - Angular Material: angular-material.md
-  - Site Page tool window: toolwindow.md
-  - Configuration file: configuration.md
-  - Settings: settings.md
+  - Facets:
+    - MKDocs: mkdocs-facet.md
+    - Angular Material: angular-material-facet.md
+  - Configuration (mkdocs.yml): configuration.md
+  - IDE Features:
+    - Site Page tool window: toolwindow.md
+    - Settings: settings.md
   - API Docs: dokka/html/index.html
   - Licences: licences/index.html

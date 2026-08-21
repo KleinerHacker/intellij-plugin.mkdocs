@@ -4,7 +4,7 @@ name: Icons
 
 # Icon Creation
 
-* MUST use `docs/docs/images/file.png` as a reference for your design in color, stroke, shapes, curved, fills, ...
+* MUST use `../../docs/docs/assets/images/file.png` as a reference for your design in color, stroke, shapes, curved, fills, ...
 * MUST create each icon in SVG format - vectors scale, so there MUST be exactly ONE file per motif
   * FORBIDDEN: additional files that only differ in target size (`@16`, `@32`, ...)
   * FORBIDDEN: a size suffix in the file name

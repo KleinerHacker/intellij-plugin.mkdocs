@@ -7,6 +7,8 @@ of *this* project.
 
 ## Material
 
+![Material Settings](assets/images/settings_material.png)
+
 ### Installation directory
 
 The icons of *Material for MkDocs* are not a list the plugin carries — they are the SVG files shipped inside
@@ -44,3 +46,22 @@ Applying the page throws the icon index away, so a corrected path takes effect i
 rather than after a restart. The index is also refreshed on its own whenever something below a
 `site-packages` directory changes — installing or upgrading `mkdocs-material` while the IDE is open is
 enough.
+
+### Reading the installation again
+
+An installation is not re-read by itself, because it does not change by itself. Three places ask for it
+explicitly, and all three do the same thing — the package is looked up again, its file list is read again and
+the icons are indexed again:
+
+| Where | What it is called |
+|-------|-------------------|
+| the settings page | the *Reload installation* button next to the installation list |
+| *Find Action* (**Ctrl+Shift+A**) | *Reload Material for MkDocs Installation* |
+| the icon completion popup | *Reload the installed icons*, in the menu at the foot of the popup |
+
+That is what picks up a theme installed next to a running IDE — a `pip install mkdocs-material` in a terminal
+outside the IDE, or an environment created after the project was opened.
+
+The lookup runs as a background task named *Analysing Material for MkDocs*, with its progress in the status
+bar: first the question to pip where the package lies, then the reading of its file list, then the number of
+icons that were found. The IDE stays usable while it runs, and it never blocks the editor.
