@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: sbom
-          path: build/reports/cyclonedx/bom.xml
+          path: plugin/build/reports/cyclonedx/bom.xml
 
   # Head of the pipeline: this job compiles everything once — the distributable plugin (`buildPlugin`) AND
   # the test code (`testClasses`) — and publishes the result through the shared Gradle build cache. Both
@@ -106,7 +106,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: plugin-distribution
-          path: build/distributions/*.zip
+          path: plugin/build/distributions/*.zip
 
   # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
   # Runs in parallel with the integration tests, both fed by the build job's cache.

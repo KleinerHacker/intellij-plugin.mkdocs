@@ -24,5 +24,6 @@ dependencies {
         "org.jetbrains.intellij.platform:intellij-platform-gradle-plugin:${libs.versions.intellij.platform.get()}"
     )
     implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.9.9")
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:2.2.0")
     implementation("app.cash.licensee:licensee-gradle-plugin:1.14.1")
 }

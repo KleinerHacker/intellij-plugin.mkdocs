@@ -29,10 +29,12 @@ plugins {
 
 rootProject.name = "mkdocs"
 
-// Multi-project build: the root project IS the publishable plugin, the projects below carry the code.
+// Multi-project build: the root project is a pure aggregator, every project below carries code.
+//   :plugin           the publishable IntelliJ plugin — a LEAF, so the licence report stays inside it
 //   :utils            shared model and helpers, no project dependency
 //   :facets:api       the contract between the plugin and a facet
 //   :facets:material  the Angular Material facet
+include(":plugin")
 include(":utils")
 include(":facets:api")
 include(":facets:material")

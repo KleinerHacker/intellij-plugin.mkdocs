@@ -10,7 +10,7 @@ name: IntelliJ Plugin UI
 
 ## Languages
 
-* The base bundle `src/main/resources/messages/MkDocsBundle.properties` is ENGLISH and is the single
+* The base bundle `plugin/src/main/resources/messages/MkDocsBundle.properties` is ENGLISH and is the single
   source of truth for all keys
 * The following translations MUST be present, one file per language, next to the base bundle:
   * `MkDocsBundle_zh_CN.properties` - Simplified Chinese

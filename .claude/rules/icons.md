@@ -22,7 +22,7 @@ name: Icons
 ## Where an icon lives
 
 * An icon file lies in the `icons` folder of the resources of the module shipping it
-  * The plugin: `src/main/resources/icons`
+  * The plugin: `plugin/src/main/resources/icons`
   * `:utils`: `utils/src/main/resources/icons`
   * A facet: below the `<facet-name>/` prefix its resources carry anyway, e.g. `material/icons` - the
     prefix is mandatory and ruled by `facets.md`

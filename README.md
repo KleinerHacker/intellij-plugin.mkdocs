@@ -147,21 +147,30 @@ out on its own.
 ├── facets/
 │   ├── api/                The contract between the plugin and a feature
 │   └── material/           The Material for MkDocs feature: code, spec and descriptors
-├── src/main
-│   ├── kotlin/             Kotlin production sources of the plugin itself
-│   └── resources/
-│       ├── META-INF/       plugin.xml and plugin logo
-│       ├── icons/          Icons of the plugin
-│       └── messages/       Message bundles of the plugin
-├── build.gradle.kts        The plugin build: packaging, quality gates and docs tasks
+├── plugin/                 The publishable plugin — a leaf project, no project nested below it
+│   ├── build.gradle.kts    Packaging, signing, publishing, verification matrix, licence report
+│   └── src/main
+│       ├── kotlin/         Kotlin production sources of the plugin itself
+│       └── resources/
+│           ├── META-INF/   plugin.xml and plugin logo
+│           ├── icons/      Icons of the plugin
+│           └── messages/   Message bundles of the plugin
+├── build.gradle.kts        The aggregator: Dokka, coverage merge, licences and the docs tasks
 ├── gradle.properties       Gradle configuration properties
 ├── settings.gradle.kts     Gradle project settings
 └── CHANGELOG.md            Release notes — the release workflow reads them from here
 ```
 
+The root project is a pure aggregator: it carries no production code and no plugin descriptor, only the
+Dokka publication over every project, the merged coverage report, the licence report hand-off and the
+MkDocs site tasks. `:plugin` is deliberately a leaf — the licence-report plugin reports over
+`project + subprojects`, and resolving a foreign project's `runtimeClasspath` at execution time is
+rejected by Gradle 9.
+
 | Project            | Applies                                   | Depends on                     |
 |--------------------|-------------------------------------------|--------------------------------|
-| `.` (the plugin)   | `org.jetbrains.intellij.platform`         | every project below            |
+| `.` (aggregator)   | `org.jetbrains.dokka`, `…kotlinx.kover`   | every project below            |
+| `:plugin`          | `org.jetbrains.intellij.platform`         | every module project           |
 | `:utils`           | `org.jetbrains.intellij.platform.module`  | nothing                        |
 | `:facets:api`      | `org.jetbrains.intellij.platform.module`  | `:utils` (`compileOnly`)       |
 | `:facets:material` | `org.jetbrains.intellij.platform.module`  | `:facets:api`, `:utils`        |
@@ -193,9 +202,9 @@ IDE installation root (the directory containing `lib/`, `plugins/`, `bin/`).
 | `test -PtestSuite=developer`   | Only fast developer tests (every class *not* named `*IT`)          |
 | `test -PtestSuite=integration` | Only integration tests (classes named `*IT`)                       |
 | `verifyPlugin`                 | Plugin Verifier compatibility check                                |
-| `buildPlugin`                  | Build the distributable plugin archive into `build/distributions/` |
+| `buildPlugin`                  | Build the distributable plugin archive into `plugin/build/distributions/` |
 | `licensee` / `cyclonedxBom`    | Licence policy check / SBOM generation                             |
-| `generateLicenseReport`        | Third-party licence report into `build/licences/`                  |
+| `generateLicenseReport`        | Third-party licence report into `plugin/build/licences/`           |
 | `koverHtmlReport`              | Test coverage report                                               |
 | `selfSignPlugin`               | Sign locally with `.signing/keystore.p12`                          |
 | `buildDocs`                    | Build the docs with `mkdocs --strict` (generation test)            |

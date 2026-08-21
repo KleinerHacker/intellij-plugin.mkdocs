@@ -28,6 +28,9 @@ plugins {
     // project, because a dependency pulled in by a module is shipped just as much as one of the plugin.
     id("org.jetbrains.kotlinx.kover")
     id("app.cash.licensee")
+    // Applied everywhere so the root project can aggregate one API documentation over every project it
+    // builds the plugin from — Dokka only contributes what the project it is applied to compiles.
+    id("org.jetbrains.dokka")
 }
 
 private val catalog = extensions.getByType<VersionCatalogsExtension>().named("libs")

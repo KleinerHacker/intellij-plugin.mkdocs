@@ -38,7 +38,7 @@ jobs:
             github:
               - '.github/**'
             code:
-              - 'src/**'
+              - 'plugin/**'
               - 'utils/**'
               - 'facets/**'
               - 'build-logic/**'
