@@ -11,7 +11,7 @@ tools:
   - Grep
 
 skill:
-  - Icons
+  - icons
 ---
 
 # Role

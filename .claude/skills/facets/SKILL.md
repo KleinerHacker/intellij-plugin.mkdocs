@@ -1,13 +1,18 @@
 ---
 name: facets
+description: Rules for MkDocs facets - creating or changing a facet project under facets/, its plugin content module and descriptor, its spec/schema resources, its resource bundle, the installation locator and its tests. Read before any work on a facet or an MkDocs site feature (Material, I18N, Mike).
 ---
+
 
 # Facets
 
 A facet is one optional feature of an MkDocs site - the Material theme, I18N, Mike - shipped as a project of
 its own under `facets/`. This file is the single source of truth for everything a facet is made of. The
-dependency arrows of the Gradle projects and the module layout live in `architecture.md` and are NOT repeated
+dependency arrows of the Gradle projects and the module layout live in `.claude/rules/architecture.md` and are NOT repeated
 here.
+
+* An IntelliJ IDEA feature MUST always be built so that it can be added to or removed from an IntelliJ
+  module - every IDE extension is linked to that feature
 
 ## Feature detection
 
@@ -75,7 +80,7 @@ here.
     * `MkDocsCoreIndependenceTest` checks both the Kotlin sources and the descriptors
 * Every user visible text of a facet lives in a resource bundle of its own, declared in that descriptor
     * Naming scheme: `messages/MkDocs<FacetName>Bundle.properties`, e.g. `messages.MkDocsMaterialBundle`
-    * The I18N rules of `ui.md` apply to it unchanged, translations included
+    * The I18N rules of the `i18n` skill apply to it unchanged, translations included
 
 ## Resources
 

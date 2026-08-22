@@ -1,6 +1,8 @@
 ---
-name: IntelliJ Plugin UI
+name: i18n
+description: I18N rules for every user visible UI text of the plugin and its facets - the base resource bundle, the mandatory zh_CN/ja/ko translations, placeholders and what MUST NOT be translated. Read before adding, renaming or removing a bundle key or writing any UI text.
 ---
+
 
 # I18N
 
@@ -29,4 +31,4 @@ name: IntelliJ Plugin UI
     product names such as MkDocs, Material for MkDocs, Angular Material, Mike
 * Adding another language MUST be confirmed with the user first
 * Every facet carries a bundle of its own - `MkDocs<FacetName>Bundle.properties` - and these rules apply to
-  it unchanged; where it lives and how it is declared is ruled by `facets.md`
+  it unchanged; where it lives and how it is declared is ruled by the `facets` skill

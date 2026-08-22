@@ -65,7 +65,7 @@ mkdocs/
 ### Facets
 
 * Everything a facet is made of - the plugin descriptor of its content module, its resources, its tests and
-  the hand-off to the plugin - is ruled by `facets.md`
+  the hand-off to the plugin - is ruled by the `facets` skill
 
 ## Structure
 
@@ -86,4 +86,4 @@ mkdocs/
 ## Resources
 
 * The resource rules of a facet - the `<facet-name>/` prefix, the `spec` data files and how they are read -
-  live in `facets.md`
+  live in the `facets` skill

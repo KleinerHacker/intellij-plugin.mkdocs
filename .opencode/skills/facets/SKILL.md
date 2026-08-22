@@ -1,13 +1,18 @@
 ---
 name: facets
+description: Rules for MkDocs facets - creating or changing a facet project under facets/, its plugin content module and descriptor, its spec/schema resources, its resource bundle, the installation locator and its tests. Read before any work on a facet or an MkDocs site feature (Material, I18N, Mike).
 ---
+
 
 # Facets
 
 A facet is one optional feature of an MkDocs site - the Material theme, I18N, Mike - shipped as a project of
 its own under `facets/`. This file is the single source of truth for everything a facet is made of. The
-dependency arrows of the Gradle projects and the module layout live in `architecture.md` and are NOT repeated
+dependency arrows of the Gradle projects and the module layout live in `.claude/rules/architecture.md` and are NOT repeated
 here.
+
+* An IntelliJ IDEA feature MUST always be built so that it can be added to or removed from an IntelliJ
+  module - every IDE extension is linked to that feature
 
 ## Feature detection
 
@@ -30,6 +35,23 @@ here.
 
 * Extends YAML support (intelligence, completion and annotation) in `mkdocs.yml` for the given feature
 * Extends file detection in MkDocs module folders
+
+## Installation of a feature
+
+* WHERE a feature is installed is asked of `pip`, through `MkDocsInstallationLocator` of `:utils`, and of
+  NOTHING else
+    * A facet names the distribution (`mkdocs-material`) and the path inside the package
+      (`material/templates/.icons`); the locator answers with the directory
+    * FORBIDDEN: searching the checkout for `.venv`, `venv`, `site-packages` or any other directory that
+      looks like an environment - pip knows where the packages of the interpreter in use lie
+    * The answer of `pip show` is cached in `MkDocsPipService`; anything that can change an installation
+      calls `invalidate()`
+    * The call starts a process and MUST NOT run on the EDT
+* The path a user configures by hand lives in `MkDocsInstallationSettings` of `:utils`, under a key of the
+  facet - a facet MUST NOT persist a path of its own
+* A settings page offering that path MUST use `MkDocsInstallationComboBox` of `:utils`
+    * It shows what was found and stays editable for setups pip cannot answer for
+    * The texts are handed in from the resource bundle of the facet
 
 ## Plugin descriptor
 
@@ -58,7 +80,7 @@ here.
     * `MkDocsCoreIndependenceTest` checks both the Kotlin sources and the descriptors
 * Every user visible text of a facet lives in a resource bundle of its own, declared in that descriptor
     * Naming scheme: `messages/MkDocs<FacetName>Bundle.properties`, e.g. `messages.MkDocsMaterialBundle`
-    * The I18N rules of `ui.md` apply to it unchanged, translations included
+    * The I18N rules of the `i18n` skill apply to it unchanged, translations included
 
 ## Resources
 
