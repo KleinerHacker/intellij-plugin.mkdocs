@@ -36,7 +36,7 @@
 // The version MUST stay the one jackson-databind resolves to on the build classpath.
 buildscript {
     dependencies {
-        classpath("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.1")
+        classpath("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.2")
     }
 }
 
