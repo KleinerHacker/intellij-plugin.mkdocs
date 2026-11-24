@@ -93,6 +93,13 @@ jobs:
         with:
           arguments: buildPlugin testClasses -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
 
+      # The Marketplace accepts an upload without <change-notes> silently and then shows nothing under
+      # "What's New". Fail here - before anything is published - if the descriptor built for this tag carries
+      # no change notes.
+      - name: Verify change notes
+        shell: bash
+        run: bash .github/scripts/verify-change-notes.sh
+
       # Must run here rather than inside the composite action: the cache can only be saved once the build
       # has filled it, and a composite action cannot register a post-job step.
       - name: Save shared build cache

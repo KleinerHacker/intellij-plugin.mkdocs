@@ -38,6 +38,12 @@ plugins {
     id("org.cyclonedx.bom") version "3.4.1"
 }
 
+// The changelog plugin is applied in :plugin, so by default it would look for plugin/CHANGELOG.md. The one and
+// only changelog lives in the repository root.
+changelog {
+    path = rootProject.layout.projectDirectory.file("CHANGELOG.md").asFile.absolutePath
+}
+
 intellijPlatform {
     instrumentCode = false
 
@@ -46,9 +52,24 @@ intellijPlatform {
             sinceBuild = "262"
             untilBuild = provider { null }   // unbounded: covers 2026.2 (262) and future IDEs
         }
-        // Release-time changelog injection is wired separately; keep patchPluginXml off the changelog
-        // provider so it stays configuration-cache friendly.
-        changeNotes = provider { "" }
+        // The change notes shown on the JetBrains Marketplace ("What's New") and in the IDE's plugin manager are
+        // read from <change-notes> in the packaged plugin.xml - the Marketplace never reads CHANGELOG.md itself.
+        // Render the CHANGELOG.md section of the version being built (CI passes the release tag as -Pversion);
+        // if there is none (e.g. a -SNAPSHOT build), fall back to [Unreleased]. Resolved lazily through a
+        // provider.
+        //
+        // Configuration cache: the lambda MUST NOT touch the `changelog` accessor (or anything else of the build
+        // script) - that would capture the Project, which cannot be serialized. Instead the parsed changelog
+        // (`changelog.instance`) and the version are zipped, so the lambda only works on its own parameters.
+        changeNotes = changelog.instance.zip(providers.gradleProperty("version")) { log, pluginVersion ->
+            val item = runCatching { log.get(pluginVersion) }.getOrNull()
+                ?: log.unreleasedItem
+                ?: error("CHANGELOG.md contains neither a section for $pluginVersion nor an [Unreleased] section")
+            log.renderItem(
+                item.withHeader(false).withEmptySections(false),
+                org.jetbrains.changelog.Changelog.OutputType.HTML,
+            )
+        }
     }
 
     // Authoritative IDE matrix for `verifyPlugin` (see .claude/rules/plugin.md). The version is

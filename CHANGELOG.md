@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **The change notes are now shown on the JetBrains Marketplace and in the plugin manager of the IDE**: the
+  *What's New* section of a release is filled from the matching section of this changelog instead of staying
+  empty.
+
 ## [0.3.0]
 
 ### Added
