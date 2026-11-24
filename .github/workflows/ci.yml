@@ -106,6 +106,32 @@ jobs:
         with:
           arguments: assemble testClasses --build-cache --stacktrace --info
 
+      # The change notes on the Marketplace come from <change-notes> in the patched plugin.xml, rendered from the
+      # CHANGELOG.md section of the built version. A regular CI build is a -SNAPSHOT build and only renders
+      # [Unreleased] (which may legitimately be empty), so the release path is exercised here explicitly: patch the
+      # descriptor for the latest released version and require non-empty change notes. This catches a broken
+      # changelog wiring or header format before a release tag is pushed, not after the upload.
+      - name: Determine latest released version
+        id: released
+        shell: bash
+        run: |
+          VERSION=$(grep -m1 -oP '^## \[\K[0-9][^\]]*' CHANGELOG.md || true)
+          if [ -z "$VERSION" ]; then
+            echo "ERROR: no released version section found in CHANGELOG.md"
+            exit 1
+          fi
+          echo "Latest released version in CHANGELOG.md: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Patch plugin descriptor for the latest released version
+        uses: ./.github/actions/gradle
+        with:
+          arguments: :plugin:patchPluginXml -Pversion=${{ steps.released.outputs.version }} --build-cache --stacktrace
+
+      - name: Verify change notes
+        shell: bash
+        run: bash .github/scripts/verify-change-notes.sh
+
       # Must run here rather than inside the composite action: the cache can only be saved once the build
       # has filled it, and a composite action cannot register a post-job step.
       - name: Save shared build cache
